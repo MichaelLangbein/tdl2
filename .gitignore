@@ -2,7 +2,9 @@ bin
 .project
 .settings
 .classpath
+.gradle
 target
+build
 mytree.bin
 app.properties
 resources/
