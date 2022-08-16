@@ -4,24 +4,21 @@ import { estimateMean, ExponentialDistribution } from './stats.utils';
 
 
 
-export interface Node {
-    id: number | null,
-    complete: boolean,
+interface LeveledTaskTree extends TaskTree {
     level: number,
-    time: number,
-    children: Node[]
+    children: LeveledTaskTree[]
 }
 
-export type levelTimeDists = {[level: number]: ExponentialDistribution};
-export type levelChildDists = {[level: number]: ExponentialDistribution};
+type levelTimeDists = {[level: number]: ExponentialDistribution};
+type levelChildDists = {[level: number]: ExponentialDistribution};
 
 
 
 
 
-export function estimate(node: Node, timesOnLevels: levelTimeDists, childrenOnLevels: levelChildDists): number {
+function estimate(node: LeveledTaskTree, timesOnLevels: levelTimeDists, childrenOnLevels: levelChildDists): number {
     // if we already know the answer, return it.
-    if (node.complete) return fullTime(node);
+    if (node.completed) return fullTime(node);
 
     // if we're outside the range of available data ...
     const maxLevel = Math.max(...Object.keys(timesOnLevels).map(k => +k));
@@ -32,7 +29,7 @@ export function estimate(node: Node, timesOnLevels: levelTimeDists, childrenOnLe
 
     // time required for task itself
     const distTimeSelf = timesOnLevels[node.level];
-    const expectedTimeSelf = distTimeSelf.conditionalExpectation(node.time);
+    const expectedTimeSelf = distTimeSelf.conditionalExpectation(node.secondsActive);
 
     // time required for already existing children
     let expectedTimeChildren = 0;
@@ -43,7 +40,7 @@ export function estimate(node: Node, timesOnLevels: levelTimeDists, childrenOnLe
     // time required for potential new children
     const distChildren = childrenOnLevels[node.level];
     const expectedNrChildren = distChildren.conditionalExpectation(node.children.length);
-    const fakeChild = {id: null, complete: false, level: node.level + 1, time: 0, children: []};
+    const fakeChild: LeveledTaskTree = {id: -99999, level: node.level + 1, secondsActive: 0, children: [], title: "", description: "", attachments: [], parent: node.id, created: new Date(), completed: null};
     const expectedTimeNewChild = estimate(fakeChild, timesOnLevels, childrenOnLevels);
     const expectedTimeExpectedChildren = expectedNrChildren * expectedTimeNewChild;
 
@@ -57,33 +54,31 @@ export function estimate(node: Node, timesOnLevels: levelTimeDists, childrenOnLe
 
 
 
-export function parseTree(tree: TaskTree, level: number) {
-    const node: Node = {id: tree.id, complete: tree.completed ? true : false, level: level, time: tree.secondsActive, children: []};
-
+function addLevelInfo(tree: TaskTree, level: number): LeveledTaskTree {
+    (tree as LeveledTaskTree).level = level;
     for (const child of tree.children) {
-        node.children.push(parseTree(child, level + 1));
+        addLevelInfo(child, level + 1);
     }
-
-    return node;
+    return tree as LeveledTaskTree;
 }
 
 
 
-export function readParas(node: Node) {
+function readParas(node: LeveledTaskTree) {
     const timesOnLevelRaw: {[level: number]: number[]} = {};
     const childrenOnLevelRaw: {[level: number]: number[]} = {};
 
     let current = node;
-    const queue = new Queue<Node>(1000);
+    const queue = new Queue<LeveledTaskTree>(1000);
 
     while (current) {
         current.children.map(c => queue.enqueue(c));
 
-        if (current.complete) {
+        if (current.completed) {
             if (!timesOnLevelRaw[current.level]) timesOnLevelRaw[current.level] = [];
-            timesOnLevelRaw[current.level].push(current.time);
+            timesOnLevelRaw[current.level].push(current.secondsActive);
             if (!childrenOnLevelRaw[current.level]) childrenOnLevelRaw[current.level] = [];
-            childrenOnLevelRaw[current.level].push(current.time);
+            childrenOnLevelRaw[current.level].push(current.children.length);
         }
 
         current = queue.dequeue()!;
@@ -92,7 +87,7 @@ export function readParas(node: Node) {
     return { timesOnLevelRaw, childrenOnLevelRaw }; 
 }
 
-export function estimateDistributions(node: Node) {
+function estimateDistributions(node: LeveledTaskTree) {
     const { timesOnLevelRaw, childrenOnLevelRaw } = readParas(node);
 
     const timesOnLevels: {[level: number]: ExponentialDistribution} = {};
@@ -119,15 +114,15 @@ export function estimateDistributions(node: Node) {
 }
 
 
-export function fullTime(node: Node) {
-    let time = node.time;
+function fullTime(node: LeveledTaskTree) {
+    let time = node.secondsActive;
     for (const child of node.children) {
         time += fullTime(child);
     }
     return time;
 }
 
-export function getNodeWithId(id: number, tree: Node): Node | undefined {
+function getNodeWithId(id: number, tree: LeveledTaskTree): LeveledTaskTree | undefined {
     if (tree.id === id) return tree;
     for (const child of tree.children) {
         const node = getNodeWithId(id, child);
@@ -136,9 +131,9 @@ export function getNodeWithId(id: number, tree: Node): Node | undefined {
     return undefined;
 }
 
-function countCompletedNodes(tree: Node) {
+function countCompletedNodes(tree: LeveledTaskTree) {
     let count = 0;
-    if (tree.complete) count += 1;
+    if (tree.completed) count += 1;
     for (const child of tree.children) {
         count += countCompletedNodes(child);
     }
@@ -147,10 +142,10 @@ function countCompletedNodes(tree: Node) {
 
 
 export function estimateTime(taskId: number, tree: TaskTree) {
-    const nodeTree = parseTree(tree, 0)!;
-    if (countCompletedNodes(nodeTree) < 1) return 0;
-    const { timesOnLevels, childrenOnLevels } = estimateDistributions(nodeTree);
-    const node = getNodeWithId(taskId, nodeTree)!;
-    const e = estimate(node, timesOnLevels, childrenOnLevels);
+    const leveledTree = addLevelInfo(tree, 0);
+    if (countCompletedNodes(leveledTree) < 1) return 0;
+    const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
+    const target = getNodeWithId(taskId, leveledTree)!;
+    const e = estimate(target, timesOnLevels, childrenOnLevels);
     return e;
 }

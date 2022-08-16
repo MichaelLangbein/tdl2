@@ -4,7 +4,7 @@ export interface TaskTree {
     id: number,
     title: string,
     description: string,
-    parent: TaskTree | null,
+    parent: number | null,
     children: TaskTree[]
     created: Date,
     completed: Date | null,
@@ -207,7 +207,7 @@ export class TaskService {
             const childIds = await this.getChildIds(id);
             for (const childId of childIds) {
                 const childTree = await this.getSubtree(childId, level - 1); // @TODO: do in parallel?
-                childTree.parent = root;
+                // childTree.parent = root;
                 root.children.push(childTree);
             }
         }

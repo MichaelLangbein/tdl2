@@ -1,45 +1,59 @@
-import { estimate, estimateDistributions, getNodeWithId, Node } from './tdvs';
+import { TaskTree } from '../model/taskService';
+import { estimateTime } from './tdvs';
+
 
 describe("Top-down variable structure", () => {
 
     test("basics", () => {
 
-        const nodeTree: Node = {
+        const tree: TaskTree = {
             id: 0,
-            complete: false,
-            level: 0,
-            time: 100,
+            parent: null,
+            created: new Date(),
+            completed: null,
+            secondsActive: 100,
+            attachments: [],
+            description: "",
+            title: "",
             children: [{
                 id: 1,
-                level: 1,
-                time: 75,
-                complete: true,
-                children: []
+                parent: 0,
+                created: new Date(),
+                completed: new Date(),
+                secondsActive: 75,
+                children: [],
+                attachments: [],
+                description: "",
+                title: "",
             }, {
                 id: 2,
-                level: 1,
-                time: 60,
-                complete: false,
+                parent: 0,
+                created: new Date(),
+                completed: null,
+                secondsActive: 60,
+                description: "",
+                title: "",
+                attachments: [],
                 children: [{
                     id: 3,
-                    level: 2,
-                    time: 10,
-                    complete: true,
-                    children: []
+                    parent: 2,
+                    secondsActive: 10,
+                    created: new Date(),
+                    completed: new Date(),
+                    children: [],
+                    attachments: [],
+                    description: "",
+                    title: "",
                 }]
             }]
         };
-
-        const { timesOnLevels, childrenOnLevels } = estimateDistributions(nodeTree);
         
         // estimation of already completed task
-        const node = getNodeWithId(1, nodeTree)!;
-        const e = estimate(node, timesOnLevels, childrenOnLevels);
-        expect(e).toEqual(nodeTree.children[0].time);
+        const e = estimateTime(1, tree);
+        expect(e).toEqual(tree.children[0].secondsActive);
 
         // estimation of not completed task
-        const node2 = getNodeWithId(0, nodeTree)!;
-        const e2 = estimate(node2, timesOnLevels, childrenOnLevels);
+        const e2 = estimateTime(0, tree);
         expect(e2).toBeGreaterThan(0.0);
     });
 
