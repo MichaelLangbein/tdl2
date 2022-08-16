@@ -1,0 +1,17 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    flex: 0 1 auto;
+
+    background-color: var(--color-primary-0);
+    color: var(--color-white);
+}
+
+.content {
+    flex: 0 1 auto;
+}

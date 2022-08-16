@@ -1,0 +1,4 @@
+.taskView {
+    display: flex;
+    flex-direction: row;
+}
