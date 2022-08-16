@@ -18,12 +18,23 @@ class Database {
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + dataBasePath);
     }
 
+    public void close() {
+        this.connection.close();
+    }
 
+
+    // query that returns a result-set
     public ResultSet query(String sqlQuery) {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sqlQuery);
         // while (rs.next()) {}
         // rs.close();
+    }
+
+    // query that doesn't return a result-set
+    public void update(String sqlQuery) {
+        Statement stmt = connection.createStatement();
+        
     }
 
 
