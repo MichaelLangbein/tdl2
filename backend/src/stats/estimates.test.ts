@@ -30,6 +30,7 @@ describe("Estimates", () => {
         const estimate = estimateTime(parent.id, tree);
         expect(estimate).toBeTruthy();
         expect(estimate['tdvs']).toBeDefined();
+        expect(estimate['buvs']).toBeDefined();
     })
 
 });

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { TaskService, Task } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-task-tree',
@@ -6,8 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./task-tree.component.css']
 })
 export class TaskTreeComponent implements OnInit {
+  tree$: Observable<Task | null>;
+  activeTask$: Observable<Task | null>;
 
-  constructor() { }
+  constructor(private taskSvc: TaskService) {
+    this.tree$ = this.taskSvc.getTree();
+    this.activeTask$ = this.taskSvc.getCurrentTask();
+  }
 
   ngOnInit(): void {
   }

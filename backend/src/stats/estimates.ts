@@ -1,11 +1,14 @@
 import { TaskTree } from '../model/taskService';
 import { estimateTime as tdvs } from './tdvs';
+import { estimateTime as buvs } from './buvs';
 
 
 
 export function estimateTime(taskId: number, tree: TaskTree) {
-    const e = tdvs(taskId, tree);
+    const eTdvs = tdvs(taskId, tree);
+    const eBuvs = buvs(taskId, tree);
     return {
-        'tdvs': e
+        'tdvs': eTdvs,
+        'buvs': eBuvs
     };
 }

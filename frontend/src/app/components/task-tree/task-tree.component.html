@@ -1,1 +1,3 @@
-<p>task-tree works!</p>
+<div class="treeList">
+    <app-task-entry [tree]="tree$ | async" [active]="activeTask$ | async"></app-task-entry>
+</div>

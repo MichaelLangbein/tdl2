@@ -1,1 +1,11 @@
-<p>task-edit works!</p>
+<form [formGroup]="form">
+    <div class="formElement">
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title" formControlName="title">
+    </div>
+    <div class="formElement">
+        <label for="description">Description:</label>
+        <textarea type="text" name="description" id="description" formControlName="description"></textarea>
+    </div>
+    <button type="submit" (click)="submit()">OK</button>
+</form>
