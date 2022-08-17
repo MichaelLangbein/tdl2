@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CalendarViewComponent } from './components/calendar-view/calendar-view.component';
-import { StatsComponent } from './components/stats/stats.component';
-import { TaskViewComponent } from './components/task-view/task-view.component';
-import { WikiViewComponent } from './components/wiki-view/wiki-view.component';
+import { CalendarViewComponent } from './views/calendar-view/calendar-view.component';
+import { StatsComponent } from './views/stats/stats.component';
+import { TaskViewComponent } from './views/task-view/task-view.component';
+import { WikiViewComponent } from './views/wiki-view/wiki-view.component';
 
 const routes: Routes = [{ 
     path: '',   

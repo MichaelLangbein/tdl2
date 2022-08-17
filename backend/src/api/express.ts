@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { TaskService } from '../model/taskService';
-import { listFilesInDir, listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
+import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 
 export function appFactory(taskService: TaskService) {
     const app = express();

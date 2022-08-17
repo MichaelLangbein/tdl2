@@ -1,10 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-wiki-view',
   templateUrl: './wiki-view.component.html',
-  styleUrls: ['./wiki-view.component.css']
+  styleUrls: [
+    './wiki-view.component.css', 
+    '../../../../node_modules/prismjs/themes/prism-coy.css',
+    '../../../../node_modules/katex/dist/katex.min.css'
+  ],
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WikiViewComponent implements OnInit {
 

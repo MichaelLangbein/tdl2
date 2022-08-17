@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { TaskTree, TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -11,6 +11,7 @@ export class TaskEntryComponent implements OnInit {
   @Input() tree: TaskTree | null = null;
   @Input() active: TaskTree | null = null;
   showContextMenu = false;
+  @ViewChild('content') content!: ElementRef<HTMLDivElement>;
 
   constructor(
     private eRef: ElementRef,
@@ -36,7 +37,7 @@ export class TaskEntryComponent implements OnInit {
 
   createChildTask()  {
     this.showContextMenu = false;
-    this.taskSvc.createTask("untitled", "", this.active!.id);
+    this.taskSvc.addChildTaskToCurrentTask("untitled", "", this.active!.id);
   }
 
   estimateTime() {

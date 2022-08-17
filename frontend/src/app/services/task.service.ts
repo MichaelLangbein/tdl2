@@ -54,20 +54,34 @@ export class TaskService {
     });
   }
 
-  public createTask(title: string, description: string, parent: number | null) {
+  public addChildTaskToCurrentTask(title: string, description: string, parent: number | null) {
     this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent }).subscribe((response: TaskRow) => {
       const newTask = {
         ... response,
         attachments: [],
         children: []
       };
-      this.currentTask$.value?.children.push(newTask);
+      if (this.fullTree$.value) {
+        const newTree = addChildToTree(this.fullTree$.value, newTask);
+        this.fullTree$.next(newTree);
+      }
       this.currentTask$.next(newTask);
     })
   }
 
+  public editCurrentTask(title: string, description: string) {
+    const currentTask = this.currentTask$.value;
+    if (currentTask) {
+      currentTask.title = title;
+      currentTask.description = description;
+      this.update(currentTask);
+    }
+  }
+
   public switchCurrentTask(task: TaskTree) {
-    this.update(this.currentTask$.value!);
+    if (this.currentTask$.value) {
+      this.update(this.currentTask$.value);
+    }
     this.currentTask$.next(task);
   }
 
@@ -80,20 +94,25 @@ export class TaskService {
       secondsActive: task.secondsActive,
       completed: task.completed
     }).subscribe((updated: TaskRow) => {
-      const newTree = this.updateState(updated);
-      this.fullTree$.next(newTree);
+      if (this.fullTree$.value) {
+        const newTree = updateTaskInTree(this.fullTree$.value, updated);
+        this.fullTree$.next(newTree);
+      }
     });
   }
 
-  public deleteTask(tree: TaskTree) {
-    const parentId = tree.parent;
+  public deleteTask(task: TaskTree) {
+    const parentId = task.parent;
     if (!parentId) return;
     const parent = this.getTask(parentId);
     if (!parent) return;
-    this.http.delete<TaskRow>(`http://localhost:1410/tasks/delete/${tree.id}`).subscribe((prnt: TaskRow) => {
-      const newTree = this.removeBranch(tree.id);
-      this.fullTree$.next(newTree);
-      this.switchCurrentTask(parent);
+    this.http.delete<TaskRow>(`http://localhost:1410/tasks/delete/${task.id}`).subscribe((prnt: TaskRow) => {
+      const tree = this.fullTree$.value;
+      if (tree) {
+        const newTree = removeBranch(tree, task.id);
+        this.fullTree$.next(newTree);
+        this.switchCurrentTask(parent);
+      }
     });
   }
 
@@ -103,38 +122,40 @@ export class TaskService {
     return task;
   }
 
-  private removeBranch(id: number): TaskTree | null {
-    const tree = this.fullTree$.value;
-    doFirstWhere(
-      (node: TaskTree) => node.children.map(c => c.id).includes(id),
-      tree!,
-      (node: TaskTree) => node.children = node.children.filter(c => c.id !== id)
-    );
-    return tree;
-  }
-
-  private updateState(updated: TaskRow): TaskTree | null {
-    const tree = this.fullTree$.value;
-    doFirstWhere(
-      (node: TaskTree) => node.children.map(c => c.id).includes(updated.id),
-      tree!,
-      (node: TaskTree) => {
-        node.title = updated.title;
-        node.description = updated.description;
-        node.completed = updated.completed;
-        node.parent = updated.parent;
-        node.secondsActive = updated.secondsActive;
-      }
-    );
-    return tree;
-  }
-
 }
 
 
+function removeBranch(tree: TaskTree, id: number): TaskTree | null {
+  doFirstWhere(
+    (node: TaskTree) => node.children.map(c => c.id).includes(id),
+    tree,
+    (node: TaskTree) => node.children = node.children.filter(c => c.id !== id)
+  );
+  return tree;
+}
 
-function getWhere(predicate: (node: TaskTree) => boolean, tree: TaskTree) {
+function updateTaskInTree(tree: TaskTree, toUpdate: TaskRow) {
+  doFirstWhere(
+    node => node.id === toUpdate.id,
+    tree,
+    node => {
+      node.title = toUpdate.title;
+      node.description = toUpdate.description;
+      node.completed = toUpdate.completed;
+      node.parent = toUpdate.parent;
+      node.secondsActive = toUpdate.secondsActive;
+    }
+  );
+  return tree;
+}
 
+function addChildToTree(tree: TaskTree, child: TaskTree) {
+  doFirstWhere(
+    node => node.id === child.parent,
+    tree,
+    node => node.children.push(child)
+  );
+  return tree;
 }
 
 function getFirstWhere(predicate: (node: TaskTree) => boolean, tree: TaskTree): TaskTree | undefined {

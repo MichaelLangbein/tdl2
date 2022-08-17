@@ -1,5 +1,5 @@
 <div [class]="{'entry': true}" *ngIf="tree">
-    <div [class]="{'active': tree.id === active!.id}" (contextmenu)="showContextMenu = true" (click)="focusOnMe()">
+    <div [class]="{'active': tree.id === active!.id}" (contextmenu)="showContextMenu = true" (click)="focusOnMe()" #content>
         {{ tree.title }}
     </div>
     <div class="children">
