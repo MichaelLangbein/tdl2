@@ -1,7 +1,5 @@
 # TODOs
 
-- CRUD
-  - update
 - tree-view:
   - drag-move tasks
   - allow collapse
@@ -11,5 +9,4 @@
 - remove this list because data is stored in app itself
 - wiki
   - correct image urls
-  - markdown doesn't work with meyer-reset
   - configure typescript-syntax-highlighting

@@ -33,6 +33,7 @@ export class TaskService {
 
   private currentTask$: BehaviorSubject<TaskTree | null>;
   private fullTree$: BehaviorSubject<TaskTree | null>;
+  private lastSwitch = new Date();
   
   constructor(private http: HttpClient) {
     this.currentTask$ = new BehaviorSubject<TaskTree | null>(null);
@@ -50,7 +51,7 @@ export class TaskService {
   public getSubtree(id = 1, depth = 3) {
     this.http.get<TaskTree>(`http://localhost:1410/subtree/${id}/${depth}`).subscribe((tree: TaskTree) => {
       this.fullTree$.next(tree);
-      this.currentTask$.next(tree);
+      this.switchCurrentTask(tree);
     });
   }
 
@@ -65,7 +66,7 @@ export class TaskService {
         const newTree = addChildToTree(this.fullTree$.value, newTask);
         this.fullTree$.next(newTree);
       }
-      this.currentTask$.next(newTask);
+      this.switchCurrentTask(newTask);
     })
   }
 
@@ -79,13 +80,18 @@ export class TaskService {
   }
 
   public switchCurrentTask(task: TaskTree) {
-    if (this.currentTask$.value) {
-      this.update(this.currentTask$.value);
+    const currentTask = this.currentTask$.value;
+    if (currentTask) {
+      this.update(currentTask);
     }
+    this.lastSwitch = new Date();
     this.currentTask$.next(task);
   }
 
   public update(task: TaskTree) {
+    const timeDelta = Math.floor((new Date().getTime() - this.lastSwitch.getTime()) / 1000);
+    task.secondsActive += timeDelta;
+
     this.http.patch<TaskRow>(`http://localhost:1410/tasks/update`, {
       id: task.id,
       title: task.title,

@@ -9,3 +9,6 @@
     </div>
     <!-- <button type="submit" (click)="submit()">OK</button> -->
 </form>
+
+<h3>Further infos:</h3>
+<p>Seconds active: {{ (currentTask$ | async)?.secondsActive }}</p>
