@@ -1,8 +1,10 @@
 <div [class]="{'entry': true}" *ngIf="tree">
-    <div [class]="{'active': tree.id === active!.id}" (contextmenu)="showContextMenu = true">
+    <div [class]="{'active': tree.id === active!.id}" (contextmenu)="showContextMenu = true" (click)="focusOnMe()">
         {{ tree.title }}
     </div>
-    <app-task-entry *ngFor="let child of tree.children" [tree]="child" [active]="active"></app-task-entry>
+    <div class="children">
+        <app-task-entry *ngFor="let child of tree.children" [tree]="child" [active]="active"></app-task-entry>
+    </div>
     
     <div [class]="{menu: true, visible: showContextMenu }">
         <ul>

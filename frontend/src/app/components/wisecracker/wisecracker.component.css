@@ -1,4 +1,5 @@
 .content {
     background-color: var(--color-light-grey);
     padding: 0.25rem;
+    min-height: 2rem;
 }

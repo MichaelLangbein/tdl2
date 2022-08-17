@@ -6,17 +6,22 @@
 }
 
 .header {
-    flex: 1 0 10%;
-
     background-color: var(--color-primary-0);
     color: var(--color-white);
 }
 
+.app .header nav a {
+    color: var(--color-light-grey);
+    margin: 0.5rem;
+}
+
+.app .header nav a.active {
+    color: var(--color-white);
+}
+
 .subHeader {
-    flex: 1 0 2%;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
 }
 
 .content {
-    flex: 1 0 88%;
 }

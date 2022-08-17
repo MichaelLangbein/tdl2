@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { TaskService, Task } from 'src/app/services/task.service';
+import { TaskService, TaskTree } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-task-edit',
@@ -10,7 +10,7 @@ import { TaskService, Task } from 'src/app/services/task.service';
 })
 export class TaskEditComponent implements OnInit {
   
-  currentTask$: Observable<Task | null>;
+  currentTask$: Observable<TaskTree | null>;
   form: FormGroup;
 
   constructor(private taskService: TaskService) {

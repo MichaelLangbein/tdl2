@@ -76,6 +76,19 @@ export class TaskService {
         return result;
     }
 
+    
+    public async getParent(taskId: number) {
+        const task = await this.getTask(taskId);
+        if (task) {
+            const result = await this.db.get<TaskRow>(`
+                select * from tasks where id = $id;
+            `, { 
+                '$id': task?.parent 
+            });
+            return result;
+        }
+    }
+
     public async getChildIds(taskId: number) {
         const results = await this.db.all<{id: number}[]>(`
             select id from tasks where parent = $parent;    

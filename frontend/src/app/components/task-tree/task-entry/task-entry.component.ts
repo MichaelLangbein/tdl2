@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
-import { Task } from 'src/app/services/task.service';
+import { TaskTree, TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-task-entry',
@@ -8,11 +8,14 @@ import { Task } from 'src/app/services/task.service';
 })
 export class TaskEntryComponent implements OnInit {
 
-  @Input() tree: Task | null = null;
-  @Input() active: Task | null = null;
+  @Input() tree: TaskTree | null = null;
+  @Input() active: TaskTree | null = null;
   showContextMenu = false;
 
-  constructor(private eRef: ElementRef) { }
+  constructor(
+    private eRef: ElementRef,
+    private taskSvc: TaskService
+    ) { }
 
   ngOnInit(): void {
     // preventing browser's default context menu from popping up on right-click
@@ -27,9 +30,13 @@ export class TaskEntryComponent implements OnInit {
     }
   }
 
+  focusOnMe() {
+    this.taskSvc.setCurrentTask(this.tree!);
+  }
+
   createChildTask()  {
     this.showContextMenu = false;
-    console.log("creating child task")
+    this.taskSvc.createTask("untitled", "", this.active!.id);
   }
 
   estimateTime() {
@@ -39,6 +46,6 @@ export class TaskEntryComponent implements OnInit {
 
   deleteTask() {
     this.showContextMenu = false;
-    console.log("deleting task");
+    this.taskSvc.deleteTask(this.tree!);
   }
 }
