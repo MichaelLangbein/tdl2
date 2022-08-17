@@ -1,1 +1,10 @@
-<p>wiki-view works!</p>
+<div class="wiki">
+    <div class="list">
+        <ul>
+            <li *ngFor="let entry of entries" (click)="activate(entry)" [class]="{active: entry === activeEntry}">{{ entry }}</li>
+        </ul>
+    </div>
+    <div class="content">
+
+    </div>
+</div>

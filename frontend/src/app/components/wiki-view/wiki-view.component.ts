@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WikiViewComponent implements OnInit {
 
-  constructor() { }
+  public entries: string[] = [];
+  public activeEntry = "";
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.http.get<string[]>("http://localhost:1410/wiki/list").subscribe((response: string[]) => {
+      this.entries = response;
+    });
+  }
+
+  activate(entry: string) {
+    this.activeEntry = entry;
+    this.http.get(`http://localhost:1410/wiki/${entry}`, {responseType: 'text'}).subscribe(content => console.log(content));
   }
 
 }

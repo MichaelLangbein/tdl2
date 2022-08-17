@@ -1,0 +1,16 @@
+.wiki {
+    display: flex;
+    flex-direction: row;
+}
+
+.wiki .list {
+    flex: 1 0 20%;
+}
+
+.wiki .content {
+    flex: 1 0 80%;
+}
+
+.wiki .list .active {
+    background-color: var(--color-secondary-1-1);
+}

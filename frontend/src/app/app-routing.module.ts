@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CalendarViewComponent } from './components/calendar-view/calendar-view.component';
 import { StatsComponent } from './components/stats/stats.component';
 import { TaskViewComponent } from './components/task-view/task-view.component';
+import { WikiViewComponent } from './components/wiki-view/wiki-view.component';
 
 const routes: Routes = [{ 
     path: '',   
@@ -17,6 +18,9 @@ const routes: Routes = [{
 },{
   path: 'stats',
   component: StatsComponent
+},{
+  path: 'wiki',
+  component: WikiViewComponent
 }];
 
 @NgModule({
