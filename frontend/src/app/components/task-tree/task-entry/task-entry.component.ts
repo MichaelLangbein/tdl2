@@ -31,4 +31,14 @@ export class TaskEntryComponent implements OnInit {
     this.showContextMenu = false;
     console.log("creating child task")
   }
+
+  estimateTime() {
+    this.showContextMenu = false;
+    console.log("estimating time");
+  }
+
+  deleteTask() {
+    this.showContextMenu = false;
+    console.log("deleting task");
+  }
 }

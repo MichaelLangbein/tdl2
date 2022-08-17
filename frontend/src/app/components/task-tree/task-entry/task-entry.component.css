@@ -22,4 +22,5 @@
 
 .menu li:hover {
     background-color: var(--color-secondary-1-2);
+    color: var(--color-white);
 }
