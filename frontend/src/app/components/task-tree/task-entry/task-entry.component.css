@@ -7,6 +7,11 @@
     color: var(--color-white);
 }
 
+.complete {
+    text-decoration: line-through;
+    color: var(--color-light-grey);
+}
+
 .menu {
     visibility: hidden;
     position: absolute;

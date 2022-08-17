@@ -8,9 +8,9 @@ import { TaskTree, TaskService } from 'src/app/services/task.service';
 })
 export class TaskEntryComponent implements OnInit {
 
+  showContextMenu = false;
   @Input() tree: TaskTree | null = null;
   @Input() active: TaskTree | null = null;
-  showContextMenu = false;
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
 
   constructor(
@@ -32,21 +32,29 @@ export class TaskEntryComponent implements OnInit {
   }
 
   focusOnMe() {
-    this.taskSvc.switchCurrentTask(this.tree!);
+    if (this.tree) this.taskSvc.switchCurrentTask(this.tree);
   }
 
   createChildTask()  {
     this.showContextMenu = false;
-    this.taskSvc.addChildTaskToCurrentTask("untitled", "", this.active!.id);
+    if (this.tree) this.taskSvc.addChildTask("untitled", "", this.tree.id);
   }
 
   estimateTime() {
     this.showContextMenu = false;
-    console.log("estimating time");
+    if (this.tree) this.taskSvc.estimateTime(this.tree).subscribe(r => console.log(r));
+  }
+
+  completeTask() {
+    if (this.tree) this.taskSvc.completeTask(this.tree);
+  }
+
+  reactivateTask() {
+    if (this.tree) this.taskSvc.reactivateTask(this.tree);
   }
 
   deleteTask() {
     this.showContextMenu = false;
-    this.taskSvc.deleteTask(this.tree!);
+    if (this.tree) this.taskSvc.deleteTask(this.tree);
   }
 }

@@ -55,7 +55,7 @@ export class TaskService {
     });
   }
 
-  public addChildTaskToCurrentTask(title: string, description: string, parent: number | null) {
+  public addChildTask(title: string, description: string, parent: number | null) {
     this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent }).subscribe((response: TaskRow) => {
       const newTask = {
         ... response,
@@ -79,6 +79,21 @@ export class TaskService {
     }
   }
 
+  completeTask(task: TaskTree) {
+    task.completed = new Date();
+    this.update(task, true);
+    const parentId = task.parent;
+    if (!parentId) return;
+    const parent = this.getTask(parentId);
+    if (!parent) return;
+    this.switchCurrentTask(parent);
+  }
+
+  reactivateTask(task: TaskTree) {
+    task.completed = null;
+    this.update(task);
+  }
+
   public switchCurrentTask(task: TaskTree) {
     const currentTask = this.currentTask$.value;
     if (currentTask) {
@@ -88,7 +103,9 @@ export class TaskService {
     this.currentTask$.next(task);
   }
 
-  public update(task: TaskTree) {
+  public update(task: TaskTree, complete = false) {
+    if (!complete && task.completed) return;
+
     const timeDelta = Math.floor((new Date().getTime() - this.lastSwitch.getTime()) / 1000);
     task.secondsActive += timeDelta;
 
@@ -108,18 +125,21 @@ export class TaskService {
   }
 
   public deleteTask(task: TaskTree) {
-    const parentId = task.parent;
-    if (!parentId) return;
-    const parent = this.getTask(parentId);
-    if (!parent) return;
-    this.http.delete<TaskRow>(`http://localhost:1410/tasks/delete/${task.id}`).subscribe((prnt: TaskRow) => {
+    this.http.delete<TaskRow>(`http://localhost:1410/tasks/delete/${task.id}`).subscribe((parentRow: TaskRow) => {
       const tree = this.fullTree$.value;
       if (tree) {
         const newTree = removeBranch(tree, task.id);
         this.fullTree$.next(newTree);
+
+        const parent = this.getTask(parentRow.id);
+        if (!parent) return;
         this.switchCurrentTask(parent);
       }
     });
+  }
+
+  public estimateTime(task: TaskTree) {
+    return this.http.get(`http://localhost:1410/tasks/${task.id}/estimate`);
   }
 
   private getTask(id: number): TaskTree | undefined {

@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { TaskService } from '../model/taskService';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
+import { estimateTime } from "../stats/estimates";
 
 export function appFactory(taskService: TaskService) {
     const app = express();
@@ -49,6 +50,18 @@ export function appFactory(taskService: TaskService) {
         await taskService.deleteTree(id, true);
         res.send(parent);
     });
+
+
+    app.get("/tasks/:id/estimate", async (req, res) => {
+        const id = +req.params.id;
+        const fullTree = await taskService.getSubtree(1, 30);
+        if (fullTree) {
+            const estimates = estimateTime(id, fullTree!);
+            res.send(estimates);
+        } else {
+            res.send({});
+        }
+    })
 
     
     /***********************************************************************

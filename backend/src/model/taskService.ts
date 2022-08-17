@@ -131,13 +131,12 @@ export class TaskService {
         return task!;
     }
     
-    public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed?: Date) {
-        if (completed) {
-            await this.db.run(`
+    public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed: Date | null) {
+        await this.db.run(`
             update tasks
             set title = $title,
                 description = $description,
-                ${parentId ? 'parent = $parent,' : ''}
+                parent = $parent,
                 secondsActive = $secondsActive,
                 completed = $completed
             where id = $id
@@ -149,22 +148,6 @@ export class TaskService {
             '$secondsActive': secondsActive,
             '$completed': completed
         });
-        } else {
-            await this.db.run(`
-            update tasks
-            set title = $title,
-                description = $description,
-                parent = $parent,
-                secondsActive = $secondsActive
-            where id = $id
-        `, {
-            '$id': id,
-            '$title': title,
-            '$description': description,
-            '$parent': parentId,
-            '$secondsActive': secondsActive
-        });
-        }
         const updatedTask = await this.getTask(id);
         return updatedTask!;
     }
@@ -227,7 +210,6 @@ export class TaskService {
             const childIds = await this.getChildIds(id);
             for (const childId of childIds) {
                 const childTree = await this.getSubtree(childId, level - 1); // @TODO: do in parallel?
-                // childTree.parent = root;
                 if (childTree) taskTree.children.push(childTree);
             }
         }

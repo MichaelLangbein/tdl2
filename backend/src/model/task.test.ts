@@ -60,7 +60,7 @@ describe("Task service", () => {
     test("update", async () => {
         const task = await ts.createTask("some task", "", null);
         task.description = "new description";
-        const updatedTask = await ts.updateTask(task.id, task.title, task.description, task.parent, task.secondsActive);
+        const updatedTask = await ts.updateTask(task.id, task.title, task.description, task.parent, task.secondsActive, null);
 
         expect(updatedTask.description).toBe("new description");
     });
