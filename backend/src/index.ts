@@ -6,7 +6,7 @@ import { TaskService } from './model/taskService';
 
 
 async function main() {
-    const database = await createDatabase("./tdl.db");
+    const database = await createDatabase("./data/tdl.db");
     const taskService = new TaskService(database);
     await taskService.init();
     const app = appFactory(taskService);

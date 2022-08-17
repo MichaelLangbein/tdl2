@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { TaskService } from '../model/taskService';
-import { listFilesInDir, readJsonFile, readTextFile } from '../files/files';
+import { listFilesInDir, listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 
 export function appFactory(taskService: TaskService) {
     const app = express();
@@ -63,12 +63,14 @@ export function appFactory(taskService: TaskService) {
      * Wiki
      **********************************************************************/
     app.get("/wiki/list", async (req, res) => {
-        const contents = await listFilesInDir('data/wiki');
-        res.send(contents);
+        const contents = await listFilesInDirRecursive('data/wiki');
+        const contentsStripped = contents.map(c => c.replace("data/wiki/", ""));
+        res.send(contentsStripped);
     });
 
-    app.get("/wiki/:entry", async (req, res) => {
-        const content = await readTextFile(`data/wiki/${req.params.entry}`);
+    app.get("/wiki/*", async (req, res) => {
+        const fileName = (req.params as any)[0];
+        const content = await readTextFile(`data/wiki/${fileName}`);
         res.send(content);
     });
 

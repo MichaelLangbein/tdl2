@@ -1,11 +1,15 @@
 import { readFile, writeFile, unlink, stat, mkdir, appendFile, readdir } from 'fs/promises';
-import { existsSync } from 'fs';
+import { existsSync, statSync } from 'fs';
 import path from 'path';
 
 
 
 export function getPathTo(filePath: string) {
     return path.dirname(filePath);
+}
+
+export function isDir(path: string) {
+    return statSync(path).isDirectory();
 }
 
 export function fileExists(path: string): boolean {
@@ -70,8 +74,23 @@ export async function readJsonFile(filePath: string) {
     return JSON.parse(content);
 }
 
-export async function listFilesInDir(path: string) {
+export async function listFilesInDir(path: string): Promise<string[]> {
     const contents = await readdir(path);
     return contents;
+}
+
+export async function listFilesInDirRecursive(path: string): Promise<string[]> {
+    const out: string[] = [];
+    const contents = await readdir(path);
+    for (const entry of contents) {
+        const entryPath = path + "/" + entry;
+        if (isDir(entryPath)) {
+            const subEntries = await listFilesInDirRecursive(entryPath);
+            out.push(...subEntries);
+        } else {
+            out.push(entryPath);
+        }
+    }
+    return out;
 }
 

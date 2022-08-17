@@ -50,7 +50,7 @@ export class TaskService {
                     secondsActive   integer
                 );
             `);
-            // await this.createTask('root', '', null);
+            await this.createTask('root', '', null);
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';
