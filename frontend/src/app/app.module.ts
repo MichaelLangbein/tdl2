@@ -15,6 +15,7 @@ import { StatsComponent } from './components/stats/stats.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TaskEntryComponent } from './components/task-tree/task-entry/task-entry.component';
 import { WisecrackerComponent } from './components/wisecracker/wisecracker.component';
+import { WikiViewComponent } from './components/wiki-view/wiki-view.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { WisecrackerComponent } from './components/wisecracker/wisecracker.compo
     UpcomingComponent,
     StatsComponent,
     TaskEntryComponent,
-    WisecrackerComponent
+    WisecrackerComponent,
+    WikiViewComponent
   ],
   imports: [
     BrowserModule,

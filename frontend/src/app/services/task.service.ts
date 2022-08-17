@@ -39,6 +39,14 @@ export class TaskService {
     this.fullTree$ = new BehaviorSubject<TaskTree | null>(null);
   }
 
+  public watchTree(): Observable<TaskTree | null> {
+    return this.fullTree$;
+  }
+
+  public watchCurrentTask(): Observable<TaskTree | null> {
+    return this.currentTask$;
+  }
+
   public getSubtree(id = 1, depth = 3) {
     this.http.get<TaskTree>(`http://localhost:1410/subtree/${id}/${depth}`).subscribe((tree: TaskTree) => {
       this.fullTree$.next(tree);
@@ -46,8 +54,7 @@ export class TaskService {
     });
   }
 
-  
-  createTask(title: string, description: string, parent: number | null) {
+  public createTask(title: string, description: string, parent: number | null) {
     this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent }).subscribe((response: TaskRow) => {
       const newTask = {
         ... response,
@@ -59,20 +66,12 @@ export class TaskService {
     })
   }
 
-  watchTree(): Observable<TaskTree | null> {
-    return this.fullTree$;
-  }
-
-  watchCurrentTask(): Observable<TaskTree | null> {
-    return this.currentTask$;
-  }
-
-  switchCurrentTask(task: TaskTree) {
+  public switchCurrentTask(task: TaskTree) {
     this.update(this.currentTask$.value!);
     this.currentTask$.next(task);
   }
 
-  update(task: TaskTree) {
+  public update(task: TaskTree) {
     this.http.patch<TaskRow>(`http://localhost:1410/tasks/update`, {
       id: task.id,
       title: task.title,
@@ -86,7 +85,7 @@ export class TaskService {
     });
   }
 
-  deleteTask(tree: TaskTree) {
+  public deleteTask(tree: TaskTree) {
     const parentId = tree.parent;
     if (!parentId) return;
     const parent = this.getTask(parentId);

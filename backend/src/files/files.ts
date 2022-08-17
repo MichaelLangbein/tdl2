@@ -1,4 +1,4 @@
-import { readFile, writeFile, unlink, stat, mkdir, appendFile } from 'fs/promises';
+import { readFile, writeFile, unlink, stat, mkdir, appendFile, readdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 
@@ -70,5 +70,8 @@ export async function readJsonFile(filePath: string) {
     return JSON.parse(content);
 }
 
-
+export async function listFilesInDir(path: string) {
+    const contents = await readdir(path);
+    return contents;
+}
 

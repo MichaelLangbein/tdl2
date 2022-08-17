@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { TaskService } from '../model/taskService';
+import { listFilesInDir, readJsonFile, readTextFile } from '../files/files';
 
 export function appFactory(taskService: TaskService) {
     const app = express();
@@ -8,9 +9,18 @@ export function appFactory(taskService: TaskService) {
     app.use(cors());
     app.use(express.json());
 
+
+    /***********************************************************************
+     * Heartbeat
+     **********************************************************************/
+
     app.get("/", (req, res) => {
         res.send("tdl-backend running.");
     });
+
+    /***********************************************************************
+     * Tasks
+     **********************************************************************/
 
     // Crud - Create
     app.post("/tasks/create", async (req, res) => {
@@ -26,7 +36,7 @@ export function appFactory(taskService: TaskService) {
     });
 
     // crUd - Update
-    app.put("/tasks/update", async (req, res) => {
+    app.patch("/tasks/update", async (req, res) => {
         const data = req.body;
         const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed);
         res.send(updatedTask);
@@ -39,6 +49,29 @@ export function appFactory(taskService: TaskService) {
         await taskService.deleteTree(id, true);
         res.send(parent);
     });
+
+    
+    /***********************************************************************
+     * Wisecracker
+     **********************************************************************/
+    app.get("/wisecracker", async (req, res) => {
+        const contents = await readJsonFile('data/wisecracker/wisecracker.json');
+        res.send(contents);
+    });
+    
+    /***********************************************************************
+     * Wiki
+     **********************************************************************/
+    app.get("/wiki/list", async (req, res) => {
+        const contents = await listFilesInDir('data/wiki');
+        res.send(contents);
+    });
+
+    app.get("/wiki/:entry", async (req, res) => {
+        const content = await readTextFile(`data/wiki/${req.params.entry}`);
+        res.send(content);
+    });
+
 
     return app;
 }
