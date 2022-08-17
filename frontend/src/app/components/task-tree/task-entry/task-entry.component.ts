@@ -31,7 +31,7 @@ export class TaskEntryComponent implements OnInit {
   }
 
   focusOnMe() {
-    this.taskSvc.setCurrentTask(this.tree!);
+    this.taskSvc.switchCurrentTask(this.tree!);
   }
 
   createChildTask()  {

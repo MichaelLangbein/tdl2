@@ -8,11 +8,12 @@
 .header {
     background-color: var(--color-primary-0);
     color: var(--color-white);
+    padding: 1rem;
 }
 
 .app .header nav a {
     color: var(--color-light-grey);
-    margin: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .app .header nav a.active {
@@ -20,8 +21,10 @@
 }
 
 .subHeader {
-    margin-bottom: 3%;
+    background-color: var(--color-light-grey);
+    padding-left: 1rem;
 }
 
 .content {
+    padding: 1rem;
 }

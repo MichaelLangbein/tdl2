@@ -67,8 +67,23 @@ export class TaskService {
     return this.currentTask$;
   }
 
-  setCurrentTask(task: TaskTree) {
+  switchCurrentTask(task: TaskTree) {
+    this.update(this.currentTask$.value!);
     this.currentTask$.next(task);
+  }
+
+  update(task: TaskTree) {
+    this.http.patch<TaskRow>(`http://localhost:1410/tasks/update`, {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      parent: task.parent,
+      secondsActive: task.secondsActive,
+      completed: task.completed
+    }).subscribe((updated: TaskRow) => {
+      const newTree = this.updateState(updated);
+      this.fullTree$.next(newTree);
+    });
   }
 
   deleteTask(tree: TaskTree) {
@@ -79,7 +94,7 @@ export class TaskService {
     this.http.delete<TaskRow>(`http://localhost:1410/tasks/delete/${tree.id}`).subscribe((prnt: TaskRow) => {
       const newTree = this.removeBranch(tree.id);
       this.fullTree$.next(newTree);
-      this.setCurrentTask(parent);
+      this.switchCurrentTask(parent);
     });
   }
 
@@ -89,12 +104,28 @@ export class TaskService {
     return task;
   }
 
-  private removeBranch(id: number) {
+  private removeBranch(id: number): TaskTree | null {
     const tree = this.fullTree$.value;
     doFirstWhere(
       (node: TaskTree) => node.children.map(c => c.id).includes(id),
       tree!,
       (node: TaskTree) => node.children = node.children.filter(c => c.id !== id)
+    );
+    return tree;
+  }
+
+  private updateState(updated: TaskRow): TaskTree | null {
+    const tree = this.fullTree$.value;
+    doFirstWhere(
+      (node: TaskTree) => node.children.map(c => c.id).includes(updated.id),
+      tree!,
+      (node: TaskTree) => {
+        node.title = updated.title;
+        node.description = updated.description;
+        node.completed = updated.completed;
+        node.parent = updated.parent;
+        node.secondsActive = updated.secondsActive;
+      }
     );
     return tree;
   }
