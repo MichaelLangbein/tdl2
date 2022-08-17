@@ -21,9 +21,8 @@ export class WikiViewComponent implements OnInit {
 
   activate(entry: string) {
     this.activeEntry = entry;
-    this.http.get(`http://localhost:1410/wiki/${entry}`, {responseType: 'text'}).subscribe(content => {
-      
-    });
+    // this.http.get(`http://localhost:1410/wiki/${entry}`, {responseType: 'text'}).subscribe(content => {
+    // });
   }
 
 }

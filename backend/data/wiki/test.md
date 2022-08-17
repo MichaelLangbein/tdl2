@@ -1,2 +1,3 @@
 # Test
-Some content
+Some content with a test-formula:
+$$e = mc^2$$

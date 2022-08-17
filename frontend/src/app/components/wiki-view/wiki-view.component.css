@@ -9,6 +9,7 @@
 
 .wiki .content {
     flex: 1 0 80%;
+    padding-left: 5%;
 }
 
 .wiki .list .active {
