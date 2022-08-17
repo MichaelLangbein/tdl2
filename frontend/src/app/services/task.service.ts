@@ -29,40 +29,39 @@ export class TaskService {
     this.fullTree$ = new BehaviorSubject<Task | null>(null);
   }
 
-  public getSubtree(id = 0, depth = 3) {
-    // this.http.get<Task>(`subtree/${id}/${depth}`).subscribe((tree: Task) => {
-    //   // @TODO: insert subtree into current tree
-    // });
-    const subTree: Task = {
-      parent: null,
-      id: 0,
-      title: "base",
-      description: "desc",
-      started: new Date(),
-      completed: null,
-      secondsActive: 0,
-      attachments: [],
-      children: [{
-        parent: 0,
-        id: 1,
-        title: "child",
-        description: "desrc",
-        started: new Date(),
-        completed: null,
-        secondsActive: 0,
-        attachments: [],
-        children: []
-      }]
-    };
-    this.fullTree$.next(subTree);
-    this.currentTask$.next(subTree);
+  public getSubtree(id = 1, depth = 3) {
+    this.http.get<Task>(`http://localhost:1410/subtree/${id}/${depth}`).subscribe((tree: Task) => {
+      this.fullTree$.next(tree);
+      this.currentTask$.next(tree);
+    });
+    // const subTree: Task = {
+    //   parent: null,
+    //   id: 0,
+    //   title: "base",
+    //   description: "desc",
+    //   started: new Date(),
+    //   completed: null,
+    //   secondsActive: 0,
+    //   attachments: [],
+    //   children: [{
+    //     parent: 0,
+    //     id: 1,
+    //     title: "child",
+    //     description: "desrc",
+    //     started: new Date(),
+    //     completed: null,
+    //     secondsActive: 0,
+    //     attachments: [],
+    //     children: []
+    //   }]
+    // };
   }
 
-  getTree(): Observable<Task | null> {
+  watchTree(): Observable<Task | null> {
     return this.fullTree$;
   }
 
-  getCurrentTask(): Observable<Task | null> {
+  watchCurrentTask(): Observable<Task | null> {
     return this.currentTask$;
   }
 

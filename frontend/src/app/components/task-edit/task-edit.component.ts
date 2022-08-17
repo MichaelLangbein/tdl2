@@ -18,7 +18,7 @@ export class TaskEditComponent implements OnInit {
       title: new FormControl(),
       description: new FormControl()
     })
-    this.currentTask$ = this.taskService.getCurrentTask();
+    this.currentTask$ = this.taskService.watchCurrentTask();
     this.currentTask$.subscribe(task => {
       if (task) {
         this.form.setValue({

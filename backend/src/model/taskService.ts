@@ -50,6 +50,7 @@ export class TaskService {
                     secondsActive   integer
                 );
             `);
+            // await this.createTask('root', '', null);
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';
@@ -199,19 +200,25 @@ export class TaskService {
      * Higher level methods
      *-----------------------------------------------------*/
 
-    public async getSubtree(id: number, level: number = 0): Promise<TaskTree> {
-        const root: any = await this.getTask(id);
-        root.attachments = await this.getFileAttachments(id);
-        root.children = [];
+    public async getSubtree(id: number, level: number = 0): Promise<TaskTree | undefined> {
+        const root = await this.getTask(id);
+        if (!root) return undefined;
+
+        const taskTree: TaskTree = {
+            ... root,
+            attachments: await this.getFileAttachments(id),
+            children: []
+        };
+
         if (level > 0) {
             const childIds = await this.getChildIds(id);
             for (const childId of childIds) {
                 const childTree = await this.getSubtree(childId, level - 1); // @TODO: do in parallel?
                 // childTree.parent = root;
-                root.children.push(childTree);
+                if (childTree) taskTree.children.push(childTree);
             }
         }
-        return root;
+        return taskTree;
     }
 
     public async deleteTree(taskId: number, recursive=true) {

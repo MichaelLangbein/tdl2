@@ -41,16 +41,19 @@ describe("Task service", () => {
         const grandChild = await ts.createTask("grandchild", "", child.id);
 
         const tree = await ts.getSubtree(task.id, 1);
-        expect(tree.children[0].title).toBe("child task");
-        expect(tree.children[1].title).toBe("another task");
-        expect(tree.children[0].children.length).toBe(0);
+        expect(tree).toBeDefined();
+        expect(tree!.children[0].title).toBe("child task");
+        expect(tree!.children[1].title).toBe("another task");
+        expect(tree!.children[0].children.length).toBe(0);
         
         const biggerTree = await ts.getSubtree(task.id, 2);
-        expect(biggerTree.children[0].children.length).toBe(1);
+        expect(biggerTree).toBeDefined();
+        expect(biggerTree!.children[0].children.length).toBe(1);
 
         const subTree = await ts.getSubtree(child.id, 1);
-        expect(subTree.id).toBe(child.id);
-        expect(subTree.children[0].id).toBe(grandChild.id);
+        expect(subTree).toBeDefined();
+        expect(subTree!.id).toBe(child.id);
+        expect(subTree!.children[0].id).toBe(grandChild.id);
     });
 
 
@@ -71,8 +74,9 @@ describe("Task service", () => {
         await ts.deleteTree(child1.id);
         
         const tree = await ts.getSubtree(task.id, 2);
-        expect(tree.children.length).toBe(1);
-        expect(tree.children[0].id).toBe(child2.id);
+        expect(tree).toBeDefined();
+        expect(tree!.children.length).toBe(1);
+        expect(tree!.children[0].id).toBe(child2.id);
 
     });
 
@@ -81,7 +85,8 @@ describe("Task service", () => {
         const task = await ts.createTask("base task", "", null);
         await ts.addFileAttachment(task.id, "/some/file/path.txt");
         const tree = await ts.getSubtree(task.id);
-        expect(tree.attachments[0].path).toBe("/some/file/path.txt");
+        expect(tree).toBeDefined();
+        expect(tree!.attachments[0].path).toBe("/some/file/path.txt");
     });
 
 });

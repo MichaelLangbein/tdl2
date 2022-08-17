@@ -12,8 +12,8 @@ export class TaskTreeComponent implements OnInit {
   activeTask$: Observable<Task | null>;
 
   constructor(private taskSvc: TaskService) {
-    this.tree$ = this.taskSvc.getTree();
-    this.activeTask$ = this.taskSvc.getCurrentTask();
+    this.tree$ = this.taskSvc.watchTree();
+    this.activeTask$ = this.taskSvc.watchCurrentTask();
   }
 
   ngOnInit(): void {
