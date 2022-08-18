@@ -14,7 +14,16 @@
     <!-- <button type="submit" (click)="submit()">OK</button> -->
 </form>
 
-<div class="infobox">
-    <h3>Infos:</h3>
-    <p>Time active: {{ (currentTask$ | async)?.secondsActive | secondsToTimestring }}</p> 
+<div class="infobox" *ngIf="currentTask$ | async as currentTask">
+    <p>Time active: {{ currentTask.secondsActive | secondsToTimestring }}</p>
+
+    <p *ngIf="!currentTask.completed">
+        <button (click)="completeTask()">Complete</button>
+        <button (click)="addChildTask()">Add child</button>
+        <button (click)="estimateTime()">Estimate time</button>
+        <button (click)="deleteTask()" style="background-color: red;">Delete task</button>
+    </p>
+    <p *ngIf="currentTask.completed">
+        <button (click)="reactivateTask()">Reactivate</button>
+    </p>
 </div>

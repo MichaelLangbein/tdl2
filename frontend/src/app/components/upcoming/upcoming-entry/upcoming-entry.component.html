@@ -1,0 +1,7 @@
+<li (contextmenu)="showContextMenu = true">{{ task.deadline | date : 'dd.MM.yy' }} - {{ task.title }}</li>
+
+<div [class]="{menu: true, visible: showContextMenu}" >
+    <ul>
+        <li>Focus on task</li>
+    </ul>
+</div>

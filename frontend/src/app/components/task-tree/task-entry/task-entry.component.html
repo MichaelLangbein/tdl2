@@ -1,24 +1,8 @@
 <div [class]="{'entry': true}" *ngIf="ownTask && activeTask">
-    <div [class]="{'active': ownTask.id === activeTask.id, 'complete': ownTask.completed ? true : false }" (contextmenu)="openContextMenu()" (click)="focusOnMe()" #content>
+    <div [class]="{'active': ownTask.id === activeTask.id, 'complete': ownTask.completed ? true : false }" (click)="focusOnMe()" #content>
         {{ ownTask.title }}
     </div>
     <div class="children">
         <app-task-entry *ngFor="let child of ownTask.children" [ownTask]="child" [activeTask]="activeTask"></app-task-entry>
-    </div>
-    
-    <div [class]="{menu: true, visible: showContextMenu }" *ngIf="!ownTask.completed">
-        <ul>
-            <li (click)="createChildTask()">create child task</li>
-            <li (click)="estimateTime()">estimate time</li>
-            <li (click)="completeTask()">complete task</li>
-            <li>-</li>
-            <li (click)="deleteTask()" style="background-color: red;">delete task</li>
-        </ul>
-    </div>
-
-    <div [class]="{menu: true, visible: showContextMenu }" *ngIf="ownTask.completed">
-        <ul>
-            <li (click)="reactivateTask()">reactivate task</li>
-        </ul>
     </div>
 </div>

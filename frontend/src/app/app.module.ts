@@ -17,6 +17,7 @@ import { UpcomingComponent } from './components/upcoming/upcoming.component';
 import { TaskEntryComponent } from './components/task-tree/task-entry/task-entry.component';
 import { WisecrackerComponent } from './components/wisecracker/wisecracker.component';
 import { SecondsToTimestringPipe } from './pipes/seconds-to-timestring.pipe';
+import { UpcomingEntryComponent } from './components/upcoming/upcoming-entry/upcoming-entry.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SecondsToTimestringPipe } from './pipes/seconds-to-timestring.pipe';
     TaskEntryComponent,
     WisecrackerComponent,
     WikiViewComponent,
-    SecondsToTimestringPipe
+    SecondsToTimestringPipe,
+    UpcomingEntryComponent
   ],
   imports: [
     BrowserModule,

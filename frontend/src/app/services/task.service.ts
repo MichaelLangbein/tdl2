@@ -107,7 +107,7 @@ export class TaskService {
   public reactivateCurrent() {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
-    this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, null, currentTask.deadline).subscribe(success => {});
+    this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, null, currentTask.deadline, true).subscribe(success => {});
   }
 
   public switchCurrent(targetTask: TaskTree) {
@@ -174,11 +174,11 @@ export class TaskService {
 
 
 
-  private updateCurrent(title: string, description: string, parent: number | null, completed: number | null, deadline: number | null): Observable<TaskRow | null> {
+  private updateCurrent(title: string, description: string, parent: number | null, completed: number | null, deadline: number | null, isReactivation = false): Observable<TaskRow | null> {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return of(null);
 
-    if (currentTask.completed) {
+    if (currentTask.completed && !isReactivation) {
       console.error(`Cannot update an already completed task: `, currentTask);
       return of(null);
     };

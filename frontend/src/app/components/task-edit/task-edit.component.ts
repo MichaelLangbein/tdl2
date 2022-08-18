@@ -13,14 +13,14 @@ export class TaskEditComponent implements OnInit {
   currentTask$: Observable<TaskTree | null>;
   form: FormGroup;
 
-  constructor(private taskService: TaskService) {
+  constructor(private taskSvc: TaskService) {
     this.form = new FormGroup({
       title: new FormControl(),
       description: new FormControl(),
       deadline: new FormControl()
     });
 
-    this.currentTask$ = this.taskService.watchCurrentTask();
+    this.currentTask$ = this.taskSvc.watchCurrentTask();
     
     this.currentTask$.subscribe(task => {
       if (task) {
@@ -39,11 +39,31 @@ export class TaskEditComponent implements OnInit {
         debounceTime(1000), 
         distinctUntilChanged((prev, cur) => shallowEqual(prev, cur))
       ).subscribe(({ title, description, deadline }) => {
-        this.taskService.editCurrent(title, description, deadline ? new Date(deadline).getTime() : null);
+        this.taskSvc.editCurrent(title, description, deadline ? new Date(deadline).getTime() : null);
     });
   }
 
   ngOnInit(): void {
+  }
+
+  addChildTask()  {
+    this.taskSvc.addChildToCurrent("untitled", "");
+  }
+
+  estimateTime() {
+    this.taskSvc.estimateCurrent()!.subscribe(r => console.log(r));
+  }
+
+  completeTask() {
+    this.taskSvc.completeCurrent();
+  }
+
+  reactivateTask() {
+    this.taskSvc.reactivateCurrent();
+  }
+
+  deleteTask() {
+    this.taskSvc.deleteCurrent();
   }
 
 }
