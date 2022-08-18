@@ -16,16 +16,19 @@ export class TaskEditComponent implements OnInit {
   constructor(private taskService: TaskService) {
     this.form = new FormGroup({
       title: new FormControl(),
-      description: new FormControl()
+      description: new FormControl(),
+      deadline: new FormControl()
     });
 
     this.currentTask$ = this.taskService.watchCurrentTask();
     
     this.currentTask$.subscribe(task => {
       if (task) {
+        console.log("task-edit now setting task from ", task)
         this.form.setValue({
           title: task.title,
-          description: task.description
+          description: task.description,
+          deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : null
         }, {
           // prevents looping between `currentTask$` and `valueChanges` 
           emitEvent: false,
@@ -35,13 +38,34 @@ export class TaskEditComponent implements OnInit {
 
     this.form.valueChanges.pipe(
         debounceTime(1000), 
-        distinctUntilChanged((prev, cur) => prev.title === cur.title && prev.description === cur.description)
-      ).subscribe(({ title, description }) => {
-        this.taskService.editCurrentTask(title, description);
+        distinctUntilChanged((prev, cur) => shallowEqual(prev, cur))
+      ).subscribe(({ title, description, deadline }) => {
+        this.taskService.editCurrentTask(title, description, deadline ? new Date(deadline).getTime() : null);
     });
   }
 
   ngOnInit(): void {
   }
 
+}
+
+
+function shallowEqual(o1: any, o2: any) {
+  const keys1 = Object.keys(o1);
+  const keys2 = Object.keys(o2);
+
+  const union: string[] = [];
+  for (const key of keys1) {
+    if (!union.includes(key)) union.push(key);
+  }
+  for (const key of keys2) {
+    if (!union.includes(key)) union.push(key);
+  }
+  if (union.length !== keys1.length) return false;
+  if (union.length !== keys2.length) return false;
+
+  for (const key of keys1) {
+    if (o1[key] !== o2[key]) return false;
+  }
+  return true;
 }

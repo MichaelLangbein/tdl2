@@ -9,41 +9,45 @@ describe("Top-down variable structure", () => {
         const tree: TaskTree = {
             id: 0,
             parent: null,
-            created: new Date(),
+            created: 1,
             completed: null,
             secondsActive: 100,
             attachments: [],
             description: "",
             title: "",
+            deadline: null,
             children: [{
                 id: 1,
                 parent: 0,
-                created: new Date(),
-                completed: new Date(),
+                created: 1,
+                completed: 1,
                 secondsActive: 75,
                 children: [],
                 attachments: [],
                 description: "",
                 title: "",
+                deadline: null
             }, {
                 id: 2,
                 parent: 0,
-                created: new Date(),
+                created: 1,
                 completed: null,
                 secondsActive: 60,
                 description: "",
                 title: "",
                 attachments: [],
+                deadline: null,
                 children: [{
                     id: 3,
                     parent: 2,
                     secondsActive: 10,
-                    created: new Date(),
-                    completed: new Date(),
+                    created: 1,
+                    completed: 1,
                     children: [],
                     attachments: [],
                     description: "",
                     title: "",
+                    deadline: null
                 }]
             }]
         };

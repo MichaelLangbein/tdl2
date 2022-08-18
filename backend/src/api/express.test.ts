@@ -1,6 +1,6 @@
 import { Database } from 'sqlite';
 import { createDatabase } from '../db/db';
-import { TaskService } from '../model/taskService';
+import { TaskRow, TaskService } from '../model/taskService';
 import { appFactory } from './express';
 import { Express } from "express";
 import axios from "axios";
@@ -45,5 +45,26 @@ describe("rest api", () => {
         expect(getResponse.status).toBe(200);
         expect(getResponse.data.title).toBe(task.title);
         expect(getResponse.data.children.length).toBe(0);
+    });
+
+    test("PATCH /tasks/update", async () => {
+        // app.patch("/tasks/update",
+        const task = {
+            title: "first task",
+            description: "...",
+            parent: null
+        }
+        const response = await axios.post("http://localhost:1410/tasks/create", task);
+        const originalTask: TaskRow = response.data;
+
+        originalTask.deadline = new Date().getTime();
+        originalTask.description = "This task is going to be simple.";
+
+        const updateResponse = await axios.patch(`http://localhost:1410/tasks/update`, originalTask);
+        expect(updateResponse.status).toBe(200);
+        const updatedTask = updateResponse.data;
+        expect(updatedTask.description).toBe(originalTask.description);
+        expect(updatedTask.deadline).toBe(originalTask.deadline);
+        
     });
 });

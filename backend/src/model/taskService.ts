@@ -6,10 +6,11 @@ export interface TaskTree {
     description: string,
     parent: number | null,
     children: TaskTree[]
-    created: Date,
-    completed: Date | null,
+    created: number,
+    completed: number | null,
     secondsActive: number,
-    attachments: FileRow[]
+    attachments: FileRow[],
+    deadline: number | null
 }
 
 export interface TaskRow {
@@ -17,9 +18,10 @@ export interface TaskRow {
     title: string,
     description: string,
     parent: number,
-    created: Date,
-    completed: Date | null,
-    secondsActive: number
+    created: number,
+    completed: number | null,
+    secondsActive: number,
+    deadline: number | null
 }
 
 export interface FileRow {
@@ -47,10 +49,11 @@ export class TaskService {
                     parent          integer,
                     created         Date,
                     completed       Date,
-                    secondsActive   integer
+                    secondsActive   integer,
+                    deadline        Date
                 );
             `);
-            await this.createTask('root', '', null);
+            await this.createTask('root', '', null, null);
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';
@@ -103,42 +106,32 @@ export class TaskService {
         return result['last_insert_rowid()'];
     }
 
-    public async createTask(title: string, description: string, parentId: number | null) {
-        if (parentId) {
-            await this.db.run(`
-                insert into tasks (title, description, parent, created, secondsActive)
-                values ($title, $description, $parent, $created, $secondsActive);
-            `, {
-                "$title": title,
-                "$description": description,
-                "$parent": parentId,
-                "$created": new Date(),
-                "$secondsActive": 0
-            });
-        } else {
-            await this.db.run(`
-                insert into tasks (title, description, created, secondsActive)
-                values ($title, $description, $created, $secondsActive);
-            `, {
-                "$title": title,
-                "$description": description,
-                "$created": new Date(),
-                "$secondsActive": 0
-            });
-        }
+    public async createTask(title: string, description: string, parentId: number | null, deadline: Date | null) {
+        await this.db.run(`
+            insert into tasks (title, description, parent, created, secondsActive, deadline)
+            values ($title, $description, $parent, $created, $secondsActive, $deadline);
+        `, {
+            "$title": title,
+            "$description": description,
+            "$parent": parentId,
+            "$created": new Date().getTime(),
+            "$secondsActive": 0,
+            "$deadline": deadline
+        });
         const id = await this.getLastInsertId();
         const task = await this.getTask(id);
         return task!;
     }
     
-    public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed: Date | null) {
+    public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed: Date | null, deadline: Date | null) {
         await this.db.run(`
             update tasks
             set title = $title,
                 description = $description,
                 parent = $parent,
                 secondsActive = $secondsActive,
-                completed = $completed
+                completed = $completed,
+                deadline = $deadline
             where id = $id
         `, {
             '$id': id,
@@ -146,7 +139,8 @@ export class TaskService {
             '$description': description,
             '$parent': parentId,
             '$secondsActive': secondsActive,
-            '$completed': completed
+            '$completed': completed,
+            '$deadline': deadline
         });
         const updatedTask = await this.getTask(id);
         return updatedTask!;
@@ -227,5 +221,15 @@ export class TaskService {
     }
 
     public addAttachment() {}
+
+    
+    public async upcoming() {
+        const tasks = await this.db.all<TaskRow[]>(`
+            select * from tasks
+            where deadline and completed is null
+            order by deadline asc;
+        `);
+        return tasks;
+    }
 
 }

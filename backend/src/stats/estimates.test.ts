@@ -22,9 +22,9 @@ describe("Estimates", () => {
 
     test("Basic functionality", async () => {
 
-        const parent = await ts.createTask("parent", "", null);
-        const child = await ts.createTask("child", "", parent.id);
-        await ts.updateTask(parent.id, parent.title, parent.description, null, 100, null);
+        const parent = await ts.createTask("parent", "", null, null);
+        const child = await ts.createTask("child", "", parent.id, null);
+        await ts.updateTask(parent.id, parent.title, parent.description, null, 100, null, null);
         const tree = await ts.getSubtree(parent.id, 2);
 
         const estimate = estimateTime(parent.id, tree!);

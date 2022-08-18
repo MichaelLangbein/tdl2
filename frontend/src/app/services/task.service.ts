@@ -8,11 +8,12 @@ export interface TaskTree {
   parent: number | null,
   title: string,
   description: string,
-  started: Date,
-  completed: Date | null,
+  started: number,
+  completed: number | null,
   secondsActive: number,
   attachments: any[],
-  children: TaskTree[]
+  children: TaskTree[],
+  deadline: number | null
 }
 
 export interface TaskRow {
@@ -20,9 +21,10 @@ export interface TaskRow {
   parent: number | null,
   title: string,
   description: string,
-  started: Date,
-  completed: Date | null,
-  secondsActive: number
+  started: number,
+  completed: number | null,
+  secondsActive: number,
+  deadline: number | null
 }
 
 
@@ -48,12 +50,17 @@ export class TaskService {
     return this.currentTask$;
   }
 
-  public getSubtree(id = 1, depth = 3) {
-    this.http.get<TaskTree>(`http://localhost:1410/subtree/${id}/${depth}`).subscribe((tree: TaskTree) => {
+  public upcoming() {
+    return this.http.get<TaskRow[]>(`http://localhost:1410/tasks/upcoming`);
+  }
+
+  public init() {
+    this.getSubTree(1, 3).subscribe((tree: TaskTree) => {
       this.fullTree$.next(tree);
       this.switchCurrentTask(tree);
     });
   }
+
 
   public addChildTask(title: string, description: string, parent: number | null) {
     this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent }).subscribe((response: TaskRow) => {
@@ -70,17 +77,18 @@ export class TaskService {
     })
   }
 
-  public editCurrentTask(title: string, description: string) {
+  public editCurrentTask(title: string, description: string, deadline: number | null) {
     const currentTask = this.currentTask$.value;
     if (currentTask) {
       currentTask.title = title;
       currentTask.description = description;
+      currentTask.deadline = deadline;
       this.update(currentTask);
     }
   }
 
-  completeTask(task: TaskTree) {
-    task.completed = new Date();
+  public completeTask(task: TaskTree) {
+    task.completed = new Date().getSeconds();
     this.update(task, true);
     const parentId = task.parent;
     if (!parentId) return;
@@ -89,39 +97,36 @@ export class TaskService {
     this.switchCurrentTask(parent);
   }
 
-  reactivateTask(task: TaskTree) {
+  public reactivateTask(task: TaskTree) {
     task.completed = null;
     this.update(task);
   }
 
-  public switchCurrentTask(task: TaskTree) {
+  public switchCurrentTask(targetTask: TaskTree) {
+    
+    // 1: save any changes to currently active task
     const currentTask = this.currentTask$.value;
     if (currentTask) {
       this.update(currentTask);
     }
-    this.lastSwitch = new Date();
-    this.currentTask$.next(task);
-  }
 
-  public update(task: TaskTree, complete = false) {
-    if (!complete && task.completed) return;
+    // 2: lazy-load target-task's children
+    if (targetTask.children.length === 0) {
+      this.getSubTree(targetTask.id, 3).subscribe(subTree => {
+          const fullTree = this.fullTree$.value;
+          if (fullTree) {
+            const newTree = updateSubtree(fullTree, subTree);
+            this.fullTree$.next(newTree);
+          }
 
-    const timeDelta = Math.floor((new Date().getTime() - this.lastSwitch.getTime()) / 1000);
-    task.secondsActive += timeDelta;
+          // 3: move to target
+          this.currentTask$.next(targetTask);
+      });
+    } else {
+      // 3: move to target
+      this.currentTask$.next(targetTask);
+    }
 
-    this.http.patch<TaskRow>(`http://localhost:1410/tasks/update`, {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      parent: task.parent,
-      secondsActive: task.secondsActive,
-      completed: task.completed
-    }).subscribe((updated: TaskRow) => {
-      if (this.fullTree$.value) {
-        const newTree = updateTaskInTree(this.fullTree$.value, updated);
-        this.fullTree$.next(newTree);
-      }
-    });
   }
 
   public deleteTask(task: TaskTree) {
@@ -140,6 +145,43 @@ export class TaskService {
 
   public estimateTime(task: TaskTree) {
     return this.http.get(`http://localhost:1410/tasks/${task.id}/estimate`);
+  }
+
+
+
+
+
+  
+
+  private update(task: TaskTree, complete = false) {
+    // you cannot update an already completed task ... except to complete it. :S
+    if (!complete && task.completed) {
+      console.error(`Cannot update an already completed task: `, task);
+      return;
+    };
+
+    const timeDelta = Math.floor((new Date().getTime() - this.lastSwitch.getTime()) / 1000);
+    task.secondsActive += timeDelta;
+    this.lastSwitch = new Date();
+
+    this.http.patch<TaskRow>(`http://localhost:1410/tasks/update`, {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      parent: task.parent,
+      secondsActive: task.secondsActive,
+      completed: task.completed,
+      deadline: task.deadline
+    }).subscribe((updated: TaskRow) => {
+      if (this.fullTree$.value) {
+        const newTree = updateTaskInTree(this.fullTree$.value, updated);
+        this.fullTree$.next(newTree);
+      }
+    });
+  }
+
+  private getSubTree(rootId: number, depth: number) {
+    return this.http.get<TaskTree>(`http://localhost:1410/subtree/${rootId}/${depth}`);
   }
 
   private getTask(id: number): TaskTree | undefined {
@@ -203,4 +245,17 @@ function doFirstWhere(predicate: (node: TaskTree) => boolean, tree: TaskTree, ac
     if (hit) return true;
   }
   return false;
+}
+
+function updateSubtree(tree: TaskTree, child: TaskTree) {
+  if (tree.id === child.id) {
+    return child;
+  } else {
+    for (let i = 0; i < tree.children.length; i++) {
+      const candidate = tree.children[i];
+      const updatedChild = updateSubtree(candidate, child);
+      tree.children[i] = updatedChild;
+    }
+    return tree;
+  }
 }

@@ -25,8 +25,8 @@ export function appFactory(taskService: TaskService) {
 
     // Crud - Create
     app.post("/tasks/create", async (req, res) => {
-        const taskData = req.body;
-        const task = await taskService.createTask(taskData.title, taskData.description, taskData.parent ? taskData.parent : null);
+        const data = req.body;
+        const task = await taskService.createTask(data.title, data.description, data.parent, data.deadline);
         res.send(task);
     });
 
@@ -39,7 +39,7 @@ export function appFactory(taskService: TaskService) {
     // crUd - Update
     app.patch("/tasks/update", async (req, res) => {
         const data = req.body;
-        const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed);
+        const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed, data.deadline);
         res.send(updatedTask);
     });
 
@@ -61,7 +61,12 @@ export function appFactory(taskService: TaskService) {
         } else {
             res.send({});
         }
-    })
+    });
+
+    app.get("/tasks/upcoming", async (req, res) => {
+        const list = await taskService.upcoming();
+        res.send(list);
+    });
 
     
     /***********************************************************************

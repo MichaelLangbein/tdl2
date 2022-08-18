@@ -9,6 +9,6 @@ import { TaskService } from './services/task.service';
 export class AppComponent {
   
   constructor(private taskSvc: TaskService) {
-    this.taskSvc.getSubtree(1, 3);
+    this.taskSvc.init();
   }
 }
