@@ -9,8 +9,8 @@ import { TaskTree, TaskService } from 'src/app/services/task.service';
 export class TaskEntryComponent implements OnInit {
 
   showContextMenu = false;
-  @Input() tree: TaskTree | null = null;
-  @Input() active: TaskTree | null = null;
+  @Input() ownTask: TaskTree | null = null;
+  @Input() activeTask: TaskTree | null = null;
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
 
   constructor(
@@ -31,30 +31,34 @@ export class TaskEntryComponent implements OnInit {
     }
   }
 
+  openContextMenu() {
+    if (this.ownTask && this.ownTask.id === this.activeTask?.id) this.showContextMenu = true;
+  }
+
   focusOnMe() {
-    if (this.tree) this.taskSvc.switchCurrentTask(this.tree);
+    if (this.ownTask) this.taskSvc.switchCurrent(this.ownTask);
   }
 
   createChildTask()  {
     this.showContextMenu = false;
-    if (this.tree) this.taskSvc.addChildTask("untitled", "", this.tree.id);
+    if (this.ownTask && this.ownTask.id === this.activeTask?.id) this.taskSvc.addChildToCurrent("untitled", "");
   }
 
   estimateTime() {
     this.showContextMenu = false;
-    if (this.tree) this.taskSvc.estimateTime(this.tree).subscribe(r => console.log(r));
+    if (this.ownTask && this.ownTask.id === this.activeTask?.id) this.taskSvc.estimateCurrent()!.subscribe(r => console.log(r));
   }
 
   completeTask() {
-    if (this.tree) this.taskSvc.completeTask(this.tree);
+    if (this.ownTask && this.ownTask.id === this.activeTask?.id) this.taskSvc.completeCurrent();
   }
 
   reactivateTask() {
-    if (this.tree) this.taskSvc.reactivateTask(this.tree);
+    if (this.ownTask && this.ownTask.id === this.activeTask?.id) this.taskSvc.reactivateCurrent();
   }
 
   deleteTask() {
     this.showContextMenu = false;
-    if (this.tree) this.taskSvc.deleteTask(this.tree);
+    if (this.ownTask && this.ownTask.id === this.activeTask?.id) this.taskSvc.deleteCurrent();
   }
 }

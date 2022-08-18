@@ -24,7 +24,6 @@ export class TaskEditComponent implements OnInit {
     
     this.currentTask$.subscribe(task => {
       if (task) {
-        console.log("task-edit now setting task from ", task)
         this.form.setValue({
           title: task.title,
           description: task.description,
@@ -40,7 +39,7 @@ export class TaskEditComponent implements OnInit {
         debounceTime(1000), 
         distinctUntilChanged((prev, cur) => shallowEqual(prev, cur))
       ).subscribe(({ title, description, deadline }) => {
-        this.taskService.editCurrentTask(title, description, deadline ? new Date(deadline).getTime() : null);
+        this.taskService.editCurrent(title, description, deadline ? new Date(deadline).getTime() : null);
     });
   }
 

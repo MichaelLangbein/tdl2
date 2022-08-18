@@ -16,6 +16,7 @@ import { SearchComponent } from './components/search/search.component';
 import { UpcomingComponent } from './components/upcoming/upcoming.component';
 import { TaskEntryComponent } from './components/task-tree/task-entry/task-entry.component';
 import { WisecrackerComponent } from './components/wisecracker/wisecracker.component';
+import { SecondsToTimestringPipe } from './pipes/seconds-to-timestring.pipe';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { WisecrackerComponent } from './components/wisecracker/wisecracker.compo
     StatsComponent,
     TaskEntryComponent,
     WisecrackerComponent,
-    WikiViewComponent
+    WikiViewComponent,
+    SecondsToTimestringPipe
   ],
   imports: [
     BrowserModule,

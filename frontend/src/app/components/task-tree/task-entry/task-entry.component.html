@@ -1,12 +1,12 @@
-<div [class]="{'entry': true}" *ngIf="tree">
-    <div [class]="{'active': tree.id === active!.id, 'complete': tree.completed ? true : false }" (contextmenu)="showContextMenu = true" (click)="focusOnMe()" #content>
-        {{ tree.title }}
+<div [class]="{'entry': true}" *ngIf="ownTask && activeTask">
+    <div [class]="{'active': ownTask.id === activeTask.id, 'complete': ownTask.completed ? true : false }" (contextmenu)="openContextMenu()" (click)="focusOnMe()" #content>
+        {{ ownTask.title }}
     </div>
     <div class="children">
-        <app-task-entry *ngFor="let child of tree.children" [tree]="child" [active]="active"></app-task-entry>
+        <app-task-entry *ngFor="let child of ownTask.children" [ownTask]="child" [activeTask]="activeTask"></app-task-entry>
     </div>
     
-    <div [class]="{menu: true, visible: showContextMenu }" *ngIf="!tree.completed">
+    <div [class]="{menu: true, visible: showContextMenu }" *ngIf="!ownTask.completed">
         <ul>
             <li (click)="createChildTask()">create child task</li>
             <li (click)="estimateTime()">estimate time</li>
@@ -16,7 +16,7 @@
         </ul>
     </div>
 
-    <div [class]="{menu: true, visible: showContextMenu }" *ngIf="tree.completed">
+    <div [class]="{menu: true, visible: showContextMenu }" *ngIf="ownTask.completed">
         <ul>
             <li (click)="reactivateTask()">reactivate task</li>
         </ul>
