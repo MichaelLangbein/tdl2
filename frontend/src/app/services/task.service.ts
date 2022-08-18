@@ -36,6 +36,7 @@ export class TaskService {
    * - Interface between frontend and backend
    * - Maps UI-actions to REST-calls
    * - Maintains state: currentTask, fullTree
+   * - All actions only apply to the currently active task
    */
 
   private currentTask$: BehaviorSubject<TaskTree | null>;
@@ -100,7 +101,7 @@ export class TaskService {
       if (!parentId) return;
       const parent = this.getTask(parentId);
       if (!parent) return;
-      this.switchCurrent(parent);
+      this.switchCurrent(parent, false);
     });
   }
 
@@ -110,10 +111,10 @@ export class TaskService {
     this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, null, currentTask.deadline, true).subscribe(success => {});
   }
 
-  public switchCurrent(targetTask: TaskTree) {
+  public switchCurrent(targetTask: TaskTree, updateLastTask=true) {
     
     const currentTask = this.currentTask$.value;
-    if (!currentTask) {
+    if (!currentTask || !updateLastTask) {
       this.currentTask$.next(targetTask);
       return;
     }
@@ -154,12 +155,11 @@ export class TaskService {
       if (!tree) return;
     
       const newTree = removeBranch(tree, currentTask.id);
-      this.currentTask$.next(null);
       this.fullTree$.next(newTree);
 
       const parent = this.getTask(parentRow.id);
       if (!parent) return;
-      this.switchCurrent(parent);
+      this.switchCurrent(parent, false);
     });
   }
 

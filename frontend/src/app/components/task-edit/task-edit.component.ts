@@ -10,6 +10,7 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
 })
 export class TaskEditComponent implements OnInit {
   
+  showDeleteModal = false;
   currentTask$: Observable<TaskTree | null>;
   form: FormGroup;
 
@@ -64,6 +65,7 @@ export class TaskEditComponent implements OnInit {
 
   deleteTask() {
     this.taskSvc.deleteCurrent();
+    this.showDeleteModal = false;
   }
 
 }

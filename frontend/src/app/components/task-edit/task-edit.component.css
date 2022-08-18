@@ -19,3 +19,13 @@ form {
 .infobox {
     margin: 0 1rem 0 1rem;
 }
+
+
+.deleteModal {
+    position: absolute;
+    background-color: var(--color-white);
+    outline: auto;
+    outline-width: 1px;
+    outline-color: var(--color-light-grey);
+    padding: 0.5rem;
+}

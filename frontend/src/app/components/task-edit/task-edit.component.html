@@ -21,9 +21,17 @@
         <button (click)="completeTask()">Complete</button>
         <button (click)="addChildTask()">Add child</button>
         <button (click)="estimateTime()">Estimate time</button>
-        <button (click)="deleteTask()" style="background-color: red;">Delete task</button>
+        <button (click)="showDeleteModal = true" style="background-color: red; float: right;">Delete task</button>
     </p>
     <p *ngIf="currentTask.completed">
         <button (click)="reactivateTask()">Reactivate</button>
     </p>
+    
+
+
+    <div class="deleteModal" *ngIf="showDeleteModal">
+        <p>Are you sure you want to delete the task "{{ currentTask.title }}"?</p>
+        <button (click)="deleteTask()" style="background-color: red;">Delete task</button>
+        <button (click)="showDeleteModal = false">Cancel</button>
+    </div>
 </div>
