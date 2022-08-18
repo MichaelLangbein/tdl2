@@ -11,7 +11,6 @@
         <label for="deadline">Deadline:</label>
         <input type="date" name="deadline" id="deadline" formControlName="deadline">
     </div>
-    <!-- <button type="submit" (click)="submit()">OK</button> -->
 </form>
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">
@@ -30,8 +29,10 @@
 
 
     <div class="deleteModal" *ngIf="showDeleteModal">
-        <p>Are you sure you want to delete the task "{{ currentTask.title }}"?</p>
-        <button (click)="deleteTask()" style="background-color: red;">Delete task</button>
-        <button (click)="showDeleteModal = false">Cancel</button>
+        <div class="deleteModalContent">
+            <p>Are you sure you want to delete the task "{{ currentTask.title }}"?</p>
+            <button (click)="deleteTask()" style="background-color: red;">Delete task</button>
+            <button (click)="showDeleteModal = false">Cancel</button>
+        </div>
     </div>
 </div>
