@@ -50,6 +50,11 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+input, textarea {
+    margin: 0;
+    padding: 0;
+    outline-width: 1px;
+}
 
 :root {
     box-sizing: border-box;

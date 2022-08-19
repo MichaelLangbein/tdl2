@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
+import { NgxFileDropModule } from 'ngx-file-drop';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -18,6 +19,7 @@ import { TaskEntryComponent } from './components/task-tree/task-entry/task-entry
 import { WisecrackerComponent } from './components/wisecracker/wisecracker.component';
 import { SecondsToTimestringPipe } from './pipes/seconds-to-timestring.pipe';
 import { UpcomingEntryComponent } from './components/upcoming/upcoming-entry/upcoming-entry.component';
+import { FormDragListComponent } from './components/form-drag-list/form-drag-list.component';
 
 @NgModule({
   declarations: [
@@ -33,14 +35,16 @@ import { UpcomingEntryComponent } from './components/upcoming/upcoming-entry/upc
     WisecrackerComponent,
     WikiViewComponent,
     SecondsToTimestringPipe,
-    UpcomingEntryComponent
+    UpcomingEntryComponent,
+    FormDragListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    NgxFileDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

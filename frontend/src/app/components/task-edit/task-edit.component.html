@@ -11,6 +11,9 @@
         <label for="deadline">Deadline:</label>
         <input type="date" name="deadline" id="deadline" formControlName="deadline">
     </div>
+    <div class="formElement">
+        <app-form-drag-list></app-form-drag-list>
+    </div>
 </form>
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">

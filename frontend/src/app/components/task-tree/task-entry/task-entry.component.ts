@@ -21,4 +21,13 @@ export class TaskEntryComponent implements OnInit {
     if (this.ownTask) this.taskSvc.switchCurrent(this.ownTask);
   }
 
+  handleDrag($event: Event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+  }
+
+  handleDrop($event: DragEvent) {
+    console.log($event);
+  }
+
 }

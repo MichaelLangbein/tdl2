@@ -1,0 +1,12 @@
+
+<ngx-file-drop dropZoneClassName="dropZone" contentClassName="content" (onFileDrop)="dropped($event)">
+    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+      Drop files here.
+      <button type="button" (click)="openFileSelector()">Browse Files</button>
+    </ng-template>
+</ngx-file-drop>
+
+<ul>
+  <li *ngFor="let item of files; let i=index">{{ item.relativePath }}</li>
+</ul>
+

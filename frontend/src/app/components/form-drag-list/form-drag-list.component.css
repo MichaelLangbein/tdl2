@@ -1,0 +1,8 @@
+.dropZone {
+}
+
+.content {
+  width: 100%;
+  border-color: var(--color-light-grey);
+  border-width: 1px;
+}
