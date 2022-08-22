@@ -1,0 +1,8 @@
+<li (contextmenu)="showContextMenu = true">{{ item.title }}</li>
+
+<div [class]="{menu: true, visible: showContextMenu}" >
+    <ul>
+        <li (click)="focusOnMe()">Focus on task</li>
+    </ul>
+</div>
+

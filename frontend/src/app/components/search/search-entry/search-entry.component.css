@@ -1,0 +1,18 @@
+
+.menu {
+    visibility: hidden;
+    position: absolute;
+    background-color: var(--color-white);
+    outline: auto;
+    outline-width: 1px;
+    outline-color: var(--color-light-grey);
+    padding: 0.5rem;
+}
+.menu.visible {
+    visibility: visible;
+}
+
+.menu li:hover {
+    background-color: var(--color-secondary-1-2);
+    color: var(--color-white);
+}

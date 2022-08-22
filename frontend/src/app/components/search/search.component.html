@@ -1,3 +1,9 @@
 <form class="searchForm">
     <input type="text" placeholder="Search.." [formControl]="searchBar">
 </form>
+
+<div class="searchResults">
+    <ul>
+        <app-search-entry *ngFor="let item of searchResults" [item]="item"></app-search-entry>
+    </ul>
+</div>

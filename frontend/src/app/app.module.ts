@@ -21,6 +21,7 @@ import { SecondsToTimestringPipe } from './pipes/seconds-to-timestring.pipe';
 import { UpcomingEntryComponent } from './components/upcoming/upcoming-entry/upcoming-entry.component';
 import { FormDragListComponent } from './components/form-drag-list/form-drag-list.component';
 import { FlashcardViewComponent } from './views/flashcard-view/flashcard-view.component';
+import { SearchEntryComponent } from './components/search/search-entry/search-entry.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { FlashcardViewComponent } from './views/flashcard-view/flashcard-view.co
     SecondsToTimestringPipe,
     UpcomingEntryComponent,
     FormDragListComponent,
-    FlashcardViewComponent
+    FlashcardViewComponent,
+    SearchEntryComponent
   ],
   imports: [
     BrowserModule,

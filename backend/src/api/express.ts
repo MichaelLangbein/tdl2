@@ -43,7 +43,7 @@ export function appFactory(taskService: TaskService) {
 
     app.post("/tasks/search", async (req, res) => {
         const searchFor = req.body;
-        const results = await taskService.search(searchFor);
+        const results = await taskService.search(searchFor.searchString);
         res.send(results);
     });
 

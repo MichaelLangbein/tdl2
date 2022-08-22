@@ -32,6 +32,7 @@ export interface TaskRow {
   providedIn: 'root'
 })
 export class TaskService {
+
   /**
    * - Interface between frontend and backend
    * - Maps UI-actions to REST-calls
@@ -58,6 +59,10 @@ export class TaskService {
 
   public upcoming() {
     return this.http.get<TaskRow[]>(`http://localhost:1410/tasks/upcoming`);
+  }
+
+  public search(searchString: string) {
+    return this.http.post<TaskRow[]>(`http://localhost:1410/tasks/search`, {searchString});
   }
 
   public init() {

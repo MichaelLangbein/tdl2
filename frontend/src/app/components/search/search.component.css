@@ -6,3 +6,7 @@
 .searchForm input {
     width: 100%;
 }
+
+.searchResults {
+    margin-bottom: 1rem;
+}
