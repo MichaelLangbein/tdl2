@@ -22,13 +22,14 @@
     <p *ngIf="!currentTask.completed">
         <button (click)="completeTask()">Complete</button>
         <button (click)="addChildTask()">Add child</button>
+        <button (click)="addSiblingTask()">Add sibling</button>
         <button (click)="estimateTime()">Estimate time</button>
         <button (click)="showDeleteModal = true" style="background-color: red; float: right;">Delete task</button>
     </p>
     <p *ngIf="currentTask.completed">
         <button (click)="reactivateTask()">Reactivate</button>
     </p>
-    
+
 
 
     <div class="deleteModal" *ngIf="showDeleteModal">

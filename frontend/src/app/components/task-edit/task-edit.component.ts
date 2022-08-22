@@ -9,7 +9,7 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
   styleUrls: ['./task-edit.component.css']
 })
 export class TaskEditComponent implements OnInit {
-  
+
   showDeleteModal = false;
   currentTask$: Observable<TaskTree | null>;
   form: FormGroup;
@@ -22,7 +22,7 @@ export class TaskEditComponent implements OnInit {
     });
 
     this.currentTask$ = this.taskSvc.watchCurrentTask();
-    
+
     this.currentTask$.subscribe(task => {
       if (task) {
         this.form.setValue({
@@ -30,14 +30,14 @@ export class TaskEditComponent implements OnInit {
           description: task.description,
           deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : null
         }, {
-          // prevents looping between `currentTask$` and `valueChanges` 
+          // prevents looping between `currentTask$` and `valueChanges`
           emitEvent: false,
         });
       }
     });
 
     this.form.valueChanges.pipe(
-        debounceTime(1000), 
+        debounceTime(1000),
         distinctUntilChanged((prev, cur) => shallowEqual(prev, cur))
       ).subscribe(({ title, description, deadline }) => {
         this.taskSvc.editCurrent(title, description, deadline ? new Date(deadline).getTime() : null);
@@ -49,6 +49,10 @@ export class TaskEditComponent implements OnInit {
 
   addChildTask()  {
     this.taskSvc.addChildToCurrent("untitled", "");
+  }
+
+  addSiblingTask() {
+    this.taskSvc.addSiblingToCurrent("untitled", "");
   }
 
   estimateTime() {

@@ -43,7 +43,7 @@ export class TaskService {
   private currentTask$: BehaviorSubject<TaskTree | null>;
   private fullTree$: BehaviorSubject<TaskTree | null>;
   private lastSwitch = new Date();
-  
+
   constructor(private http: HttpClient) {
     this.currentTask$ = new BehaviorSubject<TaskTree | null>(null);
     this.fullTree$ = new BehaviorSubject<TaskTree | null>(null);
@@ -89,6 +89,25 @@ export class TaskService {
       this.switchCurrent(newTask);
     })
   }
+
+
+  public addSiblingToCurrent(title: string, description: string) {
+    const currentTask = this.currentTask$.value;
+    if (!currentTask) return;
+    this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent: currentTask.parent }).subscribe((response: TaskRow) => {
+      const newTask = {
+        ... response,
+        attachments: [],
+        children: []
+      };
+      if (this.fullTree$.value) {
+        const newTree = addChildToTree(this.fullTree$.value, newTask);
+        this.fullTree$.next(newTree);
+      }
+      this.switchCurrent(newTask);
+    })
+  }
+
 
   public editCurrent(title: string, description: string, deadline: number | null) {
     const currentTask = this.currentTask$.value;
@@ -138,13 +157,13 @@ export class TaskService {
   }
 
   private switchCurrent(targetTask: TaskTree, updateLastTask=true) {
-    
+
     const currentTask = this.currentTask$.value;
     if (!currentTask || !updateLastTask) {
       this.currentTask$.next(targetTask);
       return;
     }
-    
+
     // 1: save any changes to currently active task
     this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, currentTask.completed, currentTask.deadline).subscribe(success => {
 
@@ -179,7 +198,7 @@ export class TaskService {
     this.http.delete<TaskRow>(`http://localhost:1410/tasks/delete/${currentTask.id}`).subscribe((parentRow: TaskRow) => {
       const tree = this.fullTree$.value;
       if (!tree) return;
-    
+
       const newTree = removeBranch(tree, currentTask.id);
       this.fullTree$.next(newTree);
 
