@@ -41,6 +41,12 @@ export function appFactory(taskService: TaskService) {
         res.send(subTree);
     });
 
+    app.post("/tasks/search", async (req, res) => {
+        const searchFor = req.body;
+        const results = await taskService.search(searchFor);
+        res.send(results);
+    });
+
     // crUd - Update
     app.patch("/tasks/update", async (req, res) => {
         const data = req.body;

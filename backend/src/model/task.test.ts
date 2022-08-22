@@ -110,6 +110,17 @@ describe("Task service", () => {
         expect(path!.children[0].children.length).toBe(0);
     });
 
+
+    test("search", async () => {
+        const baseTask = await ts.createTask("Title with Alf in it", "", null, null);
+        const child1 = await ts.createTask("", "Description with Alf in it", baseTask.id, null);
+        const child2 = await ts.createTask("", "Descalf with the searchterm in it", baseTask.id, null);
+        const grandChild = await ts.createTask("Nothing in title", "Nothing in description", child2.id, null);
+
+        const hits = await ts.search('Alf');
+        expect(hits.length).toBe(3);
+    });
+
 });
 
 

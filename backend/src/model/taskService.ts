@@ -32,6 +32,7 @@ export interface FileRow {
 
 
 export class TaskService {
+
     // @TODO: use prepared statements
 
     constructor(private db: Database) {}
@@ -190,7 +191,7 @@ export class TaskService {
      * Higher level methods
      *-----------------------------------------------------*/
 
-    public async getSubtree(id: number, level: number = 0): Promise<TaskTree | undefined> {
+    public async getSubtree(id: number, level: number = 0, includeCompleted = false): Promise<TaskTree | undefined> {
         const root = await this.getTask(id);
         if (!root) return undefined;
 
@@ -204,7 +205,7 @@ export class TaskService {
             const childIds = await this.getChildIds(id);
             for (const childId of childIds) {
                 const childTree = await this.getSubtree(childId, level - 1); // @TODO: do in parallel?
-                if (childTree) taskTree.children.push(childTree);
+                if (childTree && !childTree?.completed) taskTree.children.push(childTree);
             }
         }
         return taskTree;
@@ -250,6 +251,19 @@ export class TaskService {
             where deadline and completed is null
             order by deadline asc;
         `);
+        return tasks;
+    }
+
+    public async search(searchFor: string) {
+        const tasks = await this.db.all<TaskRow[]>(`
+            select * from tasks
+            where title like $searchTerm
+            or description like $searchTerm
+            collate nocase
+            order by deadline asc;
+        `, {
+            '$searchTerm': '%' + searchFor + '%'
+        });
         return tasks;
     }
 
