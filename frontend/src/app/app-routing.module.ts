@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CalendarViewComponent } from './views/calendar-view/calendar-view.component';
+import { FlashcardViewComponent } from './views/flashcard-view/flashcard-view.component';
 import { StatsComponent } from './views/stats/stats.component';
 import { TaskViewComponent } from './views/task-view/task-view.component';
 import { WikiViewComponent } from './views/wiki-view/wiki-view.component';
@@ -21,6 +22,9 @@ const routes: Routes = [{
 },{
   path: 'wiki',
   component: WikiViewComponent
+},{
+  path: 'flashcards',
+  component: FlashcardViewComponent
 }];
 
 @NgModule({

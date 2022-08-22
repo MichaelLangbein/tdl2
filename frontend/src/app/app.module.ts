@@ -20,6 +20,7 @@ import { WisecrackerComponent } from './components/wisecracker/wisecracker.compo
 import { SecondsToTimestringPipe } from './pipes/seconds-to-timestring.pipe';
 import { UpcomingEntryComponent } from './components/upcoming/upcoming-entry/upcoming-entry.component';
 import { FormDragListComponent } from './components/form-drag-list/form-drag-list.component';
+import { FlashcardViewComponent } from './views/flashcard-view/flashcard-view.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { FormDragListComponent } from './components/form-drag-list/form-drag-lis
     WikiViewComponent,
     SecondsToTimestringPipe,
     UpcomingEntryComponent,
-    FormDragListComponent
+    FormDragListComponent,
+    FlashcardViewComponent
   ],
   imports: [
     BrowserModule,

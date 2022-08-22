@@ -211,6 +211,8 @@ export class TaskService {
     }
 
     public async getSubtreePathTo(targetTaskId: number, extraDepth: number, startId = 1) {
+        // @TODO: maybe better recursive sql-query: https://stackoverflow.com/questions/7456957/basic-recursive-query-on-sqlite3
+
         if (startId === targetTaskId) return await this.getSubtree(startId, extraDepth);
 
         const childIds = await this.getChildIds(startId);
