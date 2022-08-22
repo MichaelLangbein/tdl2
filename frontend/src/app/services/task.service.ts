@@ -235,11 +235,20 @@ function updateTaskInTree(tree: TaskTree, toUpdate: TaskRow) {
     node => node.id === toUpdate.id,
     tree,
     node => {
-      node.title = toUpdate.title;
-      node.description = toUpdate.description;
-      node.completed = toUpdate.completed;
-      node.parent = toUpdate.parent;
-      node.secondsActive = toUpdate.secondsActive;
+      // node = {
+      //   ...node,
+      //   ...toUpdate
+      // };
+      for (const field in toUpdate) {
+        // @ts-ignore
+        node[field] = toUpdate[field];
+      }
+      // node.title = toUpdate.title;
+      // node.description = toUpdate.description;
+      // node.completed = toUpdate.completed;
+      // node.parent = toUpdate.parent;
+      // node.secondsActive = toUpdate.secondsActive;
+      // node.deadline = toUpdate.deadline;
     }
   );
   return tree;
