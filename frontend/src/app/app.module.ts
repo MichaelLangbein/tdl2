@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { AppRoutingModule } from './app-routing.module';
@@ -47,6 +48,7 @@ import { SearchEntryComponent } from './components/search/search-entry/search-en
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    DragDropModule,
     MarkdownModule.forRoot(),
     NgxFileDropModule
   ],

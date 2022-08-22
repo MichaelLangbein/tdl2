@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { TaskTree, TaskService } from 'src/app/services/task.service';
 
@@ -26,8 +27,8 @@ export class TaskEntryComponent implements OnInit {
     $event.stopPropagation();
   }
 
-  handleDrop($event: DragEvent) {
-    console.log($event);
+  handleDrop($event: CdkDragDrop<any, any, any>) {
+    if (this.ownTask) this.taskSvc.moveCurrentTaskToParent(this.ownTask.id);
   }
 
 }

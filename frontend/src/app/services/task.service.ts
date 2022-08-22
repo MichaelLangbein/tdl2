@@ -109,11 +109,20 @@ export class TaskService {
   }
 
 
+  public async moveCurrentTaskToParent(newParentId: number) {
+    const currentTask = this.currentTask$.value;
+    if (!currentTask) return;
+    console.log("moving to new parent with id", newParentId)
+    this.updateCurrent(currentTask.title, currentTask.description, newParentId, null, currentTask.deadline).subscribe(success => {});
+  }
+
+
   public editCurrent(title: string, description: string, deadline: number | null) {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
     this.updateCurrent(title, description, currentTask.parent, null, deadline).subscribe(success => {});
   }
+
 
   public completeCurrent() {
     const currentTask = this.currentTask$.value;
