@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
-import { TaskRow } from 'src/app/services/task.service';
+import { map, Observable } from 'rxjs';
+import { TaskRow, TaskService, TaskTree } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-upcoming-entry',
@@ -10,10 +11,17 @@ export class UpcomingEntryComponent implements OnInit {
 
   public showContextMenu = false;
   @Input() task!: TaskRow;
+  public activeTaskId: number = 0;
 
   constructor(
-    private eRef: ElementRef
-    ) { }
+    private eRef: ElementRef,
+    private taskSvc: TaskService
+    ) {
+      this.taskSvc.watchCurrentTask().subscribe((task: TaskTree | null) => {
+        if (!task) return;
+        this.activeTaskId = task.id;
+      });
+    }
 
   ngOnInit(): void {
     // preventing browser's default context menu from popping up on right-click
@@ -26,6 +34,11 @@ export class UpcomingEntryComponent implements OnInit {
     if (!this.eRef.nativeElement.contains(event.target)) {
       this.showContextMenu = false;
     }
+  }
+
+  public focusOnMe() {
+    this.taskSvc.loadAndSwitch(this.task.id);
+    this.showContextMenu = false;
   }
 
 }

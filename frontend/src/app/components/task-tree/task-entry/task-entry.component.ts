@@ -18,7 +18,7 @@ export class TaskEntryComponent implements OnInit {
   ngOnInit(): void {}
 
   focusOnMe() {
-    if (this.ownTask) this.taskSvc.switchCurrent(this.ownTask);
+    if (this.ownTask) this.taskSvc.loadAndSwitch(this.ownTask.id);
   }
 
   handleDrag($event: Event) {

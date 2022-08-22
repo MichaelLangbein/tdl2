@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap, Observable, of } from 'rxjs';
+import { BehaviorSubject, tap, Observable, of, map, filter } from 'rxjs';
 
 
 export interface TaskTree {
@@ -111,7 +111,28 @@ export class TaskService {
     this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, null, currentTask.deadline, true).subscribe(success => {});
   }
 
-  public switchCurrent(targetTask: TaskTree, updateLastTask=true) {
+  public loadAndSwitch(targetTaskId: number) {
+    const tree = this.fullTree$.value;
+    if (!tree) return;
+
+    let targetTree = getFirstWhere(
+      (node: TaskTree) => node.id === targetTaskId,
+      tree
+    );
+
+    let target$: Observable<TaskTree>;
+    if (targetTree) {
+      target$ = of(targetTree);
+    } else {
+      target$ = this.downloadPathTo(targetTaskId, 3);
+    }
+
+    target$.subscribe(target => {
+      this.switchCurrent(target);
+    });
+  }
+
+  private switchCurrent(targetTask: TaskTree, updateLastTask=true) {
     
     const currentTask = this.currentTask$.value;
     if (!currentTask || !updateLastTask) {
@@ -212,6 +233,29 @@ export class TaskService {
     return this.http.get<TaskTree>(`http://localhost:1410/subtree/${rootId}/${depth}`);
   }
 
+  private downloadPathTo(targetId: number, depth: number) {
+    // 1. download path
+    return this.getPathTo(targetId, depth).pipe(
+      // 2. join with current tree
+      tap((path: TaskTree) => {
+        const tree = this.fullTree$.value;
+        if (!tree) {
+          this.fullTree$.next(path);
+        } else {
+          const mergedTree = mergeTreeIntoTree(tree, path);
+          this.fullTree$.next(mergedTree);
+        }
+      }),
+      map((path: TaskTree) => {
+        return getSubTree(path, targetId)!;
+      })
+    );
+  }
+
+  private getPathTo(rootId: number, depth: number) {
+    return this.http.get<TaskTree>(`http://localhost:1410/subtree/pathTo/${rootId}/${depth}`);
+  }
+
   private getTask(id: number): TaskTree | undefined {
     const tree = this.fullTree$.value;
     const task = getFirstWhere((node) => node.id === id, tree!);
@@ -295,4 +339,27 @@ function updateSubtree(tree: TaskTree, child: TaskTree) {
     }
     return tree;
   }
+}
+
+function getSubTree(tree: TaskTree, id: number) {
+  return getFirstWhere(
+    (node: TaskTree) => node.id === id,
+    tree
+  );
+}
+
+function mergeTreeIntoTree(intoTree: TaskTree, fromTree: TaskTree): TaskTree {
+  for (const fromChild of fromTree.children) {
+    const toChild = intoTree.children.find(c => c.id === fromChild.id);
+    if (toChild) {
+      const newChild = mergeTreeIntoTree(toChild, fromChild);
+      intoTree.children = intoTree.children.map(c => {
+        if (c.id === newChild.id) return newChild;
+        return c;
+      });
+    } else {
+      intoTree.children.push(fromChild);
+    }
+  }
+  return intoTree;
 }
