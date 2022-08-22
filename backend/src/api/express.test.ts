@@ -16,7 +16,7 @@ describe("rest api", () => {
         await taskService.init();
         app = appFactory(taskService);
         
-        const port = 1410;
+        const port = 1411;
         app.listen(port);
     });
 
@@ -25,7 +25,7 @@ describe("rest api", () => {
     });
 
     test("GET /subtree", async () => {
-        const response = await axios.get("http://localhost:1410/subtree/0/3");
+        const response = await axios.get("http://localhost:1411/subtree/0/3");
         expect(response.status).toBe(200);
         expect(response.data).toBe("");
     });
@@ -36,12 +36,12 @@ describe("rest api", () => {
             description: "...",
             parent: null
         }
-        const response = await axios.post("http://localhost:1410/tasks/create", task);
+        const response = await axios.post("http://localhost:1411/tasks/create", task);
         expect(response.status).toBe(200);
         expect(response.data).toBeTruthy();
         expect(response.data.title).toBe(task.title);
 
-        const getResponse = await axios.get(`http://localhost:1410/subtree/${response.data.id}/3`);
+        const getResponse = await axios.get(`http://localhost:1411/subtree/${response.data.id}/3`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.data.title).toBe(task.title);
         expect(getResponse.data.children.length).toBe(0);
@@ -54,13 +54,13 @@ describe("rest api", () => {
             description: "...",
             parent: null
         }
-        const response = await axios.post("http://localhost:1410/tasks/create", task);
+        const response = await axios.post("http://localhost:1411/tasks/create", task);
         const originalTask: TaskRow = response.data;
 
         originalTask.deadline = new Date().getTime();
         originalTask.description = "This task is going to be simple.";
 
-        const updateResponse = await axios.patch(`http://localhost:1410/tasks/update`, originalTask);
+        const updateResponse = await axios.patch(`http://localhost:1411/tasks/update`, originalTask);
         expect(updateResponse.status).toBe(200);
         const updatedTask = updateResponse.data;
         expect(updatedTask.description).toBe(originalTask.description);

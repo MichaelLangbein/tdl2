@@ -36,6 +36,11 @@ export function appFactory(taskService: TaskService) {
         res.send(subTree);
     });
 
+    app.get("/subtree/pathTo/:targetTaskId/:extraDepth", async (req, res) => {
+        const subTree = await taskService.getSubtreePathTo(+req.params.targetTaskId, +req.params.extraDepth);
+        res.send(subTree);
+    });
+
     // crUd - Update
     app.patch("/tasks/update", async (req, res) => {
         const data = req.body;

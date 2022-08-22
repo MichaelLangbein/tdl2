@@ -89,6 +89,27 @@ describe("Task service", () => {
         expect(tree!.attachments[0].path).toBe("/some/file/path.txt");
     });
 
+    test("path to subtree", async () => {
+        const baseTask = await ts.createTask("base", "", null, null);
+        const child1 = await ts.createTask("child1", "", baseTask.id, null);
+        const child2 = await ts.createTask("child2", "", baseTask.id, null);
+        const grandChild1 = await ts.createTask("otherGrandChild", "", child1.id, null);
+        const grandChild2 = await ts.createTask("grandChild", "", child2.id, null);
+        const grandGrandChild = await ts.createTask("grandGrandChild", "", grandChild2.id, null);
+
+        const path = await ts.getSubtreePathTo(grandChild2.id, 1, baseTask.id);
+        expect(path).toBeTruthy();
+        expect(path!.id).toBe(baseTask.id);
+        // should include all direct siblings
+        expect(path!.children.length).toBe(2);
+        // should include the target-task
+        expect(path!.children[1].children[0].id).toBe(grandChild2.id);
+        // should include the target-task's children
+        expect(path!.children[1].children[0].children[0].id).toBe(grandGrandChild.id);
+        // should not include other branches
+        expect(path!.children[0].children.length).toBe(0);
+    });
+
 });
 
 

@@ -210,6 +210,25 @@ export class TaskService {
         return taskTree;
     }
 
+    public async getSubtreePathTo(targetTaskId: number, extraDepth: number, startId = 1) {
+        if (startId === targetTaskId) return await this.getSubtree(startId, extraDepth);
+
+        const childIds = await this.getChildIds(startId);
+        for (const childId of childIds) {
+            const subTree = await this.getSubtreePathTo(targetTaskId, extraDepth, childId);
+            if (subTree) {
+                const tree = await this.getSubtree(startId, 1);
+                // tree!.children.push(subTree); <-- this would not include direct siblings of the target's ancestors
+                for (let i = 0; i < tree!.children.length; i++) {
+                    if (tree!.children[i].id == subTree.id) {
+                        tree!.children[i] = subTree;
+                    }
+                }
+                return tree;
+            }
+        }
+    }
+
     public async deleteTree(taskId: number, recursive=true) {
         if (recursive) {
             const childIds = await this.getChildIds(taskId);
