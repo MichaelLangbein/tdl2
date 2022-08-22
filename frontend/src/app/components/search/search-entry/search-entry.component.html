@@ -1,4 +1,7 @@
-<li (contextmenu)="showContextMenu = true">{{ item.title }}</li>
+<li
+  (contextmenu)="showContextMenu = true"
+  [class]="{ completed: item.completed ? true : false }"
+  >{{ item.title }}</li>
 
 <div [class]="{menu: true, visible: showContextMenu}" >
     <ul>

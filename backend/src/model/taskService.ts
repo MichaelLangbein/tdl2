@@ -254,11 +254,13 @@ export class TaskService {
         return tasks;
     }
 
-    public async search(searchFor: string) {
+    public async search(searchFor: string, incompleteOnly = false) {
         const tasks = await this.db.all<TaskRow[]>(`
             select * from tasks
-            where title like $searchTerm
-            or description like $searchTerm
+            where 
+            (title like $searchTerm
+            or description like $searchTerm)
+            ${ incompleteOnly ? 'and completed is null' : '' }
             collate nocase
             order by deadline asc;
         `, {
