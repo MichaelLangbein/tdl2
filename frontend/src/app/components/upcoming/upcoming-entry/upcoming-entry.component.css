@@ -20,3 +20,14 @@
     background-color: var(--color-secondary-1-2);
     color: var(--color-white);
 }
+
+
+.urgent.soon.upcoming {
+    color: var(--color-primary-0);
+}
+.soon.upcoming {
+    color: var(--color-primary-1);
+}
+.upcoming {
+    color: var(--color-secondary-1-1);
+}

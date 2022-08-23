@@ -9,6 +9,7 @@ import { TaskTree, TaskService } from 'src/app/services/task.service';
 })
 export class TaskEntryComponent implements OnInit {
 
+  public currentTime = new Date().getTime();
   @Input() ownTask: TaskTree | null = null;
   @Input() activeTask: TaskTree | null = null;
 

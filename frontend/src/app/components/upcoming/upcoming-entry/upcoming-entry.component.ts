@@ -9,6 +9,7 @@ import { TaskRow, TaskService, TaskTree } from 'src/app/services/task.service';
 })
 export class UpcomingEntryComponent implements OnInit {
 
+  public currentTime = new Date().getTime();
   public showContextMenu = false;
   @Input() task!: TaskRow;
   public activeTaskId: number = 0;

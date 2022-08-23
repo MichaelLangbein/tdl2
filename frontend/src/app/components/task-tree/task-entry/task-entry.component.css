@@ -11,3 +11,14 @@
     text-decoration: line-through;
     color: var(--color-light-grey);
 }
+
+
+.urgent.soon.upcoming {
+    color: var(--color-primary-0);
+}
+.soon.upcoming {
+    color: var(--color-primary-1);
+}
+.upcoming {
+    color: var(--color-secondary-1-1);
+}

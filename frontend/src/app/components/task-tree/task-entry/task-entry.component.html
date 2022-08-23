@@ -1,6 +1,12 @@
 <div [class]="{'entry': true}" *ngIf="ownTask && activeTask">
     <div
-      [class]="{'active': ownTask.id === activeTask.id, 'complete': ownTask.completed ? true : false }"
+      [class]="{
+        'active':   ownTask.id === activeTask.id, 
+        'complete': ownTask.completed ? true : false,
+        'urgent':   !ownTask.completed && ownTask.deadline && ownTask.deadline < currentTime,
+        'soon':     !ownTask.completed && ownTask.deadline && ownTask.deadline < currentTime + 24 * 60 * 60 * 1000,
+        'upcoming': !ownTask.completed && ownTask.deadline && ownTask.deadline < currentTime +  2 * 24 * 60 * 60 * 1000
+     }"
       (click)="focusOnMe()"
       cdkDrag
       [cdkDragDisabled]="ownTask.id !== activeTask.id"
