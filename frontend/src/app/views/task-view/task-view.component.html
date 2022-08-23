@@ -10,3 +10,16 @@
         <app-upcoming></app-upcoming>
     </div>
 </div>
+
+
+<div class="completedModal" *ngIf="showCompletedModal">
+    <div class="completedModalContent">
+        <h3>
+            Congrats, you completed task "{{ lastCompletedTask?.title }}"!
+        </h3>
+        <p>
+            Time required: {{ lastCompletedTask?.secondsActive | secondsToTimestring }}
+        </p>
+        <button (click)="showCompletedModal = false">Close</button>
+    </div>
+</div>
