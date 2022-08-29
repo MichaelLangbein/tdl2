@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200.00005"
+   height="100"
+   viewBox="0 0 52.916678 26.458334"
+   version="1.1"
+   id="svg1163"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="code_and_colors_logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:document-units="px"
+     showgrid="false"
+     units="px"
+     showguides="true"
+     inkscape:zoom="3.6233469"
+     inkscape:cx="113.84502"
+     inkscape:cy="92.59395"
+     id="namedview2745">
+    <sodipodi:guide
+       id="guide2743" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2747" />
+  <g
+     id="g2751">
+    <path
+       class="logo cs"
+       id="path1246"
+       style="fill:#4d4d4d;stroke-width:0.782109;stroke-linecap:round;stroke-linejoin:round"
+       d="M 50 0 A 50 50 0 0 0 0 50 A 50 50 0 0 0 50 100 L 95 100 L 95 95 L 52.5 95 A 47.49999 44.999999 0 0 1 5 50 A 47.49999 44.999999 0 0 1 52.5 5 L 95 5 L 95 0 L 50 0 z M 105 0 L 105 5 L 147.5 5 A 47.49999 44.999999 0 0 1 195 50 A 47.49999 44.999999 0 0 1 147.5 95 L 105 95 L 105 100 L 150 100 A 50 50 0 0 0 200 50 A 50 50 0 0 0 150 0 L 105 0 z "
+       transform="scale(0.26458333)" />
+    <circle
+       class="logo dot"
+       style="#4d4d4d;stroke-width:1.56422;stroke-linecap:round;stroke-linejoin:round"
+       id="path2344"
+       cx="26.458334"
+       cy="13.229167"
+       r="2.6458333" />
+  </g>
+</svg>
