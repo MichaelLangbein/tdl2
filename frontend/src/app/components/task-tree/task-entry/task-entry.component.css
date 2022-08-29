@@ -1,5 +1,6 @@
 .children {
     margin-left: 1rem;
+    border-left: 1px solid var(--color-light-grey);
 }
 
 .active {

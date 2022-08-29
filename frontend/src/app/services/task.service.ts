@@ -112,14 +112,22 @@ export class TaskService {
   public async moveCurrentTaskToParent(newParentId: number) {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
-    console.log("moving to new parent with id", newParentId)
-    this.updateCurrent(currentTask.title, currentTask.description, newParentId, null, currentTask.deadline).subscribe(success => {});
+    const fullTree = this.fullTree$.value;
+    if (!fullTree) return;
+    this.updateCurrent(currentTask.title, currentTask.description, newParentId, null, currentTask.deadline).subscribe(success => {
+      let newTree = removeBranch(fullTree, currentTask.id);
+      if (newTree) {
+        newTree = addChildToTree(newTree, this.currentTask$.value!);
+        this.fullTree$.next(newTree);
+      }
+    });
   }
 
 
   public editCurrent(title: string, description: string, deadline: number | null) {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
+
     this.updateCurrent(title, description, currentTask.parent, null, deadline).subscribe(success => {});
   }
 

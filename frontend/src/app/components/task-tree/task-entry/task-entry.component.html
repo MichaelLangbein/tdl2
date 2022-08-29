@@ -1,4 +1,5 @@
 <div [class]="{'entry': true}" *ngIf="ownTask && activeTask">
+
     <div
       [class]="{
         'active':   ownTask.id === activeTask.id, 
@@ -8,13 +9,17 @@
         'upcoming': !ownTask.completed && ownTask.deadline && ownTask.deadline < currentTime +  2 * 24 * 60 * 60 * 1000
      }"
       (click)="focusOnMe()"
-      cdkDrag
-      [cdkDragDisabled]="ownTask.id !== activeTask.id"
-      [attr.data-node-id]="ownTask.id"
+      draggable="true"
+      (dragstart)="onDragStart($event)"
+      (dragover)="allowDrop($event)"
+      (drop)="onDrop($event)"
       >
         {{ ownTask.title }}
     </div>
-    <div cdkDropList (cdkDropListDropped)="handleDrop($event)" class="children">
-        <app-task-entry *ngFor="let child of ownTask.children" [ownTask]="child" [activeTask]="activeTask" draggable="true"></app-task-entry>
+
+    <div class="children">
+        <app-task-entry 
+          *ngFor="let child of ownTask.children"
+          [ownTask]="child" [activeTask]="activeTask"></app-task-entry>
     </div>
 </div>

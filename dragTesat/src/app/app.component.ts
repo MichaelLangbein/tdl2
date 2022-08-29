@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Node } from './data';
+import { DataService } from './data.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'dragTesat';
+  public tree$: Observable<Node>;
+
+  constructor(dataSvc: DataService) {
+    this.tree$ = dataSvc.watchData();
+  }
 }

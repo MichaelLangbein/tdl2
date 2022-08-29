@@ -1,5 +1,4 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TaskTree, TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -23,13 +22,33 @@ export class TaskEntryComponent implements OnInit {
     if (this.ownTask) this.taskSvc.loadAndSwitch(this.ownTask.id);
   }
 
-  handleDrag($event: Event) {
-    $event.preventDefault();
-    $event.stopPropagation();
+  
+  public allowDrop(ev: DragEvent) {
+    if (!this.ownTask) return;
+    console.log('dragover on ', this.ownTask.id)
+    ev.preventDefault();
+    ev.stopPropagation();
   }
 
-  handleDrop($event: CdkDragDrop<any, any, any>) {
-    if (this.ownTask) this.taskSvc.moveCurrentTaskToParent(this.ownTask.id);
+  public onDragStart(ev: DragEvent) {
+    if (!this.ownTask) return;
+    if (this.ownTask.id !== this.activeTask?.id) return;
+    console.log('dragstart on ', this.ownTask.id)
+    ev.dataTransfer?.setData('text', JSON.stringify({ 'sourceId': this.ownTask.id }));
+  }
+
+  public onDrop(ev: DragEvent) {
+    if (!this.ownTask) return;
+    console.log('drop on ', this.ownTask.id)
+    console.log('drop', ev)
+    ev.preventDefault();
+    ev.stopPropagation();
+    const stringData = ev.dataTransfer?.getData('text');
+    if (stringData) {
+      const data = JSON.parse(stringData);
+      console.log(data, 'dropped into ', this.ownTask.id)
+      this.taskSvc.moveCurrentTaskToParent(this.ownTask.id);
+    }
   }
 
 }
