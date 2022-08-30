@@ -211,6 +211,7 @@ export class TaskService {
         return taskTree;
     }
 
+
     public async getSubtreePathTo(targetTaskId: number, extraDepth: number, startId = 1) {
         // @TODO: maybe better recursive sql-query: https://stackoverflow.com/questions/7456957/basic-recursive-query-on-sqlite3
 

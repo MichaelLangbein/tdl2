@@ -1,13 +1,16 @@
 import express from "express";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 import { TaskService } from '../model/taskService';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 import { estimateTime } from "../stats/estimates";
+import { FileService } from '../files/fileService';
 
-export function appFactory(taskService: TaskService) {
+export function appFactory(taskService: TaskService, fileService: FileService) {
     const app = express();
 
     app.use(cors());
+    app.use(fileUpload());
     app.use(express.json());
 
 
@@ -52,6 +55,27 @@ export function appFactory(taskService: TaskService) {
         const data = req.body;
         const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed, data.deadline);
         res.send(updatedTask);
+    });
+
+    app.post("/tasks/:id/addFile", async (req, res) => {
+        const taskId = +req.params.id;
+        if (req.files) {
+            for (const key in req.files) {
+                const file = req.files[key];
+                if (Array.isArray(file)) {
+                    for (const ffile of file) {
+                        const localFilePath = await fileService.storeFile(ffile);
+                        await taskService.addFileAttachment(taskId, localFilePath);
+                    }
+                } else {
+                    const localFilePath = await fileService.storeFile(file);
+                    await taskService.addFileAttachment(taskId, localFilePath);    
+                }
+            }
+            
+        }
+        const tree = await taskService.getSubtree(taskId, 1);
+        res.send(tree);
     });
 
     // cruD - Delete

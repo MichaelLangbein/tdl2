@@ -1,7 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap, Observable, of, map, filter } from 'rxjs';
 
+
+export interface Attachment {
+  id: number,
+  taskId: number,
+  path: string,
+}
 
 export interface TaskTree {
   id: number,
@@ -11,7 +17,7 @@ export interface TaskTree {
   started: number,
   completed: number | null,
   secondsActive: number,
-  attachments: any[],
+  attachments: Attachment[],
   children: TaskTree[],
   deadline: number | null
 }
@@ -62,7 +68,7 @@ export class TaskService {
   }
 
   public search(searchString: string) {
-    return this.http.post<TaskRow[]>(`http://localhost:1410/tasks/search`, {searchString});
+    return this.http.post<TaskRow[]>(`http://localhost:1410/tasks/search`, { searchString });
   }
 
   public init() {
@@ -78,7 +84,7 @@ export class TaskService {
     if (!currentTask) return;
     this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent: currentTask.id }).subscribe((response: TaskRow) => {
       const newTask = {
-        ... response,
+        ...response,
         attachments: [],
         children: []
       };
@@ -96,7 +102,7 @@ export class TaskService {
     if (!currentTask) return;
     this.http.post<TaskRow>(`http://localhost:1410/tasks/create`, { title, description, parent: currentTask.parent }).subscribe((response: TaskRow) => {
       const newTask = {
-        ... response,
+        ...response,
         attachments: [],
         children: []
       };
@@ -128,7 +134,7 @@ export class TaskService {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
 
-    this.updateCurrent(title, description, currentTask.parent, null, deadline).subscribe(success => {});
+    this.updateCurrent(title, description, currentTask.parent, null, deadline).subscribe(success => { });
   }
 
 
@@ -149,8 +155,20 @@ export class TaskService {
   public reactivateCurrent() {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
-    this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, null, currentTask.deadline, true).subscribe(success => {});
+    this.updateCurrent(currentTask.title, currentTask.description, currentTask.parent, null, currentTask.deadline, true).subscribe(success => { });
   }
+
+
+  public addFileToCurrent(file: File, filePath: string) {
+    const currentTask = this.currentTask$.value;
+    if (!currentTask) return;
+    const formData = new FormData();
+    formData.append('file', file, filePath);
+    this.http.post<TaskTree>(`http://localhost:1410/tasks/${currentTask.id}/addFile`, formData).subscribe(updatedTask => {
+      this.currentTask$.next(updatedTask);
+    });
+  }
+
 
   public loadAndSwitch(targetTaskId: number) {
     const tree = this.fullTree$.value;
@@ -173,7 +191,7 @@ export class TaskService {
     });
   }
 
-  private switchCurrent(targetTask: TaskTree, updateLastTask=true) {
+  private switchCurrent(targetTask: TaskTree, updateLastTask = true) {
 
     const currentTask = this.currentTask$.value;
     if (!currentTask || !updateLastTask) {
@@ -190,14 +208,14 @@ export class TaskService {
 
       if (!alreadyLoaded) {  // .. if not already loaded
         this.getSubTree(targetTask.id, 3).subscribe(subTree => {
-            const fullTree = this.fullTree$.value;
-            if (fullTree) {
-              const newTree = updateSubtree(fullTree, subTree);
-              this.fullTree$.next(newTree);
-            }
+          const fullTree = this.fullTree$.value;
+          if (fullTree) {
+            const newTree = updateSubtree(fullTree, subTree);
+            this.fullTree$.next(newTree);
+          }
 
-            // 3: move to target
-            this.currentTask$.next(targetTask);
+          // 3: move to target
+          this.currentTask$.next(targetTask);
         });
       }
 

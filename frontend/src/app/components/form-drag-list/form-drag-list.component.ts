@@ -1,29 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgxFileDropEntry } from 'ngx-file-drop';
+import { TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-form-drag-list',
   templateUrl: './form-drag-list.component.html',
   styleUrls: ['./form-drag-list.component.css']
 })
-export class FormDragListComponent implements ControlValueAccessor {
+export class FormDragListComponent {
 
   public files: NgxFileDropEntry[] = [];
 
-  constructor() { }
-
-  writeValue(obj: any): void {
-    throw new Error('Method not implemented.');
-  }
-
-  registerOnChange(fn: any): void {
-    throw new Error('Method not implemented.');
-  }
-
-  registerOnTouched(fn: any): void {
-    throw new Error('Method not implemented.');
-  }
+  constructor(private taskSvc: TaskService) {}
 
 
   public dropped(files: NgxFileDropEntry[]) {
@@ -34,26 +23,9 @@ export class FormDragListComponent implements ControlValueAccessor {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-
           // Here you can access the real file
           console.log(droppedFile.relativePath, file);
-
-          /**
-          // You could upload it like this:
-          const formData = new FormData()
-          formData.append('logo', file, relativePath)
-
-          // Headers
-          const headers = new HttpHeaders({
-            'security-token': 'mytoken'
-          })
-
-          this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
-          .subscribe(data => {
-            // Sanitized logo returned from backend
-          })
-          **/
-
+          this.taskSvc.addFileToCurrent(file, droppedFile.relativePath);
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)

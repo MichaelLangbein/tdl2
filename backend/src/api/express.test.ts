@@ -4,17 +4,24 @@ import { TaskRow, TaskService } from '../model/taskService';
 import { appFactory } from './express';
 import { Express } from "express";
 import axios from "axios";
+import { FileService } from '../files/fileService';
 
 describe("rest api", () => {
 
     let database: Database;
     let taskService: TaskService;
+    let fileService: FileService;
     let app: Express;
     beforeAll(async () => {
         database = await createDatabase(":memory:");
+        
         taskService = new TaskService(database);
         await taskService.init();
-        app = appFactory(taskService);
+
+        fileService = new FileService("./data/tmp/");
+        await fileService.init();
+
+        app = appFactory(taskService, fileService);
         
         const port = 1411;
         app.listen(port);

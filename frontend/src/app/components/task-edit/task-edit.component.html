@@ -18,6 +18,13 @@
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">
     <p>Time active: {{ currentTask.secondsActive | secondsToTimestring }}</p>
+    <ul>
+        <li *ngFor="let attachment of currentTask.attachments">
+            <a [href]="attachment.path" target="_blank">
+                {{ attachment.path }}
+            </a>
+        </li>
+    </ul>
 
     <p *ngIf="!currentTask.completed">
         <button (click)="completeTask()">Complete</button>
