@@ -72,6 +72,10 @@ export class TaskEditComponent implements OnInit {
     this.showDeleteModal = false;
   }
 
+  removeAttachment(attachmentId: number) {
+    this.taskSvc.removeAttachmentFromCurrent(attachmentId);
+  }
+
 }
 
 

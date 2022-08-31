@@ -157,6 +157,16 @@ export class TaskService {
     }
 
 
+    public async getFileAttachment(fileId: number): Promise<FileRow> {
+        const out = await this.db.get(`
+            select * from files
+            where id = $fileId;
+        `, {
+            '$fileId': fileId
+        });
+        return out;
+    }
+
     public async getFileAttachments(taskId: number): Promise<FileRow[]> {
         const out = await this.db.all(`
             select * from files

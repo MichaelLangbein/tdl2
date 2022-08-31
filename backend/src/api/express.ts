@@ -86,6 +86,16 @@ export function appFactory(taskService: TaskService, fileService: FileService) {
         res.send(parent);
     });
 
+    app.delete("/tasks/:taskId/removeFile/:fileId", async (req, res) => {
+        const taskId = +req.params.taskId;
+        const fileId = +req.params.fileId;
+        const fileRow = await taskService.getFileAttachment(fileId);
+        await fileService.removeFile(fileRow.path);
+        await taskService.deleteFileAttachment(fileId);
+        const tree = await taskService.getSubtree(taskId, 1);
+        res.send(tree);
+    });
+
 
     app.get("/tasks/:id/estimate", async (req, res) => {
         const id = +req.params.id;

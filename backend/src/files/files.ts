@@ -3,9 +3,19 @@ import { existsSync, statSync } from 'fs';
 import path from 'path';
 
 
+export function pathJoin(segments: string[]): string {
+    return path.join(... segments);
+}
+
 
 export function getPathTo(filePath: string) {
-    return path.dirname(filePath);
+    if (fileExists(filePath)) {
+        if (isDir(filePath)) return path.resolve(filePath);
+        return path.resolve(path.dirname(filePath));
+    } else {
+        const dirString = filePath.substring(0, filePath.lastIndexOf(path.sep));
+        return path.resolve(dirString);
+    }
 }
 
 export function isDir(path: string) {
@@ -22,14 +32,19 @@ export async function readTextFile(filePath: string) {
 }
 
 export async function writeTextFile(filePath: string, data: string) {
-    const dir = filePath.substring(0, filePath.lastIndexOf(path.sep));
+    const dir = getPathTo(filePath);
     await createDirIfNotExists(dir);
-    await writeFile(filePath, data);
-    return true;
+    try {
+        await writeFile(filePath, data);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 }
 
 export async function appendTextFile(filePath: string, data: string) {
-    const dir = filePath.substring(0, filePath.lastIndexOf(path.sep));
+    const dir = getPathTo(filePath);
     await createDirIfNotExists(dir);
     await appendFile(filePath, data);
     return true;
@@ -38,6 +53,19 @@ export async function appendTextFile(filePath: string, data: string) {
 export async function deleteFile(filePath: string) {
     if (fileExists(filePath)) {
         await unlink(filePath);
+    }
+}
+
+
+export async function writeBinaryFile(filePath: string, data: Buffer) {
+    const dir = getPathTo(filePath);
+    await createDirIfNotExists(dir);
+    try {
+        await writeFile(filePath, data);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
     }
 }
 

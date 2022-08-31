@@ -169,6 +169,14 @@ export class TaskService {
     });
   }
 
+  public removeAttachmentFromCurrent(attachmentId: number) {
+    const currentTask = this.currentTask$.value;
+    if (!currentTask) return;
+    this.http.delete<TaskTree>(`http://localhost:1410/tasks/${currentTask.id}/removeFile/${attachmentId}`).subscribe(updatedTask => {
+      this.currentTask$.next(updatedTask);
+    });
+  }
+
 
   public loadAndSwitch(targetTaskId: number) {
     const tree = this.fullTree$.value;

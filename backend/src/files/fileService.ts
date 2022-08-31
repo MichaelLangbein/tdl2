@@ -1,19 +1,29 @@
 import { UploadedFile } from 'express-fileupload';
-import { createDirIfNotExists, getPathTo } from './files';
-import { writeFile } from 'fs/promises';
+import { createDirIfNotExists, getPathTo, deleteFile, writeBinaryFile, pathJoin } from './files';
+
 
 
 export class FileService {
 
-    constructor(private filePath: string) {}
+    private filePath: string;
+
+    constructor(filePath: string) {
+        this.filePath = getPathTo(filePath);
+    }
 
     public async init() {
         await createDirIfNotExists(this.filePath);
     }
 
     public async storeFile(data: UploadedFile): Promise<string> {
-        const localPath = getPathTo(`${this.filePath}/${data.name}`);
-        await writeFile(localPath, data.data);
-        return localPath;
+        const targetPath = pathJoin([this.filePath, data.name]);
+        await writeBinaryFile(targetPath, data.data);
+        return targetPath;
+    }
+
+    public async removeFile(targetFilePath: string): Promise<void> {
+        const localTargetFilePath = getPathTo(targetFilePath);
+        if (localTargetFilePath !== this.filePath) throw new Error(`Cannot delete files outside the file directory. ${this.filePath} != ${localTargetFilePath}`);
+        return await deleteFile(targetFilePath);
     }
 }
