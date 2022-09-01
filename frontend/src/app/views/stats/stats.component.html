@@ -1,1 +1,13 @@
-<p>stats works!</p>
+<table>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>secondsActive</th>
+    </tr>
+    <tr *ngFor="let row of data">
+        <td>{{ row.id }}</td>
+        <td>{{ row.title }}</td>
+        <td>{{ row.secondsActive }}</td>
+    </tr>
+</table>
+<button (click)="loadData()">Load...</button>

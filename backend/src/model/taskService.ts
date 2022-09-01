@@ -280,4 +280,13 @@ export class TaskService {
         return tasks;
     }
 
+    public async completionTimes() {
+        const data = await this.db.all(`
+            select id, title, secondsActive
+            from tasks 
+            where completed
+            order by secondsActive desc;
+        `);
+        return data;
+    }
 }

@@ -138,5 +138,15 @@ export function appFactory(taskService: TaskService, fileService: FileService) {
     });
 
 
+
+    /***********************************************************************
+     * Misc
+     **********************************************************************/
+    app.get("/statistics/completionTimes", async (req, res) => {
+        const times = await taskService.completionTimes();
+        res.send(times);
+    });
+
+
     return app;
 }
