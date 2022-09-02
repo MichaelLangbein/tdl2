@@ -11,7 +11,8 @@ Given automatically to the creator ... even though possibly limited in time.
 Everything that's not under copyright is public domain.
 
 ### Moral rights
-Non-commercial equivalent of copyright. You must be mentioned as author. Your work must not be defaced ... even if the work is no longer owned by you.
+Non-commercial equivalent of copyright. You must be mentioned as author.
+Your work must not be defaced ... even if the work is no longer owned by you.
 Might not be automatic, though; depends on country.
 
 ### Patents
