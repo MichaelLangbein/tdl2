@@ -1,5 +1,5 @@
 # Open-source licenses
-
+Source: https://www.youtube.com/watch?v=9kGrKBOytYM 
 
 ## Legal background
 
@@ -77,7 +77,8 @@ If you don't comply with a license, you lose the rights it gave you - and there 
 - Even better: DCO (Developer's Certificate of Origin). Good, minimal hassle.
 
 ## Licenses - detailed
-https://opensource.org/licenses 
+- https://opensource.org/licenses 
+- https://ghinda.com/blog/opensource/2020/open-source-licenses-apache-mit-bsd.html#apache-license-20
 
 
 ## Special things
@@ -90,3 +91,8 @@ Sometimes software has two licenses.
 ### Contributor License Agreement (CLA)
 Allows project leader to re-license the code
 Also covers how other peoples' contributions are copyrighted
+
+
+
+## Uncertainties
+- Each country and court can decide individually if a given license is compatible with local laws: https://news.ycombinator.com/item?id=10455848
