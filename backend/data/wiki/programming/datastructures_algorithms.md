@@ -322,6 +322,9 @@ function findPath(start: Node, target: Node) {
 }
 ```
 
+## Dijkstra
+https://www.youtube.com/watch?v=EFg3u_E6eHU
+
 ## A*
 - a BFS 
 - with a *priority* queue
