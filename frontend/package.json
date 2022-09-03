@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "host:locally": "http-server ./dist/frontend --port=8080 --cors -g"
   },
   "private": true,
   "dependencies": {

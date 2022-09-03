@@ -46,55 +46,44 @@ abstract class DynamicSlidingWindow<T> {
 
 ## Queue
 ```ts
-class FixedSizeQueue<T> {
-    private data: (T | null)[];
-    private head = 0;
-    
-    constructor(n: number) {
-        this.data = Array(n).fill(0).map(v => null);
+export class Queue<T> {
+    private data: T[] = [];
+
+    public enqueue(entry: T) {
+        this.data.push(entry);
     }
 
-    push(entry: T): T | null {
-        this.head = (this.head + 1) % this.data.length;
-        const out = this.data[this.head];
-        this.data[this.head] = entry;
-        return out;
+    public dequeue(): T | undefined {
+        return this.data.shift();
     }
 }
-```
 
+export class PriorityQueue<T> {
+    private data: {[priority: number]: T[]} = {};
 
-```ts
-class Queue<T> {
-    private data: (T | null)[];
-    private head = 0;
-    private tail = 0;
-
-    constructor(capacity: number) {
-        this.data = Array(capacity).fill(0).map(v => null);
-    }
-
-    public enqueue(val: T): boolean {
-        const location = this.tail;
-        if (!this.data[location]) {
-            this.data[location] = val;
-            this.tail = this.shiftUp(this.tail);
-            return true;
-        } else {
-            return false;
+    public enqueue(entry: T, priority: number) {
+        if (!this.data[priority]) {
+            this.data[priority] = [];
         }
+        this.data[priority].push(entry);
     }
 
-    public dequeue() {
-        const location = this.head;
-        const data = this.data[location];
-        this.data[location] = null;
-        this.head = this.shiftUp(location);
-        return data;
+    public dequeue(): T | undefined {
+        const highestPriority = this.getHighestPriority();
+        if (highestPriority === -Infinity) return undefined;
+        return this.data[highestPriority].shift();
     }
 
-    private shiftUp(n: number) {
-        return (n + 1) % this.data.length;
+    private getHighestPriority() {
+        let highestPrio = -Infinity;
+        for (const prio in this.data) {
+            if (+prio > highestPrio) {
+                if (this.data[prio].length > 0) {
+                    highestPrio = +prio;
+                }
+            }
+        }
+        return highestPrio;
     }
 }
 ```
@@ -284,33 +273,38 @@ function binaryFind(data: number[], calcDirection: CD): number {
 
 DFS is usually done with recursion, BFS with a queue.
 ```ts
+interface Node {
+    getChildren(): Node[]
+}
+
 function dfs(node: Node, predicate: (node: Node) => boolean) {
     if (predicate(node)) {
         return node;
     }
-    const leftHit = dfs(node.left, predicate);
-    if (leftHit) return leftHit;
-    const rightHit = dfs(node.right, predicate);
-    if (rightHit) return rightHit;
-
+    for (const child of node.getChildren()) {
+        const hit = dfs(child, predicate);
+        if (hit) return hit;
+    }
     return false;
 }
 
 function bfs(node: Node, predicate: (node: Node) => boolean) {
-    const queue = new Queue(node);
-    while (const candidate = queue.dequeue()) {
-        if (predicate(candidate)) {
-            return candidate;
+    const queue = new Queue<Node>();
+    queue.enqueue(node);
+    let candidate = queue.dequeue();
+    while (candidate) {
+        if (predicate(candidate)) return candidate;
+        for (const child of candidate.getChildren()) {
+            queue.enqueue(child);
         }
-        queue.enqueue(candidate.left);
-        queue.enqueue(candidate.right);
+        candidate = queue.dequeue();
     }
 }
 ```
 
 ## Path finding
 
-Path finding often uses bfs, because dfs tends to get stuck in wall-corners.
+Path finding often uses bfs, because dfs tends to try a lot of obviously bad paths at first.
 ```ts
 function findPath(start: Node, target: Node) {
     start.cost = 0;
@@ -326,7 +320,6 @@ function findPath(start: Node, target: Node) {
         }
     }
 }
-
 ```
 
 ## A*
@@ -334,23 +327,45 @@ function findPath(start: Node, target: Node) {
 - with a *priority* queue
 - where priority is given through a heuristic
 
-````ts
-const 
+```ts
+interface Node {
+    getChildren(): {costToChild: number, child: Node}[],
+    getCoords(): [number, number],
+    setPathSoFar(cost: number): void,
+    getPathSoFar(): number | undefined
+};
 
-function aStar(startNode: Node, targetNode: Node, heuristic: (node: Node) => number) {
-    startNode.cost = 0;
-    const queue = new PriorityQueue(startNode, 0);
-    const closedList = [];
-    while (const candidate = queue.dequeueMin()) {
-        if (candidate === targetNode) return true;
-        const nextNodes = except(candidate.children, closedList);
-        for (const next of nextNodes) {
-            const knownCost = candidate.cost + next.costFrom(candidate);
-            const estimatedRemaining = heuristic(next);
-            if (queue.contains(next) && )
-            next.cost = knownCost;
-            queue.enqueue(next, knownCost + estimatedRemaining);
+
+function aStar(source: Node, target: Node, heuristic: (source: Node, target: Node) => number) {
+    const pQueue = new PriorityQueue<Node>();
+    source.setPathSoFar(0);
+    const estimatedFullCosts = 0 + heuristic(source, target);
+    pQueue.enqueue(source, -estimatedFullCosts);
+
+    let candidate = pQueue.dequeue();
+    while (candidate) {
+
+        // check if target reached
+        const [xc, yc] = candidate.getCoords();
+        const [xt, yt] = target.getCoords();
+        if (xc === xt && yc === yt) {
+            return candidate.getPathSoFar();
         }
+
+        // if not, look for children to enqueue
+        for (const {costToChild, child} of candidate.getChildren()) {
+            const costPathToChild = candidate.getPathSoFar()! + costToChild;
+            const lastPathToChild = child.getPathSoFar();
+            // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
+            if (!lastPathToChild || costPathToChild < lastPathToChild) {
+                child.setPathSoFar(costPathToChild);
+                const estimatedFullCosts = costPathToChild + heuristic(child, target);
+                pQueue.enqueue(child, -estimatedFullCosts);
+            }
+        }
+
+        // prepare next step
+        candidate = pQueue.dequeue();
     }
 }
 ```

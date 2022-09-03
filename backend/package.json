@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "start": "ts-node-dev --respawn src/index.ts",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "build": "tsc",
+    "run:prod": "tsc & node ./dist/index.js"
   },
   "keywords": [],
   "author": "Michael Langbein <michael_langbein@hotmail.de>",

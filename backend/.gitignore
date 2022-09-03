@@ -2,3 +2,4 @@ node_modules
 *.db
 tmp
 data/files/*
+dist
