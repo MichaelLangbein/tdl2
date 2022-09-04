@@ -1,6 +1,6 @@
 import { createDatabase } from '../db/db';
 import { Database } from 'sqlite';
-import { TaskService } from './taskService';
+import { TaskService } from './task.service';
 
 
 

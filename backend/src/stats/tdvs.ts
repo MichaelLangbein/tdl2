@@ -1,4 +1,4 @@
-import { TaskTree } from '../model/taskService';
+import { TaskTree } from '../model/task.service';
 import { Queue } from '../utils/datastructures';
 import { estimateMean, ExponentialDistribution } from './stats.utils';
 

@@ -1,6 +1,6 @@
 import { Database } from "sqlite";
 import { createDatabase } from "../db/db";
-import { TaskService } from "../model/taskService";
+import { TaskService } from "../model/task.service";
 import { estimateTime } from "./estimates";
 
 

@@ -1,4 +1,4 @@
-import { TaskTree } from '../model/taskService';
+import { TaskTree } from '../model/task.service';
 import { estimateTime as tdvs } from './tdvs';
 import { estimateTime as buvs } from './buvs';
 

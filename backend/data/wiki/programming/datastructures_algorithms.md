@@ -322,13 +322,49 @@ function findPath(start: Node, target: Node) {
 }
 ```
 
-## Dijkstra
-https://www.youtube.com/watch?v=EFg3u_E6eHU
-
-## A*
+### Dijkstra
 - a BFS 
 - with a *priority* queue
-- where priority is given through a heuristic
+- where priority is cost from source
+https://www.youtube.com/watch?v=EFg3u_E6eHU
+
+```ts
+function dijstra(source: Node, target: Node) {
+    const pQueue = new PriorityQueue<Node>();
+    source.setPathSoFar(0);
+    pQueue.enqueue(source, 0);
+
+    let candidate = pQueue.dequeue();
+    while (candidate) {
+
+        // check if target reached
+        const [xc, yc] = candidate.getCoords();
+        const [xt, yt] = target.getCoords();
+        if (xc === xt && yc === yt) {
+            return candidate.getPathSoFar();
+        }
+
+        // if not, look for children to enqueue
+        for (const {costToChild, child} of candidate.getChildren()) {
+            const costPathToChild = candidate.getPathSoFar()! + costToChild;
+            const lastPathToChild = child.getPathSoFar();
+            // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
+            if (!lastPathToChild || costPathToChild < lastPathToChild) {
+                child.setPathSoFar(costPathToChild);
+                pQueue.enqueue(child, costPathToChild);
+            }
+        }
+
+        // prepare next step
+        candidate = pQueue.dequeue();
+    }
+}
+```
+
+### A*
+- a BFS 
+- with a priority queue
+- where priority is cost from source *+ estimated remaining cost*
 
 ```ts
 interface Node {

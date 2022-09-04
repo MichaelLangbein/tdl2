@@ -1,7 +1,7 @@
 import { appFactory } from './api/express';
 import { createDatabase } from './db/db';
 import { FileService } from './files/fileService';
-import { TaskService } from './model/taskService';
+import { TaskService } from './model/task.service';
 
 
 

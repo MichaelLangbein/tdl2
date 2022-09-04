@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
-import { TaskService } from '../model/taskService';
+import { TaskService } from '../model/task.service';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 import { estimateTime } from "../stats/estimates";
 import { FileService } from '../files/fileService';
+import { CardService } from '../model/card.service';
 
-export function appFactory(taskService: TaskService, fileService: FileService) {
+export function appFactory(taskService: TaskService, fileService: FileService, cardService: CardService) {
     const app = express();
 
     app.use(cors());
@@ -147,6 +148,42 @@ export function appFactory(taskService: TaskService, fileService: FileService) {
         res.send(times);
     });
 
+
+    
+    /***********************************************************************
+     * Cards
+     **********************************************************************/
+    app.get("/cards/topics", async (req, res) => {
+        const topics = await cardService.getTopics();
+        res.send(topics);
+    });
+
+    app.get("/cards/topics/:topicId/cards", async (req, res) => {
+        const topicId = +req.params.topicId;
+        const cards = await cardService.getCards(topicId);
+        res.send(cards);
+    });
+
+    app.post("/cards/topics/new", async (req, res) => {
+        const body = req.body;
+        const topic = await cardService.createTopic(body.title);
+        res.send(topic);
+    });
+
+    app.post("/cards/topics/:topicId/cards/new", async (req, res) => {
+        const topicId = +req.params.topicId;
+        const body = req.body;
+        const card = await cardService.createCard(topicId, body.front, body.back);
+        res.send(card);
+    });
+
+    app.patch("/cards/topics/:topicId/cards/:cardId/update", async (req, res) => {
+        const topicId = +req.params.topicId;
+        const cardId = +req.params.cardId;
+        const body = req.body;
+        const updated = await cardService.updateCard(cardId, topicId, body.front, body.back, body.goodAnswers, body.okAnswers, body.badAnswers);
+        res.send(updated);
+    });
 
     return app;
 }

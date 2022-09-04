@@ -1,16 +1,18 @@
 import { Database } from 'sqlite';
 import { createDatabase } from '../db/db';
-import { TaskRow, TaskService } from '../model/taskService';
+import { TaskRow, TaskService } from '../model/task.service';
 import { appFactory } from './express';
 import { Express } from "express";
 import axios from "axios";
 import { FileService } from '../files/fileService';
+import { CardService } from '../model/card.service';
 
 describe("rest api", () => {
 
     let database: Database;
     let taskService: TaskService;
     let fileService: FileService;
+    let cardService: CardService;
     let app: Express;
     beforeAll(async () => {
         database = await createDatabase(":memory:");
@@ -18,10 +20,13 @@ describe("rest api", () => {
         taskService = new TaskService(database);
         await taskService.init();
 
+        cardService = new CardService(database);
+        await cardService.init();
+
         fileService = new FileService("./data/tmp/");
         await fileService.init();
 
-        app = appFactory(taskService, fileService);
+        app = appFactory(taskService, fileService, cardService);
         
         const port = 1411;
         app.listen(port);
