@@ -1,1 +1,69 @@
-<p>flashcard-view works!</p>
+<div class="cardView">
+    
+    <div class="topicList">
+        
+        <form [formGroup]="createTopicForm">
+            <h3>Create topic</h3>
+            <div class="formElement">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" formControlName="title">
+            </div>
+            <button type="submit" (click)="createTopic()" [disabled]="!createTopicForm.valid">Create</button>
+        </form>
+
+        <ul>
+            <li 
+                *ngFor="let topic of topics" 
+                [ngClass]="{ active: topic.id === activeTopic?.id }"
+                (click)="setTopic(topic)"
+                >{{ topic.title }}</li>
+        </ul>
+    </div>
+    
+    <div class="cardList" *ngIf="activeTopic">
+        
+        <form [formGroup]="createCardForm">
+            <h3>Create card</h3>
+            <div class="formElement">
+                <label for="front">Front:</label>
+                <textarea type="text" name="front" id="front" formControlName="front"></textarea>
+            </div>
+            <div class="formElement">
+                <label for="back">Back:</label>
+                <textarea type="text" name="back" id="back" formControlName="back"></textarea>
+            </div>
+            <button type="submit" (click)="createCard()" [disabled]="!createCardForm.valid">Create</button>
+        </form>
+        
+        <ul>
+            <li 
+                *ngFor="let card of cards" 
+                [ngClass]="{ active: card.id === activeCard?.id }"
+                (click)="setCard(card)"
+                >{{ card.front.substring(0, 10) }}...</li>
+        </ul>
+    </div>
+
+    <div class="card" *ngIf="activeCard">
+        <h3>Card</h3>
+
+        <h5>Front</h5>
+        <div>
+            {{ activeCard.front }}
+        </div>
+        <h5>Back</h5>
+
+        <div *ngIf="!reveal">
+            <button (click)="reveal = true">Reveal...</button>
+        </div>
+        <div *ngIf="reveal">
+            {{ activeCard.back }}
+            <div>
+                <button (click)="updateCard(activeCard, 'Good')">Good</button>
+                <button (click)="updateCard(activeCard, 'OK')">OK</button>
+                <button (click)="updateCard(activeCard, 'Bad')">Bad</button>
+            </div>
+        </div>
+
+    </div>
+</div>

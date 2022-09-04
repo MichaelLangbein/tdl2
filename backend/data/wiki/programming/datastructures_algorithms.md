@@ -409,6 +409,14 @@ function aStar(source: Node, target: Node, heuristic: (source: Node, target: Nod
 }
 ```
 
+# Diffing
+
+## Longest common subsequence
+
+## Minimal edit distance
+
+## Tree-diff
+
 
 # Memory manager
 

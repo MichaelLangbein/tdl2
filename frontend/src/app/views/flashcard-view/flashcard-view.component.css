@@ -1,0 +1,31 @@
+.active {
+    background-color: var(--color-secondary-1-1);
+    color: var(--color-white);
+}
+
+.cardView {
+    display: flex;
+    flex-direction: row;
+}
+
+.topicList {}
+
+.cardList {}
+
+.card {}
+
+form {
+    margin: 0 1rem 0 1rem;
+}
+
+.formElement {
+    margin: .5rem 0 .5rem 0;
+}
+
+.formElement label {
+    width: 100%;
+}
+
+.formElement input, .formElement textarea {
+    width: 100%;
+}
