@@ -1,0 +1,185 @@
+# Calculus
+
+# Hyperreals
+
+For the biggest part, we're going to deal with Nelson-style nonstandard-analysis. 
+
+List of external properties:
+\begin{itemize}
+    \item std, nstd
+    \item limt, nlimt
+    \item inftsm, inft
+    \item nearly cont
+\end{itemize}
+
+A statement using any external properties will be denoted as $\ext{A}$, one that \emph{might} use external properties as $\pext{A}$.
+
+We will use the following axioms:
+\begin{enumerate}
+    \item $0:std$
+    \item $\forall n \in \naturals: n:std \then (n+1):std $
+    \item $\thereis n \in \naturals: n:nstd $
+    \item External induction: Induction  over \std{n} about \pext{A}: \\ 
+    $ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n)$
+    \item Internal induction: Induction over \pnstd{n} about A: \\
+    $ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $
+\end{enumerate}
+
+The rationale over the two induction-axioms is simple. Ordinary induction is about $A$ over \std{n}. 
+External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones. 
+Internal induction is about $A$ over \pnstd{n}. This makes sure that when we talk about potentially infinite $n$'s, we only apply internal statements.
+
+In other words: these two inductions ensure that we \textbf{never apply external statements to external numbers}. 
+
+Doing so would lead to logical incosistencies. That's why there is no "fully external" induction.
+
+However, note that axiom 2 is actually a case of "fully external" induction.
+
+
+\begin{theorem}
+    $ \forall n \in \naturals: n:nst \then (n+1):nst $ \label{addingNonstds}
+\end{theorem}
+\begin{proof}
+    \subprf{Suppose $n:nst$.}{$(n+1):nst$}{
+        \subprf{By contradiction. Suppose $(n+1):std$.}{this leads to a contradiction.}{
+            $(n+1):std \then n:std$.  \\
+            This contradicts the premise that $n:nst$.
+        }
+    }
+\end{proof}
+
+If you don't believe the argument in the previous proof, consider this: 
+\begin{proof}
+    \subprf{
+    Suppose all of the following: \\
+    $ [\forall n: Q(n) \then Q(n+1)] \then \forall n: Q(n) $ \\
+    $ [\forall n: Q(n) \then Q(n+1)] $ \\
+    This leads to $ \forall n: Q(n) $. \\ 
+    }{$ \forall n: Q(n+1) \then Q(n) $}{
+        \subprf{Let $n = n_0$ and suppose $Q(n_0+1)$.}{$Q(n_0)$}{
+            Since $ \forall n: Q(n) $ holds, it must be true that $Q(n_0)$.
+        }
+    }
+\end{proof}
+
+
+We can use theorem \ref{addingNonstds} to prove the following: 
+
+\begin{theorem}
+    $\forall n, m \in \naturals: n:std \land m:nstd \then (n+m):nst$
+\end{theorem}
+\begin{proof}
+    \subprf{Let $m=m_0:nst$.}{$\forall n \in \naturals: n:std  \then (n+m_0):nst$}{
+        By induction on $n$. 
+        \\
+        \subprf{Base case. Let $n=0$.}{$(0+m_0):nst$}{
+            $0+m_0=m_0$ \\
+            $m_0:nst$
+        }
+        \\
+        \subprf{Induction step.}{$[(n+m_0):nst] \then [(n+1+m_0):nst]$}{
+            Just apply theorem \ref{addingNonstds} to $n=(n+m_0)$.
+        }
+    }
+\end{proof}
+
+It is notable that you can never reach a standard number when adding nonstandard numbers.
+\begin{theorem}
+    $ \forall n,m \in \naturals: n,m:nst \then (n+m):nst $
+\end{theorem}
+\begin{proof}
+    We proceed by proving the equivalent $ (n+m):std \then (n:std \lor m:std) $ 
+    \subprf{Suppose $(n+m):std$}{$(n:std \lor m:std)$}{
+        \subprf{Without loss of generality, suppose $n:nst$}{$m:std$}{
+            \subprf{By contradiction. Suppose $m:nst$}{this leads to a contradiction}{
+                We have already assumed that  $(n+m):std$. \\
+                Now, however, we also assume that $n,m:nst$. \\
+                Using theorem \ref{addingNonstds} however, we see that when $n,m:nst$, then it must be that $(n+m):nst$.
+            }
+        }
+    }
+\end{proof}
+
+
+# Limits
+
+# Sequences and series
+
+### Tailor
+### Fourier
+### Laplace
+
+\subsection{Euler's formula}
+Proof: Consider the function $f(t)=e^{-it}(cost+isint)$ for $t \in \reals$. By the quotient rule
+$$ f'(t) = e^{-it} (i\ cos(t) - \sin(t)) -ie^{-it} (\cos(t) + i \sin(t)) = 0 $$
+identically for all $t \in \reals$. Hence, $f$ is constant everywhere. Since $f(0)=1$, it follows that $f(t)=1$ identically. Therefore, $e^{it}=cost+isint$ for all $t \in \reals$, as claimed.
+
+
+# Integration
+
+The infinitessimal view of calculus makes it quite easy to prove theorems. Consider this illustration of how definite integrals work.
+
+\begin{equation}
+    \begin{aligned}
+        \int_a^b \frac{dF}{dx}(x) dx &= \int_a^b \frac{F(x + dx) - F(x)}{dx} dx \\
+        \int_a^b F(x + dx) - \int_a^b F(x) &= F(b + dx) - F(a)
+    \end{aligned}
+\end{equation}
+
+
+### Integration strategies
+
+\paragraph{u-substitution}
+
+\paragraph{Integration by parts} is the last trick up our sleave when all other strategies haven't helped. Consider the integral 
+
+$$ \int x e^x \diff{x} $$
+
+We can rewrite this integral as 
+
+$$ \int u \diff{v} $$
+
+where $u = x$ and $\diff{v} = e^x \diff{x}$. In general, you always want to pick $u$ in such a way that $u$ gets simpler after being differentiated.
+$x$ does get a lot simpler after differentiation, whereas $e^x$ doesn't, so the choice is clear. 
+
+We then use the following: 
+
+$$ \int u \diff{v} = uv - \int v \diff{u} $$\footnote{The proof goes like this: Starting with the product rule of differentiation: $(ab)' = a'b + ba'$ we get $(ab)' - a'b = ba'$ and  $ab - \int a'b \diff{x} = \int ba' \diff{x} $}
+
+Since we chose $u = x$ we have $\diff{u} = \diff{x}$, and from $\diff{v} = e^x \diff{x}$ we get $v = e^x$. This yields us: 
+
+$$ xe^x - \int e^x \diff{x} $$
+$$ e^x ( x - 1) $$
+
+as the solution. 
+
+# Vector calculus
+
+Integration over a vector, integration along a vector, integration along a surface. 
+
+You can find a nice introduction (mostly in the second part of) this pdf: \inlinecode{http://www.maths.gla.ac.uk/~cc/2A/2A_notes/2A_chap4.pdf} and here \inlinecode{http://geocalc.clas.asu.edu/pdf-preAdobe8/SIMP_CAL.pdf}
+
+
+### Constraint optimization using Lagrange multipliers
+
+We want to maximize $f(x, y)$ subject to the constraint $g(x, y) = 0$.
+At the optimal point $x_0, y_0$ it must hold that:
+\begin{equation}
+  \nabla f = \lambda \nabla g
+\end{equation}
+for some scalar $\lambda$ (the so-called Lagrange-multiplier).
+
+Example:
+$$ f(x, y) = x^2 y $$
+$$ g(x, y) = x^2 + y^2 = 1 $$
+
+Now using $\nabla f = \lambda \nabla g$ we get the system of equations:
+\begin{equation}
+    \begin{aligned}
+        2xy &= 2x\lambda \\
+        x^2 &= 2y\lambda \\
+        x^2 + y^2 &= 1
+    \end{aligned}
+\end{equation}
+
+Which yields $x = \sqrt{2/3}$, $y = \sqrt{1/3}$ and $\lambda = \sqrt{1/3}$.

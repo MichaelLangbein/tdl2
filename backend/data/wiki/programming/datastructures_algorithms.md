@@ -145,6 +145,10 @@ function scanLine(polyPoints: Point[]) {
 Basically, ScanLine is the polygon-equivalent of raster's FloodFill.
 
 
+## Triangulation: ear-cut-algorithm
+
+## Creating Voronoi-diagrams
+
 
 # Solving recurrence relations
 
