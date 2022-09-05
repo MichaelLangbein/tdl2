@@ -412,6 +412,33 @@ function aStar(source: Node, target: Node, heuristic: (source: Node, target: Nod
 # Diffing
 
 ## Longest common subsequence
+```ts
+function lcs(s1: string, s2: string): number {
+    if (s1.length === 0 || s2.length === 0) return 0;
+    if (s1[0] === s2[0]) {
+        return 1 + lcs(s1.substring(1), s2.substring(1));
+    } else {
+        const leftMax = lcs(s1.substring(1), s2);
+        const rightMax = lcs(s1, s2.substring(1));
+        return Math.max(leftMax, rightMax);
+    }
+}
+
+function memoized(f) {
+    const cache = {};
+    const memed = (s1, s2) => {
+        if (cache[s1]?[s2]) return cache[s1][s2];
+        if (cache[s2]?[s1]) return cache[s2][s1];
+        const result = f(s1, s2);
+        if (!cache[s1]) cache[s1] = {};
+        cache[s1][s2] = result;
+        return result;
+    }
+    return memed;
+}
+//@ts-ignore
+lts = memoized(lts);
+```
 
 ## Minimal edit distance
 
