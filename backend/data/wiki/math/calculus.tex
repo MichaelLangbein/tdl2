@@ -5,23 +5,23 @@
 For the biggest part, we're going to deal with Nelson-style nonstandard-analysis. 
 
 List of external properties:
-\begin{itemize}
-    \item std, nstd
-    \item limt, nlimt
-    \item inftsm, inft
-    \item nearly cont
-\end{itemize}
+
+    - std, nstd
+    - limt, nlimt
+    - inftsm, inft
+    - nearly cont
+
 
 A statement using any external properties will be denoted as $\ext{A}$, one that \emph{might} use external properties as $\pext{A}$.
 
 We will use the following axioms:
 \begin{enumerate}
-    \item $0:std$
-    \item $\forall n \in \naturals: n:std \then (n+1):std $
-    \item $\thereis n \in \naturals: n:nstd $
-    \item External induction: Induction  over \std{n} about \pext{A}: \\ 
+    - $0:std$
+    - $\forall n \in \naturals: n:std \then (n+1):std $
+    - $\thereis n \in \naturals: n:nstd $
+    - External induction: Induction  over \std{n} about \pext{A}: \\ 
     $ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n)$
-    \item Internal induction: Induction over \pnstd{n} about A: \\
+    - Internal induction: Induction over \pnstd{n} about A: \\
     $ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $
 \end{enumerate}
 

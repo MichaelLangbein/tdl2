@@ -12,10 +12,10 @@ We'll work a lot with a few vector-spaces and transfromations from and to those 
 
 \begin{definition}
     Let $W$ be a space. Then $V \subseteq W$ is a subspace, if: 
-    \begin{itemize}
-        \item $\forall v_1, v_2 \in V: v_1 + v_2 \in W$
-        \item $\forall v \in V: \forall r \in R: rv \in V$
-    \end{itemize}
+    
+        - $\forall v_1, v_2 \in V: v_1 + v_2 \in W$
+        - $\forall v \in V: \forall r \in R: rv \in V$
+    
 \end{definition}
     
 
@@ -145,10 +145,10 @@ But inverses are notoriously hard to calculate. Fortunately, there is another ap
 \end{equation}
 
 Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial to prove:
-\begin{itemize}
-    \item $\mtrx{T}_{BA} = \mtrx{T}_{AB}^{-1}$
-    \item $\mtrx{T}_{CA} = \mtrx{T}_{CB} \mtrx{T}_{BA}$
-\end{itemize}
+
+    - $\mtrx{T}_{BA} = \mtrx{T}_{AB}^{-1}$
+    - $\mtrx{T}_{CA} = \mtrx{T}_{CB} \mtrx{T}_{BA}$
+
 
 
 
@@ -166,10 +166,10 @@ Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial t
 
 \begin{definition}
 Let $U$ and $V$ be two vector spaces and $f:U \to V$. Then $f$ is a \emph{linear transform} if
-\begin{itemize}
-    \item $f$ preserves scalar multiplication: $f(\alpha \vec{u}) = \alpha f(\vec{u})$
-    \item $f$ preserves vector addition: $f(\vec{u}_1 + \vec{u}_2) = f(\vec{u}_1) + f(\vec{u}_2)$
-\end{itemize}
+
+    - $f$ preserves scalar multiplication: $f(\alpha \vec{u}) = \alpha f(\vec{u})$
+    - $f$ preserves vector addition: $f(\vec{u}_1 + \vec{u}_2) = f(\vec{u}_1) + f(\vec{u}_2)$
+
 \end{definition}
 
 There are a bunch of properties to linear transformations that can be useful to us. 
@@ -210,19 +210,19 @@ There are a bunch of properties to linear transformations that can be useful to 
 \end{proof}
 
 A whole bunch of other properties are now easily proved. Let $f$ and $g$ be linear transforms from $U$ to $V$. The following are also linear transforms: 
-\begin{itemize}
-    \item $\alpha f$
-    \item $f + g$
-    \item $f^{-1}$ ( if it exists )
-    \item $fg$ ( here $g: V \to W$ )
-\end{itemize}
+
+    - $\alpha f$
+    - $f + g$
+    - $f^{-1}$ ( if it exists )
+    - $fg$ ( here $g: V \to W$ )
+
 
 Let $f: U \to V$ be a linear transform. Then the following are equivalent: 
-\begin{itemize}
-    \item If $f(\vec{u}) = \vec{0}$, then $\vec{u} = \vec{0}$
-    \item $f$ is one-to-one
-    \item $f$ maps linearly independent vectors to linearly independent vectors. 
-\end{itemize}
+
+    - If $f(\vec{u}) = \vec{0}$, then $\vec{u} = \vec{0}$
+    - $f$ is one-to-one
+    - $f$ maps linearly independent vectors to linearly independent vectors. 
+
 
 
 Prove that a transform can be split up into mulitple transforms on the basis vectors. 
@@ -318,10 +318,10 @@ $\det{\mtrx{A}}$ is defined as $a_{11}a_{22} - a_{12}a_{21}$. The definitions fo
     We can prove this making use of theorem \ref{lin_indep_if_no_bx0}. From the given it follows that $\mtrx{A}$ is linearly dependent. 
     Thus $\thereis \vec{a} \in \mtrx{A}: \vec{a} = \sum_{A/a} \alpha_i \vec{a}_i$. In the case of a $2 \times 2$ matrix this expression becomes very simple: $\vec{a}_1 = \alpha \vec{a}_2$. 
     Breaking $\vec{a}_1$ into its components
-    \begin{itemize}
-        \item $a_{11} = \alpha a_{12}$
-        \item $a_{21} = \alpha a_{22}$
-    \end{itemize}
+    
+        - $a_{11} = \alpha a_{12}$
+        - $a_{21} = \alpha a_{22}$
+    
     Putting this into the definition of a determinant we get:
     \begin{equation}
         \begin{aligned}
@@ -341,11 +341,11 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 \paragraph{Properties}
-\begin{itemize}
-    \item $\det{\mtrx{A} \mtrx{B}} = \det{\mtrx{A}}\det{\mtrx{B}}$
-    \item $\det{\mtrx{A} + \mtrx{B}} \neq \det{\mtrx{A}} + \det{\mtrx{B}}$
-    \item $\det{\mtrx{A}} = \prod{\lambda_i}$ (see eivenvalues, later)
-\end{itemize}
+
+    - $\det{\mtrx{A} \mtrx{B}} = \det{\mtrx{A}}\det{\mtrx{B}}$
+    - $\det{\mtrx{A} + \mtrx{B}} \neq \det{\mtrx{A}} + \det{\mtrx{B}}$
+    - $\det{\mtrx{A}} = \prod{\lambda_i}$ (see eivenvalues, later)
+
 
 
 
@@ -489,11 +489,11 @@ Once at a sprint-discussion I wondered why principal components (see about those
 \end{theorem}
 
 \paragraph{Interpretation of eigenvalues}
-\begin{itemize}
-    \item $\lambda$ is complex: $\mtrx{A}$ contains a rotation
-    \item $\lambda$ is negative: $\mtrx{A}$ contains some mirroring
-    \item $\lambda$ is 0: $\det{\mtrx{A}} = 0$, i.e. $\mtrx{A}$ squishes a dimension
-\end{itemize}
+
+    - $\lambda$ is complex: $\mtrx{A}$ contains a rotation
+    - $\lambda$ is negative: $\mtrx{A}$ contains some mirroring
+    - $\lambda$ is 0: $\det{\mtrx{A}} = 0$, i.e. $\mtrx{A}$ squishes a dimension
+
 
 
 
@@ -504,10 +504,10 @@ Let $\mtrx{A}$ be of size $m \times n$. We will prove that also such non-square 
     \mtrx{A} = \mtrx{U} \mtrx{\Sigma} \mtrx{V}^T
 \end{equation}
 where:
-\begin{itemize}
-    \item $\mtrx{U}$ and $\mtrx{V}$ are orthonormals of sizes $m \times m$ and $n \times n$, respectively
-    \item $\mtrx{\Sigma}$ is a diagonal matrix of size $m \times n$
-\end{itemize}
+
+    - $\mtrx{U}$ and $\mtrx{V}$ are orthonormals of sizes $m \times m$ and $n \times n$, respectively
+    - $\mtrx{\Sigma}$ is a diagonal matrix of size $m \times n$
+
 In other words: 
 \begin{equation}
     \mtrx{A} \mtrx{V} = \mtrx{U} \mtrx{\Sigma}
@@ -590,14 +590,14 @@ where in our case $\mtrx{\Sigma} = \begin{bmatrix}
 \end{bmatrix}$
 
 We'll now expand
-\begin{itemize}
-    \item $k \times m$ matrix $\hat{\mtrx{U}}$ to $m \times m$ matrix $\mtrx{U} = [\vec{y}_i]$, even where $\lambda_i = 0$
-    \item $k \times n$ matrix $\hat{\mtrx{V}}$ to $n \times n$ matrix $\mtrx{V} = [\vec{e}_i]$, even where $\lambda_i = 0$
-    \item $k \times k$ matrix $\mtrx{\Sigma}$ to $m \times n$ matrix $\mtrx{\Sigma} = \begin{cases}
+
+    - $k \times m$ matrix $\hat{\mtrx{U}}$ to $m \times m$ matrix $\mtrx{U} = [\vec{y}_i]$, even where $\lambda_i = 0$
+    - $k \times n$ matrix $\hat{\mtrx{V}}$ to $n \times n$ matrix $\mtrx{V} = [\vec{e}_i]$, even where $\lambda_i = 0$
+    - $k \times k$ matrix $\mtrx{\Sigma}$ to $m \times n$ matrix $\mtrx{\Sigma} = \begin{cases}
         \text{if } i = j \land i < k: \sqrt{\lambda_i} \\
         \text{else } 0
     \end{cases}$
-\end{itemize}
+
 With that we obtain
 \begin{equation}
     \mtrx{A} = \mtrx{U} \mtrx{\Sigma} \mtrx{V}^T
@@ -755,12 +755,12 @@ If there are more variables than equations, the system is underdetermined. If th
 \paragraph{Solving well determined systems}
 There are two cases: a system is either consistent or inconsistent. The follwing statements are all equivalent, meaning that any one of them is related to any other one in an if-and-only-if way. 
 
-\begin{itemize}
-    \item the system is consistent
-    \item the matrix is invertible
-    \item the determinant is nonzero
-    \item there is exactly one sollution
-\end{itemize}
+
+    - the system is consistent
+    - the matrix is invertible
+    - the determinant is nonzero
+    - there is exactly one sollution
+
 
 We proof a few of those equivalences just for the hell of it. 
 
@@ -772,12 +772,12 @@ We proof a few of those equivalences just for the hell of it.
 
 On the other hand, in the inconsistent case, the follwing statements are equivalent:
 
-\begin{itemize}
-    \item the system is inconsistent
-    \item the matrix is singular (aka. noninvertible)
-    \item the determinant equals zero
-    \item one (or more) row (or column) is lineraly dependent of the others
-\end{itemize}
+
+    - the system is inconsistent
+    - the matrix is singular (aka. noninvertible)
+    - the determinant equals zero
+    - one (or more) row (or column) is lineraly dependent of the others
+
 
 \paragraph{Solving overdetermined systems: least squares}
 

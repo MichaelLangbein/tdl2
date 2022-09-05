@@ -7,16 +7,16 @@ We will mention the following implementations: the vectorspace of coordinate fre
  
 
 \begin{definition}[Vector space] A vector space $V$ is a set closed over two operations: scalar multiplication and vector addition. These two operations must fullfill the following properties:
-\begin{itemize}
-    \item $V$ is closed under scalar multiplication and vector-addition: $a\vec{v} \in V, \vec{v} + \vec{w} \in V$
-    \item vector-addition is commutative: $\vec{v} + \vec{w} = \vec{w} + \vec{v}$
-    \item vector-addition is associative: $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
-    \item $\vec{0}$ is the additive identity: $\vec{v} + \vec{0} = \vec{v}$
+
+    - $V$ is closed under scalar multiplication and vector-addition: $a\vec{v} \in V, \vec{v} + \vec{w} \in V$
+    - vector-addition is commutative: $\vec{v} + \vec{w} = \vec{w} + \vec{v}$
+    - vector-addition is associative: $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
+    - $\vec{0}$ is the additive identity: $\vec{v} + \vec{0} = \vec{v}$
     
-    \item $a(b\vec{v}) = (ab)\vec{v}$
-    \item Vector-addition and scalar-multiplication are distributive (part 1): $a(\vec{v} + \vec{w}) = a\vec{v} + a\vec{w}$
-    \item Vector-addition and scalar-multiplication are distributive (part 2): $(a+b)\vec{v} = a\vec{v} + b\vec{v}$
-\end{itemize}
+    - $a(b\vec{v}) = (ab)\vec{v}$
+    - Vector-addition and scalar-multiplication are distributive (part 1): $a(\vec{v} + \vec{w}) = a\vec{v} + a\vec{w}$
+    - Vector-addition and scalar-multiplication are distributive (part 2): $(a+b)\vec{v} = a\vec{v} + b\vec{v}$
+
 \end{definition}
 
 The most common vectorspaces are certainly $\reals^n$ and functionspaces.
@@ -96,12 +96,12 @@ For any three vectors chosen from $\reals^2$, at least one must be a linear comb
 Vector spaces don't define anything about lengths, angles or projections. This lack is alleviated by adding a inner product. 
 
 \begin{definition}[Inner product space] The inner product is defined as any operation that has the following properties:
-\begin{itemize}
-    \item $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
-    \item $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
-    \item $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
-    \item $\vec{v} \neq \vec{0} \then \vec{v} \innerprod \vec{v} > 0$
-\end{itemize}
+
+    - $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
+    - $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
+    - $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
+    - $\vec{v} \neq \vec{0} \then \vec{v} \innerprod \vec{v} > 0$
+
 \end{definition}
 
 In inner product spaces, we can define norms, orthogonality, and angles. 
@@ -132,12 +132,12 @@ As one nice little application, consider this statement.
 
 Other properties of the norm are also easily proved:
 
-\begin{itemize}
-    \item $|a\vec{v}| = |a||\vec{v}|$
-    \item $|\vec{v} + \vec{w}| = |\vec{v}| + |\vec{w}|$
-    \item $|\vec{v}| \geq 0$
-    \item $|\vec{v}| = 0 \iff \vec{v} = \vec{0}$
-\end{itemize}
+
+    - $|a\vec{v}| = |a||\vec{v}|$
+    - $|\vec{v} + \vec{w}| = |\vec{v}| + |\vec{w}|$
+    - $|\vec{v}| \geq 0$
+    - $|\vec{v}| = 0 \iff \vec{v} = \vec{0}$
+
 
 Two more important statements that can be proven for the general inner product spaces are the pythagorean theorem and the Cauchy-Schwartz inequality. 
 
@@ -290,12 +290,12 @@ $$ B^{-1} \vec{v} = \vec{\alpha} $$
 This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N^3} operation, and matrix multiplication is still a \BigTheta{N^{>2.3}} operation. Contrary to that, the evaluation of a plynomal is a \BigTheta{N} operation when using Horners method. 
 
 \paragraph{Gram-Schmidt orthogonalisation} For every set of li vectors we can find a set of orthogonal vectors like this: 
-\begin{itemize}
-    \item $b_1 = v_1$
-    \item $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$
-    \item $b_3 = v_3 - prj(v_3, b_2) - prj(v_3, b_1)$
-    \item ...
-\end{itemize}
+
+    - $b_1 = v_1$
+    - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$
+    - $b_3 = v_3 - prj(v_3, b_2) - prj(v_3, b_1)$
+    - ...
+
 
 \paragraph{Orthogonal complement}
 

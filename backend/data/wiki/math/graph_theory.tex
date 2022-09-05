@@ -13,11 +13,11 @@
     {$\sum_{V_G} \indeg(v_n) = |E_G|$ where $E_G = \{(v_1, v_2)\}$ \\}
     {This is tirvially true.}
     {
-    \begin{itemize}
-        \item Let $\sum_{V_G} \indeg(v_n) = |E_G|$ 
-        \item Let $V_{G'} = V_G \cup \{v_{N+1}\}$
-        \item Let $E_{G'} = E_G \cup \{(x, y) \in V_G \times \{v_{N+1}\} \cup \{v_{N+1}\} \times V_G \}$
-    \end{itemize}
+    
+        - Let $\sum_{V_G} \indeg(v_n) = |E_G|$ 
+        - Let $V_{G'} = V_G \cup \{v_{N+1}\}$
+        - Let $E_{G'} = E_G \cup \{(x, y) \in V_G \times \{v_{N+1}\} \cup \{v_{N+1}\} \times V_G \}$
+    
     }
     {
      For the left side it holds that: 
@@ -200,11 +200,11 @@ The proof follows from induction on $n$, starting at $n=3$.
 \end{proof}
 
 \begin{proof} When drawing a n-gon ($n \geq 3$) using triangles, there are $n-3$ shared edges.
-\begin{itemize}
-    \item The n-gon has $n$ nodes, $n$ edges and one loop
-    \item The $n-2$ triangles have in total $n$ nodes, $n-2$ loops and (via Eulers formula) $2n-3$ edges.
-    \item The outer edges, that is, all the edges of the n-gon, are not shared. Thus, there are $e_{triangles} - e_{n-gon} = n-3$ shared edges.
-\end{itemize}
+
+    - The n-gon has $n$ nodes, $n$ edges and one loop
+    - The $n-2$ triangles have in total $n$ nodes, $n-2$ loops and (via Eulers formula) $2n-3$ edges.
+    - The outer edges, that is, all the edges of the n-gon, are not shared. Thus, there are $e_{triangles} - e_{n-gon} = n-3$ shared edges.
+
 \end{proof}
 
 

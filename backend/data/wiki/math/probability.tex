@@ -5,19 +5,19 @@
 ### Probability space
 
 Probability works on some basic entities:
-\begin{itemize}
-    \item \samplespace is a nonempty set called the sample-space. 
-    \item $\omega \in \samplespace$ is called an outcome
-    \item $E \subseteq \samplespace$ is called an event
-\end{itemize}
+
+    - \samplespace is a nonempty set called the sample-space. 
+    - $\omega \in \samplespace$ is called an outcome
+    - $E \subseteq \samplespace$ is called an event
+
 
 
 \begin{definition}[Probability]
     Probability is a measure on \samplespace. It is a total function $ \probFunct: \samplespace \to \reals $ such that:
-    \begin{itemize}
-        \item $ \forall \omega \in \samplespace : \probFunct[\omega] \geq 0 $
-        \item $ \sum_{\omega \in \samplespace} \probFunct[\omega] = 1 $
-    \end{itemize}
+    
+        - $ \forall \omega \in \samplespace : \probFunct[\omega] \geq 0 $
+        - $ \sum_{\omega \in \samplespace} \probFunct[\omega] = 1 $
+    
 \end{definition}
 
 A probability measure together with a sample-space is called a probability space. 
@@ -85,12 +85,12 @@ Here are the tables of probabilities:
 \end{table}
 
 Notice the following facts:
-\begin{itemize}
-    \item notice how $P(G|T) \neq 1 - P(G|S)$
-    \item notice how $P(G|T) = 1 - P(B|T)$
-    \item $P(A, B) = P(A|B) P(B) = P(B|A) P(A)$
-    \item $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
-\end{itemize}
+
+    - notice how $P(G|T) \neq 1 - P(G|S)$
+    - notice how $P(G|T) = 1 - P(B|T)$
+    - $P(A, B) = P(A|B) P(B) = P(B|A) P(A)$
+    - $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
+
 
 As yet another exercise, here is the formula of the probability of a union of arbitrary events: 
 
@@ -235,11 +235,11 @@ A probability distribution is a function from the domain of a random variable to
 There is an abundance of ready made probability distributions to chose from, covering virtually all important situations. But care must be taken when deciding which distribution to apply to a certain problem. 
 
 \paragraph{The Bernoulli family} based on modelling a series of coin-tosses.
-\begin{itemize}
-    \item Bernoulli: heads or tails?
-    \item Binominal: k heads in n trials
-    \item Poisson: k heads in $\infty$ trials. 
-\end{itemize}
+
+    - Bernoulli: heads or tails?
+    - Binominal: k heads in n trials
+    - Poisson: k heads in $\infty$ trials. 
+
 A remarkable feature of the Poisson-distribution is that it has only a parameter for the mean, but always the same variance.
 
 \paragraph{The geometric family} based on repeating an experiment until it succeeds. 
@@ -247,10 +247,10 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
 
 
 ### Probabilistic fallacies
-\begin{itemize}
-    \item T-Test interpretation: If $\probFunct[A|B] = x$, then this does \emph{not} mean that $\probFunct[A|\overline{B}] = 1 - x$.
-    \item Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
-\end{itemize}
+
+    - T-Test interpretation: If $\probFunct[A|B] = x$, then this does \emph{not} mean that $\probFunct[A|\overline{B}] = 1 - x$.
+    - Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
+
 
 \paragraph{$\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$}. 
 \begin{proof}
