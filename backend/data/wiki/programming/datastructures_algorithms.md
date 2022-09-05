@@ -461,27 +461,28 @@ lts = memoized(lts);
 ## Minimal edit distance
 ```ts
 /**
-    A      B        C        D         E       0 
-A   \
-     \ fits 
-       \   
-         \ add B
-C         +─────► 
-          │         \
-          |rm C       \ fits
-          |              \
-          ▼ add B   add C   \ 
-D         +──────► +─────────►
-          │        │          \
-          │rm D    │ rm D        \  fits
-          │        │                \
-          ▼ add B  ▼ add C     add D  \ add E
-R         +─────►  +───────► +──────► +───────►
-          │        │         │        │       │
-          │rm R    │rm R     │rm R    │rm R   │rm R
-          │        │         │        │       │
-          ▼ add B  ▼ add C   ▼ add D  ▼add E  ▼
-0         +──────► + ──────► + ─────► + ──────►
+                    targetString
+                    A      B         C         D       E       0 
+editableString  A   \
+                     \ fits 
+                       \   
+                         \ add B
+                C         +─────► 
+                          │         \
+                          |rm C       \ fits
+                          |              \
+                          ▼ add B   add C   \ 
+                D         +──────► +─────────►
+                          │        │          \
+                          │rm D    │ rm D        \  fits
+                          │        │                \
+                          ▼ add B  ▼ add C     add D  \ add E
+                R         +─────►  +───────► +──────► +───────►
+                          │        │         │        │       │
+                          │rm R    │rm R     │rm R    │rm R   │rm R
+                          │        │         │        │       │
+                          ▼ add B  ▼ add C   ▼ add D  ▼add E  ▼
+                0         +──────► + ──────► + ─────► + ──────►
 */
 
 
@@ -493,9 +494,9 @@ function med(targetString: string, editableString: string): number {
         // going diagonal
         return med(targetString.substring(1), editableString.substring(1));
     } else {
-        // inserting s1[0] before s2[0]  === going right
+        // inserting targetString[0] before editableString[0]  === going right
         const afterInsert = 1 + med(targetString.substring(1), editableString);
-        // removing s1[0] === going down
+        // removing editableString[0] === going down
         const afterDelete = 1 + med(targetString, editableString.substring(1));
         // picking best
         return Math.min(afterInsert, afterDelete);
@@ -504,7 +505,13 @@ function med(targetString: string, editableString: string): number {
 ```
 
 ## Tree-diff
-
+https://www.youtube.com/watch?v=6Ur8B35xCj8
+https://news.ycombinator.com/item?id=15101373
+Notably, trees allow a lot of operations. In dynamic programming we go through all possible operations in a fixed order.
+For example, above in `med` we always first explore inserting and second removing.
+With only two operations possible that's just fine.
+But with trees allowing a lot more operations, we can get much more efficient by using a guided search.
+That is, enqueue all possible operations the same way you would in `aStar`.
 
 # Memory manager
 
