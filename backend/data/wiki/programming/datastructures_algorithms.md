@@ -513,6 +513,42 @@ With only two operations possible that's just fine.
 But with trees allowing a lot more operations, we can get much more efficient by using a guided search.
 That is, enqueue all possible operations the same way you would in `aStar`.
 
+
+If , however, tree-nodes have an id, diff'ing gets much simpler, since we know exactly when something is an edit (id already exists) and when nodes have been moved (existing id at new position).
+```python
+def ted(old, new):
+    edits = []
+    assert(old.id === new.id)
+
+    if old.val != new.val:
+        edits += f"edit/{old.id}/{new.val}"
+    
+    matchingChildren = matching(new.children, old.children)
+    newChildren = listAllExcept(new.children, old.children)
+    missingChildren = listAllExcept(old.children, new.children)
+    
+    for (oldChild, newChild) in matchingChildren:
+        edits += ted(oldChild, nedChild)
+    
+    for newChild in newChildren:
+        if childOrig = findInFullTree(newChild, oldTree):
+            edits += f"move/{childOrig.id}/{new.id}"
+            edits += ted(childOrig, newChild)
+        else:
+            edits += f"create/{newChild}"
+    
+    for missingChild in missingChildren:  # those that were in old but aren't in new
+        if not findInFullTree(missingChild, newTree):
+            edits += f"remove/{missingChild.id}"
+        else:
+            # Else: node is somewhere else in newTree. 
+            # There it will be listed as a `newChild`; so no need to handle that case here.
+            continue
+
+    return edits
+
+```
+
 # Memory manager
 
 ```ts
