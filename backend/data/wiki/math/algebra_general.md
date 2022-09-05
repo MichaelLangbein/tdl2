@@ -8,18 +8,18 @@ We will mention the following implementations: the vectorspace of coordinate fre
 
 \begin{definition}[Vector space] A vector space $V$ is a set closed over two operations: scalar multiplication and vector addition. These two operations must fullfill the following properties:
 
-    - $V$ is closed under scalar multiplication and vector-addition: $a\vec{v} \in V, \vec{v} + \vec{w} \in V$
-    - vector-addition is commutative: $\vec{v} + \vec{w} = \vec{w} + \vec{v}$
-    - vector-addition is associative: $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
-    - $\vec{0}$ is the additive identity: $\vec{v} + \vec{0} = \vec{v}$
+- $V$ is closed under scalar multiplication and vector-addition: $a\vec{v} \in V, \vec{v} + \vec{w} \in V$
+- vector-addition is commutative: $\vec{v} + \vec{w} = \vec{w} + \vec{v}$
+- vector-addition is associative: $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$
+- $\vec{0}$ is the additive identity: $\vec{v} + \vec{0} = \vec{v}$
     
-    - $a(b\vec{v}) = (ab)\vec{v}$
-    - Vector-addition and scalar-multiplication are distributive (part 1): $a(\vec{v} + \vec{w}) = a\vec{v} + a\vec{w}$
-    - Vector-addition and scalar-multiplication are distributive (part 2): $(a+b)\vec{v} = a\vec{v} + b\vec{v}$
+- $a(b\vec{v}) = (ab)\vec{v}$
+- Vector-addition and scalar-multiplication are distributive (part 1): $a(\vec{v} + \vec{w}) = a\vec{v} + a\vec{w}$
+- Vector-addition and scalar-multiplication are distributive (part 2): $(a+b)\vec{v} = a\vec{v} + b\vec{v}$
 
 \end{definition}
 
-The most common vectorspaces are certainly $\reals^n$ and functionspaces.
+The most common vector-spaces are certainly $\reals^n$ and function-spaces.
 The implementations of the above defined scalar product and vector addition are trivial.
 
 
@@ -28,8 +28,8 @@ The implementations of the above defined scalar product and vector addition are 
 
 
 
-\paragraph{Subspaces of vectorspaces}
-A set $U$ is a subspace of a vectorspace $V$, iff $U \subset V$ and $U$ is a vectorspace.
+**Subspaces of vector-spaces**
+A set $U$ is a subspace of a vector-space $V$, iff $U \subset V$ and $U$ is a vectorspace.
 
 
 
@@ -38,7 +38,7 @@ A set $U$ is a subspace of a vectorspace $V$, iff $U \subset V$ and $U$ is a vec
 
 
 
-\paragraph{linear independence} 
+**linear independence** 
 The elements in $A$, a subset of a vectorspace, are linearly independent iff $\forall \alpha_1, ...,\alpha_n: [( \sum \alpha_i \vec{a}_i = 0 ) \iff ( \alpha_1 = \alpha_2 = ... = 0 )]$. Note that this reduces automatically to $\forall \alpha_1, ...,\alpha_n: [\sum_i^n \alpha_i b_i = 0 \then (\alpha_1 = ... = \alpha_n = 0)]$, because the $\leftarrow$ case is always true. 
 
 Consequently, linear dependence is defined as $B:ld \equiv \thereis \alpha_1, ..., \alpha_2: [(\alpha_1 \neq 0 \lor ... \lor \alpha_n \neq 0) \land ( \sum_i^n \alpha_i b_i = 0 )]$.
@@ -54,7 +54,7 @@ Consider the span of two integers (like in the die-hard water-jug problem). They
 
 
 
-\paragraph{Bases}
+**Bases**
 A set $B$ is a base to a vectorspace $V$ iff $ B \subseteq V \land  \forall v \in V: \thereis ! \alpha_1, ..., \alpha_n : v = \sum_i \alpha_i b_i $. It is easy to prove that this means that
 $ B:baseV \iff ( B:li \land B:spanV ) $. 
 
@@ -97,10 +97,10 @@ Vector spaces don't define anything about lengths, angles or projections. This l
 
 \begin{definition}[Inner product space] The inner product is defined as any operation that has the following properties:
 
-    - $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
-    - $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
-    - $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
-    - $\vec{v} \neq \vec{0} \then \vec{v} \innerprod \vec{v} > 0$
+ - $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
+ - $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
+ - $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
+ - $\vec{v} \neq \vec{0} \then \vec{v} \innerprod \vec{v} > 0$
 
 \end{definition}
 
@@ -133,10 +133,10 @@ As one nice little application, consider this statement.
 Other properties of the norm are also easily proved:
 
 
-    - $|a\vec{v}| = |a||\vec{v}|$
-    - $|\vec{v} + \vec{w}| = |\vec{v}| + |\vec{w}|$
-    - $|\vec{v}| \geq 0$
-    - $|\vec{v}| = 0 \iff \vec{v} = \vec{0}$
+ - $|a\vec{v}| = |a||\vec{v}|$
+ - $|\vec{v} + \vec{w}| = |\vec{v}| + |\vec{w}|$
+ - $|\vec{v}| \geq 0$
+ - $|\vec{v}| = 0 \iff \vec{v} = \vec{0}$
 
 
 Two more important statements that can be proven for the general inner product spaces are the pythagorean theorem and the Cauchy-Schwartz inequality. 
@@ -180,7 +180,7 @@ The following is a proof that the two implementations of inner product are equiv
     }
 \end{proof}
 
-Note that if we were to chose a \emph{non}orthonormal basis, the inner product would not be reduced so nicely.
+Note that if we were to chose a *non*orthonormal basis, the inner product would not be reduced so nicely.
 
 
 
@@ -249,13 +249,13 @@ Although conceptually similar, orthogonality is a stricter concept than linear i
         }
     }
 \end{proof}
-This is profound. For example, the cos-sin-Fourier-basis is hard to prove to be linearly independent. But we can use the \emph{stricter} property of orthogonality to prove that it must also be linearly independent. 
+This is profound. For example, the cos-sin-Fourier-basis is hard to prove to be linearly independent. But we can use the *stricter* property of orthogonality to prove that it must also be linearly independent. 
 
 It is good to know that although orthogonality helps us to prove linear independence, it doesn't help us to prove that a set is a base, because for that we also need the set to span the whole space. 
 \begin{proof} In the infinite dimensional case, a orthogonal set $B \subseteq V$ does not have to be a base of $V$. A good example would be a set of linear functions in $V = C_{[a,b]}$ - they can never span quadratic functions. 
 \end{proof}
 
-\paragraph{Fourier decomposition} \label{fourierDecomposition}
+**Fourier decomposition** \label{fourierDecomposition}
 In every vectorspace a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \innerprod b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
 
 \begin{proof} Let $B$ be an orthonormal base of $V$. Then for any $\vec{v} \in V$ the $n$th coefficient $\alpha_n$ can be easily calculated as \innerprodbr{\vec{v}}{\vec{b_n}} \\
@@ -274,7 +274,7 @@ In every vectorspace a vector can be expressed as a sum of the basevectors like 
 
 \end{proof}
 
-This is much easier than the case where the base is \emph{not} orthonormal. If that is the case, we have to calulate the coefficients $\alpha_n$ by using the projections: 
+This is much easier than the case where the base is *not* orthonormal. If that is the case, we have to calulate the coefficients $\alpha_n$ by using the projections: 
 
 $$ \vec{v} = \sum \alpha_k \vec{b_k} \text{, with } \alpha_k = \gamma_k P_{\vec{b_k}}(\vec{v}) =  \gamma_k \frac{\vec{b_n} \innerprod \vec{v}}{|\vec{b_n}|^2}\vec{b_n} \text{, with  $\gamma_k$ to be determined.}$$
 
@@ -291,12 +291,12 @@ This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N
 
 \paragraph{Gram-Schmidt orthogonalisation} For every set of li vectors we can find a set of orthogonal vectors like this: 
 
-    - $b_1 = v_1$
-    - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$
-    - $b_3 = v_3 - prj(v_3, b_2) - prj(v_3, b_1)$
-    - ...
+ - $b_1 = v_1$
+ - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$
+ - $b_3 = v_3 - prj(v_3, b_2) - prj(v_3, b_1)$
+ - ...
 
 
-\paragraph{Orthogonal complement}
+**Orthogonal complement**
 
 

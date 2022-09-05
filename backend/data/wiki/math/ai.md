@@ -1,15 +1,15 @@
 # Machine learning
 
-# Neural networks
+## Neural networks
 
 ### Backpropagation
 The analytical way of deriving the backpropagaion algorithm consist of just a few steps. 
 A few definitions: 
 
 
-	- A layers outputvector $\vec{y}^l$ is obtained by the activation function $\vec{y}^l = f(\vec{x}^l) $
-	- The layers inputvector is obtained as a weighted sum of previous outputs: $\vec{x}^l = \mtrx{W}^l \vec{y}^{l-1} $. We cn express a single $x_t^l = \sum_f W_{t,f}^l y_f^{l-1}$
-	- We strive to minimize the error-function. Assuming only one single training item we get $e = \frac{1}{2} \sum_t (\vec{y}^*_t - \vec{y}^L_t)^2 = \frac{1}{2} (\vec{y}^* - \vec{y}^L) \pointwise (\vec{y}^* - \vec{y}^L) $
+ - A layers outputvector $\vec{y}^l$ is obtained by the activation function $\vec{y}^l = f(\vec{x}^l) $
+ - The layers inputvector is obtained as a weighted sum of previous outputs: $\vec{x}^l = \mtrx{W}^l \vec{y}^{l-1} $. We cn express a single $x_t^l = \sum_f W_{t,f}^l y_f^{l-1}$
+ - We strive to minimize the error-function. Assuming only one single training item we get $e = \frac{1}{2} \sum_t (\vec{y}^*_t - \vec{y}^L_t)^2 = \frac{1}{2} (\vec{y}^* - \vec{y}^L) \pointwise (\vec{y}^* - \vec{y}^L) $
 
 
 Let's first consider only the top layer. 
@@ -22,7 +22,7 @@ Or, in vector form:
 $$ \partDiff{e}{\vec{x}^L} = (\vec{y}^* - \vec{y}^L)^T \pointwise f'(\vec{x}^L)  $$
 
 
-That part was easy. But how do we obtain the same differential for \emph{any} layer $l$?
+That part was easy. But how do we obtain the same differential for *any* layer $l$?
 
 $$ \partDiff{e}{x_{f_0}^l} = \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{x_t^{l+1}}{x_{f_0}^l}  $$
 $$                         = \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{}{x_{f_0}^l} ( \sum_f W_{t,f}^{l+1} y_f^l ) $$
@@ -73,7 +73,7 @@ $$ \forall f \in \mathscr{F}: \thereis \vec{\alpha}: \sum \alpha_n b_n = f $$
 So far, so simple. This holds for any basis of any vector space. Let's just propose that sigmoid functions do constitute a basis for these image-to-label functions. We cannot prove this, since we don't know what the image-to-label functions look like, but notice the potential: 
 $ \sum \alpha_n b_n $ is then just the output of one layer of a neural net!
 
-It turns out that sigmoid functions do indeed form a basis for any continuous function on $[0,1]^n$ \footnote{Note also that, while sigmoids do form a basis, they do not constitute an \emph{orthagonal} basis, meaning that we cannot obtain waights with the inner-product-trick. We couldn't have obtained them anyway, because for that trick we need the analytical form of $f$, which is generally not known to us.}.
+It turns out that sigmoid functions do indeed form a basis for any continuous function on $[0,1]^n$ \footnote{Note also that, while sigmoids do form a basis, they do not constitute an *orthagonal* basis, meaning that we cannot obtain weights with the inner-product-trick. We couldn't have obtained them anyway, because for that trick we need the analytical form of $f$, which is generally not known to us.}.
 
 There is an important point that the universal approximation theorem does not cover, however. The UAT only deals with a single layer net. We know from practice, however, that a multilayer net can approximate functions with far less nodes than what a single-layer net would need. There is some strength to having multiple layers.
 
@@ -152,9 +152,9 @@ $$ \delta^{l-1} = \frac{1}{4} \partDiff{e}{\vec{x}^l}  $$
 Self organizing maps are another, fundamentally different type of neural network. Where feedforward nets employ supervised learning with backpropagation, SOM's do unsupervised learning with a competitive algorithm. 
 
 
-# Computer vision
+## Computer vision
 
-\paragraph{Feature detection and pose estimation}
+**Feature detection and pose estimation**
 
 Say you want to locate the position of the nose in a portrait. 
 
@@ -167,7 +167,7 @@ The art of preprocessing input has developed in a branch of machine learning its
 
 # Symbolic AI
 
-Contrary to the before mentioned approaches, symbolic AI uses logical deduction instead of numerical processing to arrive at decisions. If neural nets and decision-trees learning from data can be called building \emph{experience}, then an inference engine deducting from rules can be called building \emph{expertise}. A good tutorial can be found here: \href{codeproject.com/Articles/179375/Man-Marriage-and-Machine-Adventures-in-Artificia}{codeproject.com}.
+Contrary to the before mentioned approaches, symbolic AI uses logical deduction instead of numerical processing to arrive at decisions. If neural nets and decision-trees learning from data can be called building *experience*, then an inference engine deducting from rules can be called building *expertise*. A good tutorial can be found here: \href{codeproject.com/Articles/179375/Man-Marriage-and-Machine-Adventures-in-Artificia}{codeproject.com}.
 A inference engine can do the following: 
 
 	- Learning: 
@@ -206,7 +206,7 @@ The most important variables are
 		
 
 
-\begin{lstlisting}[language=python]
+```python
 class InferenceEngine:
     def __init__(self):
         self.facts = []
@@ -332,4 +332,4 @@ if __name__ == '__main__':
     ], ['mortal', 'X'])
     e.addFact('man', 'socrates')
     print(e.eval('mortal', 'Y'))
-\end{lstlisting}
+```

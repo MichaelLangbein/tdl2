@@ -1,29 +1,27 @@
 # Calculus
 
-# Hyperreals
+## Hyperreals
 
 For the biggest part, we're going to deal with Nelson-style nonstandard-analysis. 
 
 List of external properties:
 
-    - std, nstd
-    - limt, nlimt
-    - inftsm, inft
-    - nearly cont
+- std, nstd
+- limt, nlimt
+- inftsm, inft
+- nearly cont
 
 
-A statement using any external properties will be denoted as $\ext{A}$, one that \emph{might} use external properties as $\pext{A}$.
+A statement using any external properties will be denoted as $\ext{A}$, one that *might* use external properties as $\pext{A}$.
 
 We will use the following axioms:
-\begin{enumerate}
-    - $0:std$
-    - $\forall n \in \naturals: n:std \then (n+1):std $
-    - $\thereis n \in \naturals: n:nstd $
-    - External induction: Induction  over \std{n} about \pext{A}: \\ 
+ - $0:std$
+ - $\forall n \in \naturals: n:std \then (n+1):std $
+ - $\thereis n \in \naturals: n:nstd $
+ - External induction: Induction  over \std{n} about \pext{A}: \\ 
     $ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n)$
-    - Internal induction: Induction over \pnstd{n} about A: \\
+ - Internal induction: Induction over \pnstd{n} about A: \\
     $ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $
-\end{enumerate}
 
 The rationale over the two induction-axioms is simple. Ordinary induction is about $A$ over \std{n}. 
 External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones. 
@@ -101,9 +99,9 @@ It is notable that you can never reach a standard number when adding nonstandard
 \end{proof}
 
 
-# Limits
+## Limits
 
-# Sequences and series
+## Sequences and series
 
 ### Tailor
 ### Fourier
@@ -119,19 +117,19 @@ identically for all $t \in \reals$. Hence, $f$ is constant everywhere. Since $f(
 
 The infinitessimal view of calculus makes it quite easy to prove theorems. Consider this illustration of how definite integrals work.
 
-\begin{equation}
+$$
     \begin{aligned}
         \int_a^b \frac{dF}{dx}(x) dx &= \int_a^b \frac{F(x + dx) - F(x)}{dx} dx \\
         \int_a^b F(x + dx) - \int_a^b F(x) &= F(b + dx) - F(a)
     \end{aligned}
-\end{equation}
+$$
 
 
 ### Integration strategies
 
-\paragraph{u-substitution}
+**u-substitution**
 
-\paragraph{Integration by parts} is the last trick up our sleave when all other strategies haven't helped. Consider the integral 
+**Integration by parts** is the last trick up our sleave when all other strategies haven't helped. Consider the integral 
 
 $$ \int x e^x \diff{x} $$
 
@@ -153,7 +151,7 @@ $$ e^x ( x - 1) $$
 
 as the solution. 
 
-# Vector calculus
+## Vector calculus
 
 Integration over a vector, integration along a vector, integration along a surface. 
 
@@ -164,9 +162,9 @@ You can find a nice introduction (mostly in the second part of) this pdf: \inlin
 
 We want to maximize $f(x, y)$ subject to the constraint $g(x, y) = 0$.
 At the optimal point $x_0, y_0$ it must hold that:
-\begin{equation}
+$$
   \nabla f = \lambda \nabla g
-\end{equation}
+$$
 for some scalar $\lambda$ (the so-called Lagrange-multiplier).
 
 Example:
@@ -174,12 +172,12 @@ $$ f(x, y) = x^2 y $$
 $$ g(x, y) = x^2 + y^2 = 1 $$
 
 Now using $\nabla f = \lambda \nabla g$ we get the system of equations:
-\begin{equation}
+$$
     \begin{aligned}
         2xy &= 2x\lambda \\
         x^2 &= 2y\lambda \\
         x^2 + y^2 &= 1
     \end{aligned}
-\end{equation}
+$$
 
 Which yields $x = \sqrt{2/3}$, $y = \sqrt{1/3}$ and $\lambda = \sqrt{1/3}$.

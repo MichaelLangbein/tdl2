@@ -5,10 +5,9 @@
 ### Probability space
 
 Probability works on some basic entities:
-
-    - \samplespace is a nonempty set called the sample-space. 
-    - $\omega \in \samplespace$ is called an outcome
-    - $E \subseteq \samplespace$ is called an event
+- $\samplespace$ is a nonempty set called the sample-space. 
+- $\omega \in \samplespace$ is called an outcome
+- $E \subseteq \samplespace$ is called an event
 
 
 
@@ -53,7 +52,7 @@ $$ \probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega] $$
     $$ \probFunct[A | B] = \frac{\probFunct[A \intersection B]}{\probFunct[B]}$$
 \end{definition}
 
-As a nice little exercise, we prove the formula for the conditional probability of the \emph{complement} of $B$.
+As a nice little exercise, we prove the formula for the conditional probability of the *complement* of $B$.
 
 \begin{proof}
     $$ \probFunct[A | \overline{B}] = $$
@@ -61,7 +60,7 @@ As a nice little exercise, we prove the formula for the conditional probability 
 
 
 
-As an illustrative example, consider the following probabilities. People can be \emph{small} (S) or \emph{tall} (T). They can be \emph{good} (G) or \emph{bad} (B) at basketball.
+As an illustrative example, consider the following probabilities. People can be *small* (S) or *tall* (T). They can be *good* (G) or *bad* (B) at basketball.
 Here are the tables of probabilities:
 
 \begin{table}[H]
@@ -114,47 +113,47 @@ As yet another exercise, here is the formula of the probability of a union of ar
 ### A few lemmas on conditional probability \label{condPropLemmas}
 
 In a "causal" chain of events $A, B, C$ we can integrate out the middle-event $B$.
-\begin{equation}
+$$
     \begin{aligned}
         p(A, B, C)  &= \frac{p(A, B, C)}{p(A, B)} \frac{p(A, B)}{p(A)} p(A) \\
                     &= p(C|AB) p(B|A) p(A) \\
     \end{aligned}
-\end{equation}
+$$
 
-\begin{equation}
+$$
     p(A, C) = \Sigma_B p(A, B, C)
-\end{equation}
+$$
 
-\begin{equation}
+$$
     \begin{aligned}
             p(C | A) &= \frac{p(A, C)}{p(A)} \\
                      &= \Sigma_B p(C|A, B) p(B|A)
     \end{aligned}
-\end{equation}
+$$
 
-We can take the expression for conditional probability and condition \emph{every term} on a third event.
-\begin{equation}
+We can take the expression for conditional probability and condition *every term* on a third event.
+$$
     \begin{aligned}
         p(B|A, C) &= \frac{p(A, B, C)}{p(A, C)} \\
         p(A|B, C) &= \frac{p(A, B, C)}{p(B, C)} \\
         p(A|B, C) &= \frac{p(B|A, C) p(A|C) p(C)}{p(B|C)p(C)} \\
                   &= \frac{p(B|A, C) p(A|C)}{p(B|C)} \\
     \end{aligned}
-\end{equation}
+$$
 
 
 \subsection{Decomposing variance - the road to sensitivity analysis}
 
-\paragraph{Expressing variance as expectation} ...
-\begin{equation}
+**Expressing variance as expectation** ...
+$$
     \begin{aligned}
         V_X &= E_{ (X - E_X)^2 } \\
             &= E_{ X^2 - 2 X E_X + E_X^2 } \\
             &= E_{X^2} - E_X^2
     \end{aligned}
-\end{equation}
+$$
 
-\paragraph{Conditional expectation and variance} ...
+**Conditional expectation and variance** ...
 
 \begin{definition} \label{conditionalExpectation}
     Conditional expectation:
@@ -166,8 +165,8 @@ We can take the expression for conditional probability and condition \emph{every
     $$ V_{Y|x} = E_{(Y - E_{Y|x})^2 | x} $$ 
 \end{definition}
 
-\paragraph{Law of total expectation} ...
-\begin{equation} \label{lawOfTotalExpectation}
+**Law of total expectation** ...
+$$ \label{lawOfTotalExpectation}
     \begin{aligned}
         E_Y &= \Sigma_Y y P(y) \\
             &= \Sigma_Y y \Sigma_X P(y|x) P(x) \\
@@ -175,10 +174,10 @@ We can take the expression for conditional probability and condition \emph{every
             &= \Sigma_X E_{Y|x} P(x) \\
             &= E_{E_{Y|x}}
     \end{aligned}
-\end{equation}
+$$
 
-\paragraph{Law of total variance} ...
-\begin{equation} \label{lawOfTotalVariance}
+**Law of total variance** ...
+$$ \label{lawOfTotalVariance}
     \begin{aligned}
         V_Y &= E_{Y^2} - E_Y^2 \\
             &= E_{E_{Y^2 | X}} - E^2_{E_{Y|X}} \\
@@ -186,7 +185,7 @@ We can take the expression for conditional probability and condition \emph{every
             &= E_{V_{Y|X}} + E_{E^2_{Y|X}} - E^2_{E_{Y|X}} \\
             &= E_{V_{Y|X}} + V_{E_{Y|X}}
     \end{aligned}
-\end{equation}
+$$
 
 
 \begin{figure}[h]
@@ -207,25 +206,25 @@ Then the probability density at $x$ is $\frac{d P}{d x}(x)$.
 \paragraph{As an exercise,} consider $x \tilde Exp(x)$. We want to calculate $E(x | x > x_0)$. 
 We'll start with $P(x | x > x_0)$.
 We have:
-\begin{equation}
+$$
     \begin{aligned}
         P(X | X > x_0) &= \left( \text{ using the fact that } P(B|A) = \frac{P(A \land B)}{P(A)} \right) \\
                           &= \frac{ P(X = x \land X > x_0) }{ P(X > x_0) } \\
                           &= \frac{ s_{x_0} P(X=x) }{ P(x > x_0) }  (\text{ with $s_{x_0}$ the step-function at $x_0$}) \\
                           &= \frac{ s_{x_0} P(X=x) }{ \int_{x_0}^\infty p(x) dx }
     \end{aligned}
-\end{equation}
+$$
 
 This leads us to the expectation:
 
-\begin{equation}
+$$
     \begin{aligned}
         E(X | X > x_0)  &= \int_{-\infty}^\infty x p(X | X > x_0) dx \\
                         &= \frac{ s_{x_0} \int_{-\infty}^\infty x p(x) dx }{ \int_{x_0}^\infty p(x) dx } \\
                         &= \frac{ \int_{x_0}^\infty x p(x) dx }{ \int_{x_0}^\infty p(x) dx } \\
                         &= \frac{ s_{x_0} E(X) }{ P(X > x_0) } 
     \end{aligned}
-\end{equation}
+$$
 
 
 # Probability distributions
@@ -234,7 +233,7 @@ A probability distribution is a function from the domain of a random variable to
 
 There is an abundance of ready made probability distributions to chose from, covering virtually all important situations. But care must be taken when deciding which distribution to apply to a certain problem. 
 
-\paragraph{The Bernoulli family} based on modelling a series of coin-tosses.
+**The Bernoulli family** based on modelling a series of coin-tosses.
 
     - Bernoulli: heads or tails?
     - Binominal: k heads in n trials
@@ -242,20 +241,20 @@ There is an abundance of ready made probability distributions to chose from, cov
 
 A remarkable feature of the Poisson-distribution is that it has only a parameter for the mean, but always the same variance.
 
-\paragraph{The geometric family} based on repeating an experiment until it succeeds. 
+**The geometric family** based on repeating an experiment until it succeeds. 
 
 
 
 ### Probabilistic fallacies
 
-    - T-Test interpretation: If $\probFunct[A|B] = x$, then this does \emph{not} mean that $\probFunct[A|\overline{B}] = 1 - x$.
+    - T-Test interpretation: If $\probFunct[A|B] = x$, then this does *not* mean that $\probFunct[A|\overline{B}] = 1 - x$.
     - Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
 
 
 \paragraph{$\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$}. 
 \begin{proof}
     By contradiction. 
-    \begin{equation}
+    $$
         \begin{aligned}
            \probFunct[A|B]                 &= 1 - \probFunct[A | \overline{B}] \\
                                            &= \frac{  \probFunct[B] - \probFunct[A \intersection \overline{B}]  }{  \probFunct[B]  }  \\
@@ -264,7 +263,7 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
            \probFunct[A \intersection B] + \probFunct[A \intersection \overline{B}]  &= \probFunct[B] \\
            \probFunct[A] &= \probFunct[B]
         \end{aligned}
-    \end{equation}
-    Thus $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$. But not that it \emph{does} hold true that $\probFunct[\overline{A}|B] = 1 - \probFunct[A | B]$
+    $$
+    Thus $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$. But not that it *does* hold true that $\probFunct[\overline{A}|B] = 1 - \probFunct[A | B]$
 \end{proof}
 

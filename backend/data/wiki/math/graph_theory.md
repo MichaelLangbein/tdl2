@@ -1,6 +1,6 @@
 # Graph Theory
 
-# General properties
+## General properties
 
 ### Degrees
 
@@ -37,7 +37,7 @@
     In an undirected graph we have $\sum_{V_G} \degr(v_n) = 2|E_G|$
 \end{lemma}
 
-# Walks and paths
+## Walks and paths
 
 \begin{definition}
     A walk is any sequence of vertices that are connected by an edge.
@@ -88,7 +88,7 @@ When $R=Q$, it follows easily that:
 
 
 
-# Planar graphs
+## Planar graphs
 
 The following theorems all deal with planar, connected graphs, and build up to Eulers theorem. Well use $N$ for the number of nodes, $E$ for the number of edges, and $L$ for the number of loops.
 
@@ -209,9 +209,9 @@ The proof follows from induction on $n$, starting at $n=3$.
 
 
 
-\subsection{Stable marriage and Gayle-Shapely}
+## Stable marriage and Gayle-Shapely
 In dating, the people doing the active flirting end up with partners higher up their preference-list than the people being flirted with.
-\begin{lstlisting}[language=python]
+```python
     class Person:
     def __init__(self, name):
         self.name = name
@@ -297,74 +297,5 @@ print(" ---- couples have formed: ---- ")
 for w in flirting:
     m = flirting[w][0]
     print(f"{w} + {m}")
-\end{lstlisting}
+```
 
-
-### Path finding
-We have a graph of connections with a cost associated to each connection.
-The goal is to go from node a to node b as cheaply as possible.
-
-A first approach might be depth first. But depth first on a plain, empty field will snake left and right along the bottom 
-for a long time before it finally hits a point b just a few boxes above a.
-
-Then we're better off with breadth first search. But BFS spreads out blindly in all directions.
-
-The next better thing is Dijkstra's algorithm. It's BFS but with a preference for cheap paths.
-On a road net, Dijkstra would investigate highways before it considers dirt roads with trees across them.
-All the points considered in BFS are ranked in a priority queue.
-The queue contains the candidate point, the cheapest path to the point up to now, and the cheapest price up to now.
-We pick the cheapest point first. If our path to that current cheapest point is cheaper than what it was up to now, that path is updated.
-
-Notably, Dijkstra has no sense of direction.
-If a dirt-track leads almost directly north to b, but a highway goes south, Dijkstra will investigate the highway first.
-This can be accounted for by adding a distance-heuristic to the price-calculation.
-This is the A* algorithm.
-
-\begin{lstlisting}
-type Node = char;
-type Connection = [Node, Node];
-
-class Graph {
-    nodes: Node[] = [];
-    connections: Connection[] = [];
-}
-
-class QEntry {
-    node: Node;
-    path: Node[];
-    price: number;
-}
-
-class Queue {
-    entries: QEntry[];
-
-    public getNext(): QEntry {
-        return this.entries.pop();
-    }
-
-    public add(entry: QEntry): void {
-        for (let i = this.entries.length; i > 0; i--) {
-            const candidate = this.entries[i];
-            if (candidate.price < entry.price) {
-                this.entries.insert(i, entry);
-            }
-        }
-    }
-}
-
-function dijkstra(graph: Graph, queue: Queue, b: Node): Node[] {
-    const a = queue.getNext();
-    for (const {candidateNode, candidatePrice } in graph.getNeighbors(a.node)) {
-        if (candidateNode === b) {
-            return a.path + [b];
-        }
-        const newEntry: QEntry = { candidateNode, a.path + [a.node], a.price + candidatePrice };
-        if (queue.get(candidateNode).price > newEntry.price) {
-            queue.add(newEntry);
-        }
-    }
-    return dijkstra(graph, queue, b);
-}
-\end{lstlisting}
-
-There are also public APIs for path-finding on actual streets. \href{https://www.graphhopper.com/}{Graphhopper} is one example.

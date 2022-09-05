@@ -6,7 +6,7 @@ Here we'll mostly deal with the inner-product space of vectors and occasionally 
 
 
 
-# Spaces
+## Spaces
 
 We'll work a lot with a few vector-spaces and transfromations from and to those spaces. 
 
@@ -40,7 +40,7 @@ We'll work a lot with a few vector-spaces and transfromations from and to those 
 \end{definition}
 
 
-\paragraph{rops and cops as matrix multiplication} ...
+**rops and cops as matrix multiplication** ...
 $$ \rops(A) = \rops(I) A = R A$$
 $$ \cops(A) = A \cops(I) = A C$$
 
@@ -87,13 +87,13 @@ We should look in more detail at this graphic. Note, for example, that \nullspac
     [$\forall v \in \nullspace{A}, w \in \collspace{A^T}: v \orth w$]
 \end{theorem}
 \begin{proof}
-    \begin{equation}
+    $$
         \begin{aligned}
             w^T v &= 0  & \text{ with } \thereis u: \mtrx{A}^T u = w \\
             u^T \mtrx{A} v &= 0 & \text{ with } \mtrx{A}v = 0 \\
             u^T 0 &= 0 & \text{ which is trivially true.}
         \end{aligned}
-    \end{equation}
+    $$
     Thus, \nullspace{A} and \collspace{A^T} only intersect in $\vec{0}$.
 \end{proof}
 
@@ -118,7 +118,7 @@ However, note that $\reals^n \geq \nullspace{A} \union \collspace{A^T}$. As an e
 
 
 
-# Change of basis\label{changeOfBasis}
+## Change of basis\label{changeOfBasis}
 
 Let $V$ be a vector space. Let $0$ be the canonical basis for that vector space. Let $A = \{\vec{a}_1, ..., \vec{a}_N \}$ and $B = \{\vec{b}_1, ..., \vec{b}_N\}$ be two other basis for that vectorspace. Let $\mtrx{A}$ be the matrix $[\vec{a}_1  ...  \vec{a}_N]$ and $\mtrx{B} = [\vec{b}_1 ... \vec{b}_N]$
 
@@ -131,9 +131,9 @@ $$ \vec{v} = \mtrx{A} (\vec{v})_A $$
 $$ \vec{v} = \mtrx{B} (\vec{v})_B $$
 $$ (\vec{v})_B = \mtrx{B}^{-1} \mtrx{A} (\vec{v})_A $$
 
-But inverses are notoriously hard to calculate. Fortunately, there is another approach. Call $\mtrx{T}_{BA} = [(\vec{a}_1)_B ... (\vec{a}_N)_B]$ the \emph{transition matrix}. We can prove that $\mtrx{B}^{-1} \mtrx{A} = \mtrx{T}_{BA}$:
+But inverses are notoriously hard to calculate. Fortunately, there is another approach. Call $\mtrx{T}_{BA} = [(\vec{a}_1)_B ... (\vec{a}_N)_B]$ the *transition matrix*. We can prove that $\mtrx{B}^{-1} \mtrx{A} = \mtrx{T}_{BA}$:
 
-\begin{equation}
+$$
 \begin{aligned}
 \mtrx{B}^{-1} \mtrx{A} (\vec{v})_A &= \mtrx{T}_{BA}  (\vec{v})_A \\
                                    &= \sum_n (v_n)_A (\vec{a}_n)_B \\
@@ -142,7 +142,7 @@ But inverses are notoriously hard to calculate. Fortunately, there is another ap
                                    &= \mtrx{B}^{-1} \mtrx{A} \text{  } \mtrx{I} (\vec{v})_A \\
                     (\vec{v})_A &=  (\vec{v})_A         
 \end{aligned}
-\end{equation}
+$$
 
 Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial to prove:
 
@@ -162,10 +162,10 @@ Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial t
 
 
 
-# Linear transformations
+## Linear transformations
 
 \begin{definition}
-Let $U$ and $V$ be two vector spaces and $f:U \to V$. Then $f$ is a \emph{linear transform} if
+Let $U$ and $V$ be two vector spaces and $f:U \to V$. Then $f$ is a *linear transform* if
 
     - $f$ preserves scalar multiplication: $f(\alpha \vec{u}) = \alpha f(\vec{u})$
     - $f$ preserves vector addition: $f(\vec{u}_1 + \vec{u}_2) = f(\vec{u}_1) + f(\vec{u}_2)$
@@ -191,7 +191,7 @@ There are a bunch of properties to linear transformations that can be useful to 
             
             \subprf{Part 2: }{$f$ is unique}{
                 
-                We could not have obtained any other form of $f$ than $f(\vec{x}) = \mtrx{V} (\vec{x})_B$. This is because for \emph{any} linear transform from $U \to V$ we have: 
+                We could not have obtained any other form of $f$ than $f(\vec{x}) = \mtrx{V} (\vec{x})_B$. This is because for *any* linear transform from $U \to V$ we have: 
                 
                 $ f(\vec{x}) = f(\mtrx{B}(\vec{x})_B) = f(\sum_n (x_n)_B \vec{b}_n) = \sum_n (x_n)_B f(\vec{b}_n)  $
                 
@@ -229,7 +229,7 @@ Prove that a transform can be split up into mulitple transforms on the basis vec
 As an examle, consider the case of a rotation. A diagonal rotation can be reproduced by a rotation first around one, then around another axis. 
 
 
-\paragraph{A linear transformation can also be a change of basis} when it is on a vectorspace and invertible.
+**A linear transformation can also be a change of basis** when it is on a vectorspace and invertible.
 
 
 
@@ -244,7 +244,7 @@ As an examle, consider the case of a rotation. A diagonal rotation can be reprod
 
 
 
-# Linear independence
+## Linear independence
 
 
 \begin{definition}
@@ -292,12 +292,12 @@ As an examle, consider the case of a rotation. A diagonal rotation can be reprod
 
 
 
-# Determinant
+## Determinant
 
 \includegraphics[width=0.4\linewidth]{images/determinant.png}
 
 
-\paragraph{Definition} Consider a $2 \times 2$ matrix $\mtrx{A}$ 
+**Definition** Consider a $2 \times 2$ matrix $\mtrx{A}$ 
 $$
 \mtrx{A} = 
 \begin{bmatrix}
@@ -323,24 +323,24 @@ $\det{\mtrx{A}}$ is defined as $a_{11}a_{22} - a_{12}a_{21}$. The definitions fo
         - $a_{21} = \alpha a_{22}$
     
     Putting this into the definition of a determinant we get:
-    \begin{equation}
+    $$
         \begin{aligned}
             \det{\mtrx{A}}  &= a_{11}a_{22} - a_{12}a_{21} \\
                             &= \alpha a_{12} a_{22} - \alpha a_{12} a_{22} \\
                             &= 0
         \end{aligned}
-    \end{equation}
+    $$
     For higher order matrices, the proof follows from induction or something like that.
 \end{proof}
 
 
 
-\paragraph{Interpretation} The size of the determinant can be seen as the scaling-factor of the transformation described by the matrix $A$.
+**Interpretation** The size of the determinant can be seen as the scaling-factor of the transformation described by the matrix $A$.
 It is also a measure of how much linearly independent the rows/cols of $A$ are. The size of the determinant equals the size of the (hyper-)parallelogram spanned by the columns. If two vectors are almost linearly dependent, they will be almost parallel, leading to a very small area of the parallelogram. So if you have a small determinant, your columns are almost dependent. If you have a large one, your columns are very orthogonal. 
 If your determinant is zero, that means that your matrix $A$ is a transformation $Ax$ that squishes (at least) one of the dimensions of $x$ into nothing.
 
 
-\paragraph{Properties}
+**Properties**
 
     - $\det{\mtrx{A} \mtrx{B}} = \det{\mtrx{A}}\det{\mtrx{B}}$
     - $\det{\mtrx{A} + \mtrx{B}} \neq \det{\mtrx{A}} + \det{\mtrx{B}}$
@@ -355,7 +355,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 
-# Rank nullity Theorem
+## Rank nullity Theorem
 
 
 \begin{theorem}
@@ -397,9 +397,9 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 
-# Special matrices
+## Special matrices
 
-\paragraph{Symmetric matrices} are simple but very useful.
+**Symmetric matrices** are simple but very useful.
 \begin{definition}
     [A matrix $\mtrx{A}$ is symmetric] iff $\mtrx{A} = \mtrx{A}^T$
 \end{definition}
@@ -413,7 +413,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 \end{definition}
 
 
-\paragraph{Gram matrices} appear often in important theorems. They turn out to be PSD.
+**Gram matrices** appear often in important theorems. They turn out to be PSD.
 \begin{definition}
     [A Gram matrix] is a matrix $\mtrx{A} = \mtrx{B}^T \mtrx{B}$
 \end{definition}
@@ -427,7 +427,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 \end{theorem}
 
 
-\paragraph{Orthogonal matrices} make tons of calculations simpler.
+**Orthogonal matrices** make tons of calculations simpler.
 \begin{definition}[A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \orth x_2$
 \end{definition}
 
@@ -443,17 +443,17 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 
-# Eigenvalues and eigenvectors
+## Eigenvalues and eigenvectors
 
-\begin{equation}
+$$
     \begin{aligned}
         A e &= \lambda e \\
         ( A - \lambda I ) e &= 0 \\
         \det{A - \lambda I} &= 0 \text{ using theorem \ref{det_0}}
     \end{aligned}
-\end{equation}
+$$
 
-Any \emph{square} matrix can be eigenvector (aka. spectrally) decomposed: $\mtrx{A} = \mtrx{E} \mtrx{\Lambda}\mtrx{E}^{-1}$.
+Any *square* matrix can be eigenvector (aka. spectrally) decomposed: $\mtrx{A} = \mtrx{E} \mtrx{\Lambda}\mtrx{E}^{-1}$.
 
 
 
@@ -464,23 +464,23 @@ Once at a sprint-discussion I wondered why principal components (see about those
     For any matrix $A$, symmetric or not, and for any vectors $x$ and $y$, eigenvectors or not, it holds:
     $\forall A, \forall x, y: <Ax, y> = <x, A^Ty>$
     This is true because 
-    \begin{equation}
+    $$
         \begin{aligned}
             <x, y>      &= x^T y \\
             <Ax, y>     &= (Ax)^T y \\
                         &= x^T A^T y \\
             <x, A^Ty>   &= x^T A^T y
         \end{aligned}
-    \end{equation}
+    $$
     Then we can use that finding as follows for $\mtrx{A}: \symm$ and $x, y \in \mtrx{E}_A$:
-    \begin{equation}
+    $$
         \begin{aligned}
                                                                 & <Ax, y>           &= <x, A^Ty> \\
             \text{Since } A:\symm:                              & <Ax, y>           &= <x, Ay> \\
             \text{Since } x, y \text{ are eigenvalues of } A:   & <\lambda_x x, y>  &= <x, \lambda_y y> \\
                                                                 & \lambda_x <x, y>  &= \lambda_y <x, y>
         \end{aligned}
-    \end{equation}
+    $$
     Thus, either $\lambda_x = \lambda_y$ or $x \orth y$ 
 \end{theorem}
 
@@ -488,7 +488,7 @@ Once at a sprint-discussion I wondered why principal components (see about those
     [As a corollary, the eigenvalue decomposition can be simplified]: $\mtrx{A}: \symm \then \mtrx{A} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^{-1} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^T$
 \end{theorem}
 
-\paragraph{Interpretation of eigenvalues}
+**Interpretation of eigenvalues**
 
     - $\lambda$ is complex: $\mtrx{A}$ contains a rotation
     - $\lambda$ is negative: $\mtrx{A}$ contains some mirroring
@@ -498,20 +498,20 @@ Once at a sprint-discussion I wondered why principal components (see about those
 
 
 
-# Singular value decomposition
+## Singular value decomposition
 Let $\mtrx{A}$ be of size $m \times n$. We will prove that also such non-square matrices can be decomposed, too, namely into:
-\begin{equation}
+$$
     \mtrx{A} = \mtrx{U} \mtrx{\Sigma} \mtrx{V}^T
-\end{equation}
+$$
 where:
 
     - $\mtrx{U}$ and $\mtrx{V}$ are orthonormals of sizes $m \times m$ and $n \times n$, respectively
     - $\mtrx{\Sigma}$ is a diagonal matrix of size $m \times n$
 
 In other words: 
-\begin{equation}
+$$
     \mtrx{A} \mtrx{V} = \mtrx{U} \mtrx{\Sigma}
-\end{equation}
+$$
 We'll find an orthonormal basis $\mtrx{V} \subset R_A$ which is transformed into an orthonormal basis $\mtrx{U} \subset C_A$.
 
 
@@ -527,14 +527,14 @@ Consider $\mtrx{A}^T \mtrx{A}$. Contrary to $\mtrx{A}$, this is a psd matrix. It
 \end{bmatrix}$ and eigenvalues 4 and 5.
 
 Now consider the vector $\vec{y}_i = \mtrx{A} \vec{e}_i$. Multiplying both sides with $\lambda_i$ we observe that:
-\begin{equation}
+$$
     \begin{aligned}
         \lambda_i \vec{y}_i &= \lambda_i \mtrx{A} \vec{e}_i \\
                             &= \mtrx{A} \lambda_i \vec{e}_i \\
                             &= \mtrx{A} \mtrx{A}^T \mtrx{A} \vec{e}_i \\
                             &= \mtrx{A} \mtrx{A}^T \vec{y}_i
     \end{aligned}
-\end{equation}
+$$
 In other words: $\vec{y}_i$ is an eigenvector of $\mtrx{A} \mtrx{A}^T$ with eigenvalue $\lambda_i$.
 
 Indeed: $\mtrx{A} \mtrx{A}^T = \begin{bmatrix}
@@ -550,7 +550,7 @@ Also, if $\lambda_i = 0$ then $\vec{y}_i = \vec{0}$.
 
 
 Now, let $k = \rank{\mtrx{A}}$ and define the following new matrices:
-\begin{equation}
+$$
     \begin{aligned}
         \hat{\mtrx{U}} &= [\vec{y}_i / \text{ where } \lambda_i = 0], \text{ size } m \times k  &= \begin{bmatrix}
                                                                                                         0 & 1 \\
@@ -562,10 +562,10 @@ Now, let $k = \rank{\mtrx{A}}$ and define the following new matrices:
                                                                                                         0 & 1
                                                                                                     \end{bmatrix}
     \end{aligned}
-\end{equation}
+$$
 
 Consider $\hat{\mtrx{U}}^T \mtrx{A} \hat{\mtrx{V}} \vec{b}_i$, where $\vec{b}_1 = \myarray{1 \\ 0}, \vec{b}_2 = \myarray{0 \\ 1}$:
-\begin{equation}
+$$
     \begin{aligned}
         \hat{\mtrx{U}}^T \mtrx{A} \hat{\mtrx{V}} \vec{b}_i  &= \hat{\mtrx{U}}^T \mtrx{A} \vec{e}_i \\
                                                             &= \frac{1}{\lambda_i} \hat{\mtrx{U}}^T \mtrx{A} \lambda_i \vec{e}_i \\
@@ -576,14 +576,14 @@ Consider $\hat{\mtrx{U}}^T \mtrx{A} \hat{\mtrx{V}} \vec{b}_i$, where $\vec{b}_1 
                                                             &= \sqrt{\lambda_i} \hat{\mtrx{U}}^T \vec{y}_i \text{, now, making use of } \hat{\mtrx{U}} \vec{b}_i = \vec{y}_i \\
                                                             &= \sqrt{\lambda_i} \vec{b}_i
     \end{aligned}
-\end{equation}
+$$
 Generally:
-\begin{equation}
+$$
     \begin{aligned}
         \hat{\mtrx{U}}^T \mtrx{A} \hat{\mtrx{V}} \mtrx{I} &= \sqrt{\lambda_i} I \\
         \hat{\mtrx{U}}^T \mtrx{A} \hat{\mtrx{V}}   &= \mtrx{\Sigma}
     \end{aligned}
-\end{equation}
+$$
 where in our case $\mtrx{\Sigma} = \begin{bmatrix}
     0 & \sqrt{5} \\
     \sqrt{4} & 0 
@@ -599,9 +599,9 @@ We'll now expand
     \end{cases}$
 
 With that we obtain
-\begin{equation}
+$$
     \mtrx{A} = \mtrx{U} \mtrx{\Sigma} \mtrx{V}^T
-\end{equation}
+$$
 In our example case we have 
 $$
     \mtrx{\Sigma} = \begin{bmatrix}
@@ -615,7 +615,7 @@ $$
 
 
 \paragraph{Example for a shear-matrix}: SVD means that any matrix-transformation can be rewritten as a rotation, scale and another rotation. Even a shear-matrix!
-\begin{lstlisting}
+```
 M = [
     [1, .5],
     [0, 1]
@@ -624,7 +624,7 @@ M = [
 U, S, VT = np.linalg.svd(M)
 
 U @ (np.eye(2) * S) @ VT
-\end{lstlisting}
+```
 SVD is often used for image compression, too. Just leave out some lower $\sigma_i$'s, then you can also leave out equally many columns / rows of $U$ and $V^T$, respectively.
 
 
@@ -633,12 +633,12 @@ Consider a $m \times n$ matrix $\mtrx{A}$. Let $\mtrx{X} = \mtrx{A} - \mtrx{\mu}
 Then we can express the covariance of $\mtrx{X}$ as $\mtrx{C}_X = \mtrx{X}^T \mtrx{X}$.
 
 We want to find a transformation $\mtrx{P}$ such that $\mtrx{Y} = \mtrx{X} \mtrx{P}$ is uncorrelated. We'll prove that such a matrix does exist.
-\begin{equation}
+$$
     \thereis \mtrx{P}: \mtrx{Y} = \mtrx{X} \mtrx{P} \land \mtrx{C}_Y: \text{diag}
-\end{equation}
+$$
 
 Try $\mtrx{P} = \mtrx{E}_{C_X}$. Then:
-\begin{equation}
+$$
     \begin{aligned}
         \mtrx{C}_Y  &= \mtrx{Y}^T \mtrx{Y} \\
                     &= (\mtrx{X} \mtrx{P})^T \mtrx{X} \mtrx{P} \\
@@ -646,15 +646,15 @@ Try $\mtrx{P} = \mtrx{E}_{C_X}$. Then:
                     &= \mtrx{P}^T C_\mtrx{X} \mtrx{P} \\
                     &= \mtrx{E}_{C_X}^T C_X \mtrx{E}_{C_X}
     \end{aligned}
-\end{equation}
+$$
 Thus $C_Y = \Lambda_{C_X}$, which is diagonal, as required.
 
 
-Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. Then we use: $\mtrx{X} = \mtrx{A} - \mtrx{\mu}$, the matrix with its \emph{row}-mean subtracted. With that $C_X = \mtrx{X} \mtrx{X}^T$ and $\thereis \mtrx{P}: Y = \mtrx{P}\mtrx{X}$. Try $\mtrx{E}_{C_X}$
+Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. Then we use: $\mtrx{X} = \mtrx{A} - \mtrx{\mu}$, the matrix with its *row*-mean subtracted. With that $C_X = \mtrx{X} \mtrx{X}^T$ and $\thereis \mtrx{P}: Y = \mtrx{P}\mtrx{X}$. Try $\mtrx{E}_{C_X}$
 
 \paragraph{Example: Eigenfaces} are a very fun example of PCA.
 
-\begin{lstlisting}[language=python]
+```python
     import numpy as np
     import matplotlib.pyplot as plt
     import imageio
@@ -682,7 +682,7 @@ Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. The
     face = allFaces[:, 45]
     faceEncoded = face @ evecsC
     faceReconstr = meanFace[0, :] + (evecsC @ faceEncoded)
-\end{lstlisting}
+```
 
 \begin{figure}[H]
     \caption{First eigenfaces}
@@ -702,13 +702,13 @@ Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. The
 
 
 
-# Inverse
+## Inverse
 
 If $A$ has dimensions $n \times n$, then the inverse $A^{-1}$ such that
 $$ A A^{-1} = A^{-1} A = I $$
 exists iff $det_A \neq 0$.
 
-\paragraph{Nonsqare} matrices do not have an inverse, but they might have a right- or left-inverse.
+**Nonsqare** matrices do not have an inverse, but they might have a right- or left-inverse.
 Consider $C = A A^T$. This is a square matrix, so it might have an inverse:
 $$ A A^T (A A^T)^{-1} = I $$
 Calling $A^T (A A^T)^{-1} = A^{RI}$ the right inverse:
@@ -746,13 +746,13 @@ If $A^{RI}$ exists, then $A^{LI}$ does not
 
 
 
-# Applications
+## Applications
 
 
 ### Systems of linear equations
 If there are more variables than equations, the system is underdetermined. If there are more eqations than variables, the system is overdetermined. A potentially solveable system is one where there are equally many variables as equations. But even then we must distinguish two cases. 
 
-\paragraph{Solving well determined systems}
+**Solving well determined systems**
 There are two cases: a system is either consistent or inconsistent. The follwing statements are all equivalent, meaning that any one of them is related to any other one in an if-and-only-if way. 
 
 
@@ -810,10 +810,10 @@ Here is a problem that bothered me for a while: a line needs one parameter, a pl
     }
 \end{proof}
 
-However, there are \emph{non}linear objects in $\reals^3$ that require more than three parameters! Many curves in 3d require many parameters. \emph{But} those curves don't form a vector-space, while lines and planes do (as long as they go through the origin). 
+However, there are *non*linear objects in $\reals^3$ that require more than three parameters! Many curves in 3d require many parameters. *But* those curves don't form a vector-space, while lines and planes do (as long as they go through the origin). 
 
 
-\paragraph{Summary}
+**Summary**
 \begin{table}[ht]
 \centering
 \caption{Influence of rank on solutions}
@@ -891,13 +891,13 @@ However, there are \emph{non}linear objects in $\reals^3$ that require more than
 
 ### Matrix factorisation
 
-\paragraph{Eigenvalue decomposition}
+**Eigenvalue decomposition**
 $$ A = V \Lambda V^{-1} $$
 
-\paragraph{Singular value decomposition} is eigenvalue decomposition, generalized to non-square matrices.
+**Singular value decomposition** is eigenvalue decomposition, generalized to non-square matrices.
 $$ A = U \Sigma V^T $$
 
-\paragraph{Nonnegative matrix factorisation}: Consider a dataset $A$, mapping people (rows) to properties (columns). You are looking for some hidden, small set of features, that groups of people have in common. 
+**Nonnegative matrix factorisation**: Consider a dataset $A$, mapping people (rows) to properties (columns). You are looking for some hidden, small set of features, that groups of people have in common. 
 In neural networks we can reconstruct images from a minimal amount of hidden features by funnelling the image through a very small hidden layer out to a large output layer. We can do the very same thing here!
 $$ A = U V $$
 Where $A$ has dimension $r \times c$, $U$ associates people with their hidden features/groups $r \times f$ and $V$ associates features/groups with the properties $f \times c$.
