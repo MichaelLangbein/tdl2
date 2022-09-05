@@ -413,14 +413,32 @@ function aStar(source: Node, target: Node, heuristic: (source: Node, target: Nod
 
 ## Longest common subsequence
 ```ts
+/**
+ * Example
+ * 
+ *       | s1
+ *       |  a  b  c  d  e  f  g
+ * ------+-----------------------
+ * s2  b |  +  \
+ *     f |  +  +  +  +  +  \
+ *     f |  +  +  +  +  +  \  +
+ *     d |  +  +  +  \  +  +  +
+ *     e |  +  +  +  +  \  +  +
+ *     f |  +  +  +  +  +  \  +
+ */
+
+
 function lcs(s1: string, s2: string): number {
     if (s1.length === 0 || s2.length === 0) return 0;
     if (s1[0] === s2[0]) {
+        // going diagonally down
         return 1 + lcs(s1.substring(1), s2.substring(1));
     } else {
-        const leftMax = lcs(s1.substring(1), s2);
-        const rightMax = lcs(s1, s2.substring(1));
-        return Math.max(leftMax, rightMax);
+        // going right
+        const rightMax = lcs(s1.substring(1), s2);
+        // going down
+        const bottomMax = lcs(s1, s2.substring(1));
+        return Math.max(rightMax, bottomMax);
     }
 }
 
