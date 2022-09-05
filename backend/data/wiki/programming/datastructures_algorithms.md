@@ -459,6 +459,49 @@ lts = memoized(lts);
 ```
 
 ## Minimal edit distance
+```ts
+/**
+    A      B        C        D         E       0 
+A   \
+     \ fits 
+       \   
+         \ add B
+C         +─────► 
+          │         \
+          |rm C       \ fits
+          |              \
+          ▼ add B   add C   \ 
+D         +──────► +─────────►
+          │        │          \
+          │rm D    │ rm D        \  fits
+          │        │                \
+          ▼ add B  ▼ add C     add D  \ add E
+R         +─────►  +───────► +──────► +───────►
+          │        │         │        │       │
+          │rm R    │rm R     │rm R    │rm R   │rm R
+          │        │         │        │       │
+          ▼ add B  ▼ add C   ▼ add D  ▼add E  ▼
+0         +──────► + ──────► + ─────► + ──────►
+*/
+
+
+function med(targetString: string, editableString: string): number {
+    if (targetString.length === 0) return editableString.length;
+    if (editableString.length === 0) return targetString.length;
+
+    if (targetString[0] === editableString[0]) {
+        // going diagonal
+        return med(targetString.substring(1), editableString.substring(1));
+    } else {
+        // inserting s1[0] before s2[0]  === going right
+        const afterInsert = 1 + med(targetString.substring(1), editableString);
+        // removing s1[0] === going down
+        const afterDelete = 1 + med(targetString, editableString.substring(1));
+        // picking best
+        return Math.min(afterInsert, afterDelete);
+    }
+}
+```
 
 ## Tree-diff
 
