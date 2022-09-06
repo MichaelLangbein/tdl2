@@ -1,3 +1,32 @@
+$
+\gdef\then{\to}
+\gdef\thereis{\exists}
+\gdef\iff{\leftrightarrow}
+\gdef\intersection{\cap}
+\gdef\union{\cup}
+\gdef\reals{\mathbb{R}}
+\gdef\naturals{\mathbb{N}}
+\gdef\diff#1{\mathop{d#1}}
+
+\gdef\subs#1#2{#1_{#2}}
+\gdef\std#1{\subs{#1}{std}}
+\gdef\nstd#1{\subs{#1}{nstd}}
+\gdef\pnstd#1{\subs{#1}{(nstd)}} %potentially nonstandard
+\gdef\ext#1{\subs{#1}{ext}}
+\gdef\pext#1{\subs{#1}{(ext)}} % potentially external
+
+\gdef\mtrx#1{\mathbf{#1}}
+\gdef\nullspace#1{\mathcal{N}_{#1}}
+\gdef\collspace#1{\mathcal{C}_{#1}}
+\gdef\rowspace#1{\mathcal{R}_{#1}}
+\gdef\solspace#1{\mathcal{S}_{#1}}
+\gdef\dimension#1{\text{dim}_{#1}}
+\gdef\rank#1{\text{rank}_{#1}}
+\gdef\symm{\text{sym}}
+\gdef\orthtxt{\text{orth}}
+\gdef\PSD{\text{PSD}}
+$
+
 # Calculus
 
 ## Hyperreals
@@ -27,76 +56,70 @@ The rationale over the two induction-axioms is simple. Ordinary induction is abo
 External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones. 
 Internal induction is about $A$ over \pnstd{n}. This makes sure that when we talk about potentially infinite $n$'s, we only apply internal statements.
 
-In other words: these two inductions ensure that we \textbf{never apply external statements to external numbers}. 
+In other words: these two inductions ensure that we **never apply external statements to external numbers**. 
 
-Doing so would lead to logical incosistencies. That's why there is no "fully external" induction.
+Doing so would lead to logical inconsistencies. That's why there is no "fully external" induction.
 
 However, note that axiom 2 is actually a case of "fully external" induction.
 
 
-\begin{theorem}
-    $ \forall n \in \naturals: n:nst \then (n+1):nst $ \label{addingNonstds}
-\end{theorem}
-\begin{proof}
-    \subprf{Suppose $n:nst$.}{$(n+1):nst$}{
-        \subprf{By contradiction. Suppose $(n+1):std$.}{this leads to a contradiction.}{
-            $(n+1):std \then n:std$.  \\
-            This contradicts the premise that $n:nst$.
-        }
-    }
-\end{proof}
+> **Theorem**
+> $\forall n \in \naturals: n:nst \then (n+1):nst$ <a id="addingNonstds"></a>
+>
+> Suppose $n:nst$. Proof that $(n+1):nst$
+>> By contradiction. Suppose $(n+1):std$. Proof that this leads to a contradiction.
+>>> $(n+1):std \then n:std$.
+>>>
+>>> This contradicts the premise that $n:nst$.
+
 
 If you don't believe the argument in the previous proof, consider this: 
-\begin{proof}
-    \subprf{
-    Suppose all of the following: \\
-    $ [\forall n: Q(n) \then Q(n+1)] \then \forall n: Q(n) $ \\
-    $ [\forall n: Q(n) \then Q(n+1)] $ \\
-    This leads to $ \forall n: Q(n) $. \\ 
-    }{$ \forall n: Q(n+1) \then Q(n) $}{
-        \subprf{Let $n = n_0$ and suppose $Q(n_0+1)$.}{$Q(n_0)$}{
-            Since $ \forall n: Q(n) $ holds, it must be true that $Q(n_0)$.
-        }
-    }
-\end{proof}
+
+> Suppose all of the following:
+> $$ [\forall n: Q(n) \then Q(n+1)] \then \forall n: Q(n) $$
+> $$ [\forall n: Q(n) \then Q(n+1)] $$
+> This leads to $\forall n: Q(n)$
+>> Proof that $\forall n: Q(n+1) \then Q(n)$
+>>
+>> Let $n = n_0$ and suppose $Q(n_0+1)$. Proof that $Q(n_0)$
+>>> Since $ \forall n: Q(n) $ holds, it must be true that $Q(n_0)$.
 
 
-We can use theorem \ref{addingNonstds} to prove the following: 
 
-\begin{theorem}
-    $\forall n, m \in \naturals: n:std \land m:nstd \then (n+m):nst$
-\end{theorem}
-\begin{proof}
-    \subprf{Let $m=m_0:nst$.}{$\forall n \in \naturals: n:std  \then (n+m_0):nst$}{
-        By induction on $n$. 
-        \\
-        \subprf{Base case. Let $n=0$.}{$(0+m_0):nst$}{
-            $0+m_0=m_0$ \\
-            $m_0:nst$
-        }
-        \\
-        \subprf{Induction step.}{$[(n+m_0):nst] \then [(n+1+m_0):nst]$}{
-            Just apply theorem \ref{addingNonstds} to $n=(n+m_0)$.
-        }
-    }
-\end{proof}
+We can use [theorem](addingNonstds) to prove the following: 
+
+> **Theorem**
+> $\forall n, m \in \naturals: n:std \land m:nstd \then (n+m):nst$
+>
+> Let $m=m_0:nst$. Proof that $\forall n \in \naturals: n:std  \then (n+m_0):nst$
+>
+> By induction on $n$
+>
+> Base case. Let $n=0$. Proof that $(0+m_0):nst$
+>> $0+m_0=m_0$
+>>
+>> $m_0:nst$
+>
+> Induction step. Proof that $[(n+m_0):nst] \then [(n+1+m_0):nst]$
+>> Just apply [theorem](addingNonstds) to $n=(n+m_0)$.
+
 
 It is notable that you can never reach a standard number when adding nonstandard numbers.
-\begin{theorem}
-    $ \forall n,m \in \naturals: n,m:nst \then (n+m):nst $
-\end{theorem}
-\begin{proof}
-    We proceed by proving the equivalent $ (n+m):std \then (n:std \lor m:std) $ 
-    \subprf{Suppose $(n+m):std$}{$(n:std \lor m:std)$}{
-        \subprf{Without loss of generality, suppose $n:nst$}{$m:std$}{
-            \subprf{By contradiction. Suppose $m:nst$}{this leads to a contradiction}{
-                We have already assumed that  $(n+m):std$. \\
-                Now, however, we also assume that $n,m:nst$. \\
-                Using theorem \ref{addingNonstds} however, we see that when $n,m:nst$, then it must be that $(n+m):nst$.
-            }
-        }
-    }
-\end{proof}
+> **Theorem**
+> $\forall n,m \in \naturals: n,m:nst \then (n+m):nst$
+>
+> We proceed by proving the equivalent $(n+m):std \then (n:std \lor m:std)$
+>
+> Suppose $(n+m):std$}{$(n:std \lor m:std)$
+>> Without loss of generality, suppose $n:nst$ Proof that $m:std$
+>>
+>> By contradiction. Suppose $m:nst$. Proof that this leads to a contradiction.
+>>> We have already assumed that  $(n+m):std$.
+>>>
+>>> Now, however, we also assume that $n,m:nst$.
+>>>
+>>> Using [theorem](addingNonstds) however, we see that when $n,m:nst$, then it must be that $(n+m):nst$.
+
 
 
 ## Limits
@@ -155,7 +178,7 @@ as the solution.
 
 Integration over a vector, integration along a vector, integration along a surface. 
 
-You can find a nice introduction (mostly in the second part of) this pdf: \inlinecode{http://www.maths.gla.ac.uk/~cc/2A/2A_notes/2A_chap4.pdf} and here \inlinecode{http://geocalc.clas.asu.edu/pdf-preAdobe8/SIMP_CAL.pdf}
+You can find a nice introduction (mostly in the second part of) this pdf: \inlinecode{http://www.maths.gla.ac.uk/~cc/2A/2A_notes/2A_chap4.pdf} and here `http://geocalc.clas.asu.edu/pdf-preAdobe8/SIMP_CAL.pdf`
 
 
 ### Constraint optimization using Lagrange multipliers

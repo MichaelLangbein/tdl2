@@ -6,7 +6,7 @@ We will mention the following implementations: the vectorspace of coordinate fre
 # Vector spaces
  
 
-\begin{definition}[Vector space] A vector space $V$ is a set closed over two operations: scalar multiplication and vector addition. These two operations must fullfill the following properties:
+> **Definition** [Vector space] A vector space $V$ is a set closed over two operations: scalar multiplication and vector addition. These two operations must fullfill the following properties:
 
 - $V$ is closed under scalar multiplication and vector-addition: $a\vec{v} \in V, \vec{v} + \vec{w} \in V$
 - vector-addition is commutative: $\vec{v} + \vec{w} = \vec{w} + \vec{v}$
@@ -17,7 +17,7 @@ We will mention the following implementations: the vectorspace of coordinate fre
 - Vector-addition and scalar-multiplication are distributive (part 1): $a(\vec{v} + \vec{w}) = a\vec{v} + a\vec{w}$
 - Vector-addition and scalar-multiplication are distributive (part 2): $(a+b)\vec{v} = a\vec{v} + b\vec{v}$
 
-\end{definition}
+
 
 The most common vector-spaces are certainly $\reals^n$ and function-spaces.
 The implementations of the above defined scalar product and vector addition are trivial.
@@ -59,12 +59,12 @@ A set $B$ is a base to a vectorspace $V$ iff $ B \subseteq V \land  \forall v \i
 $ B:baseV \iff ( B:li \land B:spanV ) $. 
 
 
-\begin{definition}[The dimension of a vectorspace $S$]
+> **Definition** [The dimension of a vectorspace $S$]
     is defined as the size of its base $B_S$: $dim_S = |B_S|$. 
-\end{definition}
+
 That means to get a base for $\reals^2$, we never need more than two vectors. We'll prove this for the example of $S = \reals^2$:
 
-\begin{proof} \label{proofBaseSizeEqualsSpaceDimension}
+\begin{proof} <a id="proofBaseSizeEqualsSpaceDimension"></a>
 For any three vectors chosen from $\reals^2$, at least one must be a linear combination of the others. \\
     \subprf{$\vec{a}, \vec{b}, \vec{c} \in \reals^2$ }{ $\vec{a}:ld(\vec{b}, \vec{c}) \lor \vec{b}:ld(\vec{a}, \vec{c}) \lor \vec{c}:ld(\vec{a}, \vec{b})$ }{
         
@@ -76,11 +76,11 @@ For any three vectors chosen from $\reals^2$, at least one must be a linear comb
     }
 \end{proof}
 
-\begin{theorem}
+> **Theorem**
     [Every vectorspace has a basis]
 \end{theorem}
 
-\begin{theorem}
+> **Theorem**
     [All bases of a vectorspace $S$ have the same size]
 \end{theorem}
 
@@ -95,14 +95,14 @@ For any three vectors chosen from $\reals^2$, at least one must be a linear comb
 # Inner product spaces
 Vector spaces don't define anything about lengths, angles or projections. This lack is alleviated by adding a inner product. 
 
-\begin{definition}[Inner product space] The inner product is defined as any operation that has the following properties:
+> **Definition** [Inner product space] The inner product is defined as any operation that has the following properties:
 
  - $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
  - $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
  - $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
  - $\vec{v} \neq \vec{0} \then \vec{v} \innerprod \vec{v} > 0$
 
-\end{definition}
+
 
 In inner product spaces, we can define norms, orthogonality, and angles. 
 
@@ -255,7 +255,7 @@ It is good to know that although orthogonality helps us to prove linear independ
 \begin{proof} In the infinite dimensional case, a orthogonal set $B \subseteq V$ does not have to be a base of $V$. A good example would be a set of linear functions in $V = C_{[a,b]}$ - they can never span quadratic functions. 
 \end{proof}
 
-**Fourier decomposition** \label{fourierDecomposition}
+**Fourier decomposition** <a id="fourierDecomposition"></a>
 In every vectorspace a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \innerprod b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
 
 \begin{proof} Let $B$ be an orthonormal base of $V$. Then for any $\vec{v} \in V$ the $n$th coefficient $\alpha_n$ can be easily calculated as \innerprodbr{\vec{v}}{\vec{b_n}} \\
@@ -289,7 +289,7 @@ $$ B^{-1} \vec{v} = \vec{\alpha} $$
 
 This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N^3} operation, and matrix multiplication is still a \BigTheta{N^{>2.3}} operation. Contrary to that, the evaluation of a plynomal is a \BigTheta{N} operation when using Horners method. 
 
-\paragraph{Gram-Schmidt orthogonalisation} For every set of li vectors we can find a set of orthogonal vectors like this: 
+### Gram-Schmidt orthogonalisation For every set of li vectors we can find a set of orthogonal vectors like this: 
 
  - $b_1 = v_1$
  - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$

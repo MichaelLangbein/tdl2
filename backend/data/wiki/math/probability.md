@@ -1,5 +1,9 @@
 # Probability
 
+$$
+\gdef\samplespace[]{\ensuremath{\Omega}}
+$$
+
 # Basics
 
 ### Probability space
@@ -11,29 +15,28 @@ Probability works on some basic entities:
 
 
 
-\begin{definition}[Probability]
-    Probability is a measure on \samplespace. It is a total function $ \probFunct: \samplespace \to \reals $ such that:
+> **Definition** [Probability]
+> Probability is a measure on \samplespace. It is a total function $\probFunct: \samplespace \to \reals$ such that:    
+> - $ \forall \omega \in \samplespace : \probFunct[\omega] \geq 0 $
+> - $ \sum_{\omega \in \samplespace} \probFunct[\omega] = 1 $
     
-        - $ \forall \omega \in \samplespace : \probFunct[\omega] \geq 0 $
-        - $ \sum_{\omega \in \samplespace} \probFunct[\omega] = 1 $
-    
-\end{definition}
+
 
 A probability measure together with a sample-space is called a probability space. 
 
 
 We define the probability of an event as: 
-$$ \probFunct[E] = \sum_{\omega \in E} \probFunct[\omega] $$
+$$\probFunct[E] = \sum_{\omega \in E} \probFunct[\omega]$$
 
-\begin{definition}[Random variable]
-    A random variable is a function mapping a $\omega$ from \samplespace  to the reals. 
-    $$ X(\omega) : \samplespace \then \reals $$
-\end{definition}
+> **Definition** [Random variable]
+> A random variable is a function mapping a $\omega$ from \samplespace  to the reals. 
+> $$ X(\omega) : \samplespace \to \reals$$
+
 Note that a random variable strictly takes a single $\omega$ as argument, not a set of outcomes. 
 
 We then calculate the probability that a random variable $X$ has a certain value $x$ as such: 
 
-$$ \probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega] $$
+$$\probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega]$$
 
 
 \begin{figure}[H]
@@ -43,14 +46,14 @@ $$ \probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega] $$
 \end{figure}
 
 
-\begin{definition}[Expectation]
-    The expectation of a random variable is defined as 
-    $$ E[X] = \sum_\samplespace X(\omega)P(\omega)$$ 
-\end{definition}
+> **Definition** [Expectation]
+> The expectation of a random variable is defined as 
+> $$ E[X] = \sum_\samplespace X(\omega)P(\omega)$$ 
 
-\begin{definition}[Conditional Probability]
-    $$ \probFunct[A | B] = \frac{\probFunct[A \intersection B]}{\probFunct[B]}$$
-\end{definition}
+
+> **Definition** [Conditional Probability]
+> $$ \probFunct[A | B] = \frac{\probFunct[A \intersection B]}{\probFunct[B]}$$
+
 
 As a nice little exercise, we prove the formula for the conditional probability of the *complement* of $B$.
 
@@ -63,32 +66,27 @@ As a nice little exercise, we prove the formula for the conditional probability 
 As an illustrative example, consider the following probabilities. People can be *small* (S) or *tall* (T). They can be *good* (G) or *bad* (B) at basketball.
 Here are the tables of probabilities:
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{llllll}
-      &      &  &   & S    & T    \\
-      &      &  &   & 0.6  & 0.4  \\
-      &      &  &   &      &      \\
-      &      &  &   & S    & T    \\
-    B & 0.14 &  & B & 0.54 & 0.08 \\
-    G & 0.86 &  & G & 0.6  & 0.32
-    \end{tabular}
-\end{table}
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{llll}
-        $P(B|S)$ & 0.9 & $P(B|T)$ & 0.8 \\
-        $P(G|S)$ & 0.1 & $P(G|T)$ & 0.2 
-    \end{tabular}
-\end{table}
+|     |      |  |     |**S**  |**T**|
+|-----|------|--|-----|------ |-----|
+|     |      |  |     | 0.6   | 0.4 |
+|     |      |  |     |       |     |
+|     |      |  |     |**S**  |**T**|
+|**B**| 0.14 |  |**B**| 0.54  | 0.08|
+|**G**| 0.86 |  |**G**| 0.6   | 0.32|
+
+
+|          |     |          |     |
+|----------|-----|----------|-----|
+| $P(B|S)$ | 0.9 | $P(B|T)$ | 0.8 | 
+| $P(G|S)$ | 0.1 | $P(G|T)$ | 0.2 | 
+
 
 Notice the following facts:
-
-    - notice how $P(G|T) \neq 1 - P(G|S)$
-    - notice how $P(G|T) = 1 - P(B|T)$
-    - $P(A, B) = P(A|B) P(B) = P(B|A) P(A)$
-    - $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
+- notice how $P(G|T) \neq 1 - P(G|S)$
+- notice how $P(G|T) = 1 - P(B|T)$
+- $P(A, B) = P(A|B) P(B) = P(B|A) P(A)$
+- $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
 
 
 As yet another exercise, here is the formula of the probability of a union of arbitrary events: 
@@ -110,7 +108,7 @@ As yet another exercise, here is the formula of the probability of a union of ar
     
 \end{proof}
 
-### A few lemmas on conditional probability \label{condPropLemmas}
+### A few lemmas on conditional probability <a id="condPropLemmas"></a>
 
 In a "causal" chain of events $A, B, C$ we can integrate out the middle-event $B$.
 $$
@@ -155,18 +153,18 @@ $$
 
 **Conditional expectation and variance** ...
 
-\begin{definition} \label{conditionalExpectation}
-    Conditional expectation:
-    $$ E_{Y|x} = \Sigma y P(y|x) $$
-\end{definition}
+> **Definition**  <a id="conditionalExpectation"></a>
+> Conditional expectation:
+> $$ E_{Y|x} = \Sigma y P(y|x) $$
 
-\begin{definition} \label{conditionalVariance}
-    Conditional variance: 
-    $$ V_{Y|x} = E_{(Y - E_{Y|x})^2 | x} $$ 
-\end{definition}
+
+> **Definition**  <a id="conditionalVariance"></a>
+> Conditional variance: 
+> $$ V_{Y|x} = E_{(Y - E_{Y|x})^2 | x} $$ 
+
 
 **Law of total expectation** ...
-$$ \label{lawOfTotalExpectation}
+$$ <a id="lawOfTotalExpectation"></a>
     \begin{aligned}
         E_Y &= \Sigma_Y y P(y) \\
             &= \Sigma_Y y \Sigma_X P(y|x) P(x) \\
@@ -177,7 +175,7 @@ $$ \label{lawOfTotalExpectation}
 $$
 
 **Law of total variance** ...
-$$ \label{lawOfTotalVariance}
+$$ <a id="lawOfTotalVariance"></a>
     \begin{aligned}
         V_Y &= E_{Y^2} - E_Y^2 \\
             &= E_{E_{Y^2 | X}} - E^2_{E_{Y|X}} \\
@@ -203,7 +201,7 @@ For example, we can only define probability density in therms of cumulative prob
 Let $P(x) := Pr(X > x)$ be a cumulative probability function.
 Then the probability density at $x$ is $\frac{d P}{d x}(x)$.
 
-\paragraph{As an exercise,} consider $x \tilde Exp(x)$. We want to calculate $E(x | x > x_0)$. 
+### As an exercise, consider $x \tilde Exp(x)$. We want to calculate $E(x | x > x_0)$. 
 We'll start with $P(x | x > x_0)$.
 We have:
 $$
@@ -247,23 +245,25 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
 
 ### Probabilistic fallacies
 
-    - T-Test interpretation: If $\probFunct[A|B] = x$, then this does *not* mean that $\probFunct[A|\overline{B}] = 1 - x$.
-    - Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
+- T-Test interpretation: If $\probFunct[A|B] = x$, then this does *not* mean that $\probFunct[A|\overline{B}] = 1 - x$.
+- Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
 
 
-\paragraph{$\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$}. 
-\begin{proof}
-    By contradiction. 
-    $$
-        \begin{aligned}
-           \probFunct[A|B]                 &= 1 - \probFunct[A | \overline{B}] \\
-                                           &= \frac{  \probFunct[B] - \probFunct[A \intersection \overline{B}]  }{  \probFunct[B]  }  \\
-           \probFunct[A|B] \probFunct[B]   &=         \probFunct[B] - \probFunct[A \intersection \overline{B}] \\
-           \probFunct[A \intersection B]   &= \probFunct[B] - \probFunct[A \intersection \overline{B}] \\
-           \probFunct[A \intersection B] + \probFunct[A \intersection \overline{B}]  &= \probFunct[B] \\
-           \probFunct[A] &= \probFunct[B]
-        \end{aligned}
-    $$
-    Thus $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$. But not that it *does* hold true that $\probFunct[\overline{A}|B] = 1 - \probFunct[A | B]$
-\end{proof}
+> $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$
+>
+> By contradiction. 
+>>    $$
+>>        \begin{aligned}
+>>           \probFunct[A|B]                 &= 1 - \probFunct[A | \overline{B}] \\
+>>                                           &= \frac{  \probFunct[B] - \probFunct[A \intersection \overline{B}]  }{  \probFunct[B]  }  \\
+>>           \probFunct[A|B] \probFunct[B]   &=         \probFunct[B] - \probFunct[A \intersection \overline{B}] \\
+>>           \probFunct[A \intersection B]   &= \probFunct[B] - \probFunct[A \intersection \overline{B}] \\
+>>           \probFunct[A \intersection B] + \probFunct[A \intersection \overline{B}]  &= \probFunct[B] \\
+>>           \probFunct[A] &= \probFunct[B]
+>>        \end{aligned}
+>>    $$
+> Thus $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$.
+>
+> But not that it *does* hold true that $\probFunct[\overline{A}|B] = 1 - \probFunct[A | B]$
+
 

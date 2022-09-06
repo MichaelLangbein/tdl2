@@ -1,3 +1,16 @@
+$
+\gdef\mtrx#1{\mathbf{#1}}
+\gdef\nullspace#1{\mathcal{N}_{#1}}
+\gdef\collspace#1{\mathcal{C}_{#1}}
+\gdef\rowspace#1{\mathcal{R}_{#1}}
+\gdef\solspace#1{\mathcal{S}_{#1}}
+\gdef\dimension#1{\text{dim}_{#1}}
+\gdef\rank#1{\text{rank}_{#1}}
+\gdef\symm{\text{sym}}
+\gdef\orthtxt{\text{orth}}
+$
+
+
 # Linear algebra
 
 In the previous section on general algebra we dealt with vector spaces (subspaces, linear independence, bases) and inner product spaces (norms, orthogonality). 
@@ -10,69 +23,55 @@ Here we'll mostly deal with the inner-product space of vectors and occasionally 
 
 We'll work a lot with a few vector-spaces and transfromations from and to those spaces. 
 
-\begin{definition}
-    Let $W$ be a space. Then $V \subseteq W$ is a subspace, if: 
+> **Definition** 
+> Let $W$ be a space. Then $V \subseteq W$ is a subspace, if:   
+> - $\forall v_1, v_2 \in V: v_1 + v_2 \in W$
+> - $\forall v \in V: \forall r \in R: rv \in V$
     
-        - $\forall v_1, v_2 \in V: v_1 + v_2 \in W$
-        - $\forall v \in V: \forall r \in R: rv \in V$
-    
-\end{definition}
-    
+> **Definition** [Nullspace]
+> $\nullspace{A}$ is the nullspace of $A$. It is defined as $\nullspace{A} = \{ x | Ax = 0 \}$
 
-\begin{definition}[Nullspace]
-     $\nullspace{A}$ is the nullspace of $A$. It is defined as $\nullspace{A} = \{ x | Ax = 0 \}$
-\end{definition}
+> **Definition** [Columnspace]
+> $\collspace{A}$ is the collumnspace of $A$. It is defined as $\collspace{A} = \{ y | Ax = y \}$
 
-\begin{definition}[Columnspace]
-     $\collspace{A}$ is the collumnspace of $A$. It is defined as $\collspace{A} = \{ y | Ax = y \}$
-\end{definition}
+> **Definition** [Rowspace]
+> $\rowspace{A}$ is the rowspace of $A$. It is defined as $\rowspace{A} = \{ y | A^Tx = y \}$
 
-\begin{definition}[Rowspace]
-     $\rowspace{A}$ is the rowspace of $A$. It is defined as $\rowspace{A} = \{ y | A^Tx = y \}$
-\end{definition}
+> **Definition** [Rank]
+> $r_A$ is the rank of $A$. It is defined as the dimension of $\collspace{A}$, $\dimension{\collspace{A}}$
 
-\begin{definition}[Rank]
-     $r_A$ is the rank of $A$. It is defined as the dimension of $\collspace{A}$, $\dimension{\collspace{A}}$
-\end{definition}
 
-\begin{definition}[Nullity]
-    $n_A$ is the nullity of $A$. It is defined as the dimension of $\nullspace{A}$, $\dimension{\nullspace{A}}$
-\end{definition}
+> **Definition** [Nullity]
+> $n_A$ is the nullity of $A$. It is defined as the dimension of $\nullspace{A}$, $\dimension{\nullspace{A}}$
+
 
 
 **rops and cops as matrix multiplication** ...
 $$ \rops(A) = \rops(I) A = R A$$
 $$ \cops(A) = A \cops(I) = A C$$
 
-\paragraph{rops don't change \nullspace{A}}
+### rops don't change \nullspace{A}
 Row- and column-operations (rops and cops) seem somewhat trivial at first and not worth any proof writing efforts. However, many theorems of linear algebra are much easier proved if we first reduce the matrices to their RRLE (reduced row linear echelon) form.
 
-\begin{theorem}
-  Row-operations on $A$ don't change \nullspace{A}. 
-\end{theorem}
+> **Theorem**
+> Row-operations on $A$ don't change \nullspace{A}. 
+>
+> Let $A' = \rops(A) = RA$ Proof that $\nullspace{A} = \nullspace{A'}$
+>> Let $x_0: Ax_0 = 0$. Proof that $\exists y_0: A'y_0 = 0$
+>>> Try $y_0 = x_0$. Proof that $A'y_0 = 0$
+>>>> $RAy_0 = 0$
+>> Let $y_0: A'y_0 = 0$. Proof that $\exists x_0: Ax_0 = 0$
+>>> This is equivalent to stating that $\exists x_0: R^{-1} A' x_0 = 0$
+>>>
+>>> Try $x_0 = y_0$. Proof that $R^{-1} A' x_0 = 0$
+>>>> $R^{-1} A' x_0 = 0$
 
-\begin{proof}
-    \subprf {Let $A' = \rops(A) = RA$} {\nullspace{A} = \nullspace{A'}} {
-        \subprf {Let $x_0: Ax_0 = 0$} {$\exists y_0: A'y_0 = 0$} {
-            \subprf {Try $y_0 = x_0$} {$A'y_0 = 0$} {
-                $RAy_0 = 0$
-            }
-        } \\
-        \subprf {Let $y_0: A'y_0 = 0$} {$\exists x_0: Ax_0 = 0$} {
-            This is equivalent to stating that $\exists x_0: R^{-1} A' x_0 = 0$ \\
-            \subprf {Try $x_0 = y_0$} {$R^{-1} A' x_0 = 0$} {
-                $R^{-1} A' x_0 = 0$
-            }
-            
-        }
-    } 
-\end{proof}
 
 Therefore, when searching for the special solutions to a problem $Ab = 0$, we can use Gauss-Elemination and RREF without any problems.
 
-\paragraph{cops don't change C(A)} ...
+### cops don't change C(A) ...
 
-\paragraph{rops don't change C(A) if A is invertible }...
+### rops don't change C(A) if A is invertible ...
 
 We can now print an overview of the different spaces that are associated with a matrix $A$ of dimension $m \cdot n$ and rank $r$.
 
@@ -83,19 +82,18 @@ Notice how we included the previous theorem: any combination $x$ of a particular
 
 
 We should look in more detail at this graphic. Note, for example, that \nullspace{A} and \collspace{A^T} seem to be orthogonal. Indeed:
-\begin{theorem}
-    [$\forall v \in \nullspace{A}, w \in \collspace{A^T}: v \orth w$]
-\end{theorem}
-\begin{proof}
-    $$
-        \begin{aligned}
-            w^T v &= 0  & \text{ with } \thereis u: \mtrx{A}^T u = w \\
-            u^T \mtrx{A} v &= 0 & \text{ with } \mtrx{A}v = 0 \\
-            u^T 0 &= 0 & \text{ which is trivially true.}
-        \end{aligned}
-    $$
-    Thus, \nullspace{A} and \collspace{A^T} only intersect in $\vec{0}$.
-\end{proof}
+> **Theorem**
+> $\forall v \in \nullspace{A}, w \in \collspace{A^T}: v \orth w$
+>
+>>    $$
+>>        \begin{aligned}
+>>            w^T v &= 0  & \text{ with } \thereis u: \mtrx{A}^T u = w \\
+>>            u^T \mtrx{A} v &= 0 & \text{ with } \mtrx{A}v = 0 \\
+>>            u^T 0 &= 0 & \text{ which is trivially true.}
+>>        \end{aligned}
+>>    $$
+>> Thus, \nullspace{A} and \collspace{A^T} only intersect in $\vec{0}$.
+
 
 However, note that $\reals^n \geq \nullspace{A} \union \collspace{A^T}$. As an example, consider $\mtrx{A} = \begin{bmatrix}
     1 & 0 \\
@@ -106,9 +104,9 @@ However, note that $\reals^n \geq \nullspace{A} \union \collspace{A^T}$. As an e
     x \\ 0
 \end{bmatrix}$. Now consider $\vec{v} = \begin{bmatrix}
     1 \\ 1
-\end{bmatrix}$, which is neither in \nullspace{A} nor in \collspace{A^T}. As illustration, look at fig. \ref{nullspace_rowspace_lowrank}.
+\end{bmatrix}$, which is neither in \nullspace{A} nor in \collspace{A^T}. As illustration, look at [fig.](nullspace_rowspace_lowrank).
 
-\begin{figure}[H] \label{nullspace_rowspace_lowrank}
+\begin{figure}[H] <a id="nullspace_rowspace_lowrank"></a>
     \caption{When $A$ is not full rank, there are infinitely many vectors $v$ that are neither in \rowspace{A} nor in \nullspace{A}. When it comes to spatial dimensions, $1 + 1 \neq 2$!}
     \centering
     \includegraphics[width=0.5\linewidth]{images/nullspace_rowspace_lowrank.png}
@@ -118,7 +116,7 @@ However, note that $\reals^n \geq \nullspace{A} \union \collspace{A^T}$. As an e
 
 
 
-## Change of basis\label{changeOfBasis}
+## Change of basis<a id="changeOfBasis"></a>
 
 Let $V$ be a vector space. Let $0$ be the canonical basis for that vector space. Let $A = \{\vec{a}_1, ..., \vec{a}_N \}$ and $B = \{\vec{b}_1, ..., \vec{b}_N\}$ be two other basis for that vectorspace. Let $\mtrx{A}$ be the matrix $[\vec{a}_1  ...  \vec{a}_N]$ and $\mtrx{B} = [\vec{b}_1 ... \vec{b}_N]$
 
@@ -164,72 +162,59 @@ Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial t
 
 ## Linear transformations
 
-\begin{definition}
-Let $U$ and $V$ be two vector spaces and $f:U \to V$. Then $f$ is a *linear transform* if
-
-    - $f$ preserves scalar multiplication: $f(\alpha \vec{u}) = \alpha f(\vec{u})$
-    - $f$ preserves vector addition: $f(\vec{u}_1 + \vec{u}_2) = f(\vec{u}_1) + f(\vec{u}_2)$
-
-\end{definition}
+> **Definition** 
+> Let $U$ and $V$ be two vector spaces and $f:U \to V$. Then $f$ is a *linear transform* if
+> - $f$ preserves scalar multiplication: $f(\alpha \vec{u}) = \alpha f(\vec{u})$
+> - $f$ preserves vector addition: $f(\vec{u}_1 + \vec{u}_2) = f(\vec{u}_1) + f(\vec{u}_2)$
 
 There are a bunch of properties to linear transformations that can be useful to us. 
 
-\begin{proof}[There is a unique linear transform from the basis of $U$ to any set of vectors in $V$ that we want.] In other words, any linear transform $f$ is completely deterimed by the matrix $[ f(\vec{b}_1) ... f(\vec{b}_N) ] = [\vec{v}_1 ... \vec{v}_N]$. That means if we dont know the transform, but we do know the results of the transform on a basis, then we can reconstruct the transform with certainty.  \\
+There is a unique linear transform from the basis of $U$ to any set of vectors in $V$ that we want.
+In other words, any linear transform $f$ is completely determined by the matrix $[ f(\vec{b}_1) ... f(\vec{b}_N) ] = [\vec{v}_1 ... \vec{v}_N]$. That means if we don't know the transform, but we do know the results of the transform on a basis, then we can reconstruct the transform with certainty.
 
-    \subprf{Let $B = \{ \vec{b}_1, ..., \vec{b}_N \}$ be a basis for $U$. Let $\{ \vec{v}_1, ..., \vec{v}_N \}$ be any vectors in $V$ that we may chose. }
-    { there is a unique function $f:U \to V$ such that $f(\vec{b}_i) = \vec{v}_i$ }{
-    
-        \subprf{Try $f(\vec{x}) = \mtrx{V} (\vec{x})_B$}
-        {$f(\vec{b}_i) = \vec{v}_i$ and $f$ is a linear transform.}{
-        
-            \subprf{Part 1: }
-            {$f(\vec{b}_i) = \vec{v}_i$}{
-                
-                $ f(\vec{b}_i) = \mtrx{V} (\vec{b}_i)_B = \mtrx{V} \vec{e}_i = \vec{v}_i $
-                
-            }
-            
-            \subprf{Part 2: }{$f$ is unique}{
-                
-                We could not have obtained any other form of $f$ than $f(\vec{x}) = \mtrx{V} (\vec{x})_B$. This is because for *any* linear transform from $U \to V$ we have: 
-                
-                $ f(\vec{x}) = f(\mtrx{B}(\vec{x})_B) = f(\sum_n (x_n)_B \vec{b}_n) = \sum_n (x_n)_B f(\vec{b}_n)  $
-                
-                Using the result from part 1, this cannot be any other function than: 
-                
-                $ \sum_n (x_n)_B f(\vec{b}_n) = \sum_n (x_n)_B \vec{v}_n = \mtrx{V} (\vec{x})_B $ 
-                
-            }
-            
-            \subprf{Part 3: }
-            {$f$ is a linear tansform}{
-            
-            }
-        }
-    }
-\end{proof}
+> Let $B = \{ \vec{b}_1, ..., \vec{b}_N \}$ be a basis for $U$. Let $\{ \vec{v}_1, ..., \vec{v}_N \}$ be any vectors in $V$ that we may chose. Proof that there is a unique function $f:U \to V$ such that $f(\vec{b}_i) = \vec{v}_i$ 
+
+>> Try $f(\vec{x}) = \mtrx{V} (\vec{x})_B$. Proof that $f(\vec{b}_i) = \vec{v}_i$ and $f$ is a linear transform.
+>>
+>>> Part 1:
+>>>
+>>>$f(\vec{b}_i) = \vec{v}_i$. Proof that $ f(\vec{b}_i) = \mtrx{V} (\vec{b}_i)_B = \mtrx{V} \vec{e}_i = \vec{v}_i $
+>>>
+>>> Part 2:
+>>>
+>>> $f$ is unique
+>>>> We could not have obtained any other form of $f$ than $f(\vec{x}) = \mtrx{V} (\vec{x})_B$. This is because for *any* linear transform from $U \to V$ we have: 
+>>>>
+>>>> $ f(\vec{x}) = f(\mtrx{B}(\vec{x})_B) = f(\sum_n (x_n)_B \vec{b}_n) = \sum_n (x_n)_B f(\vec{b}_n)  $
+>>>>
+>>>> Using the result from part 1, this cannot be any other function than: 
+>>>>
+>>>> $ \sum_n (x_n)_B f(\vec{b}_n) = \sum_n (x_n)_B \vec{v}_n = \mtrx{V} (\vec{x})_B $ 
+>>>
+>>> Part 3:
+>>>
+>>> $f$ is a linear tansform
+
 
 A whole bunch of other properties are now easily proved. Let $f$ and $g$ be linear transforms from $U$ to $V$. The following are also linear transforms: 
-
-    - $\alpha f$
-    - $f + g$
-    - $f^{-1}$ ( if it exists )
-    - $fg$ ( here $g: V \to W$ )
+- $\alpha f$
+- $f + g$
+- $f^{-1}$ ( if it exists )
+- $fg$ ( here $g: V \to W$ )
 
 
 Let $f: U \to V$ be a linear transform. Then the following are equivalent: 
-
-    - If $f(\vec{u}) = \vec{0}$, then $\vec{u} = \vec{0}$
-    - $f$ is one-to-one
-    - $f$ maps linearly independent vectors to linearly independent vectors. 
-
+- If $f(\vec{u}) = \vec{0}$, then $\vec{u} = \vec{0}$
+- $f$ is one-to-one
+- $f$ maps linearly independent vectors to linearly independent vectors. 
 
 
-Prove that a transform can be split up into mulitple transforms on the basis vectors. 
-As an examle, consider the case of a rotation. A diagonal rotation can be reproduced by a rotation first around one, then around another axis. 
+
+Prove that a transform can be split up into multiple transforms on the basis vectors. 
+As an example, consider the case of a rotation. A diagonal rotation can be reproduced by a rotation first around one, then around another axis. 
 
 
-**A linear transformation can also be a change of basis** when it is on a vectorspace and invertible.
+**A linear transformation can also be a change of basis** when it is on a vector-space and invertible.
 
 
 
@@ -247,41 +232,46 @@ As an examle, consider the case of a rotation. A diagonal rotation can be reprod
 ## Linear independence
 
 
-\begin{definition}
-    $B$ is linearly independent if $\forall b \in B: b \neq \sum r_n b_n$, with $b_n \in B/b$. 
-\end{definition}
+> **Definition** 
+> $B$ is linearly independent if $\forall b \in B: b \neq \sum r_n b_n$, with $b_n \in B/b$. 
 
-\begin{theorem} \label{lin_indep_if_no_bx0}
-  A better definition could be stated as such: $B$ is linearly independent, if the only solution to $Bx = 0$ is the zero-vector.
-\end{theorem}
 
-\begin{proof}
-    \subprf{Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$}{$\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$}{
-        \subprf{Suppose $\mtrx{B} \vec{x} = \vec{0}$}{$\vec{x} = \vec{0}$}{
-            \subprf{By contradiction. Assume $\vec{x} \neq \vec{0}$}{there is a contradiction.}{
-                We have $\mtrx{B}\vec{x} = \vec{0}$ \\
-                Consider the vector $\vec{b}_3$. \\
-                Thus: $\sum_{B/b_3} x_i \vec{b}_i = -x_3 \vec{b}_3$ \\
-                Or: $\sum_{B/b_3} \frac{- x_i}{x_3} \vec{b}_i = -x_3 \vec{b}_3$ \\
-                This contradicts the statement that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
-            }
-        }
-    }
-    \subprf{Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$}{$\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$}{
-        \subprf{Let $\vec{b_0} \in \mtrx{B}$}{$\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$}{
-            \subprf{By contradiction. Assume $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$}{there is a contradiction.}{
-                Since $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$ \\
-                we get $\vec{0} = \sum_B \alpha_i \vec{b}_i$, where $\alpha_0 = -1$ \\
-                In matrix notation: $\vec{0} = \mtrx{B} \vec{\alpha}$, with a non-zero $\vec{\alpha}$. \\
-                This contradicts our assumption that $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
-            }
-        }
-    }
-\end{proof}
+> **Theorem** <a id="lin_indep_if_no_bx0"></a>
+> A better definition could be stated as such: $B$ is linearly independent, if the only solution to $Bx = 0$ is the zero-vector.
+>
+> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$}{$\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
+>
+>> Suppose $\mtrx{B} \vec{x} = \vec{0}$}{$\vec{x} = \vec{0}$
+>>
+>>> By contradiction. Assume $\vec{x} \neq \vec{0}$. Proof that there is a contradiction.
+>>>
+>>>> We have $\mtrx{B}\vec{x} = \vec{0}$
+>>>> 
+>>>> Consider the vector $\vec{b}_3$.
+>>>> 
+>>>> Thus: $\sum_{B/b_3} x_i \vec{b}_i = -x_3 \vec{b}_3$
+>>>> 
+>>>> Or: $\sum_{B/b_3} \frac{- x_i}{x_3} \vec{b}_i = -x_3 \vec{b}_3$
+>>>> 
+>>>> This contradicts the statement that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
+>>
+>> Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$}{$\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
+>>
+>>> Let $\vec{b_0} \in \mtrx{B}$}{$\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$
+>>>
+>>>> By contradiction. Assume $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$. Proof that there is a contradiction.
+>>>>> Since $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$
+>>>>>
+>>>>> we get $\vec{0} = \sum_B \alpha_i \vec{b}_i$, where $\alpha_0 = -1$
+>>>>>
+>>>>> In matrix notation: $\vec{0} = \mtrx{B} \vec{\alpha}$, with a non-zero $\vec{\alpha}$.
+>>>>>
+>>>>> This contradicts our assumption that $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
 
-\begin{definition}
-    Let $V$ be a subspace. $B \subseteq V$ is a basis for $V$ if $B$ is linearly independent and $\forall v \in V: v = \sum r_n b_n$, with $b_n \in B$
-\end{definition}
+
+> **Definition** 
+> Let $V$ be a subspace. $B \subseteq V$ is a basis for $V$ if $B$ is linearly independent and $\forall v \in V: v = \sum r_n b_n$, with $b_n \in B$
+
 
 
 
@@ -297,41 +287,40 @@ As an examle, consider the case of a rotation. A diagonal rotation can be reprod
 \includegraphics[width=0.4\linewidth]{images/determinant.png}
 
 
-**Definition** Consider a $2 \times 2$ matrix $\mtrx{A}$ 
-$$
-\mtrx{A} = 
-\begin{bmatrix}
-    a_{11} & a_{12} \\
-    a_{21} & a_{22}
-\end{bmatrix}
-$$
-$\det{\mtrx{A}}$ is defined as $a_{11}a_{22} - a_{12}a_{21}$. The definitions for higher order matrix-determinants are similar, but so extremely tedious that we just ignore them here. 
+> **Definition** Consider a $2 \times 2$ matrix $\mtrx{A}$ 
+> $$
+> \mtrx{A} = 
+> \begin{bmatrix}
+>     a_{11} & a_{12} \\
+>     a_{21} & a_{22}
+> \end{bmatrix}
+> $$
+> $\det{\mtrx{A}}$ is defined as $a_{11}a_{22} - a_{12}a_{21}$. The definitions for higher order matrix-determinants are similar, but so extremely tedious that we just ignore them here. 
+> 
 
-
-\begin{theorem}  \label{det_0}
-    Let $ \mtrx{A} \vec{x} = 0 $ and $ \vec{x} \neq \vec{0}$. Then it must hold that $\det{\mtrx{A}} = 0$.
-    In fact, this holds in two directions:
-
-    $$ \thereis \vec{x} \neq \vec{0}: \mtrx{A} \vec{x} = 0  \iff \det{\mtrx{A}} = 0 $$
-\end{theorem}
-\begin{proof}
-    We can prove this making use of theorem \ref{lin_indep_if_no_bx0}. From the given it follows that $\mtrx{A}$ is linearly dependent. 
-    Thus $\thereis \vec{a} \in \mtrx{A}: \vec{a} = \sum_{A/a} \alpha_i \vec{a}_i$. In the case of a $2 \times 2$ matrix this expression becomes very simple: $\vec{a}_1 = \alpha \vec{a}_2$. 
-    Breaking $\vec{a}_1$ into its components
-    
-        - $a_{11} = \alpha a_{12}$
-        - $a_{21} = \alpha a_{22}$
-    
-    Putting this into the definition of a determinant we get:
-    $$
-        \begin{aligned}
-            \det{\mtrx{A}}  &= a_{11}a_{22} - a_{12}a_{21} \\
-                            &= \alpha a_{12} a_{22} - \alpha a_{12} a_{22} \\
-                            &= 0
-        \end{aligned}
-    $$
-    For higher order matrices, the proof follows from induction or something like that.
-\end{proof}
+> **Theorem**  <a id="det_0"></a>
+> Let $ \mtrx{A} \vec{x} = 0 $ and $ \vec{x} \neq \vec{0}$. Then it must hold that $\det{\mtrx{A}} = 0$.
+>
+> In fact, this holds in two directions:
+> $$ \thereis \vec{x} \neq \vec{0}: \mtrx{A} \vec{x} = 0  \iff \det{\mtrx{A}} = 0 $$
+>
+ > We can prove this making use of [theorem](lin_indep_if_no_bx0). From the given it follows that $\mtrx{A}$ is linearly dependent.
+ >
+ > Thus $\thereis \vec{a} \in \mtrx{A}: \vec{a} = \sum_{A/a} \alpha_i \vec{a}_i$. In the case of a $2 \times 2$ matrix this expression becomes very simple: $\vec{a}_1 = \alpha \vec{a}_2$. 
+>
+> Breaking $\vec{a}_1$ into its components  
+> - $a_{11} = \alpha a_{12}$
+> - $a_{21} = \alpha a_{22}$
+>
+> Putting this into the definition of a determinant we get:
+> $$
+>     \begin{aligned}
+>         \det{\mtrx{A}}  &= a_{11}a_{22} - a_{12}a_{21} \\
+>                         &= \alpha a_{12} a_{22} - \alpha a_{12} a_{22} \\
+>                         &= 0
+>     \end{aligned}
+> $$
+> For higher order matrices, the proof follows from induction or something like that.
 
 
 
@@ -342,9 +331,9 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 **Properties**
 
-    - $\det{\mtrx{A} \mtrx{B}} = \det{\mtrx{A}}\det{\mtrx{B}}$
-    - $\det{\mtrx{A} + \mtrx{B}} \neq \det{\mtrx{A}} + \det{\mtrx{B}}$
-    - $\det{\mtrx{A}} = \prod{\lambda_i}$ (see eivenvalues, later)
+- $\det{\mtrx{A} \mtrx{B}} = \det{\mtrx{A}}\det{\mtrx{B}}$
+- $\det{\mtrx{A} + \mtrx{B}} \neq \det{\mtrx{A}} + \det{\mtrx{B}}$
+- $\det{\mtrx{A}} = \prod{\lambda_i}$ (see eivenvalues, later)
 
 
 
@@ -358,39 +347,41 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 ## Rank nullity Theorem
 
 
-\begin{theorem}
-    $ \nullspace{A} = \{ 0 \} \then \det{A} \neq 0 $
-\end{theorem}
-\begin{proof}
-    This is almost self-proving. 
-    $\nullspace{A} = \{ 0 \}$ is equivalent to writing $\mtrx{A} \vec{x} = \vec{0} \then \vec{x} = \vec{0}$.
-    By theorem \ref{lin_indep_if_no_bx0} this means that $\mtrx{A}$ is linearly independent.
-    And by theorem \ref{det_0} this means that $ \det{A} \neq 0 $.
-\end{proof}
+> **Theorem**
+> $ \nullspace{A} = \{ 0 \} \then \det{A} \neq 0 $
+>
+> This is almost self-proving. 
+>>  $\nullspace{A} = \{ 0 \}$ is equivalent to writing $\mtrx{A} \vec{x} = \vec{0} \then \vec{x} = \vec{0}$.
+>>
+>>  By [theorem](lin_indep_if_no_bx0) this means that $\mtrx{A}$ is linearly independent.
+>>
+>>  And by [theorem](det_0) this means that $ \det{A} \neq 0 $.
 
 
-\begin{theorem}
-    Let $A: X \to Y$. Then:
-    $$ \nullspace{A} = \{ 0 \} \then \collspace{A} = Y $$
-\end{theorem}
+
+> **Theorem**
+> Let $A: X \to Y$. Then:
+> $$ \nullspace{A} = \{ 0 \} \then \collspace{A} = Y $$
+
 
 \includegraphics[width=0.4\linewidth]{images/A_from_X_to_Y.png}
 
-\begin{theorem}
-    Rank nullity: this is a fundamental theorem of linear algebra.
-    Let $A$ be of dimension $r \times c$ and full rank.
-    Then: 
-    $$ r_A + n_A = c $$
-\end{theorem}
+> **Theorem**
+> Rank nullity: this is a fundamental theorem of linear algebra.
+>
+> Let $A$ be of dimension $r \times c$ and full rank.
+> Then: 
+> $$ r_A + n_A = c $$
 
 
-\begin{theorem}
-    $$ r_A = \dimension{\collspace{A}} = \dimension{\rowspace{A}} $$
-\end{theorem}
 
-\begin{theorem}
-    $$ A:basis_{\collspace{A}} \then r_A = n $$
-\end{theorem}
+> **Theorem**
+> $$ r_A = \dimension{\collspace{A}} = \dimension{\rowspace{A}} $$
+
+
+> **Theorem**
+> $$ A:basis_{\collspace{A}} \then r_A = n $$
+
 
 
 
@@ -400,41 +391,41 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 ## Special matrices
 
 **Symmetric matrices** are simple but very useful.
-\begin{definition}
-    [A matrix $\mtrx{A}$ is symmetric] iff $\mtrx{A} = \mtrx{A}^T$
-\end{definition}
+> **Definition** 
+> A matrix $\mtrx{A}$ is symmetric iff $\mtrx{A} = \mtrx{A}^T$
 
 
-\paragraph{Positive (semi-)definite matrix} are a special case of symmetric matrices.
-\begin{definition}
-    [$\mtrx{A}: \PSD \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$]
-    From the first condition, $\mtrx{A}: \symm$, it follows that the eigenvectors are orthogonal (see eq. \ref{symm_then_orth}), 
-    from the second one, $\forall z: z^T \mtrx{A} z \geq 0$, it follows that the eigenvalues are all greater or equal than $0$ (see eq. \dots).
-\end{definition}
+
+### Positive (semi-)definite matrix are a special case of symmetric matrices.
+> **Definition** 
+> $$\mtrx{A}: \PSD \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$$
+> From the first condition, $\mtrx{A}: \symm$, it follows that the eigenvectors are orthogonal (see [eq.](symm_then_orth)), 
+> from the second one, $\forall z: z^T \mtrx{A} z \geq 0$, it follows that the eigenvalues are all greater or equal than $0$ (see eq. \dots).
+
 
 
 **Gram matrices** appear often in important theorems. They turn out to be PSD.
-\begin{definition}
-    [A Gram matrix] is a matrix $\mtrx{A} = \mtrx{B}^T \mtrx{B}$
-\end{definition}
+> **Definition** 
+> A Gram matrix is a matrix $\mtrx{A} = \mtrx{B}^T \mtrx{B}$
 
-\begin{theorem}
-    [$\rank{A} = \rank{A^T A}$]
-\end{theorem}
 
-\begin{theorem}
-    [$A^T A: \PSD$]
-\end{theorem}
+> **Theorem**
+> $\rank{A} = \rank{A^T A}$
+
+
+> **Theorem**
+> $A^T A: \PSD$
+
 
 
 **Orthogonal matrices** make tons of calculations simpler.
-\begin{definition}[A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \orth x_2$
-\end{definition}
+> **Definition** [A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \orth x_2$
 
-\begin{theorem}
-    [If $A$ is orthogonal, than $A^{-1} = A^T$.]
-    This is trivially proven. By the definition of orthogonality we have $\mtrx{A}^T \mtrx{A} = \mtrx{I}$
-\end{theorem}
+
+> **Theorem**
+> If $A$ is orthogonal, than $A^{-1} = A^T$.
+> This is trivially proven. By the definition of orthogonality we have $\mtrx{A}^T \mtrx{A} = \mtrx{I}$
+
 
 
 
@@ -449,7 +440,7 @@ $$
     \begin{aligned}
         A e &= \lambda e \\
         ( A - \lambda I ) e &= 0 \\
-        \det{A - \lambda I} &= 0 \text{ using theorem \ref{det_0}}
+        \det{A - \lambda I} &= 0 \text{ using [theorem](det_0)}
     \end{aligned}
 $$
 
@@ -458,41 +449,41 @@ Any *square* matrix can be eigenvector (aka. spectrally) decomposed: $\mtrx{A} =
 
 
 Once at a sprint-discussion I wondered why principal components (see about those later) were all orthogonal. Here's the proof why. (Note that the proof only holds for symmetric matrices - which, in PCA, $C_A$ is indeed symmetric.)
-\begin{theorem} \label{symm_then_orth}
-    $\mtrx{A}: \symm \then \mtrx{E}_A: \orth$
+> **Theorem** <a id="symm_then_orth"></a>
+> $\mtrx{A}: \symm \then \mtrx{E}_A: \orth$
+>
+> For any matrix $A$, symmetric or not, and for any vectors $x$ and $y$, eigenvectors or not, it holds:
+> $$\forall A, \forall x, y: <Ax, y> = <x, A^Ty>$$
+> This is true because 
+>    $$
+>        \begin{aligned}
+>            <x, y>      &= x^T y \\
+>            <Ax, y>     &= (Ax)^T y \\
+>                        &= x^T A^T y \\
+>            <x, A^Ty>   &= x^T A^T y
+>        \end{aligned}
+>    $$
+> Then we can use that finding as follows for $\mtrx{A}: \symm$ and $x, y \in \mtrx{E}_A$:
+>    $$
+>        \begin{aligned}
+>                                                                & <Ax, y>           &= <x, A^Ty> \\
+>            \text{Since } A:\symm:                              & <Ax, y>           &= <x, Ay> \\
+>            \text{Since } x, y \text{ are eigenvalues of } A:   & <\lambda_x x, y>  &= <x, \lambda_y y> \\
+>                                                                & \lambda_x <x, y>  &= \lambda_y <x, y>
+>        \end{aligned}
+>    $$
+> Thus, either $\lambda_x = \lambda_y$ or $x \orth y$ 
 
-    For any matrix $A$, symmetric or not, and for any vectors $x$ and $y$, eigenvectors or not, it holds:
-    $\forall A, \forall x, y: <Ax, y> = <x, A^Ty>$
-    This is true because 
-    $$
-        \begin{aligned}
-            <x, y>      &= x^T y \\
-            <Ax, y>     &= (Ax)^T y \\
-                        &= x^T A^T y \\
-            <x, A^Ty>   &= x^T A^T y
-        \end{aligned}
-    $$
-    Then we can use that finding as follows for $\mtrx{A}: \symm$ and $x, y \in \mtrx{E}_A$:
-    $$
-        \begin{aligned}
-                                                                & <Ax, y>           &= <x, A^Ty> \\
-            \text{Since } A:\symm:                              & <Ax, y>           &= <x, Ay> \\
-            \text{Since } x, y \text{ are eigenvalues of } A:   & <\lambda_x x, y>  &= <x, \lambda_y y> \\
-                                                                & \lambda_x <x, y>  &= \lambda_y <x, y>
-        \end{aligned}
-    $$
-    Thus, either $\lambda_x = \lambda_y$ or $x \orth y$ 
-\end{theorem}
 
-\begin{theorem}
-    [As a corollary, the eigenvalue decomposition can be simplified]: $\mtrx{A}: \symm \then \mtrx{A} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^{-1} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^T$
-\end{theorem}
+> **Theorem**
+  >As a corollary, the eigenvalue decomposition can be simplified: $\mtrx{A}: \symm \then \mtrx{A} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^{-1} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^T$
+
 
 **Interpretation of eigenvalues**
 
-    - $\lambda$ is complex: $\mtrx{A}$ contains a rotation
-    - $\lambda$ is negative: $\mtrx{A}$ contains some mirroring
-    - $\lambda$ is 0: $\det{\mtrx{A}} = 0$, i.e. $\mtrx{A}$ squishes a dimension
+- $\lambda$ is complex: $\mtrx{A}$ contains a rotation
+- $\lambda$ is negative: $\mtrx{A}$ contains some mirroring
+- $\lambda$ is 0: $\det{\mtrx{A}} = 0$, i.e. $\mtrx{A}$ squishes a dimension
 
 
 
@@ -504,9 +495,8 @@ $$
     \mtrx{A} = \mtrx{U} \mtrx{\Sigma} \mtrx{V}^T
 $$
 where:
-
-    - $\mtrx{U}$ and $\mtrx{V}$ are orthonormals of sizes $m \times m$ and $n \times n$, respectively
-    - $\mtrx{\Sigma}$ is a diagonal matrix of size $m \times n$
+- $\mtrx{U}$ and $\mtrx{V}$ are orthonormals of sizes $m \times m$ and $n \times n$, respectively
+- $\mtrx{\Sigma}$ is a diagonal matrix of size $m \times n$
 
 In other words: 
 $$
@@ -590,10 +580,9 @@ where in our case $\mtrx{\Sigma} = \begin{bmatrix}
 \end{bmatrix}$
 
 We'll now expand
-
-    - $k \times m$ matrix $\hat{\mtrx{U}}$ to $m \times m$ matrix $\mtrx{U} = [\vec{y}_i]$, even where $\lambda_i = 0$
-    - $k \times n$ matrix $\hat{\mtrx{V}}$ to $n \times n$ matrix $\mtrx{V} = [\vec{e}_i]$, even where $\lambda_i = 0$
-    - $k \times k$ matrix $\mtrx{\Sigma}$ to $m \times n$ matrix $\mtrx{\Sigma} = \begin{cases}
+- $k \times m$ matrix $\hat{\mtrx{U}}$ to $m \times m$ matrix $\mtrx{U} = [\vec{y}_i]$, even where $\lambda_i = 0$
+- $k \times n$ matrix $\hat{\mtrx{V}}$ to $n \times n$ matrix $\mtrx{V} = [\vec{e}_i]$, even where $\lambda_i = 0$
+- $k \times k$ matrix $\mtrx{\Sigma}$ to $m \times n$ matrix $\mtrx{\Sigma} = \begin{cases}
         \text{if } i = j \land i < k: \sqrt{\lambda_i} \\
         \text{else } 0
     \end{cases}$
@@ -614,7 +603,7 @@ $$
 
 
 
-\paragraph{Example for a shear-matrix}: SVD means that any matrix-transformation can be rewritten as a rotation, scale and another rotation. Even a shear-matrix!
+### Example for a shear-matrix: SVD means that any matrix-transformation can be rewritten as a rotation, scale and another rotation. Even a shear-matrix!
 ```
 M = [
     [1, .5],
@@ -652,7 +641,7 @@ Thus $C_Y = \Lambda_{C_X}$, which is diagonal, as required.
 
 Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. Then we use: $\mtrx{X} = \mtrx{A} - \mtrx{\mu}$, the matrix with its *row*-mean subtracted. With that $C_X = \mtrx{X} \mtrx{X}^T$ and $\thereis \mtrx{P}: Y = \mtrx{P}\mtrx{X}$. Try $\mtrx{E}_{C_X}$
 
-\paragraph{Example: Eigenfaces} are a very fun example of PCA.
+### Example: Eigenfaces are a very fun example of PCA.
 
 ```python
     import numpy as np
@@ -715,19 +704,25 @@ Calling $A^T (A A^T)^{-1} = A^{RI}$ the right inverse:
 $$ A A^{RI} = I $$
 For $C^{-1}$ to exist, we require $C$ to be full-rank, which means that $A$ must be full row rank. This  requires $r \leq c$, in other words, $A$ being a broad matrix.
 
-\begin{proof}
-If $A^{RI}$ exists, then $A^{LI}$ does not
-\end{proof}
 
-\begin{proof}
-    $A^{RI}$ is not unique.
-    Let $A$ be of dimension $r \times c$ and full rank, with $r < c$. By rank nullity we have
-    $$ n_A = c - r > 0 $$
-    That is, the nullspace is nonempty. Thus $\thereis x : Ax = 0$
-    Now try $B' = B + x$
-    We get 
-    $$ AB' = AB + Ax = I + 0$$
-\end{proof}
+> If $A^{RI}$ exists, then $A^{LI}$ does not
+
+
+> $A^{RI}$ is not unique.
+>
+> Let $A$ be of dimension $r \times c$ and full rank, with $r < c$. By rank nullity we have
+>
+> $$ n_A = c - r > 0 $$
+>
+> That is, the nullspace is nonempty. Thus $\thereis x : Ax = 0$
+>
+> Now try $B' = B + x$
+>
+> We get 
+>
+> $$ AB' = AB + Ax = I + 0$$
+>
+
 
 
 
@@ -755,34 +750,29 @@ If there are more variables than equations, the system is underdetermined. If th
 **Solving well determined systems**
 There are two cases: a system is either consistent or inconsistent. The follwing statements are all equivalent, meaning that any one of them is related to any other one in an if-and-only-if way. 
 
-
-    - the system is consistent
-    - the matrix is invertible
-    - the determinant is nonzero
-    - there is exactly one sollution
+- the system is consistent
+- the matrix is invertible
+- the determinant is nonzero
+- there is exactly one sollution
 
 
 We proof a few of those equivalences just for the hell of it. 
 
-\begin{proof} There is exactly one solution if and only if the determinant is nonzero. \\
-    \subprf{}{$|A| = 0 \iff \thereis ! \vec{x} : A \vec{x} = \vec{b} $}{
-    
-    }
-\end{proof}
+> There is exactly one solution if and only if the determinant is nonzero.
+>> Proof that $|A| = 0 \iff \thereis ! \vec{x} : A \vec{x} = \vec{b} $
+
 
 On the other hand, in the inconsistent case, the follwing statements are equivalent:
+- the system is inconsistent
+- the matrix is singular (aka. noninvertible)
+- the determinant equals zero
+- one (or more) row (or column) is lineraly dependent of the others
 
 
-    - the system is inconsistent
-    - the matrix is singular (aka. noninvertible)
-    - the determinant equals zero
-    - one (or more) row (or column) is lineraly dependent of the others
+### Solving overdetermined systems: least squares
 
 
-\paragraph{Solving overdetermined systems: least squares}
-
-
-\paragraph{Solving underdetermined systems: geometric bodies}
+### Solving underdetermined systems: geometric bodies
 I like to think of underdetermined systems as (linear) geometric bodies, written in their parameterized form. A line in $\reals^3$ is described by a $3 \times 1$ matrix (or rather, it's column space), a plane in $\reals^3$ by a $3 \times 2$ matrix. However, it is important to note one distinction: geometric objects don't need to go through the origin, a matrix system however does. A line that does not go through the origin needs a base vector, like so: 
 
 $$\vec{x} = \begin{bmatrix} \vec{d} \end{bmatrix} \begin{bmatrix} \alpha \end{bmatrix} + \vec{b}$$ 
@@ -795,95 +785,89 @@ $$\vec{x} = \begin{bmatrix} \vec{p}_1 && \vec{p}_2 \end{bmatrix} \begin{bmatrix}
 
 Here is a problem that bothered me for a while: a line needs one parameter, a plane two. An ellipsoid, too, needs two parameters. Are there any linear geometric objects in $\reals^3$ that require more than three parameters? The answer is: no. Here is the proof. 
 
-\begin{proof}
-    For any $3 \times 4$ matrix, there is a $3 \times 3$ matrix that has the same column space, that is, that describes the same geometrical body. \\
-    
-    \subprf{}{$\forall A(3 \times 4) \thereis A'(3 \times 3): \collspace{A} = \collspace{A'}$}{
+> For any $3 \times 4$ matrix, there is a $3 \times 3$ matrix that has the same column space, that is, that describes the same geometrical body. 
+>> Proof that $\forall A(3 \times 4) \thereis A'(3 \times 3): \collspace{A} = \collspace{A'}$
+>>> Let $A_0(3 \times4)$. Proof that $\thereis A': \collspace{A_0} = \collspace{A'}$
+>>>> We know [from](proofBaseSizeEqualsSpaceDimension) that $\thereis \vec{a}_0 \in A_0: \vec{a}_0:ld$. So Try $A' = A_0/\vec{a_0}$.
+>>>>
+>>>> Indeed, now $A_0$ and $A'$ both form a base of the same space. So they must have the same column space. 
 
-        \subprf{Let $A_0(3 \times4)$.}{$\thereis A': \collspace{A_0} = \collspace{A'}$}{
-        
-            We know from \ref{proofBaseSizeEqualsSpaceDimension} that $\thereis \vec{a}_0 \in A_0: \vec{a}_0:ld$. So Try $A' = A_0/\vec{a_0}$.
-            
-            Indeed, now $A_0$ and $A'$ both form a base of the same space. So they must have the same column space. 
-        }    
-
-    }
-\end{proof}
 
 However, there are *non*linear objects in $\reals^3$ that require more than three parameters! Many curves in 3d require many parameters. *But* those curves don't form a vector-space, while lines and planes do (as long as they go through the origin). 
 
 
 **Summary**
-\begin{table}[ht]
-\centering
-\caption{Influence of rank on solutions}
-\begin{tabular}{@{}llll@{}}
-\toprule
-                                                                                      & m \textless n                             & m = n & m \textgreater n                                 \\ \midrule
-\rowcolor[HTML]{96FFFB} 
-\cellcolor[HTML]{96FFFB}                                                              & n - m free variables                      &       &                                                  \\
-\rowcolor[HTML]{96FFFB} 
-\multirow{-2}{*}{\cellcolor[HTML]{96FFFB}r \textless m}                               & m – r conditions on $b \in \collspace{A}$ &       &                                                  \\
-                                                                                      & 1 pivot per row                           &       &                                                  \\
-                                                                                      & n – r = n – m free variables              &       &                                                  \\
-\multirow{-3}{*}{\begin{tabular}[c]{@{}l@{}}r = m \\ (full row rank)\end{tabular}}    & 0 conditions on $b \in \collspace{A}$     &       & X                                                 \\
-\rowcolor[HTML]{96FFFB} 
-\cellcolor[HTML]{96FFFB}                                                              &                                           &       & m – r conditions on $b \in \collspace{A}$        \\
-\rowcolor[HTML]{96FFFB} 
-\multirow{-2}{*}{\cellcolor[HTML]{96FFFB}r \textless n}                               &                                           &       & n – r free variables                             \\
-                                                                                      & X                                         &       & 1 pivot per column                               \\
-                                                                                      &                                           &       & m – r = m – n conditions on $b \in \collspace{A}$ \\
-\multirow{-3}{*}{\begin{tabular}[c]{@{}l@{}}r = n \\ (full column rank)\end{tabular}} &                                           &       & 0 free variables, thus $\nullspace{A} = \{0\}$     \\ \cmidrule(l){1-4} 
-\end{tabular}
-\end{table}
+Influence of rank on solutions
+
+|                               | m < n                                     |  m = n  | m > n                                             |
+|-------------------------------|-------------------------------------------|---------|---------------------------------------------------|
+|                               | n - m free variables                      |         |                                                   |
+| r<m                           | m – r conditions on $b \in \collspace{A}$ |         |                                                   |
+|                               | 1 pivot per row                           |         |                                                   |
+|                               | n – r = n – m free variables              |         |                                                   |
+| r = m (full row rank)         | 0 conditions on $b \in \collspace{A}$     |         | X                                                 |
+|                               |                                           |         | m – r conditions on $b \in \collspace{A}$         |
+| r<n                           |                                           |         | n – r free variables                              |
+|                               | X                                         |         | 1 pivot per column                                |
+|                               |                                           |         | m – r = m – n conditions on $b \in \collspace{A}$ |
+| r = n \\ (full column rank)   |                                           |         | 0 free variables, thus $\nullspace{A} = \{0\}$    |
+
 
 
 
 
 \paragraph {Ax = b reduces to A'x' = 0}
 
-\begin{theorem}
-  A problem of the form $Ax = b$ can be re-expressed as $A'x' = 0$, where $A' = [A, -b]$ 
-\end{theorem}
+> **Theorem**
+> A problem of the form $Ax = b$ can be re-expressed as $A'x' = 0$, where $A' = [A, -b]$ 
+>
+> Proof that $A x = b$ can be re-expressed as $A'x' = 0$
+>> $A x = b$
+>>
+>> $A x -b = 0$
+>>
+>> $A_1 x_1 + A_2 x_2 + ... -b = 0$
+>>
+>> Let $A' = [A, b]$ and $x_{n+1} = -1$. Then:
+>>
+>> $A' x' = 0 $
+>>
+>> Now we can use the nullspace of $A'$ to find the solutionspace of $A$.
+>>
+>> $\nullspace{[A b]} = \{x' | [A b]x' = 0\}$
+>>
+>> $ = \{x' | A x'_{1:m} = -b x'_{m+1}\}$
+>>
+>> A subset of that nullspace equals the solutionset for $A x = b$:
+>>
+>> $ \nullspace{[A b]} \text{ where } [x'_{m+1} = -1] = \{x'| A x'_{1:m} = b \}$
 
-\begin{proof}
-    \subprf {} {$A x = b$ can be re-expressed as $A'x' = 0$} {
-        $ A x = b $ \\
-        $ A x -b = 0 $ \\
-        $ A_1 x_1 + A_2 x_2 + ... -b = 0 $ \\
-        Let $A' = [A, b]$ and $x_{n+1} = -1$. Then: \\
-        $ A' x' = 0 $ \\
-        Now we can use the nullspace of $A'$ to find the solutionspace of $A$. \\
-        $ \nullspace{[A b]} = \{x' | [A b]x' = 0\} $ \\
-        $ = \{x' | A x'_{1:m} = -b x'_{m+1}\} $ \\
-        A subset of that nullspace equals the solutionset for $A x = b$: \\
-        $ \nullspace{[A b]} \text{ where } [x'_{m+1} = -1] = \{x'| A x'_{1:m} = b \} $ 
-    }   
-\end{proof}
 
 
-\paragraph{Solving Ax = b}
+### Solving Ax = b
 
-\begin{theorem}
-  If we can only find any one particular solution $x_p$ such that $A x_p = b$, then we get the whole solutionspace as $\nullspace{A} + x_p$.
-\end{theorem}
+> **Theorem**
+> If we can only find any one particular solution $x_p$ such that $A x_p = b$, then we get the whole solutionspace as $\nullspace{A} + x_p$.
+>
+> Let $x_p: A x_p = b$. Proof that $\solspace{A x = b} = \nullspace{A} + x_p$
+>> We'll make use of the fact that $\nullspace{A} + x_p = \{ x + x_p | A x = 0 \} = \{ x | A x = A x_p \}$
+>>
+>> Let $x_0 \in \nullspace{A} + x_p$. Proof that $x_0 \in \solspace{A x = b}$, i.o.w. $A x_0 = b$
+>>> $x_0 \in \nullspace{A} + x_p$
+>>>
+>>> $x_0 \in \{ x + x_p | A x = 0 \}$
+>>>
+>>> $x_0 \in \{ x | A (x - x_p) = 0 \}$
+>>>
+>>> Thus $A x_0 = A x_p$
+>>>
+>>> Since $A x_p = b$, it must be that $ A x_0 = b $.
+>>>
+>>> Let $x_0 \in \solspace{A x = b}$. Proof that $x_0 \in \nullspace{A} + x_p$, i.o.w. $A x_0 = A x_p$
+>>>> Because $x_0 \in \solspace{A x = b}$, we have $A x_0 = b$.
+>>>>
+>>>> Also, it was given that $A x_p = b$.
 
-\begin{proof}
-    \subprf{Let $x_p: A x_p = b$.}{$\solspace{A x = b} = \nullspace{A} + x_p$}{
-        We'll make use of the fact that $\nullspace{A} + x_p = \{ x + x_p | A x = 0 \} = \{ x | A x = A x_p \}$ \\
-        \subprf{Let $x_0 \in \nullspace{A} + x_p $.}{$x_0 \in \solspace{A x = b}$, i.o.w. $A x_0 = b$}{
-            $ x_0 \in \nullspace{A} + x_p $ \\
-            $ x_0 \in \{ x + x_p | A x = 0 \} $ \\
-            $ x_0 \in \{ x | A (x - x_p) = 0 \} $ \\
-            Thus $ A x_0 = A x_p $ \\
-            Since $A x_p = b$, it must be that $ A x_0 = b $.
-        }
-        \subprf{Let $x_0 \in \solspace{A x = b}$.}{$x_0 \in \nullspace{A} + x_p$, i.o.w. $A x_0 = A x_p$}{
-            Because $x_0 \in \solspace{A x = b}$, we have $A x_0 = b$. \\
-            Also, it was given that $A x_p = b$.
-        }
-    }
-\end{proof}
 
 
 
