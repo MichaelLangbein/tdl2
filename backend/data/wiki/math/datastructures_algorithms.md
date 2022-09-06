@@ -152,10 +152,29 @@ Basically, ScanLine is the polygon-equivalent of raster's FloodFill.
 
 # Solving recurrence relations
 
-Example:
-$$ T_f(N) = T_f(N/2) + g(N) $$
-Generally solved with Master-method.
-Or by just trying. Here, for example, try $$ T_f(N) = N lg(N) $$ . 
+## Solving linear recurrences
+
+A homogeneous linear recurrence is one of the following form: 
+
+$$f(n) = a_1 f(n-1) + a_2 f(n-2) + ... + a_d f(n-d)$$
+
+We can solve it as follows: 
+
+1. Assume $f(n) = x^n$. We now try to find an expression for $x$.
+2. Divide both sides in the hlr by $x^{n-d}$, leaving a (hyper-)quadratic equation. 
+3. Every root of the quadratic equation is a *homogeneous solution*. Also, if a root $r$ occurs $v$ times, $r^n, nr^{n-1}, n^2r^n ..., n^{v-1}r^n$ are also solutions.
+4. Also, every linear combination of the above is also a solution. So, a solution might in general have a form like $a r_1^n + b r_2^n + ...$.
+5. Finally, choose $a, b, ...$ such that they fulfill the boundary conditions (in Fibonacci those would be $f(0) = f(1) = 1$). This is the *concrete solution*.
+
+
+We can extend the above schema to also solve (nonhomogeneous) linear recurrences: 
+$$ f(n) = a_1 f(n-1) + a_2 f(n-2) + ... + a_d f(n-d) + g(n)$$
+
+1. Ignore $g(n)$, find the homogeneous solution from step 4 above.
+2. Find a *particular solution* to the equation including $g(n)$.
+3. homogeneous solution + particular solution = *general solution*
+4. Now for the general solution, again plug in the boundary conditions as in step 5 above.
+
 
 # Sorting algorithms
 

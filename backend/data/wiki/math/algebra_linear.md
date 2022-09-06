@@ -8,6 +8,8 @@ $
 \gdef\rank#1{\text{rank}_{#1}}
 \gdef\symm{\text{sym}}
 \gdef\orthtxt{\text{orth}}
+\gdef\rops{\text{rops}}
+\gdef\cops{\text{cops}}
 $
 
 
@@ -28,29 +30,37 @@ We'll work a lot with a few vector-spaces and transfromations from and to those 
 > - $\forall v_1, v_2 \in V: v_1 + v_2 \in W$
 > - $\forall v \in V: \forall r \in R: rv \in V$
     
-> **Definition** [Nullspace]
+> **Definition**: Nullspace
+>
 > $\nullspace{A}$ is the nullspace of $A$. It is defined as $\nullspace{A} = \{ x | Ax = 0 \}$
 
-> **Definition** [Columnspace]
-> $\collspace{A}$ is the collumnspace of $A$. It is defined as $\collspace{A} = \{ y | Ax = y \}$
+> **Definition**: Columnspace
+>
+> $\collspace{A}$ is the columnspace of $A$. It is defined as $\collspace{A} = \{ y | Ax = y \}$
 
-> **Definition** [Rowspace]
+> **Definition**: Rowspace
+>
 > $\rowspace{A}$ is the rowspace of $A$. It is defined as $\rowspace{A} = \{ y | A^Tx = y \}$
 
-> **Definition** [Rank]
+> **Definition**: Rank
+>
 > $r_A$ is the rank of $A$. It is defined as the dimension of $\collspace{A}$, $\dimension{\collspace{A}}$
 
 
-> **Definition** [Nullity]
+> **Definition**: Nullity
+>
 > $n_A$ is the nullity of $A$. It is defined as the dimension of $\nullspace{A}$, $\dimension{\nullspace{A}}$
 
 
 
-**rops and cops as matrix multiplication** ...
-$$ \rops(A) = \rops(I) A = R A$$
-$$ \cops(A) = A \cops(I) = A C$$
+**rops and cops as matrix multiplication**
 
-### rops don't change \nullspace{A}
+$$\rops(A) = \rops(I) A = R A$$
+
+$$\cops(A) = A \cops(I) = A C$$
+
+
+### rops don't change $\nullspace{A}$
 Row- and column-operations (rops and cops) seem somewhat trivial at first and not worth any proof writing efforts. However, many theorems of linear algebra are much easier proved if we first reduce the matrices to their RRLE (reduced row linear echelon) form.
 
 > **Theorem**
