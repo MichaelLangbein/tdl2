@@ -87,8 +87,8 @@ We can now print an overview of the different spaces that are associated with a 
 
 \includegraphics[width=0.7\linewidth]{images/four_spaces.png}
 
-The rowspace of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The columspace of A can be visulaized using the vector-image of A: it contains all the points that are spanned by A. 
-Notice how we included the previous theorem: any combination $x$ of a particular sollution $x_r$ and any vector in the nullspace $x_n$ is also a solution.
+The rowspace of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The columspace of A can be visualized using the vector-image of A: it contains all the points that are spanned by A. 
+Notice how we included the previous theorem: any combination $x$ of a particular solution $x_r$ and any vector in the nullspace $x_n$ is also a solution.
 
 
 We should look in more detail at this graphic. Note, for example, that \nullspace{A} and \collspace{A^T} seem to be orthogonal. Indeed:
@@ -154,8 +154,8 @@ $$
 
 Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial to prove:
 
-    - $\mtrx{T}_{BA} = \mtrx{T}_{AB}^{-1}$
-    - $\mtrx{T}_{CA} = \mtrx{T}_{CB} \mtrx{T}_{BA}$
+- $\mtrx{T}_{BA} = \mtrx{T}_{AB}^{-1}$
+- $\mtrx{T}_{CA} = \mtrx{T}_{CB} \mtrx{T}_{BA}$
 
 
 
@@ -826,7 +826,7 @@ Influence of rank on solutions
 
 
 
-\paragraph {Ax = b reduces to A'x' = 0}
+### Ax = b reduces to A'x' = 0
 
 > **Theorem**
 > A problem of the form $Ax = b$ can be re-expressed as $A'x' = 0$, where $A' = [A, -b]$ 
