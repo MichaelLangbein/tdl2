@@ -100,7 +100,7 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     app.get("/tasks/:id/estimate", async (req, res) => {
         const id = +req.params.id;
-        const fullTree = await taskService.getSubtree(1, 30);
+        const fullTree = await taskService.getSubtree(1, 30, true);
         if (fullTree) {
             const estimates = estimateTime(id, fullTree!);
             res.send(estimates);

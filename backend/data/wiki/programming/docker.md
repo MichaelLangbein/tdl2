@@ -25,26 +25,29 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
         - `build --tag=<nameofappalllowercase> .`: package your app and send it to `/var/lib/docker/images`
         - `save -o <path-to-tar-file> <name-of-image>`
         - `load -i <path-to-tar-file>/ `
+        - `prune -a`: removes un-used, dangling images
             
-- `container`
-    - `run -p 4000:80 -d --name=<nameofyourcontaineralllowercase> <nameofyourappalllowercase>` execute that package (where `-p 4000:80` means *map the containers port 80 to the systems port 4000* and `-d` stands for *detached*, i.e. get back control of your command-line after starting the container). `run` is actually a shorthand for `create` and `start`. 
-        - *--expose*: makes a port available inside of a docker-network.
-        - *--publish*: is the long-form of *-p*. It makes the port available outside of a docker-network.        
-            - `run -it ...` creates a new container from an image
-            - `start -i ...` starts up an existing container
-            - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
-            - `cp /path/to/local/file.html my-nginx:/var/www/html`
-            - `exec -it my-nginx /bin/bash`
-            - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
-            - `rm <containername>`
-            
-        - `volume` 
-            - `ls`
-            - `rm`
-            - `create --name <volumename>`
-            - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
-- `inspect <nameofyourcontaineralllowercase>`
-    - `| grep IP`: get container's local IP
+  - `container`
+      - `run -p 4000:80 -d --name=<nameofyourcontaineralllowercase> <nameofyourappalllowercase>` execute that package (where `-p 4000:80` means *map the containers port 80 to the systems port 4000* and `-d` stands for *detached*, i.e. get back control of your command-line after starting the container). `run` is actually a shorthand for `create` and `start`. 
+          - *--expose*: makes a port available inside of a docker-network.
+          - *--publish*: is the long-form of *-p*. It makes the port available outside of a docker-network.        
+              - `run -it ...` creates a new container from an image
+              - `start -i ...` starts up an existing container
+              - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
+              - `cp /path/to/local/file.html my-nginx:/var/www/html`
+              - `exec -it my-nginx /bin/bash`
+              - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
+              - `rm <containername>`
+              
+          - `volume` 
+              - `ls`
+              - `rm`
+              - `create --name <volumename>`
+              - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
+  - `inspect <nameofyourcontaineralllowercase>`
+      - `| grep IP`: get container's local IP
+  - `system`
+    - `df`: shows how much space is being used by docker-daemon
             
     
 ...
