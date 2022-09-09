@@ -342,26 +342,18 @@ function removeBranch(tree: TaskTree, id: number): TaskTree | null {
 }
 
 function updateTaskInTree(tree: TaskTree, toUpdate: TaskRow) {
-  doFirstWhere(
-    node => node.id === toUpdate.id,
-    tree,
-    node => {
-      // node = {
-      //   ...node,
-      //   ...toUpdate
-      // };
-      for (const field in toUpdate) {
-        // @ts-ignore
-        node[field] = toUpdate[field];
-      }
-      // node.title = toUpdate.title;
-      // node.description = toUpdate.description;
-      // node.completed = toUpdate.completed;
-      // node.parent = toUpdate.parent;
-      // node.secondsActive = toUpdate.secondsActive;
-      // node.deadline = toUpdate.deadline;
+  if (tree.id === toUpdate.id) {
+    tree = {
+      ... tree,
+      ... toUpdate
+    };
+  } else {
+    for (let i = 0; i < tree.children.length; i++) {
+      const child = tree.children[i];
+      const updatedChild = updateTaskInTree(child, toUpdate);
+      tree.children[i] = updatedChild;
     }
-  );
+  }
   return tree;
 }
 

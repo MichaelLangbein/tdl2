@@ -441,11 +441,9 @@ plt.imshow(classesImg, cmap="Set3")
 
 
 This classifies our Weßling scene quite nicely.
-\begin{figure}[H]
-    \caption{Supervised classification of Weßling scene using maximum-likelihood
-    \centering
-      \includegraphics[width=0.65\textwidth]{images/max_likelihood_wessling.png
-\end{figure
+**Supervised classification of Weßling scene using maximum-likelihood**
+<img src="images/max_likelihood_wessling.png">
+
 
 
 

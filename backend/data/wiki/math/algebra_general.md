@@ -185,8 +185,7 @@ Note that if we were to chose a *non*orthonormal basis, the inner product would 
 
 
 \begin{table}[ht]
-\centering
-\caption{Important implemantations of vector spaces, inner product spaces and algebras}
+**Important implemantations of vector spaces, inner product spaces and algebras**
 \begin{tabular}{@{}llllll@{}}
 \toprule
                     & \multicolumn{2}{l}{Vector space} & \multicolumn{2}{l}{Inner product space}            & Algebra                                                  \\ 
