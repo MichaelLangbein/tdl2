@@ -23,7 +23,7 @@ Here we'll mostly deal with the inner-product space of vectors and occasionally 
 
 ## Spaces
 
-We'll work a lot with a few vector-spaces and transfromations from and to those spaces. 
+We'll work a lot with a few vector-spaces and transformations from and to those spaces. 
 
 > **Definition** 
 > Let $W$ be a space. Then $V \subseteq W$ is a subspace, if:   
@@ -399,13 +399,13 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 ## Special matrices
 
-**Symmetric matrices** are simple but very useful.
+> **Symmetric matrices** are simple but very useful.
 > **Definition** 
 > A matrix $\mtrx{A}$ is symmetric iff $\mtrx{A} = \mtrx{A}^T$
 
 
 
-### Positive (semi-)definite matrix are a special case of symmetric matrices.
+Positive (semi-)definite matrix are a special case of symmetric matrices.
 > **Definition** 
 > $$\mtrx{A}: \PSD \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$$
 > From the first condition, $\mtrx{A}: \symm$, it follows that the eigenvectors are orthogonal (see [eq.](symm_then_orth)), 
