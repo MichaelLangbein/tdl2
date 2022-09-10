@@ -344,8 +344,9 @@ function removeBranch(tree: TaskTree, id: number): TaskTree | null {
 function updateTaskInTree(tree: TaskTree, toUpdate: TaskRow) {
   if (tree.id === toUpdate.id) {
     tree = {
-      ... tree,
-      ... toUpdate
+      ... toUpdate,
+      children: tree.children,
+      attachments: tree.attachments
     };
   } else {
     for (let i = 0; i < tree.children.length; i++) {

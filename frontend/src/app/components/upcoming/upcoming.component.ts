@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, delay, filter, map, Observable, pairwise, switchMap } from 'rxjs';
+import { delay, filter, map, Observable, pairwise, switchMap } from 'rxjs';
 import { TaskRow, TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -26,6 +26,7 @@ export class UpcomingComponent implements OnInit {
           return newView || deadlineSet || taskCompleted;
         }),
         // get upcoming
+        delay(500),
         switchMap(() => {
           return this.taskSvc.upcoming()
         }),

@@ -1,13 +1,12 @@
 $
-\gdef\mtrx#1{\mathbf{#1}}
-\gdef\nullspace#1{\mathcal{N}_{#1}}
-\gdef\colspace#1{\mathcal{C}_{#1}}
-\gdef\rowspace#1{\mathcal{R}_{#1}}
-\gdef\solspace#1{\mathcal{S}_{#1}}
-\gdef\dimension#1{\text{dim}_{#1}}
-\gdef\rank#1{\text{rank}_{#1}}
+\newcommand\mtrx[1]{\mathbf{#1}}
+\newcommand\nullspace[1]{\mathcal N_{#1}}
+\newcommand\colspace[1]{\mathcal C_{#1}}
+\newcommand\rowspace[1]{\mathcal R_{#1}}
+\newcommand\solspace[1]{\mathcal S_{#1}}
+\newcommand\dimension[1]{\text{dim}_#1}
+\newcommand\rank[1]{\text{rank}_#1}
 \gdef\symm{\text{sym}}
-\gdef\orthtxt{\text{orth}}
 \gdef\rops{\text{rops}}
 \gdef\cops{\text{cops}}
 $
@@ -93,7 +92,7 @@ Notice how we included the previous theorem: any combination $x$ of a particular
 
 We should look in more detail at this graphic. Note, for example, that \nullspace{A} and \colspace{A^T} seem to be orthogonal. Indeed:
 > **Theorem**
-> $\forall v \in \nullspace{A}, w \in \colspace{A^T}: v \orth w$
+> $\forall v \in \nullspace{A}, w \in \colspace{A^T}: v \perp w$
 >
 >>    $$
 >>        \begin{aligned}
@@ -248,9 +247,9 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 > **Theorem** <a id="lin_indep_if_no_bx0"></a>
 > A better definition could be stated as such: $B$ is linearly independent, if the only solution to $Bx = 0$ is the zero-vector.
 >
-> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$}{$\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
+> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$. Proof that $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
 >
->> Suppose $\mtrx{B} \vec{x} = \vec{0}$}{$\vec{x} = \vec{0}$
+>> Suppose $\mtrx{B} \vec{x} = \vec{0}$. Proof that $\vec{x} = \vec{0}$
 >>
 >>> By contradiction. Assume $\vec{x} \neq \vec{0}$. Proof that there is a contradiction.
 >>>
@@ -264,9 +263,9 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 >>>> 
 >>>> This contradicts the statement that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
 >>
->> Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$}{$\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
+>> Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$. Proof that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
 >>
->>> Let $\vec{b_0} \in \mtrx{B}$}{$\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$
+>>> Let $\vec{b_0} \in \mtrx{B}$. Proof that $\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$
 >>>
 >>>> By contradiction. Assume $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$. Proof that there is a contradiction.
 >>>>> Since $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$
@@ -407,7 +406,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 Positive (semi-)definite matrix are a special case of symmetric matrices.
 > **Definition** 
-> $$\mtrx{A}: \PSD \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$$
+> $$\mtrx{A}: \text{PSD} \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$$
 > From the first condition, $\mtrx{A}: \symm$, it follows that the eigenvectors are orthogonal (see [eq.](symm_then_orth)), 
 > from the second one, $\forall z: z^T \mtrx{A} z \geq 0$, it follows that the eigenvalues are all greater or equal than $0$ (see eq. \dots).
 
@@ -423,12 +422,12 @@ Positive (semi-)definite matrix are a special case of symmetric matrices.
 
 
 > **Theorem**
-> $A^T A: \PSD$
+> $A^T A: \text{PSD}$
 
 
 
 **Orthogonal matrices** make tons of calculations simpler.
-> **Definition** [A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \orth x_2$
+> **Definition** [A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \perp x_2$
 
 
 > **Theorem**
@@ -459,7 +458,7 @@ Any *square* matrix can be eigenvector (aka. spectrally) decomposed: $\mtrx{A} =
 
 Once at a sprint-discussion I wondered why principal components (see about those later) were all orthogonal. Here's the proof why. (Note that the proof only holds for symmetric matrices - which, in PCA, $C_A$ is indeed symmetric.)
 > **Theorem** <a id="symm_then_orth"></a>
-> $\mtrx{A}: \symm \then \mtrx{E}_A: \orth$
+> $\mtrx{A}: \symm \then \mtrx{E}_A: \perp$
 >
 > For any matrix $A$, symmetric or not, and for any vectors $x$ and $y$, eigenvectors or not, it holds:
 > $$\forall A, \forall x, y: <Ax, y> = <x, A^Ty>$$
@@ -481,7 +480,7 @@ Once at a sprint-discussion I wondered why principal components (see about those
 >                                                                & \lambda_x <x, y>  &= \lambda_y <x, y>
 >        \end{aligned}
 >    $$
-> Thus, either $\lambda_x = \lambda_y$ or $x \orth y$ 
+> Thus, either $\lambda_x = \lambda_y$ or $x \perp y$ 
 
 
 > **Theorem**
