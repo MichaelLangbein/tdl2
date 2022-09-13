@@ -69,11 +69,12 @@ function readParas(node: LeveledTaskTree) {
     const childrenOnLevelRaw: {[level: number]: number[]} = {};
 
     let current = node;
-    const queue = new Queue<LeveledTaskTree>(1000);
+    const queue = new Queue<LeveledTaskTree>();
 
     while (current) {
         current.children.map(c => queue.enqueue(c));
 
+        // we only accept data if the node has already been completed.
         if (current.completed) {
             if (!timesOnLevelRaw[current.level]) timesOnLevelRaw[current.level] = [];
             timesOnLevelRaw[current.level].push(current.secondsActive);
