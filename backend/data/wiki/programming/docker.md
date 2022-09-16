@@ -39,11 +39,11 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
               - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
               - `rm <containername>`
               
-          - `volume` 
-              - `ls`
-              - `rm`
-              - `create --name <volumename>`
-              - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
+  - `volume` 
+      - `ls`
+      - `rm`
+      - `create --name <volumename>`
+      - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
   - `inspect <nameofyourcontaineralllowercase>`
       - `| grep IP`: get container's local IP
   - `system`
@@ -68,7 +68,7 @@ To stop, rebuild and restart a single container:
 
 ## Dockerfile syntax
 Dockerfile
-```
+```Dockerfile
     # Parent image
     FROM python:2.7-slim
     # All subsequent commands are executed here. May be called mutliple times.
@@ -88,51 +88,51 @@ Dockerfile
 
 ## Composefile syntax
 docker-compose.yml
-```
-    version: '3'
-    services: 
-      mysql:
-        build: ./mysql
-        env_file:
-          - ./mysql/resources/mysql.env
-        ports:
-          - "127.0.0.1:3306:3306"
-        volumes:
-          - ./mysql/resources/init:/docker-entrypoint-initdb.d     # note how this is a relative path to the local machine == bind-mount
-          - mysql-data:/var/lib/mysql                              # note how this is a named volume, referenced again further down in the volume-section
-        # See https://www.drupal.org/project/drupal/issues/2966523
-        command: --default-authentication-plugin=mysql_native_password
-    
-      drupal:
-        build: ./drupal
-        env_file:
-          - ./mysql/resources/mysql.env
-          - ./drupal/resources/drupal.env
-        depends_on:
-          - mysql
-        volumes:
-            - html:/var/www/html
-            - ./dev:/var/www/html/sites
-        expose:
-          - 9000
-    
-      nginx:
-        build: ./nginx
-        env_file:
-          - ./nginx/resources/nginx.env
-        depends_on:
-          - mysql
-          - drupal
-        ports:
-          - "127.0.0.1:8080:80"
-        volumes:
-          - html:/var/www/html
-          - ./dev:/var/www/html/sites
-          - ./nginx/resources/default.conf:/etc/nginx/conf.d/default.conf:ro
-    
-    volumes:  # all entries here create a new docker-managed volume (as opposed to a bind-mount)
-      html:   # this is intentionally left blank! Required to be blank for this to be a volume
-      mysql-data:   # this is intentionally left blank! Required to be blank for this to be a volume
+```yml
+version: '3'
+services: 
+  mysql:
+    build: ./mysql
+    env_file:
+      - ./mysql/resources/mysql.env
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./mysql/resources/init:/docker-entrypoint-initdb.d     # note how this is a relative path to the local machine == bind-mount
+      - mysql-data:/var/lib/mysql                              # note how this is a named volume, referenced again further down in the volume-section
+    # See https://www.drupal.org/project/drupal/issues/2966523
+    command: --default-authentication-plugin=mysql_native_password
+
+  drupal:
+    build: ./drupal
+    env_file:
+      - ./mysql/resources/mysql.env
+      - ./drupal/resources/drupal.env
+    depends_on:
+      - mysql
+    volumes:
+        - html:/var/www/html
+        - ./dev:/var/www/html/sites
+    expose:
+      - 9000
+
+  nginx:
+    build: ./nginx
+    env_file:
+      - ./nginx/resources/nginx.env
+    depends_on:
+      - mysql
+      - drupal
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - html:/var/www/html
+      - ./dev:/var/www/html/sites
+      - ./nginx/resources/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:  # all entries here create a new docker-managed volume (as opposed to a bind-mount)
+  html:   # this is intentionally left blank! Required to be blank for this to be a volume
+  mysql-data:   # this is intentionally left blank! Required to be blank for this to be a volume
 ```
 
 
