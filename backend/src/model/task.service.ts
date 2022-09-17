@@ -11,7 +11,9 @@ export interface TaskTree {
     completed: number | null,
     secondsActive: number,
     attachments: FileRow[],
-    deadline: number | null
+    deadline: number | null,
+    lastUpdate: number,
+    // deleted: number | null  <-- @TODO: do I need a `deleted` field for tree-syncing?
 }
 
 export interface TaskRow {
@@ -22,7 +24,9 @@ export interface TaskRow {
     created: number,
     completed: number | null,
     secondsActive: number,
-    deadline: number | null
+    deadline: number | null,
+    lastUpdate: number,
+    // deleted: number | null
 }
 
 export interface FileRow {
@@ -52,7 +56,8 @@ export class TaskService {
                     created         Date,
                     completed       Date,
                     secondsActive   integer,
-                    deadline        Date
+                    deadline        Date,
+                    lastUpdate      Date
                 );
                 create index parent_task on tasks(parent);
             `);
@@ -110,16 +115,19 @@ export class TaskService {
     }
 
     public async createTask(title: string, description: string, parentId: number | null, deadline: Date | null) {
+        const time = new Date().getTime();
+        
         await this.db.run(`
-            insert into tasks (title, description, parent, created, secondsActive, deadline)
-            values ($title, $description, $parent, $created, $secondsActive, $deadline);
+            insert into tasks (title, description, parent, created, secondsActive, deadline, lastUpdate)
+            values ($title, $description, $parent, $created, $secondsActive, $deadline, $lastUpdate);
         `, {
             "$title": title,
             "$description": description,
             "$parent": parentId,
-            "$created": new Date().getTime(),
+            "$created": time,
             "$secondsActive": 0,
-            "$deadline": deadline
+            "$deadline": deadline,
+            "$lastUpdate": time,
         });
         const id = await this.getLastInsertId();
         const task = await this.getTask(id);
@@ -127,6 +135,8 @@ export class TaskService {
     }
     
     public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed: Date | null, deadline: Date | null) {
+        const time = new Date().getTime();
+        
         await this.db.run(`
             update tasks
             set title = $title,
@@ -134,7 +144,8 @@ export class TaskService {
                 parent = $parent,
                 secondsActive = $secondsActive,
                 completed = $completed,
-                deadline = $deadline
+                deadline = $deadline,
+                lastUpdate = $lastUpdate,
             where id = $id;
         `, {
             '$id': id,
@@ -143,7 +154,8 @@ export class TaskService {
             '$parent': parentId,
             '$secondsActive': secondsActive,
             '$completed': completed,
-            '$deadline': deadline
+            '$deadline': deadline,
+            '$lastUpdate': time
         });
         const updatedTask = await this.getTask(id);
         return updatedTask!;
@@ -156,6 +168,16 @@ export class TaskService {
         `, {
             '$id': taskId
         });
+        // const time = new Date().getTime();
+        // await this.db.run(`
+        //     update tasks
+        //     set lastUpdate = $lastUpdate,
+        //         deleted = $deleted
+        //     where id = $id;
+        // `, {
+        //     '$lastUpdate': time,
+        //     '$deleted': time
+        // });
     }
 
 
@@ -261,7 +283,13 @@ export class TaskService {
     public async treeDiff(frontendTree: TaskTree): Promise<TaskTree> {
         const backendTree = await this.getSubtree(frontendTree.id, 99, true);
         const updatedBackendTree = treeDiff(frontendTree, backendTree);
+        const savedUpdatedBackendTree = await this.saveTree(updatedBackendTree);
+        // @TODO: while you're at it, also update the task-estimates
         return updatedBackendTree;
+    }
+
+    public async saveTree(tree: TaskTree): Promise<TaskTree> {
+        throw new Error(`Method not implemented`);
     }
 
 

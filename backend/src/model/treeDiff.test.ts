@@ -9,7 +9,7 @@ describe('Tree diff', () => {
         const frontendTree: TaskTree = {
             id: 1,
             title: '', description: '', attachments: [],
-            created: 0, completed: undefined, deadline: undefined, secondsActive: 1000,
+            created: 0, completed: undefined, deadline: undefined, secondsActive: 1000, lastUpdate: 1000,
             parent: undefined,
             children: [],
         };
