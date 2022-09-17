@@ -1,5 +1,5 @@
 import { Database } from 'sqlite';
-import { treeDiff } from './treeDiff';
+
 
 export interface TaskTree {
     id: number,
@@ -35,6 +35,17 @@ export interface FileRow {
     taskId: number
 }
 
+export interface DbAction {
+    /**
+     * - *create*
+     * - *update*
+     *   - update also includes *move*s (change to parent-property) and *delete*s (setting deleted-property)
+     * - *file*
+     */
+    type: 'create' | 'update' | 'addFile',
+    args: any
+}
+
 
 export class TaskService {
 
@@ -62,7 +73,7 @@ export class TaskService {
                 );
                 create index parent_task on tasks(parent);
             `);
-            await this.createTask('root', '', null, null);
+            await this.createTask('root');
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';
@@ -121,32 +132,32 @@ export class TaskService {
         return result['last_insert_rowid()'];
     }
 
-    public async createTask(title: string, description: string, parentId: number | null, deadline: Date | null) {
-        const time = new Date().getTime();
-        
+    public async createTask(title: string = '', parentId: number | null  = null, creationTime: number | null = new Date().getTime()) {
         await this.db.run(`
-            insert into tasks (title, description, parent, created, secondsActive, deadline, lastUpdate)
-            values ($title, $description, $parent, $created, $secondsActive, $deadline, $lastUpdate);
+            insert into tasks (title, parent, created, secondsActive, lastUpdate)
+            values ($title, $parent, $created, $secondsActive, $lastUpdate);
         `, {
             "$title": title,
-            "$description": description,
             "$parent": parentId,
-            "$created": time,
+            "$created": creationTime,
+            "$lastUpdate": creationTime,
             "$secondsActive": 0,
-            "$deadline": deadline,
-            "$lastUpdate": time,
         });
         const id = await this.getLastInsertId();
         const task = await this.getTask(id);
         return task!;
     }
     
-    public async updateTask(
-        id: number, title: string, description: string, parentId: number | null, 
-        secondsActive: number, completed: number | null, deadline: number | null, deleted: number | null) {
-        
-        const time = new Date().getTime();
-        
+    public async updateTask(task: TaskRow, ensureNewestUpdate = true) {
+
+        if (ensureNewestUpdate) {
+            const latestState = await this.getTask(task.id);
+            if (latestState.lastUpdate > task.lastUpdate) {
+                console.error(`Cannot update - There's a newer version of this task in the db: ${task.id}/${task.title}`);
+                return latestState;
+            }
+        }
+
         await this.db.run(`
             update tasks
             set title = $title,
@@ -156,28 +167,27 @@ export class TaskService {
                 completed = $completed,
                 deadline = $deadline,
                 lastUpdate = $lastUpdate,
-                deleted = $deleted
+                deleted = $deleted,
             where id = $id;
         `, {
-            '$id': id,
-            '$title': title,
-            '$description': description,
-            '$parent': parentId,
-            '$secondsActive': secondsActive,
-            '$completed': completed,
-            '$deadline': deadline,
-            '$lastUpdate': time,
-            '$deleted': deleted
+            '$id': task.id,
+            '$title': task.title,
+            '$description': task.description,
+            '$parent': task.parent,
+            '$secondsActive': task.secondsActive,
+            '$completed': task.completed,
+            '$deadline': task.deadline,
+            '$lastUpdate': task.lastUpdate,
+            '$deleted': task.deleted
         });
-        const updatedTask = await this.getTask(id);
+        const updatedTask = await this.getTask(task.id);
         return updatedTask!;
     }
 
-    public async deleteTask(taskId: number) {
-        const time = new Date().getTime();
+    public async deleteTask(taskId: number, time: number = new Date().getTime()) {
         await this.db.run(`
             update tasks
-            set lastUpdate = $lastUpdate,
+                set lastUpdate = $lastUpdate,
                 deleted = $deleted
             where id = $id;
         `, {
@@ -187,10 +197,11 @@ export class TaskService {
         });
     }
 
-    public async purgeDeletedTasks() {
+    public async purgeDeletedTasks(minAge: number) {
+        const currentTime = new Date().getTime();
         await this.db.run(`
             delete from tasks
-            where deleted;
+            where deleted - ${currentTime} < ${minAge};
         `);
     }
 
@@ -294,31 +305,29 @@ export class TaskService {
         this.deleteTask(taskId);
     }
 
-    public async treeSync(frontendTree: TaskTree): Promise<TaskTree> {
-        const backendTree = await this.getSubtree(frontendTree.id, 99, true);
-        const actions = treeDiff(frontendTree, backendTree);
+
+    public async actionQueue(actions: DbAction[]) {
         for (const action of actions) {
             switch (action.type) {
                 case 'create':
                     await this.createTask(
-                        action.args.title, action.args.description, action.args.parentId, action.args.deadline);
+                        action.args.title, action.args.parentId, action.args.created);
                 case 'update':
-                    await this.updateTask(
-                        action.args.id, action.args.title, action.args.description, action.args.parentId,
-                        action.args.secondsActive, action.args.completed, action.args.deadline, action.args.deleted);
+                    const updatedRow: TaskRow = action.args;
+                    await this.updateTask(updatedRow);
+                case 'addFile':
+                    await this.addFileAttachment(action.args.taskId, action.args.filePath);
+                default:
+                    console.error(`No such DbAction: ${action.type}`);
             }
         }
-        const updatedBackendTree = await this.getSubtree(frontendTree.id, 99, false);
-        return updatedBackendTree;
-    }
-
-    public async saveTree(tree: TaskTree): Promise<TaskTree> {
-        throw new Error(`Method not implemented`);
     }
 
 
 
-    public addAttachment() {}
+    public addAttachment() {
+        throw new Error(`Method not implemented: addAttachment`);
+    }
 
     
     public async upcoming() {

@@ -1,115 +1,87 @@
-import { TaskTree } from './task.service';
+import { PriorityQueue } from '../utils/datastructures';
+import { DbAction, TaskTree } from './task.service';
 
 
+export function treeDiff(frontendTree: TaskTree, backendTree: TaskTree): number {
 
-export interface DbAction {
+    const frontendNode = new TaskTreeNode(frontendTree);
+    const backendNode = new TaskTreeNode(backendTree);
+    function heuristic(source: Node, target: Node): number {
+        throw new Error('Method not implemented.');
+    }
+
+    const nrSteps = aStar(backendNode, frontendNode, heuristic);
+    return nrSteps;
+}
+
+
+class TaskTreeNode implements Node {
+
+    private pathSoFar: number = undefined;
+
+    constructor(private tree: TaskTree) {}
+
     /**
-     * - *create*
-     * - *update*
-     *   - update also includes *move*s (change to parent-property) and *delete*s (setting deleted-property)
+     * All possible task trees that can be reached with a `create`, `edit` or `delete` action
      */
-    type: 'create' | 'update',
-    args: any
+    getChildren(): { costToChild: number; child: Node; }[] {
+        throw new Error('Method not implemented.');
+    }
+
+    /**
+     * How different are two trees?
+     */
+    distanceTo(node: Node): number {
+        throw new Error('Method not implemented.');
+    }
+
+    setPathSoFar(cost: number): void {
+        this.pathSoFar = cost;
+    }
+
+    getPathSoFar(): number {
+        return this.pathSoFar;
+    }
+
 }
 
-/**
- * Updates backend-tree based on frontend-tree.
- * Every task has a `lastUpdate` field. Always prefers the latest update.
- */
-export function treeDiff(frontendTree: TaskTree, backendTree: TaskTree): DbAction[] {
-    if (frontendTree.id !== backendTree.id) throw Error(`Error in tree-diff. Expects root-ids to always be the same. Got: ${frontendTree.id}/${frontendTree.title}, ${backendTree.id}/${backendTree.title}`);
 
-    const actions: DbAction[] = [];
 
-    if (frontendTree.lastUpdate > backendTree.lastUpdate) {
-        actions.push({
-            type: 'update',
-            args: {
-                taskId: backendTree.id,
-                values: frontendTree
-            }
-        })
-    }
+interface Node {
+    getChildren(): {costToChild: number, child: Node}[],
+    distanceTo(node: Node): number,
+    setPathSoFar(cost: number): void,
+    getPathSoFar(): number | undefined
+};
 
-    const frontendChildIds = frontendTree.children.map(c => c.id);
-    const backendChildIds = backendTree.children.map(c => c.id);
-    const commonChildIds: number[] = listIntersection(frontendChildIds, backendChildIds);
-    const newChildIds: number[] = listExcept(frontendChildIds, commonChildIds);
-    // const oldChildIds: number[] = listExcept(backendChildIds, commonChildIds);
+function aStar(source: Node, target: Node, heuristic: (source: Node, target: Node) => number) {
+    const pQueue = new PriorityQueue<Node>();
+    source.setPathSoFar(0);
+    const estimatedFullCosts = 0 + heuristic(source, target);
+    pQueue.enqueue(source, -estimatedFullCosts);
 
-    for (const childId of commonChildIds) {
-        const backendChild = backendTree.children.find(c => c.id === childId)!;
-        const frontendChild = frontendTree.children.find(c => c.id === childId)!;
-        const furtherActions = treeDiff(frontendChild, backendChild);
-        actions.push(... furtherActions);
-    }
+    let candidate = pQueue.dequeue();
+    while (candidate) {
 
-    for (const childId of newChildIds) {
-        const frontendChild = frontendTree.children.find(c => c.id === childId)!;
-        const foundBackendChild = findInTree(childId, backendTree);
-        if (foundBackendChild) {
-            const furtherActions = treeDiff(frontendChild, foundBackendChild);
-            actions.push(...furtherActions);
-        } else {
-            actions.push({
-                type: 'create',
-                args: frontendChild
-            });
+        // check if target reached
+        const distance = source.distanceTo(target);
+        if (distance === 0) {
+            return candidate.getPathSoFar();
         }
 
-    }
-
-    // NO NEED TO HANDLE `oldChildIds`.
-    // for missingChild in missingChildren:
-    //     if not findInFullTree(missingChild, newTree):
-    //         # edits += f"remove/{missingChild.id}"
-    //         # Not necessary: backend can have items that the frontend doesn't know about, because we lazy load.
-    //     else:
-    //         # Else: node is somewhere else in newTree. 
-    //         # There it will be listed as a `newChild`; so no need to handle that case here.
-    //         continue
-
-    return actions;
-}
-
-
-
-function findInTree(id: number, tree: TaskTree): TaskTree | undefined {
-    if (tree.id === id) return tree;
-    for (const child of tree.children) {
-        const found = findInTree(id, child);
-        if (found) return found;
-    }
-}
-
-
-function listIntersection(l1: number[], l2: number[]): number[] {
-    const intersection: number[] = [];
-    for (const i1 of l1) {
-        for (const i2 of l2) {
-            if (i1 === i2) {
-                intersection.push(i1);
-                break;
+        // if not, look for children to enqueue
+        for (const {costToChild, child} of candidate.getChildren()) {
+            const costPathToChild = candidate.getPathSoFar()! + costToChild;
+            const lastPathToChild = child.getPathSoFar();
+            // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
+            if (!lastPathToChild || costPathToChild < lastPathToChild) {
+                child.setPathSoFar(costPathToChild);
+                const estimatedFullCosts = costPathToChild + heuristic(child, target);
+                pQueue.enqueue(child, -estimatedFullCosts);
             }
         }
-    }
-    return intersection;
-}
 
-function listExcept(list: number[], expect: number[]): number[] {
-    const remainder: number[] = [];
-    for (const i of list) {
-        let  insert = true;
-        for (const e of expect) {
-            if (i === e) {
-                insert = false;
-                break;
-            }
-        }
-        if (insert) {
-            remainder.push(i);
-        }
+        // prepare next step
+        candidate = pQueue.dequeue();
     }
-    return remainder;
 }
-

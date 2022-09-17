@@ -11,7 +11,34 @@ export class Queue<T> {
     }
 }
 
+export class PriorityQueue<T> {
+    private data: {[priority: number]: T[]} = {};
 
+    public enqueue(entry: T, priority: number) {
+        if (!this.data[priority]) {
+            this.data[priority] = [];
+        }
+        this.data[priority].push(entry);
+    }
+
+    public dequeue(): T | undefined {
+        const highestPriority = this.getHighestPriority();
+        if (highestPriority === -Infinity) return undefined;
+        return this.data[highestPriority].shift();
+    }
+
+    private getHighestPriority() {
+        let highestPrio = -Infinity;
+        for (const prio in this.data) {
+            if (+prio > highestPrio) {
+                if (this.data[prio].length > 0) {
+                    highestPrio = +prio;
+                }
+            }
+        }
+        return highestPrio;
+    }
+}
 
 
 export type SetEqualityFunction<T> = (a: T, b: T) => boolean;

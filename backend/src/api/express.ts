@@ -1,11 +1,12 @@
 import express from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
-import { TaskService, TaskTree } from '../model/task.service';
+import { DbAction, TaskRow, TaskService, TaskTree } from '../model/task.service';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 import { estimateTime } from "../stats/estimates";
 import { FileService } from '../files/fileService';
 import { CardService } from '../model/card.service';
+
 
 export function appFactory(taskService: TaskService, fileService: FileService, cardService: CardService) {
     const app = express();
@@ -32,7 +33,7 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
     // Crud - Create
     app.post("/tasks/create", async (req, res) => {
         const data = req.body;
-        const task = await taskService.createTask(data.title, data.description, data.parent, data.deadline);
+        const task = await taskService.createTask(data.title, data.parent, data.created);
         res.send(task);
     });
 
@@ -45,8 +46,8 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     // crUd - Update
     app.patch("/tasks/update", async (req, res) => {
-        const data = req.body;
-        const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed, data.deadline, data.deleted);
+        const taskRow: TaskRow = req.body;
+        const updatedTask = await taskService.updateTask(taskRow);
         res.send(updatedTask);
     });
 
@@ -121,11 +122,10 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
         res.send(subTree);
     });
 
-    app.post("/subtree/treeDiff", async (req, res) => {
-        const frontendTree: TaskTree = req.body;
-        const backendTree = await taskService.treeSync(frontendTree);
-        // @TODO: while you're at it, also update the task-estimates
-        res.send(backendTree);
+    app.post("/subtree/actionQueue", async (req, res) => {
+        const actions: DbAction[] = req.body;
+        const subTree = await taskService.actionQueue(actions);
+        res.send(subTree);
     });
 
     
