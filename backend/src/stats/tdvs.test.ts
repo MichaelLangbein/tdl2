@@ -9,7 +9,7 @@ describe("Top-down variable structure", () => {
         const tree: TaskTree = {
             id: 0,
             parent: null,
-            created: 1, completed: null, deleted: null, secondsActive: 100, deadline: null,
+            created: 1, completed: null, lastUpdate: 1, deleted: null, secondsActive: 100, deadline: null,
             attachments: [], description: "", title: "",
             children: [{
                 id: 1,
