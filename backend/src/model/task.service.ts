@@ -1,4 +1,5 @@
 import { Database } from 'sqlite';
+import { treeDiff } from './treeDiff';
 
 export interface TaskTree {
     id: number,
@@ -226,7 +227,6 @@ export class TaskService {
         return taskTree;
     }
 
-
     public async getSubtreePathTo(targetTaskId: number, extraDepth: number, startId = 1) {
         // @TODO: maybe better recursive sql-query: https://stackoverflow.com/questions/7456957/basic-recursive-query-on-sqlite3
 
@@ -257,6 +257,14 @@ export class TaskService {
         }
         this.deleteTask(taskId);
     }
+
+    public async treeDiff(frontendTree: TaskTree): Promise<TaskTree> {
+        const backendTree = await this.getSubtree(frontendTree.id, 99, true);
+        const updatedBackendTree = treeDiff(frontendTree, backendTree);
+        return updatedBackendTree;
+    }
+
+
 
     public addAttachment() {}
 

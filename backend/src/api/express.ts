@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
-import { TaskService } from '../model/task.service';
+import { TaskService, TaskTree } from '../model/task.service';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 import { estimateTime } from "../stats/estimates";
 import { FileService } from '../files/fileService';
@@ -35,16 +35,6 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
     });
 
     // cRud - Read
-    app.get("/subtree/:taskId/:depth", async (req, res) => {
-        const subTree = await taskService.getSubtree(+req.params.taskId, +req.params.depth);
-        res.send(subTree);
-    });
-
-    app.get("/subtree/pathTo/:targetTaskId/:extraDepth", async (req, res) => {
-        const subTree = await taskService.getSubtreePathTo(+req.params.targetTaskId, +req.params.extraDepth);
-        res.send(subTree);
-    });
-
     app.post("/tasks/search", async (req, res) => {
         const searchFor = req.body;
         const results = await taskService.search(searchFor.searchString);
@@ -112,6 +102,27 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
     app.get("/tasks/upcoming", async (req, res) => {
         const list = await taskService.upcoming();
         res.send(list);
+    });
+
+
+    /***********************************************************************
+     * TaskTrees
+     **********************************************************************/
+
+    app.get("/subtree/:taskId/:depth", async (req, res) => {
+        const subTree = await taskService.getSubtree(+req.params.taskId, +req.params.depth);
+        res.send(subTree);
+    });
+
+    app.get("/subtree/pathTo/:targetTaskId/:extraDepth", async (req, res) => {
+        const subTree = await taskService.getSubtreePathTo(+req.params.targetTaskId, +req.params.extraDepth);
+        res.send(subTree);
+    });
+
+    app.post("/subtree/treeDiff", async (req, res) => {
+        const frontendTree: TaskTree = req.body;
+        const backendTree = await taskService.treeDiff(frontendTree);
+        res.send(backendTree);
     });
 
     

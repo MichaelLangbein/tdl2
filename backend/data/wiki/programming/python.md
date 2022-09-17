@@ -1,6 +1,12 @@
 # Python
 
 ## venv
+- python -m venv ./venv  # creates a venv in the dir ./venv
+- source ./venv/Scrips/activate
+- pip install <some-package>
+- deactivate
+- pip freeze > requirements.txt
+- pip install -r requirements.txt
 
 
 ## conda
