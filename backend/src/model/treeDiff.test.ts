@@ -9,17 +9,16 @@ describe('Tree diff', () => {
         const frontendTree: TaskTree = {
             id: 1,
             title: '', description: '', attachments: [],
-            created: 0, completed: undefined, deadline: undefined, secondsActive: 1000, lastUpdate: 1000,
+            created: 0, completed: undefined, deadline: undefined, secondsActive: 1000, lastUpdate: 1000, deleted: undefined,
             parent: undefined,
             children: [],
         };
     
         const backendTree: TaskTree = { ... frontendTree };
         
-        const updatedBackendTree = treeDiff(frontendTree, backendTree);
+        const actions = treeDiff(frontendTree, backendTree);
     
-        expect(updatedBackendTree.id).toBe(frontendTree.id);
-        expect(updatedBackendTree.children.length).toBe(frontendTree.children.length);
+        expect(actions.length).toBe(0);
     });
 
     

@@ -25,6 +25,8 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     /***********************************************************************
      * Tasks
+     * This API will soon be deprecated in favor of the subtree-API
+     * with its TreeDiff algorithm.
      **********************************************************************/
 
     // Crud - Create
@@ -44,7 +46,7 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
     // crUd - Update
     app.patch("/tasks/update", async (req, res) => {
         const data = req.body;
-        const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed, data.deadline);
+        const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed, data.deadline, data.deleted);
         res.send(updatedTask);
     });
 
@@ -121,7 +123,8 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     app.post("/subtree/treeDiff", async (req, res) => {
         const frontendTree: TaskTree = req.body;
-        const backendTree = await taskService.treeDiff(frontendTree);
+        const backendTree = await taskService.treeSync(frontendTree);
+        // @TODO: while you're at it, also update the task-estimates
         res.send(backendTree);
     });
 

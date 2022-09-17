@@ -13,7 +13,7 @@ export interface TaskTree {
     attachments: FileRow[],
     deadline: number | null,
     lastUpdate: number,
-    // deleted: number | null  <-- @TODO: do I need a `deleted` field for tree-syncing?
+    deleted: number | null 
 }
 
 export interface TaskRow {
@@ -26,7 +26,7 @@ export interface TaskRow {
     secondsActive: number,
     deadline: number | null,
     lastUpdate: number,
-    // deleted: number | null
+    deleted: number | null
 }
 
 export interface FileRow {
@@ -57,7 +57,8 @@ export class TaskService {
                     completed       Date,
                     secondsActive   integer,
                     deadline        Date,
-                    lastUpdate      Date
+                    lastUpdate      Date,
+                    deleted         Date,
                 );
                 create index parent_task on tasks(parent);
             `);
@@ -78,9 +79,12 @@ export class TaskService {
         }
     }
     
-    public async getTask(taskId: number) {
+    public async getTask(taskId: number, includeDeleted = false) {
         const result = await this.db.get<TaskRow>(`
-            select * from tasks where id = $id;
+            select * from tasks 
+                where id = $id
+                ${ includeDeleted ? '' : 'and not deleted'}
+            ;
         `, { 
             '$id': taskId 
         });
@@ -100,9 +104,12 @@ export class TaskService {
         }
     }
 
-    public async getChildIds(taskId: number) {
+    public async getChildIds(taskId: number, includeDeleted = false) {
         const results = await this.db.all<{id: number}[]>(`
-            select id from tasks where parent = $parent;    
+            select id from tasks 
+                where parent = $parent
+                ${ includeDeleted ? '' : 'and not deleted'}
+            ;    
         `, {
             '$parent': taskId
         });
@@ -134,7 +141,10 @@ export class TaskService {
         return task!;
     }
     
-    public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed: Date | null, deadline: Date | null) {
+    public async updateTask(
+        id: number, title: string, description: string, parentId: number | null, 
+        secondsActive: number, completed: number | null, deadline: number | null, deleted: number | null) {
+        
         const time = new Date().getTime();
         
         await this.db.run(`
@@ -146,6 +156,7 @@ export class TaskService {
                 completed = $completed,
                 deadline = $deadline,
                 lastUpdate = $lastUpdate,
+                deleted = $deleted
             where id = $id;
         `, {
             '$id': id,
@@ -155,29 +166,32 @@ export class TaskService {
             '$secondsActive': secondsActive,
             '$completed': completed,
             '$deadline': deadline,
-            '$lastUpdate': time
+            '$lastUpdate': time,
+            '$deleted': deleted
         });
         const updatedTask = await this.getTask(id);
         return updatedTask!;
     }
 
     public async deleteTask(taskId: number) {
+        const time = new Date().getTime();
         await this.db.run(`
-            delete from tasks
+            update tasks
+            set lastUpdate = $lastUpdate,
+                deleted = $deleted
             where id = $id;
         `, {
-            '$id': taskId
+            '$id': taskId,
+            '$lastUpdate': time,
+            '$deleted': time
         });
-        // const time = new Date().getTime();
-        // await this.db.run(`
-        //     update tasks
-        //     set lastUpdate = $lastUpdate,
-        //         deleted = $deleted
-        //     where id = $id;
-        // `, {
-        //     '$lastUpdate': time,
-        //     '$deleted': time
-        // });
+    }
+
+    public async purgeDeletedTasks() {
+        await this.db.run(`
+            delete from tasks
+            where deleted;
+        `);
     }
 
 
@@ -280,11 +294,21 @@ export class TaskService {
         this.deleteTask(taskId);
     }
 
-    public async treeDiff(frontendTree: TaskTree): Promise<TaskTree> {
+    public async treeSync(frontendTree: TaskTree): Promise<TaskTree> {
         const backendTree = await this.getSubtree(frontendTree.id, 99, true);
-        const updatedBackendTree = treeDiff(frontendTree, backendTree);
-        const savedUpdatedBackendTree = await this.saveTree(updatedBackendTree);
-        // @TODO: while you're at it, also update the task-estimates
+        const actions = treeDiff(frontendTree, backendTree);
+        for (const action of actions) {
+            switch (action.type) {
+                case 'create':
+                    await this.createTask(
+                        action.args.title, action.args.description, action.args.parentId, action.args.deadline);
+                case 'update':
+                    await this.updateTask(
+                        action.args.id, action.args.title, action.args.description, action.args.parentId,
+                        action.args.secondsActive, action.args.completed, action.args.deadline, action.args.deleted);
+            }
+        }
+        const updatedBackendTree = await this.getSubtree(frontendTree.id, 99, false);
         return updatedBackendTree;
     }
 

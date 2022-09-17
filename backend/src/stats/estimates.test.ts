@@ -24,7 +24,7 @@ describe("Estimates", () => {
 
         const parent = await ts.createTask("parent", "", null, null);
         const child = await ts.createTask("child", "", parent.id, null);
-        await ts.updateTask(parent.id, parent.title, parent.description, null, 100, null, null);
+        await ts.updateTask(parent.id, parent.title, parent.description, null, 100, null, null, null);
         const tree = await ts.getSubtree(parent.id, 2);
 
         const estimate = estimateTime(parent.id, tree!);
@@ -37,43 +37,26 @@ describe("Estimates", () => {
     test("Return reasonable estimate", async () => {
         const tree: TaskTree = {
             id: 1,
-            title: '',
-            description: '',
-            attachments: [],
-            created: 1,
-            secondsActive: 10,
-            completed: undefined,
-            deadline: undefined,
+            title: '', description: '', attachments: [],
+            created: 1, secondsActive: 10, completed: undefined, deadline: undefined, lastUpdate: 10, deleted: undefined,
             parent: undefined,
             children: [{
                 id: 2,
-                title: '',
-                description: '',
-                attachments: [],
-                created: 10,
-                completed: 110,
-                secondsActive: 100,  
-                deadline: undefined,
+                title: '', description: '', attachments: [],
+                created: 10, completed: 110, secondsActive: 100, deadline: undefined, lastUpdate: 110, deleted: undefined,
                 parent: 1,
                 children: []
             }, {
                 id: 3,
-                title: '',
-                description: '',
-                attachments: [],
-                created: 110,
-                completed: undefined,
+                title: '', description: '', attachments: [],
+                created: 110, completed: undefined, deadline: undefined, lastUpdate: 110, deleted: undefined,
                 secondsActive: 100,  // task-3 has been active as long as task-2 ... so an estimate should say that task-3 should be done soon.
-                deadline: undefined,
                 parent: 1,
                 children: []
             }, {
                 id: 4,
-                title: '',
-                description: '',
-                attachments: [],
-                created: 110,
-                completed: undefined,
+                title: '', description: '', attachments: [],
+                created: 110, completed: undefined, lastUpdate: 110, deleted: undefined,
                 secondsActive: 0,  // task-4 has not been active yet ... an estimate should say that task-4 should take about as long as task-2.
                 deadline: undefined,
                 parent: 1,

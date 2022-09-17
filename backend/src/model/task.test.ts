@@ -60,7 +60,7 @@ describe("Task service", () => {
     test("update", async () => {
         const task = await ts.createTask("some task", "", null, null);
         task.description = "new description";
-        const updatedTask = await ts.updateTask(task.id, task.title, task.description, task.parent, task.secondsActive, null, null);
+        const updatedTask = await ts.updateTask(task.id, task.title, task.description, task.parent, task.secondsActive, null, null, null);
 
         expect(updatedTask.description).toBe("new description");
     });
@@ -114,7 +114,7 @@ describe("Task service", () => {
     test("search", async () => {
         const baseTask = await ts.createTask("Title with Alf in it", "", null, null);
         const child1 = await ts.createTask("", "Description with Alf in it", baseTask.id, null);
-        const child2 = await ts.createTask("", "Descalf with the searchterm in it", baseTask.id, null);
+        const child2 = await ts.createTask("", "Descralf with the searchterm in it", baseTask.id, null);
         const grandChild = await ts.createTask("Nothing in title", "Nothing in description", child2.id, null);
 
         const hits = await ts.search('Alf');
