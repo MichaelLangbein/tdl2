@@ -48,7 +48,7 @@ function estimate(node: LeveledTaskTree, timesOnLevels: levelTimeDists, children
     // time required for potential new children
     const distChildren = childrenOnLevels[node.level];
     const expectedNrChildren = distChildren.conditionalExpectation(node.children.length);
-    const fakeChild: LeveledTaskTree = {id: -99999, level: node.level - 1, secondsActive: 0, children: [], title: "", description: "", attachments: [], parent: node.id, created: 1, lastUpdate: 1, completed: null, deadline: null, deleted: null};
+    const fakeChild: LeveledTaskTree = {id: -99999, level: node.level - 1, secondsActive: 0, children: [], title: "", description: "", attachments: [], parent: node.id, created: 1, lastUpdate: 1, completed: null, deadline: null};
     const expectedTimeNewChild = estimate(fakeChild, timesOnLevels, childrenOnLevels);
     const expectedTimeExpectedChildren = expectedNrChildren * expectedTimeNewChild;
 

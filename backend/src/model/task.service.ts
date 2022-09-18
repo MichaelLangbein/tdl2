@@ -12,8 +12,7 @@ export interface TaskTree {
     secondsActive: number,
     attachments: FileRow[],
     deadline: number | null,
-    lastUpdate: number,
-    deleted: number | null 
+    lastUpdate: number
 }
 
 export interface TaskRow {
@@ -25,8 +24,7 @@ export interface TaskRow {
     completed: number | null,
     secondsActive: number,
     deadline: number | null,
-    lastUpdate: number,
-    deleted: number | null
+    lastUpdate: number
 }
 
 export interface FileRow {
@@ -39,10 +37,11 @@ export interface DbAction {
     /**
      * - *create*
      * - *update*
-     *   - update also includes *move*s (change to parent-property) and *delete*s (setting deleted-property)
+     *   - update also includes *move*s (change to parent-property)
+     * - *delete*
      * - *file*
      */
-    type: 'create' | 'update' | 'addFile',
+    type: 'create' | 'update' | 'delete' | 'addFile',
     args: any
 }
 
@@ -68,8 +67,7 @@ export class TaskService {
                     completed       Date,
                     secondsActive   integer,
                     deadline        Date,
-                    lastUpdate      Date,
-                    deleted         Date,
+                    lastUpdate      Date
                 );
                 create index parent_task on tasks(parent);
             `);
@@ -90,12 +88,10 @@ export class TaskService {
         }
     }
     
-    public async getTask(taskId: number, includeDeleted = false) {
+    public async getTask(taskId: number) {
         const result = await this.db.get<TaskRow>(`
             select * from tasks 
-                where id = $id
-                ${ includeDeleted ? '' : 'and not deleted'}
-            ;
+                where id = $id;
         `, { 
             '$id': taskId 
         });
@@ -115,12 +111,10 @@ export class TaskService {
         }
     }
 
-    public async getChildIds(taskId: number, includeDeleted = false) {
+    public async getChildIds(taskId: number) {
         const results = await this.db.all<{id: number}[]>(`
             select id from tasks 
-                where parent = $parent
-                ${ includeDeleted ? '' : 'and not deleted'}
-            ;    
+                where parent = $parent;
         `, {
             '$parent': taskId
         });
@@ -166,8 +160,7 @@ export class TaskService {
                 secondsActive = $secondsActive,
                 completed = $completed,
                 deadline = $deadline,
-                lastUpdate = $lastUpdate,
-                deleted = $deleted,
+                lastUpdate = $lastUpdate
             where id = $id;
         `, {
             '$id': task.id,
@@ -177,32 +170,19 @@ export class TaskService {
             '$secondsActive': task.secondsActive,
             '$completed': task.completed,
             '$deadline': task.deadline,
-            '$lastUpdate': task.lastUpdate,
-            '$deleted': task.deleted
+            '$lastUpdate': task.lastUpdate
         });
         const updatedTask = await this.getTask(task.id);
         return updatedTask!;
     }
 
-    public async deleteTask(taskId: number, time: number = new Date().getTime()) {
-        await this.db.run(`
-            update tasks
-                set lastUpdate = $lastUpdate,
-                deleted = $deleted
-            where id = $id;
-        `, {
-            '$id': taskId,
-            '$lastUpdate': time,
-            '$deleted': time
-        });
-    }
-
-    public async purgeDeletedTasks(minAge: number) {
-        const currentTime = new Date().getTime();
+    public async deleteTask(taskId: number) {
         await this.db.run(`
             delete from tasks
-            where deleted - ${currentTime} < ${minAge};
-        `);
+            where id = $id;
+        `, {
+            '$id': taskId
+        });
     }
 
 
@@ -315,6 +295,8 @@ export class TaskService {
                 case 'update':
                     const updatedRow: TaskRow = action.args;
                     await this.updateTask(updatedRow);
+                case 'delete':
+                    await this.deleteTask(action.args.id);
                 case 'addFile':
                     await this.addFileAttachment(action.args.taskId, action.args.filePath);
                 default:
