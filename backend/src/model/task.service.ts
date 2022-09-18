@@ -285,28 +285,6 @@ export class TaskService {
         this.deleteTask(taskId);
     }
 
-
-    public async actionQueue(actions: DbAction[]) {
-        for (const action of actions) {
-            switch (action.type) {
-                case 'create':
-                    await this.createTask(
-                        action.args.title, action.args.parentId, action.args.created);
-                case 'update':
-                    const updatedRow: TaskRow = action.args;
-                    await this.updateTask(updatedRow);
-                case 'delete':
-                    await this.deleteTask(action.args.id);
-                case 'addFile':
-                    await this.addFileAttachment(action.args.taskId, action.args.filePath);
-                default:
-                    console.error(`No such DbAction: ${action.type}`);
-            }
-        }
-    }
-
-
-
     public addAttachment() {
         throw new Error(`Method not implemented: addAttachment`);
     }

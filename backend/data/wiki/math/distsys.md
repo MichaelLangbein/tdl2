@@ -207,6 +207,31 @@ Especially, termination is often replaced to $P(\text{termination}) \approx 1$. 
 
 ### CAP-Theorem
 
+Consider your servers and a client.
+- Consistent: reads from any of your servers return the exact same result.
+- Available: all your servers need to be available for both reads and writes at all time.
+- Partition tolerance: communication between your servers may be disrupted for an arbitrary length of time.
+
+> Proof that you cannot have all three at the same time.
+>
+> - Consider a client $C$ and two servers $S_1$ and $S_2$.
+> - Assume there is a communication-failure between $S_1$ and $S_2$.
+> - Both servers initially hold value $v_0$ - write $S_1(v_0)$ and $S_2(v_0)$
+> 
+> 1. Assuming availability, $C$ communicates with $S_1$ setting value $v_1$. The system now has state $S_1(v_1), S_2(v_0)$.
+> 2. Assuming availability, $C$ communicates with $S_2$ reading the value $v_?$.
+> 3. Assuming consistency, the value received from $S_2$ must be $v_1$.
+> 4. Assuming partition tolerance, $S_1$ had no way to update $S_2$'s value to $v_1$, so $S_2$'s value must still be $v_0$.
+> 
+> Statement 4 contradicts statement 3.
+> 
+> The proof for more than two servers follows through induction.
+
+
+
+
+- Eventual consistency: Servers are allowed to return inconsistent answers for a while, but will eventually settle into a consistent state.
+
 There are nowadays no *distributed* databases that are not partition tolerant - it is illusionary to assume that a network cannot be partitioned. (However, if your database will always stay on one machine only, feel free to design for CA)
 If a distributed database provides the acid-properties, then it must chose consistency (CP) over availability (AP) according to the cap theorem. An available (AP) database cannot provide acid-transactions.
 

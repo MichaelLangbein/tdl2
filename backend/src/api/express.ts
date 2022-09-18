@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import fileUpload from "express-fileupload";
+import fileUpload, { FileArray } from "express-fileupload";
 import { DbAction, TaskRow, TaskService, TaskTree } from '../model/task.service';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 import { estimateTime } from "../stats/estimates";
@@ -51,22 +51,25 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
         res.send(updatedTask);
     });
 
+    async function saveOneOrMoreFiles(taskId: number, fileArray: FileArray) {
+        for (const key in fileArray) {
+            const files = fileArray[key];
+            if (Array.isArray(files)) {
+                for (const file of files) {
+                    const localFilePath = await fileService.storeFile(file);
+                    await taskService.addFileAttachment(taskId, localFilePath);
+                }
+            } else {
+                const localFilePath = await fileService.storeFile(files);
+                await taskService.addFileAttachment(taskId, localFilePath);    
+            }
+        }
+    }
+
     app.post("/tasks/:id/addFile", async (req, res) => {
         const taskId = +req.params.id;
         if (req.files) {
-            for (const key in req.files) {
-                const file = req.files[key];
-                if (Array.isArray(file)) {
-                    for (const ffile of file) {
-                        const localFilePath = await fileService.storeFile(ffile);
-                        await taskService.addFileAttachment(taskId, localFilePath);
-                    }
-                } else {
-                    const localFilePath = await fileService.storeFile(file);
-                    await taskService.addFileAttachment(taskId, localFilePath);    
-                }
-            }
-            
+            saveOneOrMoreFiles(taskId, req.files);
         }
         const tree = await taskService.getSubtree(taskId, 1);
         res.send(tree);
@@ -124,8 +127,23 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     app.post("/subtree/actionQueue", async (req, res) => {
         const actions: DbAction[] = req.body;
-        const subTree = await taskService.actionQueue(actions);
-        res.send(subTree);
+        for (const action of actions) {
+            switch (action.type) {
+                case 'create':
+                    await taskService.createTask(
+                        action.args.title, action.args.parentId, action.args.created);
+                case 'update':
+                    const updatedRow: TaskRow = action.args;
+                    await taskService.updateTask(updatedRow);
+                case 'delete':
+                    await taskService.deleteTask(action.args.id);
+                case 'addFile':
+                    await saveOneOrMoreFiles(action.args.id, action.args.files);
+                default:
+                    console.error(`No such DbAction: ${action.type}`);
+            }
+        }
+        res.send(true);
     });
 
     
