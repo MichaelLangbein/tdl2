@@ -40,25 +40,25 @@ describe("Estimates", () => {
         const tree: TaskTree = {
             id: 1,
             title: '', description: '', attachments: [],
-            created: 1, lastUpdate: 11, secondsActive: 10, completed: undefined, deadline: undefined,
+            created: 1, secondsActive: 10, completed: undefined, deadline: undefined,
             parent: undefined,
             children: [{
                 id: 2,
                 title: '', description: '', attachments: [],
-                created: 10, lastUpdate: 110, completed: 110, secondsActive: 100, deadline: undefined,
+                created: 10, completed: 110, secondsActive: 100, deadline: undefined,
                 parent: 1,
                 children: []
             }, {
                 id: 3,
                 title: '', description: '', attachments: [],
-                created: 110, lastUpdate: 210, completed: undefined, deadline: undefined,
+                created: 110, completed: undefined, deadline: undefined,
                 secondsActive: 100,  // task-3 has been active as long as task-2 ... so an estimate should say that task-3 should be done soon.
                 parent: 1,
                 children: []
             }, {
                 id: 4,
                 title: '', description: '', attachments: [],
-                created: 110, lastUpdate: 110, completed: undefined,
+                created: 110, completed: undefined,
                 secondsActive: 0,  // task-4 has not been active yet ... an estimate should say that task-4 should take about as long as task-2.
                 deadline: undefined,
                 parent: 1,
