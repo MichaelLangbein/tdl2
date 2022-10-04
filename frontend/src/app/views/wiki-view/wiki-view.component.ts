@@ -15,6 +15,9 @@ export class WikiViewComponent implements OnInit {
 
   public entries: string[] = [];
   public activeEntry = "";
+  public katexOptions = {
+    macros: {}
+  };
 
   constructor(private http: HttpClient) { }
 

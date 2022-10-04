@@ -45,7 +45,6 @@ describe("rest api", () => {
     test("POST /tasks", async () => {
         const task = {
             title: "first task",
-            description: "...",
             parent: null
         }
         const response = await axios.post("http://localhost:1411/tasks/create", task);
@@ -60,7 +59,6 @@ describe("rest api", () => {
     });
 
     test("PATCH /tasks/update", async () => {
-        // app.patch("/tasks/update",
         const task = {
             title: "first task",
             description: "...",

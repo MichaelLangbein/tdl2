@@ -39,11 +39,9 @@ We then calculate the probability that a random variable $X$ has a certain value
 $$\probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega]$$
 
 
-\begin{figure}[H]
-    \caption{From sample-space to probability of a random variable}
-    \centering
-      \includegraphics[width=0.85\textwidth]{images/prob.png}
-\end{figure}
+**From sample-space to probability of a random variable**
+          <img src="images/prob.png">
+
 
 
 > **Definition** [Expectation]
@@ -186,11 +184,9 @@ $$ <a id="lawOfTotalVariance"></a>
 $$
 
 
-\begin{figure}[h]
-    \caption{Illustration of the law of total variance}
-    \centering
-      \includegraphics[width=0.5\textwidth]{images/law_of_total_variance.jpg}
-\end{figure}
+**Illustration of the law of total variance**
+          <img src="images/law_of_total_variance.jpg">
+
  
  
 # Probability density functions

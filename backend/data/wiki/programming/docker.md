@@ -25,26 +25,29 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
         - `build --tag=<nameofappalllowercase> .`: package your app and send it to `/var/lib/docker/images`
         - `save -o <path-to-tar-file> <name-of-image>`
         - `load -i <path-to-tar-file>/ `
+        - `prune -a`: removes un-used, dangling images
             
-- `container`
-    - `run -p 4000:80 -d --name=<nameofyourcontaineralllowercase> <nameofyourappalllowercase>` execute that package (where `-p 4000:80` means *map the containers port 80 to the systems port 4000* and `-d` stands for *detached*, i.e. get back control of your command-line after starting the container). `run` is actually a shorthand for `create` and `start`. 
-        - *--expose*: makes a port available inside of a docker-network.
-        - *--publish*: is the long-form of *-p*. It makes the port available outside of a docker-network.        
-            - `run -it ...` creates a new container from an image
-            - `start -i ...` starts up an existing container
-            - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
-            - `cp /path/to/local/file.html my-nginx:/var/www/html`
-            - `exec -it my-nginx /bin/bash`
-            - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
-            - `rm <containername>`
-            
-        - `volume` 
-            - `ls`
-            - `rm`
-            - `create --name <volumename>`
-            - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
-- `inspect <nameofyourcontaineralllowercase>`
-    - `| grep IP`: get container's local IP
+  - `container`
+      - `run -p 4000:80 -d --name=<nameofyourcontaineralllowercase> <nameofyourappalllowercase>` execute that package (where `-p 4000:80` means *map the containers port 80 to the systems port 4000* and `-d` stands for *detached*, i.e. get back control of your command-line after starting the container). `run` is actually a shorthand for `create` and `start`. 
+          - *--expose*: makes a port available inside of a docker-network.
+          - *--publish*: is the long-form of *-p*. It makes the port available outside of a docker-network.        
+              - `run -it ...` creates a new container from an image
+              - `start -i ...` starts up an existing container
+              - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
+              - `cp /path/to/local/file.html my-nginx:/var/www/html`
+              - `exec -it my-nginx /bin/bash`
+              - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
+              - `rm <containername>`
+              
+  - `volume` 
+      - `ls`
+      - `rm`
+      - `create --name <volumename>`
+      - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
+  - `inspect <nameofyourcontaineralllowercase>`
+      - `| grep IP`: get container's local IP
+  - `system`
+    - `df`: shows how much space is being used by docker-daemon
             
     
 ...
@@ -65,7 +68,7 @@ To stop, rebuild and restart a single container:
 
 ## Dockerfile syntax
 Dockerfile
-```
+```Dockerfile
     # Parent image
     FROM python:2.7-slim
     # All subsequent commands are executed here. May be called mutliple times.
@@ -85,51 +88,51 @@ Dockerfile
 
 ## Composefile syntax
 docker-compose.yml
-```
-    version: '3'
-    services: 
-      mysql:
-        build: ./mysql
-        env_file:
-          - ./mysql/resources/mysql.env
-        ports:
-          - "127.0.0.1:3306:3306"
-        volumes:
-          - ./mysql/resources/init:/docker-entrypoint-initdb.d     # note how this is a relative path to the local machine == bind-mount
-          - mysql-data:/var/lib/mysql                              # note how this is a named volume, referenced again further down in the volume-section
-        # See https://www.drupal.org/project/drupal/issues/2966523
-        command: --default-authentication-plugin=mysql_native_password
-    
-      drupal:
-        build: ./drupal
-        env_file:
-          - ./mysql/resources/mysql.env
-          - ./drupal/resources/drupal.env
-        depends_on:
-          - mysql
-        volumes:
-            - html:/var/www/html
-            - ./dev:/var/www/html/sites
-        expose:
-          - 9000
-    
-      nginx:
-        build: ./nginx
-        env_file:
-          - ./nginx/resources/nginx.env
-        depends_on:
-          - mysql
-          - drupal
-        ports:
-          - "127.0.0.1:8080:80"
-        volumes:
-          - html:/var/www/html
-          - ./dev:/var/www/html/sites
-          - ./nginx/resources/default.conf:/etc/nginx/conf.d/default.conf:ro
-    
-    volumes:  # all entries here create a new docker-managed volume (as opposed to a bind-mount)
-      html:   # this is intentionally left blank! Required to be blank for this to be a volume
-      mysql-data:   # this is intentionally left blank! Required to be blank for this to be a volume
+```yml
+version: '3'
+services: 
+  mysql:
+    build: ./mysql
+    env_file:
+      - ./mysql/resources/mysql.env
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./mysql/resources/init:/docker-entrypoint-initdb.d     # note how this is a relative path to the local machine == bind-mount
+      - mysql-data:/var/lib/mysql                              # note how this is a named volume, referenced again further down in the volume-section
+    # See https://www.drupal.org/project/drupal/issues/2966523
+    command: --default-authentication-plugin=mysql_native_password
+
+  drupal:
+    build: ./drupal
+    env_file:
+      - ./mysql/resources/mysql.env
+      - ./drupal/resources/drupal.env
+    depends_on:
+      - mysql
+    volumes:
+        - html:/var/www/html
+        - ./dev:/var/www/html/sites
+    expose:
+      - 9000
+
+  nginx:
+    build: ./nginx
+    env_file:
+      - ./nginx/resources/nginx.env
+    depends_on:
+      - mysql
+      - drupal
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - html:/var/www/html
+      - ./dev:/var/www/html/sites
+      - ./nginx/resources/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:  # all entries here create a new docker-managed volume (as opposed to a bind-mount)
+  html:   # this is intentionally left blank! Required to be blank for this to be a volume
+  mysql-data:   # this is intentionally left blank! Required to be blank for this to be a volume
 ```
 
 

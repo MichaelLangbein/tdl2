@@ -20,7 +20,7 @@ afterAll(async () => {
 describe("Task service", () => {
 
     test("create", async () => {
-        const task = await ts.createTask("some task", "", null, null);
+        const task = await ts.createTask("some task", null, 0);
         expect(task).toBeTruthy();
         const taskFetched = await ts.getTask(task.id);
         expect(taskFetched).toBeTruthy();
@@ -28,17 +28,17 @@ describe("Task service", () => {
             expect(taskFetched.title).toBe("some task");
         }
     
-        const childTask = await ts.createTask("some child task", "", task.id, null);
+        const childTask = await ts.createTask("some child task", task.id, 0);
         expect(childTask).toBeTruthy();
         expect(childTask.parent).toBe(task.id);
     });
 
 
     test("read", async () => {
-        const task = await ts.createTask("some task", "", null, null);
-        const child = await ts.createTask("child task", "", task.id, null);
-        const child2 = await ts.createTask("another task", "", task.id, null);
-        const grandChild = await ts.createTask("grandchild", "", child.id, null);
+        const task = await ts.createTask("some task", null, 0);
+        const child = await ts.createTask("child task", task.id, 0);
+        const child2 = await ts.createTask("another task", task.id, 0);
+        const grandChild = await ts.createTask("grandchild", child.id, 0);
 
         const tree = await ts.getSubtree(task.id, 1);
         expect(tree).toBeDefined();
@@ -58,19 +58,19 @@ describe("Task service", () => {
 
 
     test("update", async () => {
-        const task = await ts.createTask("some task", "", null, null);
+        const task = await ts.createTask("some task", null, 0);
         task.description = "new description";
-        const updatedTask = await ts.updateTask(task.id, task.title, task.description, task.parent, task.secondsActive, null, null);
+        const updatedTask = await ts.updateTask(task);
 
         expect(updatedTask.description).toBe("new description");
     });
 
 
     test("delete", async () => {
-        const task = await ts.createTask("base task", "", null, null);
-        const child1 = await ts.createTask("child1", "", task.id, null);
-        const child2 = await ts.createTask("child2", "", task.id, null);
-        const grandChild = await ts.createTask("grandChild", "", child1.id, null);
+        const task = await ts.createTask("base task", null, 0);
+        const child1 = await ts.createTask("child1", task.id, 0);
+        const child2 = await ts.createTask("child2", task.id, 0);
+        const grandChild = await ts.createTask("grandChild", child1.id, 0);
         await ts.deleteTree(child1.id);
         
         const tree = await ts.getSubtree(task.id, 2);
@@ -82,7 +82,7 @@ describe("Task service", () => {
 
 
     test("attachments", async () => {
-        const task = await ts.createTask("base task", "", null, null);
+        const task = await ts.createTask("base task", null, 0);
         await ts.addFileAttachment(task.id, "/some/file/path.txt");
         const tree = await ts.getSubtree(task.id);
         expect(tree).toBeDefined();
@@ -90,12 +90,13 @@ describe("Task service", () => {
     });
 
     test("path to subtree", async () => {
-        const baseTask = await ts.createTask("base", "", null, null);
-        const child1 = await ts.createTask("child1", "", baseTask.id, null);
-        const child2 = await ts.createTask("child2", "", baseTask.id, null);
-        const grandChild1 = await ts.createTask("otherGrandChild", "", child1.id, null);
-        const grandChild2 = await ts.createTask("grandChild", "", child2.id, null);
-        const grandGrandChild = await ts.createTask("grandGrandChild", "", grandChild2.id, null);
+        const time = new Date().getTime();
+        const baseTask = await ts.createTask("base", null, time);
+        const child1 = await ts.createTask("child1", baseTask.id, time);
+        const child2 = await ts.createTask("child2", baseTask.id, time);
+        const grandChild1 = await ts.createTask("otherGrandChild", child1.id, time);
+        const grandChild2 = await ts.createTask("grandChild", child2.id, time);
+        const grandGrandChild = await ts.createTask("grandGrandChild", grandChild2.id, time);
 
         const path = await ts.getSubtreePathTo(grandChild2.id, 1, baseTask.id);
         expect(path).toBeTruthy();
@@ -112,10 +113,15 @@ describe("Task service", () => {
 
 
     test("search", async () => {
-        const baseTask = await ts.createTask("Title with Alf in it", "", null, null);
-        const child1 = await ts.createTask("", "Description with Alf in it", baseTask.id, null);
-        const child2 = await ts.createTask("", "Descalf with the searchterm in it", baseTask.id, null);
-        const grandChild = await ts.createTask("Nothing in title", "Nothing in description", child2.id, null);
+        const time = new Date().getTime();
+        const baseTask = await ts.createTask("Title with Alf in it", null, time);
+        const child1 = await ts.createTask("", baseTask.id, time);
+        const child2 = await ts.createTask("", baseTask.id, time);
+        const grandChild = await ts.createTask("Nothing in title", child2.id, time);
+        child2.description = 'Alf in description';
+        const updatedChild2 = await ts.updateTask(child2);
+        grandChild.description = 'Ralf in description';
+        const updatedGrand = await ts.updateTask(grandChild);
 
         const hits = await ts.search('Alf');
         expect(hits.length).toBe(3);

@@ -67,6 +67,42 @@ export class TaskEditComponent implements OnInit {
     this.taskSvc.reactivateCurrent();
   }
 
+  template() {
+    const currentValue = this.form.value;
+    this.form.setValue({
+      ... currentValue,
+      description: currentValue.description += `
+
+1.  Understand the problem
+    * What are you asked to find or show?
+    * Can you restate the problem in your own words?
+    * Can you think of a picture or a diagram that might help you understand the problem?
+    * Is there enough information to enable you to find a solution?
+    * Do you understand all the words used in stating the problem?
+    * Do you need to ask a question to get the answer?
+2.  Make a plan
+    * Guess and check
+    * Make an orderly list
+    * Eliminate possibilities
+    * Use symmetry
+    * Consider special cases
+    * Use direct reasoning
+    * Solve an equation
+    * Look for a pattern
+    * Draw a picture
+    * Solve a simpler problem
+    * Use a model
+    * Work backward
+    * Use a formula
+    * Be creative
+    * Use your head/noggin
+3.  Carry out the plan.
+4. If you can't solve a problem, then there is an easier problem you can solve: find it.
+5.  Look back on your work. How could it be better?
+      `
+    });
+  }
+
   deleteTask() {
     this.taskSvc.deleteCurrent();
     this.showDeleteModal = false;

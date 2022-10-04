@@ -5,6 +5,6 @@
         </ul>
     </div>
     <div class="content">
-        <markdown *ngIf="activeEntry" katex [src]="'http://localhost:1410/wiki/' + activeEntry"></markdown>
+        <markdown *ngIf="activeEntry" katex [katexOptions]="katexOptions" [src]="'http://localhost:1410/wiki/' + activeEntry"></markdown>
     </div>
 </div>

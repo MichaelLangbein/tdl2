@@ -1,5 +1,6 @@
 import { Database } from 'sqlite';
 
+
 export interface TaskTree {
     id: number,
     title: string,
@@ -10,7 +11,8 @@ export interface TaskTree {
     completed: number | null,
     secondsActive: number,
     attachments: FileRow[],
-    deadline: number | null
+    deadline: number | null,
+    lastUpdate: number
 }
 
 export interface TaskRow {
@@ -21,13 +23,26 @@ export interface TaskRow {
     created: number,
     completed: number | null,
     secondsActive: number,
-    deadline: number | null
+    deadline: number | null,
+    lastUpdate: number
 }
 
 export interface FileRow {
     id: number,
     path: string,
     taskId: number
+}
+
+export interface DbAction {
+    /**
+     * - *create*
+     * - *update*
+     *   - update also includes *move*s (change to parent-property)
+     * - *delete*
+     * - *file*
+     */
+    type: 'create' | 'update' | 'delete' | 'addFile',
+    args: any
 }
 
 
@@ -51,11 +66,12 @@ export class TaskService {
                     created         Date,
                     completed       Date,
                     secondsActive   integer,
-                    deadline        Date
+                    deadline        Date,
+                    lastUpdate      Date
                 );
                 create index parent_task on tasks(parent);
             `);
-            await this.createTask('root', '', null, null);
+            await this.createTask('root');
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';
@@ -74,7 +90,8 @@ export class TaskService {
     
     public async getTask(taskId: number) {
         const result = await this.db.get<TaskRow>(`
-            select * from tasks where id = $id;
+            select * from tasks 
+                where id = $id;
         `, { 
             '$id': taskId 
         });
@@ -96,7 +113,8 @@ export class TaskService {
 
     public async getChildIds(taskId: number) {
         const results = await this.db.all<{id: number}[]>(`
-            select id from tasks where parent = $parent;    
+            select id from tasks 
+                where parent = $parent;
         `, {
             '$parent': taskId
         });
@@ -108,24 +126,32 @@ export class TaskService {
         return result['last_insert_rowid()'];
     }
 
-    public async createTask(title: string, description: string, parentId: number | null, deadline: Date | null) {
+    public async createTask(title: string = '', parentId: number | null  = null, creationTime: number | null = new Date().getTime()) {
         await this.db.run(`
-            insert into tasks (title, description, parent, created, secondsActive, deadline)
-            values ($title, $description, $parent, $created, $secondsActive, $deadline);
+            insert into tasks (title, parent, created, secondsActive, lastUpdate)
+            values ($title, $parent, $created, $secondsActive, $lastUpdate);
         `, {
             "$title": title,
-            "$description": description,
             "$parent": parentId,
-            "$created": new Date().getTime(),
+            "$created": creationTime,
+            "$lastUpdate": creationTime,
             "$secondsActive": 0,
-            "$deadline": deadline
         });
         const id = await this.getLastInsertId();
         const task = await this.getTask(id);
         return task!;
     }
     
-    public async updateTask(id: number, title: string, description: string, parentId: number | null, secondsActive: number, completed: Date | null, deadline: Date | null) {
+    public async updateTask(task: TaskRow, ensureNewestUpdate = true) {
+
+        if (ensureNewestUpdate) {
+            const latestState = await this.getTask(task.id);
+            if (latestState.lastUpdate > task.lastUpdate) {
+                console.error(`Cannot update - There's a newer version of this task in the db: ${task.id}/${task.title}`);
+                return latestState;
+            }
+        }
+
         await this.db.run(`
             update tasks
             set title = $title,
@@ -133,18 +159,20 @@ export class TaskService {
                 parent = $parent,
                 secondsActive = $secondsActive,
                 completed = $completed,
-                deadline = $deadline
+                deadline = $deadline,
+                lastUpdate = $lastUpdate
             where id = $id;
         `, {
-            '$id': id,
-            '$title': title,
-            '$description': description,
-            '$parent': parentId,
-            '$secondsActive': secondsActive,
-            '$completed': completed,
-            '$deadline': deadline
+            '$id': task.id,
+            '$title': task.title,
+            '$description': task.description,
+            '$parent': task.parent,
+            '$secondsActive': task.secondsActive,
+            '$completed': task.completed,
+            '$deadline': task.deadline,
+            '$lastUpdate': task.lastUpdate
         });
-        const updatedTask = await this.getTask(id);
+        const updatedTask = await this.getTask(task.id);
         return updatedTask!;
     }
 
@@ -216,12 +244,15 @@ export class TaskService {
             const childIds = await this.getChildIds(id);
             for (const childId of childIds) {
                 const childTree = await this.getSubtree(childId, level - 1); // @TODO: do in parallel?
-                if (childTree && !childTree?.completed) taskTree.children.push(childTree);
+                if (childTree) {
+                    if (!childTree!.completed || includeCompleted) {
+                        taskTree.children.push(childTree);
+                    }
+                }
             }
         }
         return taskTree;
     }
-
 
     public async getSubtreePathTo(targetTaskId: number, extraDepth: number, startId = 1) {
         // @TODO: maybe better recursive sql-query: https://stackoverflow.com/questions/7456957/basic-recursive-query-on-sqlite3
@@ -254,7 +285,9 @@ export class TaskService {
         this.deleteTask(taskId);
     }
 
-    public addAttachment() {}
+    public addAttachment() {
+        throw new Error(`Method not implemented: addAttachment`);
+    }
 
     
     public async upcoming() {

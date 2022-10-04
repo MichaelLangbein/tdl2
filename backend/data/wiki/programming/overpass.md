@@ -4,28 +4,72 @@
 - Nodes
 - Ways 
 - Relations
+- Areas
 
 ## Finding tags
 In the wiki: https://wiki.openstreetmap.org/wiki/Relation:route#Bus_routes_.28also_trolley_bus.29 
 
 ## Syntax
 
-default input set `_`
+ - each statement works on the last set
+ - sets can be assigned to with `->.setname`;
+ - `_` is the default set
+ - statements can be 
+     - way
+     - node
+     - relation
+     - area
+  - `(node|way|rel)[]`: logically filter the statement
+     - `node[key]`: get all nodes that have `key`
+     - `node[key=val]`: get all nodes where `key=val`
+     - `node[key1=val1][key2=val2]`: get all nodes where `key1=val1` and `key2=val2`
+  - `(bbox)`: spatially filter the statement
+  - You can get the union of two sets with 
+    `(statement1; statement2;)->.unionSet;`
+  - Recursing:
+    - `n, w, r, bn, bw, br`: node, way, relation, base-node, base-way, base-relation
+        - `node(w);`  select child nodes from ways in the input set
+        - `node(r);`  select node members of relations in the input set
+        - `way(bn);`  select parent ways for nodes in the input set
+        - `way(r);`   select way members of relations in the input set
+        - `rel(bn);`  select relations that have node members in the input set
+        - `rel(bw);`  select relations that have way members in the input set
+        - `rel(r);`   select relation members of relations in the input set
+        - `rel(br);`  select parent relations from relations in the input set
+    - `n, w, r, bn, bw, br` on named sets:
+      - `node(w.foo);`         select child nodes from ways in the "foo" input set
+      - `node(r.foo:"role");`  select node members with role "role" of relations in the "foo" input set
+    - arrow-shorthand
+      - If you have a set of `ways`, then `>` recurses **down to nodes and out to connected nodes** to get you the constituent nodes.
+      - It takes an input set. It produces a result set. Its result set is composed of:
+        - all nodes that are part of a way which appears in the input set `node(w)`; plus
+        - all nodes and ways that are members of a relation which appears in the input set `(node(r); way(r);)`; plus
+        - all nodes that are part of a way which appears in the result set
 
 ### Examples
 
 ```
-[out:json][timeout:25];
+/* preamble */
+/* output in json format */
+[out:json];
 
+/*query body */
+
+/* get all ways that are [buildings] and are (inside bbox) and assign -> them to the default set _ */
+way[building]( 48.0658,11.21309,48.0916,11.30064 )->._;
+
+/* get the union () of ... 
+  - the default set (= ways)
+  - and nodes that make up the ways by recursing down > to the way's constituent nodes
+*/
 (
-    node["amenity"="post_box"]({{bbox}});
-    way["amenity"="post_box"]({{bbox}});
-    relation["amenity"="post_box"]({{bbox}});
-)
+  ._;
+  >;
+)->._;        
 
-out body;
->;
-out skel qt;
+
+/* post */
+out geom;
 
 ```
 

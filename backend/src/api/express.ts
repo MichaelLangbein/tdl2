@@ -1,11 +1,12 @@
 import express from "express";
 import cors from "cors";
-import fileUpload from "express-fileupload";
-import { TaskService } from '../model/task.service';
+import fileUpload, { FileArray } from "express-fileupload";
+import { DbAction, TaskRow, TaskService, TaskTree } from '../model/task.service';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
 import { estimateTime } from "../stats/estimates";
 import { FileService } from '../files/fileService';
 import { CardService } from '../model/card.service';
+
 
 export function appFactory(taskService: TaskService, fileService: FileService, cardService: CardService) {
     const app = express();
@@ -25,26 +26,18 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     /***********************************************************************
      * Tasks
+     * This API will soon be deprecated in favor of the subtree-API
+     * with its TreeDiff algorithm.
      **********************************************************************/
 
     // Crud - Create
     app.post("/tasks/create", async (req, res) => {
         const data = req.body;
-        const task = await taskService.createTask(data.title, data.description, data.parent, data.deadline);
+        const task = await taskService.createTask(data.title, data.parent, data.created);
         res.send(task);
     });
 
     // cRud - Read
-    app.get("/subtree/:taskId/:depth", async (req, res) => {
-        const subTree = await taskService.getSubtree(+req.params.taskId, +req.params.depth);
-        res.send(subTree);
-    });
-
-    app.get("/subtree/pathTo/:targetTaskId/:extraDepth", async (req, res) => {
-        const subTree = await taskService.getSubtreePathTo(+req.params.targetTaskId, +req.params.extraDepth);
-        res.send(subTree);
-    });
-
     app.post("/tasks/search", async (req, res) => {
         const searchFor = req.body;
         const results = await taskService.search(searchFor.searchString);
@@ -53,27 +46,30 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     // crUd - Update
     app.patch("/tasks/update", async (req, res) => {
-        const data = req.body;
-        const updatedTask = await taskService.updateTask(data.id, data.title, data.description, data.parent, data.secondsActive, data.completed, data.deadline);
+        const taskRow: TaskRow = req.body;
+        const updatedTask = await taskService.updateTask(taskRow);
         res.send(updatedTask);
     });
+
+    async function saveOneOrMoreFiles(taskId: number, fileArray: FileArray) {
+        for (const key in fileArray) {
+            const files = fileArray[key];
+            if (Array.isArray(files)) {
+                for (const file of files) {
+                    const localFilePath = await fileService.storeFile(file);
+                    await taskService.addFileAttachment(taskId, localFilePath);
+                }
+            } else {
+                const localFilePath = await fileService.storeFile(files);
+                await taskService.addFileAttachment(taskId, localFilePath);    
+            }
+        }
+    }
 
     app.post("/tasks/:id/addFile", async (req, res) => {
         const taskId = +req.params.id;
         if (req.files) {
-            for (const key in req.files) {
-                const file = req.files[key];
-                if (Array.isArray(file)) {
-                    for (const ffile of file) {
-                        const localFilePath = await fileService.storeFile(ffile);
-                        await taskService.addFileAttachment(taskId, localFilePath);
-                    }
-                } else {
-                    const localFilePath = await fileService.storeFile(file);
-                    await taskService.addFileAttachment(taskId, localFilePath);    
-                }
-            }
-            
+            saveOneOrMoreFiles(taskId, req.files);
         }
         const tree = await taskService.getSubtree(taskId, 1);
         res.send(tree);
@@ -100,7 +96,7 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
 
     app.get("/tasks/:id/estimate", async (req, res) => {
         const id = +req.params.id;
-        const fullTree = await taskService.getSubtree(1, 30);
+        const fullTree = await taskService.getSubtree(1, 30, true);
         if (fullTree) {
             const estimates = estimateTime(id, fullTree!);
             res.send(estimates);
@@ -112,6 +108,42 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
     app.get("/tasks/upcoming", async (req, res) => {
         const list = await taskService.upcoming();
         res.send(list);
+    });
+
+
+    /***********************************************************************
+     * TaskTrees
+     **********************************************************************/
+
+    app.get("/subtree/:taskId/:depth", async (req, res) => {
+        const subTree = await taskService.getSubtree(+req.params.taskId, +req.params.depth);
+        res.send(subTree);
+    });
+
+    app.get("/subtree/pathTo/:targetTaskId/:extraDepth", async (req, res) => {
+        const subTree = await taskService.getSubtreePathTo(+req.params.targetTaskId, +req.params.extraDepth);
+        res.send(subTree);
+    });
+
+    app.post("/subtree/actionQueue", async (req, res) => {
+        const actions: DbAction[] = req.body;
+        for (const action of actions) {
+            switch (action.type) {
+                case 'create':
+                    await taskService.createTask(
+                        action.args.title, action.args.parentId, action.args.created);
+                case 'update':
+                    const updatedRow: TaskRow = action.args;
+                    await taskService.updateTask(updatedRow);
+                case 'delete':
+                    await taskService.deleteTask(action.args.id);
+                case 'addFile':
+                    await saveOneOrMoreFiles(action.args.id, action.args.files);
+                default:
+                    console.error(`No such DbAction: ${action.type}`);
+            }
+        }
+        res.send(true);
     });
 
     

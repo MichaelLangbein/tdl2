@@ -21,9 +21,18 @@ function estimate(node: LeveledTaskTree, timesOnLevels: levelTimeDists, children
     if (node.completed) return fullTime(node);
 
     // if we're outside the range of available data ...
-    if (node.level < 0) {
+    if (!timesOnLevels[node.level]) {
         // ... return best estimate from last level that does have data
-        return timesOnLevels[0].conditionalExpectation(node.children.length);
+        let l = node.level - 1;
+        while (!timesOnLevels[l] && l > 0) {
+            l -= 1;
+        }
+        if (l > 0) {
+            node.level = l;
+            return estimate(node, timesOnLevels, childrenOnLevels);
+        } else {
+            return 0;
+        }
     }
 
     // time required for task itself
@@ -39,7 +48,7 @@ function estimate(node: LeveledTaskTree, timesOnLevels: levelTimeDists, children
     // time required for potential new children
     const distChildren = childrenOnLevels[node.level];
     const expectedNrChildren = distChildren.conditionalExpectation(node.children.length);
-    const fakeChild: LeveledTaskTree = {id: -99999, level: node.level + 1, secondsActive: 0, children: [], title: "", description: "", attachments: [], parent: node.id, created: 1, completed: null, deadline: null};
+    const fakeChild: LeveledTaskTree = {id: -99999, level: node.level - 1, secondsActive: 0, children: [], title: "", description: "", attachments: [], parent: node.id, created: 1, lastUpdate: 1, completed: null, deadline: null};
     const expectedTimeNewChild = estimate(fakeChild, timesOnLevels, childrenOnLevels);
     const expectedTimeExpectedChildren = expectedNrChildren * expectedTimeNewChild;
 
@@ -53,12 +62,14 @@ function estimate(node: LeveledTaskTree, timesOnLevels: levelTimeDists, children
 
 
 
-function addLevelInfo(tree: TaskTree, level: number): LeveledTaskTree {
-    (tree as LeveledTaskTree).level = level;
+function addLevelInfo(tree: TaskTree): number {
+    let maxChildLevel = 0;
     for (const child of tree.children) {
-        addLevelInfo(child, level - 1);
+        const childLevel = addLevelInfo(child);
+        if (childLevel > maxChildLevel) maxChildLevel = childLevel;
     }
-    return tree as LeveledTaskTree;
+    (tree as LeveledTaskTree).level = maxChildLevel + 1;
+    return (tree as LeveledTaskTree).level;
 }
 
 
@@ -68,7 +79,7 @@ function readParas(node: LeveledTaskTree) {
     const childrenOnLevelRaw: {[level: number]: number[]} = {};
 
     let current = node;
-    const queue = new Queue<LeveledTaskTree>(1000);
+    const queue = new Queue<LeveledTaskTree>();
 
     while (current) {
         current.children.map(c => queue.enqueue(c));
@@ -96,7 +107,7 @@ function estimateDistributions(node: LeveledTaskTree) {
     const allTimes = Object.values(timesOnLevelRaw).reduce((carry, current) => carry.concat(current), []);
     const allChildren = Object.values(childrenOnLevelRaw).reduce((carry, current) => carry.concat(current), []);
 
-    for (let level = 0; level <= maxLevel; level++) {
+    for (let level = 1; level <= maxLevel; level++) {
         let rawTimes = timesOnLevelRaw[level];
         let rawChildren = childrenOnLevelRaw[level];
         // if no data found, use global means
@@ -139,19 +150,30 @@ function countCompletedNodes(tree: LeveledTaskTree) {
     return count;
 }
 
-function getTreeDepth(tree: TaskTree) {
-    let maxDepth = 0;
-    for (const child of tree.children) {
-        const depth = getTreeDepth(child);
-        if (depth > maxDepth) maxDepth = depth;
-    }
-    return maxDepth;
-}
 
 
+/**
+
+                    ┌───┐
+                    │ 4 │
+                    └┬─┬┘
+                     │ │
+              ┌───┐◄─┘ └─►┌───┐
+              │ 3 │       │ 1 │
+              └┬─┬┘       └───┘
+               │ │
+       ┌───┐◄──┘ └──► ┌───┐
+       │ 2 │          │ 1 │
+       └┬─┬┘          └───┘
+        │ │
+┌───┐◄──┘ └──►┌───┐
+│ 1 │         │ 1 │
+└───┘         └───┘
+
+ */
 export function estimateTime(taskId: number, tree: TaskTree) {
-    const maxLevel = getTreeDepth(tree);
-    const leveledTree = addLevelInfo(tree, maxLevel);
+    const maxLevel = addLevelInfo(tree);
+    const leveledTree = tree as LeveledTaskTree;
     if (countCompletedNodes(leveledTree) < 1) return 0;
     const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
     const target = getNodeWithId(taskId, leveledTree)!;

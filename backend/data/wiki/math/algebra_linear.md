@@ -1,13 +1,12 @@
 $
-\gdef\mtrx#1{\mathbf{#1}}
-\gdef\nullspace#1{\mathcal{N}_{#1}}
-\gdef\collspace#1{\mathcal{C}_{#1}}
-\gdef\rowspace#1{\mathcal{R}_{#1}}
-\gdef\solspace#1{\mathcal{S}_{#1}}
-\gdef\dimension#1{\text{dim}_{#1}}
-\gdef\rank#1{\text{rank}_{#1}}
+\newcommand\mtrx[1]{\mathbf{#1}}
+\newcommand\nullspace[1]{\mathcal N_{#1}}
+\newcommand\colspace[1]{\mathcal C_{#1}}
+\newcommand\rowspace[1]{\mathcal R_{#1}}
+\newcommand\solspace[1]{\mathcal S_{#1}}
+\newcommand\dimension[1]{\text{dim}_#1}
+\newcommand\rank[1]{\text{rank}_#1}
 \gdef\symm{\text{sym}}
-\gdef\orthtxt{\text{orth}}
 \gdef\rops{\text{rops}}
 \gdef\cops{\text{cops}}
 $
@@ -23,7 +22,7 @@ Here we'll mostly deal with the inner-product space of vectors and occasionally 
 
 ## Spaces
 
-We'll work a lot with a few vector-spaces and transfromations from and to those spaces. 
+We'll work a lot with a few vector-spaces and transformations from and to those spaces. 
 
 > **Definition** 
 > Let $W$ be a space. Then $V \subseteq W$ is a subspace, if:   
@@ -36,7 +35,7 @@ We'll work a lot with a few vector-spaces and transfromations from and to those 
 
 > **Definition**: Columnspace
 >
-> $\collspace{A}$ is the columnspace of $A$. It is defined as $\collspace{A} = \{ y | Ax = y \}$
+> $\colspace{A}$ is the columnspace of $A$. It is defined as $\colspace{A} = \{ y | Ax = y \}$
 
 > **Definition**: Rowspace
 >
@@ -44,7 +43,7 @@ We'll work a lot with a few vector-spaces and transfromations from and to those 
 
 > **Definition**: Rank
 >
-> $r_A$ is the rank of $A$. It is defined as the dimension of $\collspace{A}$, $\dimension{\collspace{A}}$
+> $r_A$ is the rank of $A$. It is defined as the dimension of $\colspace{A}$, $\dimension{\colspace{A}}$
 
 
 > **Definition**: Nullity
@@ -85,15 +84,15 @@ Therefore, when searching for the special solutions to a problem $Ab = 0$, we ca
 
 We can now print an overview of the different spaces that are associated with a matrix $A$ of dimension $m \cdot n$ and rank $r$.
 
-\includegraphics[width=0.7\linewidth]{images/four_spaces.png}
+<img src="images/four_spaces.png">
 
-The rowspace of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The columspace of A can be visulaized using the vector-image of A: it contains all the points that are spanned by A. 
-Notice how we included the previous theorem: any combination $x$ of a particular sollution $x_r$ and any vector in the nullspace $x_n$ is also a solution.
+The rowspace of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The columspace of A can be visualized using the vector-image of A: it contains all the points that are spanned by A. 
+Notice how we included the previous theorem: any combination $x$ of a particular solution $x_r$ and any vector in the nullspace $x_n$ is also a solution.
 
 
-We should look in more detail at this graphic. Note, for example, that \nullspace{A} and \collspace{A^T} seem to be orthogonal. Indeed:
+We should look in more detail at this graphic. Note, for example, that \nullspace{A} and \colspace{A^T} seem to be orthogonal. Indeed:
 > **Theorem**
-> $\forall v \in \nullspace{A}, w \in \collspace{A^T}: v \orth w$
+> $\forall v \in \nullspace{A}, w \in \colspace{A^T}: v \perp w$
 >
 >>    $$
 >>        \begin{aligned}
@@ -102,25 +101,24 @@ We should look in more detail at this graphic. Note, for example, that \nullspac
 >>            u^T 0 &= 0 & \text{ which is trivially true.}
 >>        \end{aligned}
 >>    $$
->> Thus, \nullspace{A} and \collspace{A^T} only intersect in $\vec{0}$.
+>> Thus, \nullspace{A} and \colspace{A^T} only intersect in $\vec{0}$.
 
 
-However, note that $\reals^n \geq \nullspace{A} \union \collspace{A^T}$. As an example, consider $\mtrx{A} = \begin{bmatrix}
+However, note that $\reals^n \geq \nullspace{A} \union \colspace{A^T}$. As an example, consider $\mtrx{A} = \begin{bmatrix}
     1 & 0 \\
     0 & 0
 \end{bmatrix}$. We get $\nullspace{A} = \begin{bmatrix}
     0 \\ x
-\end{bmatrix}$ and $\collspace{A^T} = \begin{bmatrix}
+\end{bmatrix}$ and $\colspace{A^T} = \begin{bmatrix}
     x \\ 0
 \end{bmatrix}$. Now consider $\vec{v} = \begin{bmatrix}
     1 \\ 1
-\end{bmatrix}$, which is neither in \nullspace{A} nor in \collspace{A^T}. As illustration, look at [fig.](nullspace_rowspace_lowrank).
+\end{bmatrix}$, which is neither in \nullspace{A} nor in \colspace{A^T}. As illustration, look at [fig.](nullspace_rowspace_lowrank).
 
 \begin{figure}[H] <a id="nullspace_rowspace_lowrank"></a>
-    \caption{When $A$ is not full rank, there are infinitely many vectors $v$ that are neither in \rowspace{A} nor in \nullspace{A}. When it comes to spatial dimensions, $1 + 1 \neq 2$!}
-    \centering
-    \includegraphics[width=0.5\linewidth]{images/nullspace_rowspace_lowrank.png}
-\end{figure}
+    **When $A$ is not full rank, there are infinitely many vectors $v$ that are neither in \rowspace{A} nor in \nullspace{A}. When it comes to spatial dimensions, $1 + 1 \neq 2$!**
+        <img src="images/nullspace_rowspace_lowrank.png">
+
 
 
 
@@ -154,8 +152,8 @@ $$
 
 Using $\mtrx{T}_{BA} = \mtrx{B}^{-1}\mtrx{A}$, a lot of statements are trivial to prove:
 
-    - $\mtrx{T}_{BA} = \mtrx{T}_{AB}^{-1}$
-    - $\mtrx{T}_{CA} = \mtrx{T}_{CB} \mtrx{T}_{BA}$
+- $\mtrx{T}_{BA} = \mtrx{T}_{AB}^{-1}$
+- $\mtrx{T}_{CA} = \mtrx{T}_{CB} \mtrx{T}_{BA}$
 
 
 
@@ -249,9 +247,9 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 > **Theorem** <a id="lin_indep_if_no_bx0"></a>
 > A better definition could be stated as such: $B$ is linearly independent, if the only solution to $Bx = 0$ is the zero-vector.
 >
-> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$}{$\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
+> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$. Proof that $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
 >
->> Suppose $\mtrx{B} \vec{x} = \vec{0}$}{$\vec{x} = \vec{0}$
+>> Suppose $\mtrx{B} \vec{x} = \vec{0}$. Proof that $\vec{x} = \vec{0}$
 >>
 >>> By contradiction. Assume $\vec{x} \neq \vec{0}$. Proof that there is a contradiction.
 >>>
@@ -265,9 +263,9 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 >>>> 
 >>>> This contradicts the statement that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
 >>
->> Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$}{$\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
+>> Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$. Proof that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
 >>
->>> Let $\vec{b_0} \in \mtrx{B}$}{$\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$
+>>> Let $\vec{b_0} \in \mtrx{B}$. Proof that $\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$
 >>>
 >>>> By contradiction. Assume $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$. Proof that there is a contradiction.
 >>>>> Since $\vec{b}_0 = \sum_{B/b_0} \alpha_i \vec{b}_i$
@@ -294,7 +292,7 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 
 ## Determinant
 
-\includegraphics[width=0.4\linewidth]{images/determinant.png}
+<img src="images/determinant.png">
 
 
 > **Definition** Consider a $2 \times 2$ matrix $\mtrx{A}$ 
@@ -371,10 +369,10 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 > **Theorem**
 > Let $A: X \to Y$. Then:
-> $$ \nullspace{A} = \{ 0 \} \then \collspace{A} = Y $$
+> $$ \nullspace{A} = \{ 0 \} \then \colspace{A} = Y $$
 
 
-\includegraphics[width=0.4\linewidth]{images/A_from_X_to_Y.png}
+<img src="images/A_from_X_to_Y.png">
 
 > **Theorem**
 > Rank nullity: this is a fundamental theorem of linear algebra.
@@ -386,11 +384,11 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 > **Theorem**
-> $$ r_A = \dimension{\collspace{A}} = \dimension{\rowspace{A}} $$
+> $$ r_A = \dimension{\colspace{A}} = \dimension{\rowspace{A}} $$
 
 
 > **Theorem**
-> $$ A:basis_{\collspace{A}} \then r_A = n $$
+> $$ A:basis_{\colspace{A}} \then r_A = n $$
 
 
 
@@ -400,15 +398,15 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 ## Special matrices
 
-**Symmetric matrices** are simple but very useful.
+> **Symmetric matrices** are simple but very useful.
 > **Definition** 
 > A matrix $\mtrx{A}$ is symmetric iff $\mtrx{A} = \mtrx{A}^T$
 
 
 
-### Positive (semi-)definite matrix are a special case of symmetric matrices.
+Positive (semi-)definite matrix are a special case of symmetric matrices.
 > **Definition** 
-> $$\mtrx{A}: \PSD \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$$
+> $$\mtrx{A}: \text{PSD} \iff \mtrx{A}: \symm \land \forall z: z^T \mtrx{A} z \geq 0$$
 > From the first condition, $\mtrx{A}: \symm$, it follows that the eigenvectors are orthogonal (see [eq.](symm_then_orth)), 
 > from the second one, $\forall z: z^T \mtrx{A} z \geq 0$, it follows that the eigenvalues are all greater or equal than $0$ (see eq. \dots).
 
@@ -424,12 +422,12 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 > **Theorem**
-> $A^T A: \PSD$
+> $A^T A: \text{PSD}$
 
 
 
 **Orthogonal matrices** make tons of calculations simpler.
-> **Definition** [A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \orth x_2$
+> **Definition** [A matrix $\mtrx{A}$ is orthogonal] iff $\forall x_1, x_2 \in \mtrx{A}, x_1 \neq x_2: x_1 \perp x_2$
 
 
 > **Theorem**
@@ -460,7 +458,7 @@ Any *square* matrix can be eigenvector (aka. spectrally) decomposed: $\mtrx{A} =
 
 Once at a sprint-discussion I wondered why principal components (see about those later) were all orthogonal. Here's the proof why. (Note that the proof only holds for symmetric matrices - which, in PCA, $C_A$ is indeed symmetric.)
 > **Theorem** <a id="symm_then_orth"></a>
-> $\mtrx{A}: \symm \then \mtrx{E}_A: \orth$
+> $\mtrx{A}: \symm \then \mtrx{E}_A: \perp$
 >
 > For any matrix $A$, symmetric or not, and for any vectors $x$ and $y$, eigenvectors or not, it holds:
 > $$\forall A, \forall x, y: <Ax, y> = <x, A^Ty>$$
@@ -482,7 +480,7 @@ Once at a sprint-discussion I wondered why principal components (see about those
 >                                                                & \lambda_x <x, y>  &= \lambda_y <x, y>
 >        \end{aligned}
 >    $$
-> Thus, either $\lambda_x = \lambda_y$ or $x \orth y$ 
+> Thus, either $\lambda_x = \lambda_y$ or $x \perp y$ 
 
 
 > **Theorem**
@@ -683,17 +681,13 @@ Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. The
     faceReconstr = meanFace[0, :] + (evecsC @ faceEncoded)
 ```
 
-\begin{figure}[H]
-    \caption{First eigenfaces}
-    \centering
-    \includegraphics[width=0.75\linewidth]{images/eigenface1.png}
-\end{figure}
+**First eigenfaces**
+        <img src="images/eigenface1.png">
 
-\begin{figure}[H]
-    \caption{Reconstructing a faces from its percentages of the eigenfaces}
-    \centering
-    \includegraphics[width=0.75\linewidth]{images/eigenface_reconstructed.png}
-\end{figure}
+
+**Reconstructing a faces from its percentages of the eigenfaces**
+        <img src="images/eigenface_reconstructed.png">
+
 
 
 
@@ -796,8 +790,8 @@ $$\vec{x} = \begin{bmatrix} \vec{p}_1 && \vec{p}_2 \end{bmatrix} \begin{bmatrix}
 Here is a problem that bothered me for a while: a line needs one parameter, a plane two. An ellipsoid, too, needs two parameters. Are there any linear geometric objects in $\reals^3$ that require more than three parameters? The answer is: no. Here is the proof. 
 
 > For any $3 \times 4$ matrix, there is a $3 \times 3$ matrix that has the same column space, that is, that describes the same geometrical body. 
->> Proof that $\forall A(3 \times 4) \thereis A'(3 \times 3): \collspace{A} = \collspace{A'}$
->>> Let $A_0(3 \times4)$. Proof that $\thereis A': \collspace{A_0} = \collspace{A'}$
+>> Proof that $\forall A(3 \times 4) \thereis A'(3 \times 3): \colspace{A} = \colspace{A'}$
+>>> Let $A_0(3 \times4)$. Proof that $\thereis A': \colspace{A_0} = \colspace{A'}$
 >>>> We know [from](proofBaseSizeEqualsSpaceDimension) that $\thereis \vec{a}_0 \in A_0: \vec{a}_0:ld$. So Try $A' = A_0/\vec{a_0}$.
 >>>>
 >>>> Indeed, now $A_0$ and $A'$ both form a base of the same space. So they must have the same column space. 
@@ -812,21 +806,21 @@ Influence of rank on solutions
 |                               | m < n                                     |  m = n  | m > n                                             |
 |-------------------------------|-------------------------------------------|---------|---------------------------------------------------|
 |                               | n - m free variables                      |         |                                                   |
-| r<m                           | m – r conditions on $b \in \collspace{A}$ |         |                                                   |
+| r<m                           | m – r conditions on $b \in \colspace{A}$ |         |                                                   |
 |                               | 1 pivot per row                           |         |                                                   |
 |                               | n – r = n – m free variables              |         |                                                   |
-| r = m (full row rank)         | 0 conditions on $b \in \collspace{A}$     |         | X                                                 |
-|                               |                                           |         | m – r conditions on $b \in \collspace{A}$         |
+| r = m (full row rank)         | 0 conditions on $b \in \colspace{A}$     |         | X                                                 |
+|                               |                                           |         | m – r conditions on $b \in \colspace{A}$         |
 | r<n                           |                                           |         | n – r free variables                              |
 |                               | X                                         |         | 1 pivot per column                                |
-|                               |                                           |         | m – r = m – n conditions on $b \in \collspace{A}$ |
+|                               |                                           |         | m – r = m – n conditions on $b \in \colspace{A}$ |
 | r = n \\ (full column rank)   |                                           |         | 0 free variables, thus $\nullspace{A} = \{0\}$    |
 
 
 
 
 
-\paragraph {Ax = b reduces to A'x' = 0}
+### Ax = b reduces to A'x' = 0
 
 > **Theorem**
 > A problem of the form $Ax = b$ can be re-expressed as $A'x' = 0$, where $A' = [A, -b]$ 
