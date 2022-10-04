@@ -1,10 +1,38 @@
 # Linux
 
+## Disks and mounts
+- `/etc/fstab`: config-file to mount devices
+- `mount`: cli to mount devices
+- `df -h`: show disk usage
+ - `tmpfs`: ramdisks
+- `du . -h`: show file size in this folder
+
 ## apt
 
  - `apt-cache policy <package-name>`: get the version of a candidate before installing it
  - `dpkg -l |grep <package-name>`: check if a package is already installed
 
+
+## Repo's
+Aka. PPA: personal package archive.
+PPA's worth knowing:
+ - Main: from Canonical
+ - Universe: from community
+ - Multiverse: legally restricted software
+ - Restricted: Proprietary drivers
+
+- repos:
+  - update repo-contend: `apt update`
+  - list repos: 
+    - `apt-cache policy | awk '/http.*amd64/{print$2}' | sort -u`
+    - `cat /etc/apt/sources.list.d/*`
+  - add repo: `add-apt-repository ppa:<provider>/<program>`
+  - key: ``
+  - remove repo: ``
+- packages:
+  - search: `apt search <keyword>`
+  - list currently installed: `apt list --installed`
+  - remove package: `apt remove apache2` or `apt purge apache2` (also deletes config files)
 
 
 ## directories
@@ -34,6 +62,13 @@
 - `chgrp -R <new-owner-group> <file-name>`
 
 
+
+## network
+
+- `iptables -L`: show firewall rules
+- `lsof -i -P -n`: show open files (also includes sockets, so useful for web-ports)
+
+
 ## processes and threads
 - processes `fork()`: creates a copy of the parent process. Copies all of it's associated memory-pages. (never copies read-only pages; only write pages)
   - copy-on-write fork: an optimization of fork. 
@@ -49,14 +84,6 @@
 | Memory        | Own                                 | Shared                                |
 | Communication | Communicates with parent through    | Can directly call methods of parent,  |
 |               | syscalls, pipes and files           | no piping required                    |
-
-
-
-
-## network
-
-- `iptables -L`: show firewall rules
-- `lsof -i -P -n`: show open files (also includes sockets, so useful for web-ports)
 
 
 
@@ -97,24 +124,3 @@ Network:   Device-1: Realtek RTL8111/8168/8411 PCI Express Gigabit Ethernet
 
 => Basically I have now deactivated firmware-powersafe (fwlps) and powersafe (ips) but actiated software-powersafe (swlps). I'm assuming that swlps is overridden by ips.
 
-
-## Repo's
-Aka. PPA: personal package archive.
-PPA's worth knowing:
- - Main: from Canonical
- - Universe: from community
- - Multiverse: legally restricted software
- - Restricted: Proprietary drivers
-
-- repos:
-  - update repo-contend: `apt update`
-  - list repos: 
-    - `apt-cache policy | awk '/http.*amd64/{print$2}' | sort -u`
-    - `cat /etc/apt/sources.list.d/*`
-  - add repo: `add-apt-repository ppa:<provider>/<program>`
-  - key: ``
-  - remove repo: ``
-- packages:
-  - search: `apt search <keyword>`
-  - list currently installed: `apt list --installed`
-  - remove package: `apt remove apache2` or `apt purge apache2` (also deletes config files)
