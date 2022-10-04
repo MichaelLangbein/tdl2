@@ -5,19 +5,23 @@
 - `mount`: cli to mount devices
 - `df -h`: show disk usage
 - `du . -h`: show file size in this folder
+- `lsblk`: lists disk devices
+- `fdisk`: for partitioning disks
+- `mkfs`: creates a file-system on some device
+
 
 File-system types:
- - networked:
-     - `nfs`: network file system. linux. abstracts over `ext4, ntfs, fat32,` ...
+ - networked (abstract over local formats `ext, ntfs, fat,` ...):
+     - `nfs`: network file system. linux. 
      - `cifs`: common internet file system. microsoft's counter to nfs. a dialect of `smb`
      - `smb`: `server message block`. IBM's file sharing protocol. 80's.
- - local
+ - local:
      - `ntfs`: new tech file system. local. current microsoft format. Journaling.
      - `fat`: by microsoft. No journaling. but compatible with more OS'es.
      - `xfs`: for extremely large files. journaling.
      - `ext`: pretty standard
 
-
+It can happen that you define a networked mount using `/etc/fstab` but still have to use the `mount` command to enter credentials.
 
 ## apt
 
