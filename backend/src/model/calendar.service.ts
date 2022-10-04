@@ -28,22 +28,22 @@ export class CalendarService {
     }
 
     public async getLastActivity(): Promise<CalendarRow> {
-
+        throw new Error(`Method 'getLastActivity' not implemented`)        
     }
     
     public async pushActivity(taskId: number, secondsActive: number): Promise<CalendarRow> {
-
+        throw new Error(`Method 'pushActivity' not implemented`)
     }
 
     public async scheduleTask(taskId, deadline: number): Promise<CalendarRow> {
-
+        throw new Error(`Method 'scheduleTask' not implemented`)
     }
     
     public async updateTask(taskId: number, from: number, to: number): Promise<CalendarRow> {
-
+        throw new Error(`Method 'updateTask' not implemented`)
     }
 
     public async getActivity(from: number, to: number): Promise<CalendarRow[]> {
-
+        throw new Error(`Method 'getActivity' not implemented`)
     }
 }

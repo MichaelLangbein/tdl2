@@ -11,8 +11,7 @@ export interface TaskTree {
     completed: number | null,
     secondsActive: number,
     attachments: FileRow[],
-    deadline: number | null,
-    lastUpdate: number
+    deadline: number | null
 }
 
 export interface TaskRow {
@@ -23,8 +22,7 @@ export interface TaskRow {
     created: number,
     completed: number | null,
     secondsActive: number,
-    deadline: number | null,
-    lastUpdate: number
+    deadline: number | null
 }
 
 export interface FileRow {
@@ -66,8 +64,7 @@ export class TaskService {
                     created         Date,
                     completed       Date,
                     secondsActive   integer,
-                    deadline        Date,
-                    lastUpdate      Date
+                    deadline        Date
                 );
                 create index parent_task on tasks(parent);
             `);
@@ -128,13 +125,12 @@ export class TaskService {
 
     public async createTask(title: string = '', parentId: number | null  = null, creationTime: number | null = new Date().getTime()) {
         await this.db.run(`
-            insert into tasks (title, parent, created, secondsActive, lastUpdate)
-            values ($title, $parent, $created, $secondsActive, $lastUpdate);
+            insert into tasks (title, parent, created, secondsActive)
+            values ($title, $parent, $created, $secondsActive);
         `, {
             "$title": title,
             "$parent": parentId,
             "$created": creationTime,
-            "$lastUpdate": creationTime,
             "$secondsActive": 0,
         });
         const id = await this.getLastInsertId();
@@ -142,15 +138,7 @@ export class TaskService {
         return task!;
     }
     
-    public async updateTask(task: TaskRow, ensureNewestUpdate = true) {
-
-        if (ensureNewestUpdate) {
-            const latestState = await this.getTask(task.id);
-            if (latestState.lastUpdate > task.lastUpdate) {
-                console.error(`Cannot update - There's a newer version of this task in the db: ${task.id}/${task.title}`);
-                return latestState;
-            }
-        }
+    public async updateTask(task: TaskRow) {
 
         await this.db.run(`
             update tasks
@@ -159,8 +147,7 @@ export class TaskService {
                 parent = $parent,
                 secondsActive = $secondsActive,
                 completed = $completed,
-                deadline = $deadline,
-                lastUpdate = $lastUpdate
+                deadline = $deadline
             where id = $id;
         `, {
             '$id': task.id,
@@ -169,8 +156,7 @@ export class TaskService {
             '$parent': task.parent,
             '$secondsActive': task.secondsActive,
             '$completed': task.completed,
-            '$deadline': task.deadline,
-            '$lastUpdate': task.lastUpdate
+            '$deadline': task.deadline
         });
         const updatedTask = await this.getTask(task.id);
         return updatedTask!;
