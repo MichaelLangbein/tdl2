@@ -1,37 +1,44 @@
 
 export class Queue<T> {
-    private data: (T | null)[];
-    private head = 0;
-    private tail = 0;
+    private data: T[] = [];
 
-    constructor(capacity: number) {
-        this.data = Array(capacity).fill(0).map(v => null);
+    public enqueue(entry: T) {
+        this.data.push(entry);
     }
 
-    public enqueue(val: T): boolean {
-        const location = this.tail;
-        if (!this.data[location]) {
-            this.data[location] = val;
-            this.tail = this.shiftUp(this.tail);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public dequeue() {
-        const location = this.head;
-        const data = this.data[location];
-        this.data[location] = null;
-        this.head = this.shiftUp(location);
-        return data;
-    }
-
-    private shiftUp(n: number) {
-        return (n + 1) % this.data.length;
+    public dequeue(): T | undefined {
+        return this.data.shift();
     }
 }
 
+export class PriorityQueue<T> {
+    private data: {[priority: number]: T[]} = {};
+
+    public enqueue(entry: T, priority: number) {
+        if (!this.data[priority]) {
+            this.data[priority] = [];
+        }
+        this.data[priority].push(entry);
+    }
+
+    public dequeue(): T | undefined {
+        const highestPriority = this.getHighestPriority();
+        if (highestPriority === -Infinity) return undefined;
+        return this.data[highestPriority].shift();
+    }
+
+    private getHighestPriority() {
+        let highestPrio = -Infinity;
+        for (const prio in this.data) {
+            if (+prio > highestPrio) {
+                if (this.data[prio].length > 0) {
+                    highestPrio = +prio;
+                }
+            }
+        }
+        return highestPrio;
+    }
+}
 
 
 export type SetEqualityFunction<T> = (a: T, b: T) => boolean;

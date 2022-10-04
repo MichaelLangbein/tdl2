@@ -1,0 +1,1 @@
+cp .\backend\data\tdl.db D:\tdlSicherung\
