@@ -2,8 +2,8 @@
 
 ## Basics
 Kraft F [N]
-Energie E [J] = F*x  . Auch gegeben in 1 kWh = 3.600.000 J
-Leistung P [W] = E / t
+Arbeit W [J] = F*x [N*m] . Auch gegeben in 1 kWh = 3.600.000 J
+Leistung P [W] = W / t [J/s]
 
 ## Kleinste 
 1 Fahrradfahrer trampelt mit ~ 100W.
@@ -17,6 +17,7 @@ Energie-Preis Deutschland: ~ 30Ct/kWh
 
 Ein Deutscher verbraucht etwa 120 kWh Energie am Tag.
 (Indien: 20kWh, China: 75kWh, US: )
+Der durchschnittliche Stromverbrauch eines 1-Personen-Haushalts in Deutschland liegt bei 1.300 kWh im Jahr [Quelle](https://www.stromauskunft.de/stromverbrauch/wie-viel-strom-verbraucht-eine-person/).
 
 ## Größte
 
