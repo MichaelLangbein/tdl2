@@ -9,9 +9,16 @@
 ## CLI
 
 - `rails new blog`
-- `./bin/rails server`
-- `./bin/rails generate`
-- `./bin/rails console`
+- `rails server`
+- `rails generate`
+  - `model <name> [filename:type]`
+  - `controller <name> <method-names>`
+  - `scaffold <name> [field:type]`.
+- `rails console`
+- `rails db`
+  - `:migrate`
+  - `:rollback`
+
 
 
 
@@ -77,6 +84,7 @@ Important functions:
 - creates/updates `db/schema.rb` (basically the *.d.ts file for your database)
 - applies changes to actual db
 
+
 ```irb
 task = Task.new title: "Base task", description: "Learn rails"
 task.save
@@ -111,7 +119,8 @@ Evaluated form-data is put into the `params` variable.
 
 
 ## Authentication
-
+Easiest done with [devise](https://github.com/heartcombo/devise#starting-with-rails):
+`$ rails generate devise <your-user-model-name>`
 
 
 ## Console

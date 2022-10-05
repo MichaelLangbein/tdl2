@@ -21,8 +21,8 @@ In the wiki: https://wiki.openstreetmap.org/wiki/Relation:route#Bus_routes_.28al
      - area
   - `(node|way|rel)[]`: logically filter the statement
      - `node[key]`: get all nodes that have `key`
-     - `node[key=val]`: get all nodes where `key=val`
-     - `node[key1=val1][key2=val2]`: get all nodes where `key1=val1` and `key2=val2`
+     - `way[key=val]`: get all ways where `key=val`
+     - `rel[key1=val1][key2=val2]`: get all relations where `key1=val1` and `key2=val2`
   - `(bbox)`: spatially filter the statement
   - You can get the union of two sets with 
     `(statement1; statement2;)->.unionSet;`
@@ -36,7 +36,7 @@ In the wiki: https://wiki.openstreetmap.org/wiki/Relation:route#Bus_routes_.28al
         - `rel(bw);`  select relations that have way members in the input set
         - `rel(r);`   select relation members of relations in the input set
         - `rel(br);`  select parent relations from relations in the input set
-    - `n, w, r, bn, bw, br` on named sets:
+    - `n, w, r, bn, bw, br` on named sets. This is weirdly red from *right to left*.
       - `node(w.foo);`         select child nodes from ways in the "foo" input set
       - `node(r.foo:"role");`  select node members with role "role" of relations in the "foo" input set
     - arrow-shorthand
