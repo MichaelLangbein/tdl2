@@ -13,9 +13,10 @@ if [[ $compile == "y" || $compile == "Y" ]]; then
     npm run build
 fi
 
-cd $thisDir/frontend
-gnome-terminal -- npm run host:locally
 cd $thisDir/backend
 gnome-terminal -- npm run run:prod
+cd $thisDir/frontend
+gnome-terminal -- npm run host:locally
+
 
 
