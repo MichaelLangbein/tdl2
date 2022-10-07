@@ -528,3 +528,40 @@ for i, result in enumerate(solve(vars, facs)):
 # %%
 
 ```
+
+
+
+## Markov decision processes
+
+We move from *state* to state through *action*s.
+Actions applied to a state yield another state *probabilistic*ally.
+Arriving at a new state yields some *reward*.
+We try to find a *policy* which maximizes our *cumulative* reward, aka. the *value*.
+
+- $s$: **State**.
+- $a$: **Action**. Probabilistic - might result in $s' = s_1$ or $s' = s_2$ or ...
+- $P_a(s, s') = P(s_{t+1} = s' | s_t = s, a_t = a)$: **Transition probabilities**
+- $R_a(s, s')$: Immediate **reward** for getting to state $s'$ from $s$ through $a$
+- $\pi(s) = a$: **Policy**: decides on which action to take given a state.
+
+
+Once a policy $\pi$ has been decided on, this process reduces to a Markov-chain.
+$P(s' | s, a)$ reduces to $P(s' | s)$.
+
+The objective is to chose a $\pi$ that will maximize my cumulative reward: 
+
+$$ E[\Sigma_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ] $$
+Where $\gamma$ is some discount value $0 \leq \gamma \leq 1$ which accounts for the fact that I'd rather have my earnings today than tomorrow.
+
+
+
+Given a policy we can calculate our value per state:
+$$ V(s) = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)(s, s') + \gamma V(s')} ] $$
+(Note that this is a recursive calculation)
+
+
+And we can chose $pi(s)$ like so:
+$$ \pi(s) = \text{argmax}_a \{ \Sigma_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \} $$
+
+
+This requires a lot of back- and forth-iteration, but will eventually yield a correct solution.
