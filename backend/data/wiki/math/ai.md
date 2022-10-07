@@ -550,18 +550,66 @@ $P(s' | s, a)$ reduces to $P(s' | s)$.
 
 The objective is to chose a $\pi$ that will maximize my cumulative reward: 
 
-$$ E[\Sigma_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ] $$
+$$ E[ \Sigma_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ] $$
 Where $\gamma$ is some discount value $0 \leq \gamma \leq 1$ which accounts for the fact that I'd rather have my earnings today than tomorrow.
 
+The value $V = E[U]$ is defined as the expected reward. This expands to:
+$$
+\begin{aligned}
+U    &= R(s_1 | s_0) + \gamma R(s_2 | s_1) + ...  \\
+E[U] &= E[R(s_1 | s_0)] + \gamma E[R(s_2 | s_1)] + ... \\
+     &= \Sigma_{s_1} P(s_1) R(s_1 | s_0) + \gamma \Sigma_{s_1} P(s_1) E | s_1[R(s_2 | s_1)]   + ... \\
+     &= \Sigma_{s_1} P(s_1) R(s_1 | s_0) + \gamma \Sigma_{s_1} \Sigma_{s_2} P(s_1) P(s_2 | s_1) R(s_2 | s_1) + ...
+\end{aligned}
+$$
+
+This is a recursive calculation. So, given a policy we can calculate our value per state:
+$$ V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')] $$
 
 
-Given a policy we can calculate our value per state:
-$$ V(s) = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)(s, s') + \gamma V(s')} ] $$
-(Note that this is a recursive calculation)
 
-
-And we can chose $pi(s)$ like so:
-$$ \pi(s) = \text{argmax}_a \{ \Sigma_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \} $$
+And we can chose $\pi(s)$ like so:
+$$ \pi(s) | V = \text{argmax}_a \{ \Sigma_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \} $$
 
 
 This requires a lot of back- and forth-iteration, but will eventually yield a correct solution.
+
+
+```python
+def calcValue(policy, s):
+    if isEndState(s):
+        return 0
+    a = policy[s]
+    v = 0
+    for sNext in S:
+        vNow = reward(sNext, s, a)
+        vFut = calcValue(policy, sNext)
+        v += prob(sNext, s, a) * (vNow + gamma * vFut)
+    return v
+
+
+def calcPolicy(value, s):
+    vMax = 0
+    for a in A:
+        v = 0
+        for sNext in S:
+            vNow = reward(sNext, s, a)
+            vFut = value[sNext]
+            v += prob(sNext, s, a) * (vNow + gamma * vFut)
+        if v > vMax:
+            vMax = v
+            aOpt = a
+    return aOpt
+
+p = {...}
+v = {...}
+while delta > 0.01:
+    pLast = p
+    for s in S:
+        v[s] = calcValue(p, s)
+    for s in S:
+        p[s] = calcPolicy(v, s)
+    delta = maxDif(p, pLast)
+
+
+```
