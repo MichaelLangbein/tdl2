@@ -17,6 +17,7 @@ Libraries:
 Service-providers:
 - **Auth0**: auth-service-provider
 - **ActiveDirectory**: A microsoft auth-service-provider that uses LDAP or others
+- **Keycloak**: Self-hostable, open-source alternative to auth0
 
 
 

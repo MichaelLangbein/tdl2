@@ -19,6 +19,18 @@ Log in to admin db
 Good admin tool: pgAdmin3
 
 
+## Most common commands
+- `\l`: list databases
+- `\c <db-name>`: use database
+- `\dt`: list tables
+- `\d <table-name>`: describe table
+- `\dn`: list schemes
+- `\df`: list functions
+- `\dv`: list views
+- `\i <file-name>`: execute psql commands from a file
+- `\copy`
+
+
 ## Performance-settings
 
 

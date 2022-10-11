@@ -569,47 +569,93 @@ $$ V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')
 
 
 And we can chose $\pi(s)$ like so:
-$$ \pi(s) | V = \text{argmax}_a \{ \Sigma_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \} $$
+$$ 
+\begin{aligned}
+    &\forall s \in S: \\
+    &\pi(s) | V = \text{argmax}_a \{ \Sigma_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \} 
+\end{aligned}
+$$
 
 
-This requires a lot of back- and forth-iteration, but will eventually yield a correct solution.
+This requires a lot of recursion, but will eventually yield a correct solution.
 
 
 ```python
-def calcValue(policy, s):
+def evalPolicy(policy, s):
     if isEndState(s):
         return 0
     a = policy[s]
     v = 0
     for sNext in S:
         vNow = reward(sNext, s, a)
-        vFut = calcValue(policy, sNext)
+        vFut = evalPolicy(policy, sNext)
         v += prob(sNext, s, a) * (vNow + gamma * vFut)
     return v
 
+```
 
-def calcPolicy(value, s):
-    vMax = 0
-    for a in A:
-        v = 0
-        for sNext in S:
-            vNow = reward(sNext, s, a)
-            vFut = value[sNext]
-            v += prob(sNext, s, a) * (vNow + gamma * vFut)
-        if v > vMax:
-            vMax = v
-            aOpt = a
-    return aOpt
 
-p = {...}
-v = {...}
-while delta > 0.01:
-    pLast = p
-    for s in S:
-        v[s] = calcValue(p, s)
-    for s in S:
-        p[s] = calcPolicy(v, s)
-    delta = maxDif(p, pLast)
 
+### Better performance for MDPs
+A policies value is calculated recursively:
+$$ V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')] $$
+But in practice, that $V(s')$ is problematic: this keeps recursing down until at some point `isEndState(s) == true`.
+
+We can get a better performance by employing *iterative easing*:
+$$
+\begin{aligned}
+  & \text{while } V^{new} - V^{old} > \epsilon: \\
+  & V^{old} = V^{new} \\
+  & V^{new}(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V^{old}(s')]
+\end{aligned}
+$$
+
+Note how $V^{old}(s')$ is now no longer a recursive call, but evaluates immediately.
+
+```python 
+def qValue(state, action, Vold):
+    if isEndState(state):
+        return 0
+    v = 0
+    for sNext in S:
+        vNow = reward(sNext, state, action)
+        vFut = Vold[sNext]
+        p = prob(sNext, state, action)
+        v += p * (vNow + gamma * vFut)
+    return v
+
+
+def evalStrategy(strategy):
+    Vnew = {s: 0 for s in S}
+    error = 99999
+    while error > 0.05:
+        Vold = Vnew
+        Vnew = {}
+        for s in S:
+            action = strategy[s]
+            Vnew[s] = qValue(s, action, Vold)
+        error = errorFunc(Vnew, Vold)
+    return Vnew
+
+
+
+def optimalStrategy():
+    strategy = {}
+    Vnew = {s: 0 for s in S}
+    error = 99999
+    while error > 0.05:
+        Vold = Vnew
+        Vnew = {}
+        for s in S:
+            maxQs = -99999
+            for a in A:
+                qs = qValue(s, a, Vold)
+                if qs > maxQs:
+                    maxQs = qs
+                    strategy[s] = a
+            Vnew[s] = maxQs
+        error = errorFunc(Vnew, Vold)
+    return strategy
 
 ```
+
