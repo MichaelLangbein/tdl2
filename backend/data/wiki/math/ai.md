@@ -601,16 +601,17 @@ A policies value is calculated recursively:
 $$ V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')] $$
 But in practice, that $V(s')$ is problematic: this keeps recursing down until at some point `isEndState(s) == true`.
 
-We can get a better performance by employing *iterative easing*:
+We can get a better performance by employing **contraction mapping**:
 $$
 \begin{aligned}
-  & \text{while } V^{new} - V^{old} > \epsilon: \\
-  & V^{old} = V^{new} \\
-  & V^{new}(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V^{old}(s')]
+  V^{new}, & V^{old}: \text{dictionaries} \\
+  \text{while } & V^{new} - V^{old} > \epsilon: \\
+                & V^{old} = V^{new} \\
+                & V^{new}[s] | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V^{old}[s']]
 \end{aligned}
 $$
 
-Note how $V^{old}(s')$ is now no longer a recursive call, but evaluates immediately.
+Note how $V^{old}[s']$ is now no longer a recursive call, but evaluates immediately.
 
 ```python 
 def qValue(state, action, Vold):
@@ -659,3 +660,43 @@ def optimalStrategy():
 
 ```
 
+### Contraction mapping: background information
+Contraction mapping is an elegant way of increasing the performance of dynamic programming.
+For some functions $f$ it allows us to replace recursive calls ...
+```python
+def f(arg):
+    return ... f(arg) ... # recursive
+f(a)
+```
+... with an easing-code:
+```python
+def f(a, fOld):
+    return ... fOld ... # non-recursive
+fNew = 0
+while |fNew - fOld| > e:
+    fOld = fNew
+    fNew = f(a, fOld)
+```
+
+A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
+$$ f(x_{fix}) = x_{fix} $$
+
+
+A **contraction** is a function $f: X \to X$ for which:
+$$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq  |x_1 - x_2|$$
+
+In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ *again* to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
+
+- If a function is a contraction, it has one unique fixed point $x_{fix}$.
+- $ \forall x \in X: x, f(x), f(f(x)), ... $ converges to the fixed point $x_{fix}$
+
+
+
+
+Applying this to our MDP:
+- $x = f(x)$ maps to `V = evalPolicy() # recursive`
+- $x_1$ maps to `vOld`
+- $x_{fix} = f(f(f(x_1)))$ maps to `vNew = qVal(qVal(qVal(vOld)))`
+
+
+By the way: Contraction-mapping [is a slightly more general form of Newton's method](https://schoolbag.info/mathematics/advanced/18.html).
