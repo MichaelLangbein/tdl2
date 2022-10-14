@@ -51,6 +51,24 @@ PPA's worth knowing:
   - remove package: `apt remove apache2` or `apt purge apache2` (also deletes config files)
 
 
+## Other package-mechanisms
+
+- apt
+    - Distribution-dependent
+    - A package shares it's requirements with other packages
+- Snap
+    - For many (debian-like) distros, including IOT
+    - Packages all requirements
+- Flatpack
+    - Sandboxed, no root privileges
+- AppImage
+    - One guy
+    - Like exes on Windows
+    - All bundled together in one file; so deletion is also just `rm <appimage-filename>`
+    - No standardized way of updating
+    - https://appimage.github.io/apps/ 
+
+
 ## directories
 
 - `/bin`: system-wide executables
