@@ -150,7 +150,7 @@ export function estimateTime(taskId: number, tree: TaskTree) {
 }
 
 
-export function estimateTree(tree: EstimatedTaskTree) {
+export function estimateTree(tree: TaskTree): EstimatedTaskTree {
 
     function memo(f) {
         const cache = {};
@@ -178,7 +178,6 @@ export function estimateTree(tree: EstimatedTaskTree) {
 
 
     const leveledTree = addLevelInfo(tree, 0);
-    if (countCompletedNodes(leveledTree) < 1) return 0;
     const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
 
     const estimatedTree = estimateRecursive(leveledTree, timesOnLevels, childrenOnLevels);

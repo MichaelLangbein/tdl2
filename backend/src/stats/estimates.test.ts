@@ -68,7 +68,6 @@ describe("Estimates", () => {
 
         // task-3 has been active as long as task-2 ... so an estimate should say that task-3 should be done soon.
         const estimates3 = estimateTime(3, tree);
-        console.log(estimates3)
         expect(estimates3).toBeTruthy();
         expect(estimates3['tdvs']).toBeDefined();
         expect(estimates3['buvs']).toBeDefined();
@@ -77,7 +76,6 @@ describe("Estimates", () => {
 
         // task-4 has not been active yet ... an estimate should say that task-4 should take about as long as task-2.
         const estimates4 = estimateTime(4, tree);
-        console.log(estimates4)
         expect(estimates4).toBeTruthy();
         expect(estimates4['tdvs']).toBeDefined();
         expect(estimates4['buvs']).toBeDefined();

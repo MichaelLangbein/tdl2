@@ -3,9 +3,10 @@ import cors from "cors";
 import fileUpload, { FileArray } from "express-fileupload";
 import { DbAction, TaskRow, TaskService, TaskTree } from '../model/task.service';
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from '../files/files';
-import { estimateTime } from "../stats/estimates";
+import { estimateTime, estimateTreeTime } from "../stats/estimates";
 import { FileService } from '../files/fileService';
 import { CardService } from '../model/card.service';
+import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 
 
 export function appFactory(taskService: TaskService, fileService: FileService, cardService: CardService) {
@@ -148,9 +149,9 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
             }
         }
 
-        const rootId = getCommonRoot(ids);
-        const fullTree = taskService.getSubtree(rootId, 30, true);
-        const estimatedTree = estimateTreeTime(rootId);
+        const fullTree = await taskService.getSubtree(1, 30, true);
+        const minimumSpanningTree = filterToParentNode(ids, fullTree);
+        const estimatedTree = estimateTreeTime(minimumSpanningTree);
         const estimatedUnfinishedTree = filterTree(estimatedTree, node => !(node.completed));
 
         res.send(estimatedUnfinishedTree);

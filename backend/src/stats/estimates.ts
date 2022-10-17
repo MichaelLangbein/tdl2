@@ -1,6 +1,6 @@
 import { TaskTree } from '../model/task.service';
-import { estimateTime as tdvs } from './tdvs';
-import { estimateTime as buvs } from './buvs';
+import { estimateTime as tdvs, estimateTree as tdvsRec } from './tdvs';
+import { estimateTime as buvs, estimateTree as buvsRec } from './buvs';
 
 
 
@@ -17,11 +17,14 @@ export interface EstimatedTaskTree extends TaskTree {
     estimates: {
         'tdvs': number,
         'buvs': number,
-    }
+    },
+    children: EstimatedTaskTree[]
 }
 
 export function estimateTreeTime(tree: TaskTree): EstimatedTaskTree {
-
+    tree = tdvsRec(tree);
+    tree = buvsRec(tree);
+    return tree as EstimatedTaskTree;
 }
 
 

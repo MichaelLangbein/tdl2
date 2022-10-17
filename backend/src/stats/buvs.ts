@@ -182,3 +182,39 @@ export function estimateTime(taskId: number, tree: TaskTree) {
     return e;
 }
 
+
+
+export function estimateTree(tree: TaskTree): EstimatedTaskTree {
+
+    function memo(f) {
+        const cache = {};
+        function memoized(target: EstimatedTaskTree, timesOnLevels, childrenOnLevels) {
+            if (cache[target.id]) return cache[target.id];
+            const estimate = f(target, timesOnLevels, childrenOnLevels);
+            cache[target.id] = estimate;
+            return estimate;
+        }
+        return memoized;
+    }
+    //@ts-ignore
+    estimate = memo(estimate);
+
+    function estimateRecursive(tree: LeveledTaskTree, timesOnLevels, childrenOnLevels): EstimatedTaskTree {
+        for (let i = 0; i < tree.children.length; i++) {
+            (tree as any).children[i] = estimateRecursive(tree.children[i], timesOnLevels, childrenOnLevels);
+        }
+        if (!(tree as any).estimates) {
+            (tree as any).estimates = {};
+        }
+        (tree as any).estimates['buvs'] = estimate(tree, timesOnLevels, childrenOnLevels);
+        return tree as any;
+    }
+
+
+    const maxLevel = addLevelInfo(tree);
+    const leveledTree = tree as LeveledTaskTree;
+    const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
+
+    const estimatedTree = estimateRecursive(leveledTree, timesOnLevels, childrenOnLevels);
+    return estimatedTree;
+}
