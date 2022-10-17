@@ -12,3 +12,18 @@ export function estimateTime(taskId: number, tree: TaskTree) {
         'buvs': eBuvs
     };
 }
+
+export interface EstimatedTaskTree extends TaskTree {
+    estimates: {
+        'tdvs': number,
+        'buvs': number,
+    }
+}
+
+export function estimateTreeTime(tree: TaskTree): EstimatedTaskTree {
+
+}
+
+
+
+

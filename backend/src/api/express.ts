@@ -126,15 +126,19 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
     });
 
     app.post("/subtree/actionQueue", async (req, res) => {
+
         const actions: DbAction[] = req.body;
+        const ids: number[] = [];
         for (const action of actions) {
             switch (action.type) {
                 case 'create':
-                    await taskService.createTask(
+                    const trc = await taskService.createTask(
                         action.args.title, action.args.parentId, action.args.created);
+                    ids.push(trc.id);
                 case 'update':
                     const updatedRow: TaskRow = action.args;
-                    await taskService.updateTask(updatedRow);
+                    const tru = await taskService.updateTask(updatedRow);
+                    ids.push(tru.id);
                 case 'delete':
                     await taskService.deleteTask(action.args.id);
                 case 'addFile':
@@ -143,7 +147,13 @@ export function appFactory(taskService: TaskService, fileService: FileService, c
                     console.error(`No such DbAction: ${action.type}`);
             }
         }
-        res.send(true);
+
+        const rootId = getCommonRoot(ids);
+        const fullTree = taskService.getSubtree(rootId, 30, true);
+        const estimatedTree = estimateTreeTime(rootId);
+        const estimatedUnfinishedTree = filterTree(estimatedTree, node => !(node.completed));
+
+        res.send(estimatedUnfinishedTree);
     });
 
     

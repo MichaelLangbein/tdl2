@@ -1,5 +1,6 @@
 import { TaskTree } from '../model/task.service';
 import { Queue } from '../utils/datastructures';
+import { EstimatedTaskTree } from './estimates';
 import { estimateMean, ExponentialDistribution } from './stats.utils';
 
 
@@ -47,9 +48,6 @@ function estimate(node: LeveledTaskTree, timesOnLevels: levelTimeDists, children
     // returning sum of the above
     return expectedTimeSelf + expectedTimeChildren + expectedTimeExpectedChildren;
 }
-
-
-
 
 
 
@@ -149,4 +147,40 @@ export function estimateTime(taskId: number, tree: TaskTree) {
     const target = getNodeWithId(taskId, leveledTree)!;
     const e = estimate(target, timesOnLevels, childrenOnLevels);
     return e;
+}
+
+
+export function estimateTree(tree: EstimatedTaskTree) {
+
+    function memo(f) {
+        const cache = {};
+        function memoized(target: EstimatedTaskTree, timesOnLevels, childrenOnLevels) {
+            if (cache[target.id]) return cache[target.id];
+            const estimate = f(target, timesOnLevels, childrenOnLevels);
+            cache[target.id] = estimate;
+            return estimate;
+        }
+        return memoized;
+    }
+    //@ts-ignore
+    estimate = memo(estimate);
+
+    function estimateRecursive(tree: LeveledTaskTree, timesOnLevels, childrenOnLevels): EstimatedTaskTree {
+        for (let i = 0; i < tree.children.length; i++) {
+            (tree as any).children[i] = estimateRecursive(tree.children[i], timesOnLevels, childrenOnLevels);
+        }
+        if (!(tree as any).estimates) {
+            (tree as any).estimates = {};
+        }
+        (tree as any).estimates['tdvs'] = estimate(tree, timesOnLevels, childrenOnLevels);
+        return tree as any;
+    }
+
+
+    const leveledTree = addLevelInfo(tree, 0);
+    if (countCompletedNodes(leveledTree) < 1) return 0;
+    const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
+
+    const estimatedTree = estimateRecursive(leveledTree, timesOnLevels, childrenOnLevels);
+    return estimatedTree;
 }

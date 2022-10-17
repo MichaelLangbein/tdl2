@@ -1,5 +1,6 @@
 import { TaskTree } from '../model/task.service';
 import { Queue } from '../utils/datastructures';
+import { EstimatedTaskTree } from './estimates';
 import { ExponentialDistribution } from './stats.utils';
 
 
@@ -180,3 +181,4 @@ export function estimateTime(taskId: number, tree: TaskTree) {
     const e = estimate(target, timesOnLevels, childrenOnLevels);
     return e;
 }
+
