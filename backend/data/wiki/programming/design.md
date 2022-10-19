@@ -34,8 +34,10 @@ This is about how to visualize attribute types: categorical, ordered, quantitati
 
 Using:
 
- - Marks: Point, line, area
- - Channels: Position, color, size
+ - Marks are things to be displayed: 
+   - Numbers, key-value pairs, ...
+ - Channels are properties of those marks: 
+   - Position, shape, color, size, opacity, texture, tooltips, ...
 
 Typically, a row in your csv is a mark, and a column is a channel.
 
