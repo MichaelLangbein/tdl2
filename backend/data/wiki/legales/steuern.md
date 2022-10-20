@@ -38,7 +38,7 @@ Einkommenssteuer für GmbHs, AGs etc
 
 
 ## Gewerbesteuer
-Nicht für Freiberufler!
+Nicht für Freiberufler ... aber schon für Kleingewerbe!
 Vierteljährlich muss fester Betrag an Gemeinde gezahlt werden. Genannt "Hebesatz", denn natürlich heist der so.
 Gilt ab einem Gewinn > 24.500€
 Je nach Gemeinde. Ca. 45%, kann teilweise von Einkommenssteuer als Steuerermäßigung abgesetzt werden.
