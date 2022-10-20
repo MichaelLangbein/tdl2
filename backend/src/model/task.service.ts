@@ -229,9 +229,9 @@ export class TaskService {
         if (level > 0) {
             const childIds = await this.getChildIds(id);
             for (const childId of childIds) {
-                const childTree = await this.getSubtree(childId, level - 1); // @TODO: do in parallel?
+                const childTree = await this.getSubtree(childId, level - 1, includeCompleted); // @TODO: do in parallel?
                 if (childTree) {
-                    if (!childTree!.completed || includeCompleted) {
+                    if ( (!childTree.completed) || includeCompleted ) {
                         taskTree.children.push(childTree);
                     }
                 }

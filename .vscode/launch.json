@@ -5,25 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ts-node",
+            "name": "ts-node index.ts",
             "type": "node",
             "request": "launch",
             "args": [
-                "${relativeFile}"
+                "src/index.ts"
             ],
             "runtimeArgs": [
                 "-r",
                 "ts-node/register"
             ],
-            "cwd": "${workspaceRoot}\\backend",
-            "protocol": "inspector",
+            "cwd": "${workspaceRoot}/backend",
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "name": "Jest file",
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
-            "runtimeExecutable": "${workspaceRoot}\\backend\\node_modules\\.bin\\jest",
+            "runtimeExecutable": "${workspaceRoot}/backend/node_modules/.bin/jest",
             "args": [
                 "${fileBasenameNoExtension}",
                 "--runInBand",
@@ -31,13 +30,10 @@
                 "--coverage=false",
                 "--no-cache"
             ],
-            "cwd": "${workspaceRoot}\\backend",
+            "cwd": "${workspaceRoot}/backend",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "sourceMaps": true,
-            "windows": {
-                "program": "${workspaceFolder}\\backend\\node_modules\\jest\\bin\\jest"
-            }
         },
     ]
 }
