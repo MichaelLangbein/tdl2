@@ -27,7 +27,9 @@ Cheat-sheet:
   - config
     - --add channels conda-forge
     - --remove channels defaults
-    - --set channel_priority strict
+    - --set 
+      - channel_priority strict
+      - auto_activate_base false
     - --show channels
     - Or just alter `.condarc`
   - create 
