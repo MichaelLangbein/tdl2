@@ -23,6 +23,7 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
         - `pull`
         - `rm <imagename>`
         - `build --tag=<nameofappalllowercase> .`: package your app and send it to `/var/lib/docker/images`
+          - `--file=<path/to>/Dockerfile`
         - `save -o <path-to-tar-file> <name-of-image>`
         - `load -i <path-to-tar-file>/ `
         - `prune -a`: removes un-used, dangling images
@@ -87,6 +88,15 @@ Dockerfile
 
 
 ## Composefile syntax
+
+- `build`: path to a docker-file, or an object containing the sub-instructions:
+  - `context`: path from which to run `docker build`
+  - `dockerfile`: path to Dockerfile relative form `context`
+  - `args`: object containing arg-names and values
+- `image`: id of an image on docker-hub
+  - or, if build is also specified: `tag`name under which the built image is to be saved
+
+
 docker-compose.yml
 ```yml
 version: '3'
