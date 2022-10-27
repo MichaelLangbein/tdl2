@@ -177,6 +177,7 @@ export function estimateTime(taskId: number, tree: TaskTree) {
     const leveledTree = tree as LeveledTaskTree;
     if (countCompletedNodes(leveledTree) < 1) return 0;
     const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
+    // console.log('buvs - statistics'); console.table(timesOnLevels); console.table(childrenOnLevels);
     const target = getNodeWithId(taskId, leveledTree)!;
     const e = estimate(target, timesOnLevels, childrenOnLevels);
     return e;

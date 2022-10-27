@@ -8,16 +8,23 @@
 
 ## CLI
 
-- `rails new blog`
-- `rails server`
-- `rails generate`
-  - `model <name> [filename:type]`
-  - `controller <name> <method-names>`
-  - `scaffold <name> [field:type]`.
-- `rails console`
-- `rails db`
-  - `:migrate`
-  - `:rollback`
+- `bundle`
+  - `install`
+  - `add <gem-name>`
+  - `update`
+- `rails`
+  - `new blog`
+  - `server`
+  - `generate`
+    - `model <name> [filename:type]`
+    - `controller <name> <method-names>`
+    - `scaffold <name> [field:type]`
+    - `migration <migration-description>`
+  - `console`
+  - `db`
+    - `:migrate`
+    - `:rollback`
+      - `VERSION=<roll-back-all-including-this-date>`
 
 
 
@@ -130,7 +137,7 @@ A wrapper around `irb` that knows about the current state of your rails-app.
 
 
 ## Active Storage
-Metadata stored in 3 tables. Create those with `./bin/rails active_storage:install`.
+Metadata stored in 3 tables. Create those with `rails active_storage:install`.
 Configuration of which storage-engine to use is defined in `config/storage.yml`.
 
 

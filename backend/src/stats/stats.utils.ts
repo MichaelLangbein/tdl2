@@ -46,6 +46,10 @@ export class ExponentialDistribution {
     public conditionalExpectation(x0: number) {
         return x0 + this.expectation();
     }
+
+    public toString() {
+        return `exp(λ=${this.lambda})`;
+    }
 }
 
 
@@ -64,6 +68,10 @@ export class NormalDistribution {
         const normalizer = 1.0 / (sigma * Math.sqrt(2.0 * Math.PI));
         const exponent = - 0.5 * Math.pow((x - mu) / sigma, 2);
         return normalizer * Math.exp(exponent);
+    }
+
+    public toString() {
+        return `normal(μ=${this.mu}, σ=${this.sigma})`;
     }
 }
 

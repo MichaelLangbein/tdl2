@@ -144,6 +144,7 @@ export function estimateTime(taskId: number, tree: TaskTree) {
     const leveledTree = addLevelInfo(tree, 0);
     if (countCompletedNodes(leveledTree) < 1) return 0;
     const { timesOnLevels, childrenOnLevels } = estimateDistributions(leveledTree);
+    // console.log('tdvs - statistics'); console.table(timesOnLevels); console.table(childrenOnLevels);
     const target = getNodeWithId(taskId, leveledTree)!;
     const e = estimate(target, timesOnLevels, childrenOnLevels);
     return e;
