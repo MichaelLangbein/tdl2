@@ -53,14 +53,16 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
     
 ...
 
-- `docker-compose` 
-    - `up -d`
-        - `docker-compose up -d --no-deps --build elasticsearch` to run *and* force a rebuild of a single existing image within the images of the compose.
-    - `build`: like `up`, but rebuilds when a dockerfile changes.
-        -  `docker-compose build --no-cache elasticsearch` to force a rebuild of a single existing image within the images of the compose.
+- `docker compose` 
+    - `up <optional-container-name>`: builds containers if not already there, starts if not already started
+        - `--build`: force rebuild
+        - `--no-deps`:  don't (re-)start linked containers
+    - `build <optional-container-name>`: only builds, doesn't start containers.
+        -  `--no-cache`: ignore cached layers; re-build from scratch
     - `start`: starts a `stop`'ed set of containers.
     - `stop`: stops the containers.
     - `down`: stops the containers and deletes them (but leaves the images intact).
+      - `-v`: also removes volumes
         
 
 To stop, rebuild and restart a single container:
