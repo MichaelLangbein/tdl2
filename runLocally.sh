@@ -1,5 +1,9 @@
 #! /bin/bash
 
+
+isZsh=$( -n "ZSH_VERSION" )
+isBash=$( -n "$BASH_VERION" )
+
 thisDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 
@@ -13,10 +17,20 @@ if [[ $compile == "y" || $compile == "Y" ]]; then
     npm run build
 fi
 
-cd $thisDir/backend
-gnome-terminal -- npm run run:prod
-cd $thisDir/frontend
-gnome-terminal -- npm run host:locally
+if $isBash; then
+	cd $thisDir/backend
+	gnome-terminal -- npm run run:prod
+	cd $thisDir/frontend
+	gnome-terminal -- npm run host:locally
+fi
 
+if $isZsh; then
+	osascript -e 'tell app "Terminal"
+		do script "cd $thisDir/backend && npm run run:prod"
+	end tell'
+	osascript -e 'tell app "Terminal"
+		do script "cd $thisDir/frontend && npm run host:locally"
+	end tell'
+fi
 
 
