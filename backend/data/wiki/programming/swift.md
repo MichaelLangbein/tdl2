@@ -25,7 +25,14 @@ let dict = [
     500: "Internal server error"
 ]
 
+
+// guard
+// some
+
 ```
+
+
+
 
 ## SwiftUI
 
@@ -38,6 +45,12 @@ let dict = [
 
 
 ### Important components
+
+#### Images
+- `Image`: SwiftUI Image - a view
+- `UIImage`: UIKit Image - the old style version of `Image`, more compatible with apple's image-processors
+- `CGImage`: Core graphics image
+- `CIImage`: 
 
 
 ### Routing
