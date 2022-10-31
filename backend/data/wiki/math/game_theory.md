@@ -137,7 +137,9 @@ Some notes:
 A similar game is the soccer-penalty-kick game. Here's something interesting: shooting into the middle is never a best response. But if the goalie knows you'll never shoot into the middle, then he'll account for that - making shooting in the middle a very good option for you again. This is an example where iterating the game (like in the gas-station example) does *not* reduce our possible strategies. We may initially remove never-best-responses, but immediately have to add them in again after one iteration.
 
 
+## Sharing homework: iteratively deleting never-best-responses and Nash-equilibrium
 
+...
 
 
 
