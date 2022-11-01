@@ -1,3 +1,7 @@
+# Resources
+- Paul Hudson
+
+
 # Swift
 
 ## Language basics
@@ -34,31 +38,83 @@ let dict = [
 
 
 
-## SwiftUI
+# SwiftUI
 
-### State
+## State
 
-- `@state`: local, primitive state
-- `@objectBinding`: local or passable complex state
+- `@State`: local, primitive state
+- `@ObjectBinding`: local or passable complex state
 - `$variableName`: two-way binding
-- `@environmentObject`: global state
+- `@EnvironmentObject`: global state
+
+```swift
+@State var toggled = false
+var body: some View {
+    VStack {
+        Text("The toggle is \(toggled ? "true" : "false")")
+        Toggle("Toggle me", isOn: $toggled)
+    }
+}
+```
+
+```swift
+// A class, not a struct. We want one instance shared between all views.
+class StateContainer: ObservableObject {
+    @Published var toggle = false
+}
+
+struct ContentView: View {
+    @StateObject var sc = StateContainer()
+    var body: some View {
+        VStack {
+            ToggleWriterView()
+            ToggleReaderView()
+        }
+        .environmentObject(sc)
+    }
+}
+
+struct ToggleReaderView: View {
+    @EnvironmentObject var sc: StateContainer
+    var body: some View {
+        Text("The toggle is \(sc.toggle ? "on" : "off" )")
+    }
+}
+
+struct ToggleWriterView: View {
+    @EnvironmentObject var sc: StateContainer
+    @State var toggled = false
+    var body: some View {
+        Toggle("toggle", isOn: $toggled)
+            .onChange(of: toggled) {toggled in
+                sc.toggle = toggled
+            }
+    }
+}
+```
 
 
-### Important components
-
-#### Images
+## Images
 - `Image`: SwiftUI Image - a view
 - `UIImage`: UIKit Image - the old style version of `Image`, more compatible with apple's image-processors
 - `CGImage`: Core graphics image
 - `CIImage`: 
 
 
-### Routing
+
+## VisionKit
+
+1. Capture image
+2. Detect landmarks and head-orientation
+3. Visualize results
 
 
-### 3d-graphics: Scene-Kit
 
-### Using UIKit Components in SwiftUI Components
+## 3d-graphics: Scene-Kit
+
+
+
+## Using UIKit Components in SwiftUI Components
 Details from this article: https://itnext.io/using-uiview-in-swiftui-ec4e2b39451b
 
 ```swift
@@ -75,3 +131,7 @@ struct myUiKitControllerWrapper: UIViewControllerRepresentable {
     func updateViewController() { /* ... do something with UIKit ... */ }
 }
 ```
+
+
+## Combine
+Very much like Rx.
