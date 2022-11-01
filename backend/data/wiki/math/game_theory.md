@@ -111,6 +111,8 @@ Imagine two candidates for presidential election.
 > $$ s'_i: BR_{|p(s_{-i})} \iff \forall s''_i: E_{|p(s_{-i})}[u_i(s'_i, s_{-i})] \geq E_{|p(s_{-i})}[u_i(s''_i, s_{-i})]$$ 
 > **In picking a strategy, we can delete strategies that are not a best response under any belief $p(s_{-i})$**
 
+Notice the term *response* here. A best response is always defined either by what others are known to do ($s_{-i}$) or by what they are expected to do  ($p(s_{-i})$).
+
 
 ### Deal or no deal
 Deal or no deal is a game show where the host often offers players to buy them out.
@@ -141,6 +143,18 @@ A similar game is the soccer-penalty-kick game. Here's something interesting: sh
 
 ...
 
+
+## Bank runs and Nash equilibrium
+
+> **Nash equilibrium**: 
+> A set of strategies $s = {s_1, s_2, ...}$ is a Nash equilibrium if:
+> $$ \forall i: s_i: BR_{s/s_i} $$
+
+A Nash equilibrium is 
+- not always the globally best strategy (see prisoners' dilemma)
+- not always the strategy that rational players will pick
+
+Games can have many NE's.
 
 
 ## Stable marriage

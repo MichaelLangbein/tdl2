@@ -1,6 +1,7 @@
 # Resources
 - Paul Hudson
-
+- Sean Allen
+- iOS Academy
 
 # Swift
 
@@ -38,7 +39,9 @@ let dict = [
 
 
 
+
 # SwiftUI
+
 
 ## State
 
@@ -95,22 +98,64 @@ struct ToggleWriterView: View {
 
 
 ## Images
-- `Image`: SwiftUI Image - a view
-- `UIImage`: UIKit Image - the old style version of `Image`, more compatible with apple's image-processors
-- `CGImage`: Core graphics image
-- `CIImage`: 
+- `Image`: SwiftUI Image - a swiftui view that can also load images from disk
+- `UIImage`: UIKit Image - the old style version of `Image`, more compatible with apple's image-processors. Can also load images from disk, apply effects etc
+- `CGImage`: Core graphics image: the raw pixel data of an image
+- `CIImage`: Declarative list of instructions to be applied on an image
 
 
 
 ## VisionKit
 
-1. Capture image
-2. Detect landmarks and head-orientation
-3. Visualize results
+```swift
+import SwiftUI
+import Vision
 
+struct ContentView: View {
+    @State var nrObservations = 0
+    
+    var body: some View {
+        VStack {
+            Image("TestImage").resizable().scaledToFit()
+            Button("Detect") {
+                detect()
+            }
+            Text("Detected \(nrObservations) faces")
+        }
+    }
+    
+    func detect() {
+        guard let uiImage = UIImage(named: "TestImage") else {return}   // old style image container
+        guard let cgImage = uiImage.cgImage else {return}               // raw pixels
+        guard let orientation = CGImagePropertyOrientation(
+            rawValue: UInt32(uiImage.imageOrientation.rawValue)) else {return}
+        
+        let request = VNDetectFaceRectanglesRequest()                                                   // task to execute
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])   // context for task execution
+        
+        // do off main tread
+        DispatchQueue.global().async {
+            try? handler.perform([request])                             // execute task
+            guard let observations = request.results else {return}      // get results
+            handleObservations(observations)                            // pass results into View again
+        }
+    }
+    
+    func handleObservations(_ observations: [VNFaceObservation]) {
+        self.nrObservations = observations.count
+    }
+}
+```
 
 
 ## 3d-graphics: Scene-Kit
+
+
+
+## Async, Concurency, Completion handler
+- https://www.youtube.com/watch?v=hmu0v_25pgc
+- https://www.youtube.com/watch?v=xiS5gJOIQxI
+
 
 
 
