@@ -281,6 +281,9 @@ struct ScenekitView : UIViewRepresentable {
 
 ### Custom shaders
 
+https://github.com/ApolloZhu/MetalTryout/issues/1
+https://www.kodeco.com/5156-rwdevcon-2018-vault/lessons/16
+
 - Standard: completely replace standard shader with `SCNProgram`
 - Simplest: Snippet injection with `SCNShadable`
 - Post-processing: Custom shaders with `SCNTechnique`
