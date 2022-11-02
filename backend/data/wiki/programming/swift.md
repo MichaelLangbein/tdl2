@@ -59,6 +59,23 @@ DispatchQueue.global(
 }
 ```
 
+## Async await
+Swift has the `async/await` keywords.
+To call an async-function, you have to be in a `Task` context.
+Tasks happen on the calling thread (usually the main thread) by default.
+
+```
+func callApi() async {
+    let url = URL(string: "https://picksum.photos/200")
+    let (data, _) = await URLSession.shared.data(from: url, delegate: nil)
+    return data
+}
+
+Task(priority: .background) {
+    let data = await callApi()
+}
+```
+
 
 
 
@@ -172,6 +189,95 @@ struct ContentView: View {
 
 
 ## 3d-graphics: Scene-Kit
+
+SwiftUI has a simple wrapper for SCNViews:
+```swift
+struct GameView: View {
+    var body: some View {
+        
+        let baseScene = SCNScene()
+
+        let figureScene = SCNScene(named: "figure.usdz")!
+        let figure = figureScene.rootNode.childNodes[0].childNodes[0].childNodes[0]
+        
+        baseScene.rootNode.addChildNode(figure)
+        baseScene.background.contents = UIColor.black
+        
+        let sceneView = SceneView(
+            scene: baseScene,
+            options: [
+                .allowsCameraControl,
+                .autoenablesDefaultLighting
+            ]
+        ).frame(
+            width: UIScreen.main.bounds.width,
+            height: UIScreen.main.bounds.height / 2
+        )
+        
+        return sceneView
+    }
+}
+```
+
+*BUT*: this simple wrapper does not seem to support transparency.
+For more control, you're better off creating your own view by wrapping UIKit's version of `SceneView`, called `SCNView`:
+
+```swift
+struct ScenekitView : UIViewRepresentable {
+    let scene = SCNScene()
+
+    func makeUIView(context: Context) -> SCNView {
+        // create and add a camera to the scene
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        scene.rootNode.addChildNode(cameraNode)
+
+        // place the camera
+        cameraNode.position = SCNVector3(x: 10, y: 5, z: 10)
+        cameraNode.look(at: SCNVector3(x: 0, y: 0, z: 0))
+
+        // create and add a light to the scene
+        let lightNode = SCNNode()
+        lightNode.light = SCNLight()
+        lightNode.light!.type = .omni
+        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
+        scene.rootNode.addChildNode(lightNode)
+
+        // create and add an ambient light to the scene
+        let ambientLightNode = SCNNode()
+        ambientLightNode.light = SCNLight()
+        ambientLightNode.light!.type = .ambient
+        ambientLightNode.light!.color = UIColor.darkGray
+        scene.rootNode.addChildNode(ambientLightNode)
+
+        // retrieve the ship node
+//        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
+        let geometry = SCNBox(width: 2.3, height: 1.2, length: 1.2, chamferRadius: 0.5)
+        geometry.firstMaterial?.lightingModel = .physicallyBased
+        let figure = SCNNode( geometry: geometry )
+        scene.rootNode.addChildNode(figure)
+
+        // animate the 3d object
+        figure.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+
+        // retrieve the SCNView
+        let scnView = SCNView()
+        return scnView
+    }
+
+    func updateUIView(_ scnView: SCNView, context: Context) {
+        scnView.scene = scene
+
+        // allows the user to manipulate the camera
+        scnView.allowsCameraControl = true
+        // show statistics such as fps and timing information
+        scnView.showsStatistics = true
+        // configure the view
+        scnView.backgroundColor = UIColor.clear
+    }
+}
+
+```
 
 
 
