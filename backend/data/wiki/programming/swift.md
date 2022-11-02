@@ -33,7 +33,30 @@ let dict = [
 
 // guard
 // some
+// weak self
 
+```
+
+
+## Threading
+
+```swift
+// on main thread
+// main does all UI activity
+// prioretized over other threads
+DispatchQueue.main.async {
+    foo()
+}
+
+// on background thread
+DispatchQueue.global(
+    qos: .utility // quality of service: not very urgent 
+).async {
+    let data = callApi()
+    DispatchQueue.main.async {
+        updateUi(data)
+    }
+}
 ```
 
 
