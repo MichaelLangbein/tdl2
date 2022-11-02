@@ -279,6 +279,26 @@ struct ScenekitView : UIViewRepresentable {
 
 ```
 
+### Custom shaders
+
+- Standard: completely replace standard shader with `SCNProgram`
+- Simplest: Snippet injection with `SCNShadable`
+- Post-processing: Custom shaders with `SCNTechnique`
+
+```swift
+// Example of snippet injection
+let geometry = SCNBox(width: 2.3, height: 1.2, length: 1.2, chamferRadius: 0.5)
+geometry.firstMaterial?.lightingModel = .physicallyBased
+geometry.shaderModifiers = [
+    SCNShaderModifierEntryPoint.fragment : """
+        float whiteness = (_output.color.r + _output.color.g + _output.color.b) / 3.0;
+        // both rgb and a range from 0 to 1
+        _output.color.a = 1.0 - whiteness;
+    """
+]
+let figure = SCNNode( geometry: geometry )
+scene.rootNode.addChildNode(figure)
+```
 
 
 ## Async, Concurency, Completion handler
