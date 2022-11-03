@@ -330,5 +330,79 @@ struct myUiKitControllerWrapper: UIViewControllerRepresentable {
 ```
 
 
+## Camera and photos
+
+
+```swift
+struct ContentView: View {
+    @State var uiImage: UIImage?
+    @State var showPicker = false
+    
+    var body: some View {
+        VStack {
+            if let uim = uiImage {
+                Image(uiImage: uim)
+                    .resizable()
+                    .scaledToFit()
+            }
+
+            Button("Load image") {
+                showPicker = true
+            }
+        }.sheet(isPresented: $showPicker) {
+            GeneralImagePicker(image: $uiImage, sourceType: .photoLibrary)
+        }
+    }
+}
+
+
+struct GeneralImagePicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Environment(\.presentationMode) private var presentationMode
+    // select .camera here to get the image from the camera
+    var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    
+    
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = sourceType
+        imagePicker.delegate = context.coordinator
+        return imagePicker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+    
+    final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+     
+        var parent: GeneralImagePicker
+     
+        init(_ parent: GeneralImagePicker) {
+            self.parent = parent
+        }
+    
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                parent.image = image
+            }
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+}
+
+```
+
+
+### Processing photo-previews
+https://developer.apple.com/tutorials/sample-apps/capturingphotos-camerapreview
+https://www.youtube.com/watch?v=hg-6sOOxeHA
+
+
+
 ## Combine
 Very much like Rx.
