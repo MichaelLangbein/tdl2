@@ -1,12 +1,12 @@
 # General algebra
 In the following sections, we will take care to differentiate between the definition of a concept (like of an inner product) and its implementation. The definition of an inner product is based on properties that a thing has to fulfill, whereas the implementation begins with a definition and is then followed by a proof that the properties hold under that definition.
 
-We will mention the following implementations: the vectorspace of coordinate free oriented lengths, the vectorspace $\reals^n$, which is the same as oriented length but put inside of a coordinate system(euclidian or angular), the vectorspace of matrices, and $C_{[a,b]}$, the vectorspace of continuous functions.
+We will mention the following implementations: the vector-space of coordinate free oriented lengths, the vector-space $\reals^n$, which is the same as oriented length but put inside of a coordinate system(euclidean or angular), the vector-space of matrices, and $C_{[a,b]}$, the vector-space of continuous functions.
 
 # Vector spaces
  
 
-> **Definition** [Vector space] A vector space $V$ is a set closed over two operations: scalar multiplication and vector addition. These two operations must fullfill the following properties:
+> **Definition** [Vector space] A **vector space** $V$ is a set closed over two operations: scalar multiplication and vector addition. These two operations must fulfill the following properties:
 
 - $V$ is closed under scalar multiplication and vector-addition: $a\vec{v} \in V, \vec{v} + \vec{w} \in V$
 - vector-addition is commutative: $\vec{v} + \vec{w} = \vec{w} + \vec{v}$
@@ -29,7 +29,7 @@ The implementations of the above defined scalar product and vector addition are 
 
 
 **Subspaces of vector-spaces**
-A set $U$ is a subspace of a vector-space $V$, iff $U \subset V$ and $U$ is a vectorspace.
+A set $U$ is a subspace of a vector-space $V$, iff $U \subset V$ and $U$ is a vector-space.
 
 
 
@@ -39,9 +39,9 @@ A set $U$ is a subspace of a vector-space $V$, iff $U \subset V$ and $U$ is a ve
 
 
 **linear independence** 
-The elements in $A$, a subset of a vectorspace, are linearly independent iff $\forall \alpha_1, ...,\alpha_n: [( \sum \alpha_i \vec{a}_i = 0 ) \iff ( \alpha_1 = \alpha_2 = ... = 0 )]$. Note that this reduces automatically to $\forall \alpha_1, ...,\alpha_n: [\sum_i^n \alpha_i b_i = 0 \then (\alpha_1 = ... = \alpha_n = 0)]$, because the $\leftarrow$ case is always true. 
+The elements in $A$, a subset of a vector-space, are linearly independent iff $\forall \alpha_1, ...,\alpha_n: [( \sum \alpha_i \vec{a}_i = 0 ) \iff ( \alpha_1 = \alpha_2 = ... = 0 )]$. Note that this reduces automatically to $\forall \alpha_1, ...,\alpha_n: [\sum_i^n \alpha_i b_i = 0 \to (\alpha_1 = ... = \alpha_n = 0)]$, because the $\leftarrow$ case is always true. 
 
-Consequently, linear dependence is defined as $B:ld \equiv \thereis \alpha_1, ..., \alpha_2: [(\alpha_1 \neq 0 \lor ... \lor \alpha_n \neq 0) \land ( \sum_i^n \alpha_i b_i = 0 )]$.
+Consequently, linear dependence is defined as $B:ld \equiv \exists\alpha_1, ..., \alpha_2: [(\alpha_1 \neq 0 \lor ... \lor \alpha_n \neq 0) \land ( \sum_i^n \alpha_i b_i = 0 )]$.
 
 
 \begin{proof}
@@ -55,11 +55,11 @@ Consider the span of two integers (like in the die-hard water-jug problem). They
 
 
 **Bases**
-A set $B$ is a base to a vectorspace $V$ iff $ B \subseteq V \land  \forall v \in V: \thereis ! \alpha_1, ..., \alpha_n : v = \sum_i \alpha_i b_i $. It is easy to prove that this means that
+A set $B$ is a base to a vector-space $V$ iff $ B \subseteq V \land  \forall v \in V: \exists! \alpha_1, ..., \alpha_n : v = \sum_i \alpha_i b_i $. It is easy to prove that this means that
 $ B:baseV \iff ( B:li \land B:spanV ) $. 
 
 
-> **Definition** [The dimension of a vectorspace $S$]
+> **Definition** [The dimension of a vector-space $S$]
     is defined as the size of its base $B_S$: $dim_S = |B_S|$. 
 
 That means to get a base for $\reals^2$, we never need more than two vectors. We'll prove this for the example of $S = \reals^2$:
@@ -77,11 +77,11 @@ For any three vectors chosen from $\reals^2$, at least one must be a linear comb
 \end{proof}
 
 > **Theorem**
-    [Every vectorspace has a basis]
+    [Every vector-space has a basis]
 \end{theorem}
 
 > **Theorem**
-    [All bases of a vectorspace $S$ have the same size]
+    [All bases of a vector-space $S$ have the same size]
 \end{theorem}
 
 
@@ -100,7 +100,7 @@ Vector spaces don't define anything about lengths, angles or projections. This l
  - $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
  - $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
  - $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
- - $\vec{v} \neq \vec{0} \then \vec{v} \innerprod \vec{v} > 0$
+ - $\vec{v} \neq \vec{0} \to \vec{v} \innerprod \vec{v} > 0$
 
 
 
@@ -232,8 +232,8 @@ Orthogonality turns out to be an important concept for statistics and signal ana
 
 Although conceptually similar, orthogonality is a stricter concept than linear independence. It requires an inner product space instead of just a vector space. Also, two vectors may be linearly independent, but not orthogonal (allthough we can use Gram-Schmidt orthogonalisation to make any li vectors orthogonal).
 
-\begin{proof} If a set of vectors is orthogonal, then it is linearly independent: $B:orth \then B:li$. \\
-    \subprf{Suppose that $\forall b_i, b_j \in B: b_i \innerprod b_j = 0$}{$\forall \alpha_1, ..., \alpha_n: \sum \alpha_i b_i = 0 \then \alpha_1 = ... = \alpha_n = 0$}{
+\begin{proof} If a set of vectors is orthogonal, then it is linearly independent: $B:orth \to B:li$. \\
+    \subprf{Suppose that $\forall b_i, b_j \in B: b_i \innerprod b_j = 0$}{$\forall \alpha_1, ..., \alpha_n: \sum \alpha_i b_i = 0 \to \alpha_1 = ... = \alpha_n = 0$}{
         
         \subprf{Let $\alpha_1^0, ..., \alpha_n^0$ be chosen. Suppose $\sum \alpha_i^0 b_i = 0$}{$\alpha_1 = ... = \alpha_n = 0$}{
         
@@ -255,12 +255,12 @@ It is good to know that although orthogonality helps us to prove linear independ
 \end{proof}
 
 **Fourier decomposition** <a id="fourierDecomposition"></a>
-In every vectorspace a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \innerprod b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
+In every vector-space a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \innerprod b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
 
 \begin{proof} Let $B$ be an orthonormal base of $V$. Then for any $\vec{v} \in V$ the $n$th coefficient $\alpha_n$ can be easily calculated as \innerprodbr{\vec{v}}{\vec{b_n}} \\
 
 \subprf{
-    For any vectorspace it holds that $\forall \vec{v} \in V: \thereis \alpha_1, ..., \alpha_N: \sum \alpha_k \vec{b_k} = \vec{v}$. \\
+    For any vector-space it holds that $\forall \vec{v} \in V: \exists\alpha_1, ..., \alpha_N: \sum \alpha_k \vec{b_k} = \vec{v}$. \\
     Suppose $B$ to be orthonormal.
 }{ $ \alpha_n = \innerprodbr{\vec{v}}{\vec{b_n}} $ }{
     

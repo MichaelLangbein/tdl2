@@ -83,6 +83,44 @@ Task(priority: .background) {
 # SwiftUI
 
 
+## Passing callbacks to views
+
+```swift
+struct ContentView: View {
+    @State var bodyText = "Initial body text "
+    var body: some View {
+        VStack {
+            Text(bodyText)
+            ProcessorView { result in
+                bodyText = "Body text augmented with result: \(result)"
+            }
+        }
+    }
+}
+
+
+struct ProcessorView: View {
+    @State var state = "Awaiting user input"
+    var onComplete: (_ result: String) -> Void
+    
+    var body: some View {
+        Text(state)
+        Button("Calculate") {
+                state = "... calculating ..."
+                DispatchQueue.global(qos: .background).async {
+                    let sleepTime: UInt32 = 2 * 1000000
+                    usleep(sleepTime)
+                    DispatchQueue.main.async {
+                        state = "... completed"
+                        onComplete(state)
+                    }
+                }
+            }
+    }
+}
+```
+
+
 ## State
 
 - `@State`: local, primitive state
@@ -175,9 +213,11 @@ struct ContentView: View {
         
         // do off main tread
         DispatchQueue.global().async {
-            try? handler.perform([request])                             // execute task
-            guard let observations = request.results else {return}      // get results
-            handleObservations(observations)                            // pass results into View again
+            try? handler.perform([request])                         // execute task
+            guard let observations = request.results else {return}  // get results
+            DispatchQueue.main.async {
+                handleObservations(observations)                    // pass results into View again
+            }
         }
     }
     
@@ -333,6 +373,28 @@ struct myUiKitControllerWrapper: UIViewControllerRepresentable {
 ## Camera and photos
 
 
+```txt
+        .onChange(@State $uiImage)
+
+               ▲ In/out
+               │
+               │                               (Renderable)
+┌──────────────┼───────────────── ImagePickerView: UIViewControllerRepresentable ─────────────┐
+│              │                               │                                              │
+│              │                               └────────────────────────────────►┐            │
+│              │                                                                 │            │
+│              │             (Core-logic)              (handles core-events)     │            │
+│ ┌────────────▼─────┐        ┌UIImagePickerController         ┌──Coordinator────┼────────┐   │
+│ │@Binding: UIImage │        │                    │           │                 │        │   │
+│ └──────────────────┘        │                    │           │    parent ◄─────┘        │   │
+│                             │          │   didFinishPicking  │                          │   │
+│                             │          └─────────┬───────────┼──► imagePickerController │   │
+│                             └────────────────────┘           └──────────────────────────┘   │
+│                                                                                             │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 ```swift
 struct ContentView: View {
     @State var uiImage: UIImage?
@@ -398,10 +460,103 @@ struct GeneralImagePicker: UIViewControllerRepresentable {
 ```
 
 
+
 ### Processing photo-previews
 https://developer.apple.com/tutorials/sample-apps/capturingphotos-camerapreview
 https://www.youtube.com/watch?v=hg-6sOOxeHA
 
+
+```swift
+import SwiftUI
+import UIKit
+import AVFoundation
+
+
+class PreviewStreamController: UIViewController {
+    private var permissionGranted = false
+    private let captureSession = AVCaptureSession()
+    private let sessionQueue = DispatchQueue(label: "CameraPreviewStream")
+    private var previewLayer = AVCaptureVideoPreviewLayer()
+    var screenRect: CGRect! = nil
+    
+    override func viewDidLoad() {
+        // checkPermission will prevent the sessionQueue (next lines)
+        // from running as long as no permission has been given
+        checkPermission()
+        
+        sessionQueue.async { [unowned self] in
+            guard permissionGranted else { return }
+            self.setupCaptureSession()
+            self.captureSession.startRunning()
+        }
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        screenRect = UIScreen.main.bounds
+        self.previewLayer.frame = CGRect(x: 0, y: 0, width: screenRect.size.width, height: screenRect.size.height)
+        
+        switch UIDevice.current.orientation {
+        case UIDeviceOrientation.portraitUpsideDown:
+            self.previewLayer.connection?.videoOrientation = .portraitUpsideDown
+        case UIDeviceOrientation.landscapeLeft:
+            self.previewLayer.connection?.videoOrientation = .landscapeLeft
+        case UIDeviceOrientation.portrait:
+            self.previewLayer.connection?.videoOrientation = .portrait
+        case UIDeviceOrientation.landscapeRight:
+            self.previewLayer.connection?.videoOrientation = .landscapeRight
+        default:
+            break
+        }
+    }
+    
+    func setupCaptureSession() {
+        guard let videoDevice = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else { return }
+        guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice) else { return }
+        guard captureSession.canAddInput(videoDeviceInput) else { return }
+        captureSession.addInput(videoDeviceInput)
+        
+        screenRect = UIScreen.main.bounds
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.frame = CGRect(x: 0, y: 0, width: screenRect.size.width, height: screenRect.size.height)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        previewLayer.connection?.videoOrientation = .portrait
+        
+        // updates to ui (on main thread)
+        DispatchQueue.main.async { [weak self] in
+            self!.view.layer.addSublayer(self!.previewLayer)
+        }
+    }
+    
+    func checkPermission() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            permissionGranted = true
+        case .notDetermined:
+            requestPermission()
+        default:
+            permissionGranted = false
+        }
+    }
+    
+    func requestPermission() {
+        sessionQueue.suspend()
+        AVCaptureDevice.requestAccess(for: .video, completionHandler: { [unowned self] granted in
+            self.permissionGranted = granted
+            self.sessionQueue.resume()
+        })
+    }
+}
+
+
+struct CameraPreviewStreamView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> PreviewStreamController {
+        return PreviewStreamController()
+    }
+    
+    func updateUIViewController(_ uiViewController: PreviewStreamController, context: Context) {}
+}
+
+```
 
 
 ## Combine

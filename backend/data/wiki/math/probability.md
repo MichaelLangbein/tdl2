@@ -1,7 +1,7 @@
 # Probability
 
 $$
-\gdef\samplespace[]{\ensuremath{\Omega}}
+\gdef\samplespace{\Omega}
 $$
 
 # Basics
