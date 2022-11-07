@@ -34,19 +34,26 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
           - *--publish*: is the long-form of *-p*. It makes the port available outside of a docker-network.        
               - `run -it ...` creates a new container from an image
               - `start -i ...` starts up an existing container
-              - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
-              - `cp /path/to/local/file.html my-nginx:/var/www/html`
-              - `exec -it my-nginx /bin/bash`
-              - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
-              - `rm <containername>`
-              
+      - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
+      - `cp /path/to/local/file.html my-nginx:/var/www/html`
+      - `exec`
+          - `-it my-nginx /bin/bash`: starts an interactive session
+          - `my-nginx cat /etc/resolv.conf`: runs a one-off command on `my-nginx`
+      - `inspect --format={{.LogPath}} <containerid>`: Hardware-info
+          - `| grep IP`: get container's local IP
+      - `rm <containername>`
+
   - `volume` 
       - `ls`
       - `rm`
       - `create --name <volumename>`
       - To be used with `docker container run -v <volumename>:/container/fs/path <imagename>`
-  - `inspect <nameofyourcontaineralllowercase>`
-      - `| grep IP`: get container's local IP
+
+  - `network`
+      - `ls`
+      - `rm`
+      - `create`
+
   - `system`
     - `df`: shows how much space is being used by docker-daemon
             
@@ -67,6 +74,8 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
 
 To stop, rebuild and restart a single container:
 `sudo docker-compose stop router && sudo docker-compose build router && sudo docker-compose start -d router`
+Or better (*should* work): 
+`sudo docker compose build --no-deps router`
 
 
 ## Dockerfile syntax
@@ -291,3 +300,9 @@ docker container run --rm alpine:latest bin/sh -c "whoami"
 
 
 
+## Networking
+
+### Default bridge
+Docker creates a new network interface `docker0`. This is the interface to the *default bridge*.
+New containers are by default deployed in the docker0/bridge network.
+Every new container then has its own interface (visible as `vethXXXX` in ifconfig) which are virtually plugged in to the docker0-bridge
