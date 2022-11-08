@@ -2,6 +2,7 @@
 
 $$
 \gdef\samplespace{\Omega}
+\gdef\probFunct{\text{Pr}}
 $$
 
 # Basics
@@ -50,14 +51,12 @@ $$\probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega]$$
 
 
 > **Definition** [Conditional Probability]
-> $$ \probFunct[A | B] = \frac{\probFunct[A \intersection B]}{\probFunct[B]}$$
+> $$ \probFunct[A | B] = \frac{\probFunct[A \cap B]}{\probFunct[B]}$$
 
 
-As a nice little exercise, we prove the formula for the conditional probability of the *complement* of $B$.
+> As a nice little exercise, we prove the formula for the conditional probability of the *complement* of $B$.
+>    $$ \probFunct[A | \overline{B}] = $$
 
-\begin{proof}
-    $$ \probFunct[A | \overline{B}] = $$
-\end{proof}
 
 
 
@@ -87,24 +86,18 @@ Notice the following facts:
 - $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
 
 
-As yet another exercise, here is the formula of the probability of a union of arbitrary events: 
-
-\begin{proof}
-    $$ \probFunct (\union A_i) = \sum_i \probFunct(A_i) 
-            - \sum_i \sum_{j>i} \probFunct(A_i \intersection A_j) 
-            + \sum_i \sum_{j>i} \sum_{k>j} \probFunct(A_i \intersection A_j \intersection A_k) 
+>As yet another exercise, here is the formula of the probability of a union of arbitrary events: 
+>    $$ \probFunct (\cup A_i) = \sum_i \probFunct(A_i) 
+            - \sum_i \sum_{j>i} \probFunct(A_i \cap A_j) 
+            + \sum_i \sum_{j>i} \sum_{k>j} \probFunct(A_i \cap A_j \cap A_k) 
             - ...  $$
+>  This is proven by induction. 
+>> Base case:
+>> $\probFunct(A_1 \cup A_2) = \probFunct(A_1) + \probFunct(A_2) - \probFunct(A_1 \cap A_2) $
+>> This is tirivally true when looking at a Venn Diagramm. 
+>
+>> Induction step. Suppose that... 
     
-    This is proven by induction. 
-                
-    \subprf{Base case:}{$\probFunct(A_1 \union A_2) = \probFunct(A_1) + \probFunct(A_2) - \probFunct(A_1 \intersection A_2) $}{
-        This is tirivally true when looking at a Venn Diagramm. 
-    }
-    \subprf{Induction step. Suppose that... }{ }{
-    }
-    
-    
-\end{proof}
 
 ### A few lemmas on conditional probability <a id="condPropLemmas"></a>
 
@@ -161,8 +154,8 @@ $$
 > $$ V_{Y|x} = E_{(Y - E_{Y|x})^2 | x} $$ 
 
 
-**Law of total expectation** ...
-$$ <a id="lawOfTotalExpectation"></a>
+**Law of total expectation** ... <a id="lawOfTotalExpectation"></a>
+$$ 
     \begin{aligned}
         E_Y &= \Sigma_Y y P(y) \\
             &= \Sigma_Y y \Sigma_X P(y|x) P(x) \\
@@ -172,8 +165,8 @@ $$ <a id="lawOfTotalExpectation"></a>
     \end{aligned}
 $$
 
-**Law of total variance** ...
-$$ <a id="lawOfTotalVariance"></a>
+**Law of total variance** ...<a id="lawOfTotalVariance"></a>
+$$ 
     \begin{aligned}
         V_Y &= E_{Y^2} - E_Y^2 \\
             &= E_{E_{Y^2 | X}} - E^2_{E_{Y|X}} \\
@@ -229,9 +222,9 @@ There is an abundance of ready made probability distributions to chose from, cov
 
 **The Bernoulli family** based on modelling a series of coin-tosses.
 
-    - Bernoulli: heads or tails?
-    - Binominal: k heads in n trials
-    - Poisson: k heads in $\infty$ trials. 
+ - Bernoulli: heads or tails?
+ - Binominal: k heads in n trials
+ - Poisson: k heads in $\infty$ trials. 
 
 A remarkable feature of the Poisson-distribution is that it has only a parameter for the mean, but always the same variance.
 
@@ -251,10 +244,10 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
 >>    $$
 >>        \begin{aligned}
 >>           \probFunct[A|B]                 &= 1 - \probFunct[A | \overline{B}] \\
->>                                           &= \frac{  \probFunct[B] - \probFunct[A \intersection \overline{B}]  }{  \probFunct[B]  }  \\
->>           \probFunct[A|B] \probFunct[B]   &=         \probFunct[B] - \probFunct[A \intersection \overline{B}] \\
->>           \probFunct[A \intersection B]   &= \probFunct[B] - \probFunct[A \intersection \overline{B}] \\
->>           \probFunct[A \intersection B] + \probFunct[A \intersection \overline{B}]  &= \probFunct[B] \\
+>>                                           &= \frac{  \probFunct[B] - \probFunct[A \cap \overline{B}]  }{  \probFunct[B]  }  \\
+>>           \probFunct[A|B] \probFunct[B]   &=         \probFunct[B] - \probFunct[A \cap \overline{B}] \\
+>>           \probFunct[A \cap B]   &= \probFunct[B] - \probFunct[A \cap \overline{B}] \\
+>>           \probFunct[A \cap B] + \probFunct[A \cap \overline{B}]  &= \probFunct[B] \\
 >>           \probFunct[A] &= \probFunct[B]
 >>        \end{aligned}
 >>    $$
