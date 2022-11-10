@@ -9,12 +9,13 @@
 ## CLI
 
 - `rails new blog`
+- `rails console`
 - `rails server`
 - `rails generate`
-  - `model <name> [filename:type]`
   - `controller <name> <method-names>`
-  - `scaffold <name> [field:type]`.
-- `rails console`
+  - `scaffold <name> [field:type]`
+  - `model <name> [filename:type]`
+  - `migration <MigrationName>`
 - `rails db`
   - `:migrate`
   - `:rollback`
@@ -85,7 +86,7 @@ Important functions:
 - applies changes to actual db
 
 
-```irb
+```ruby
 task = Task.new title: "Base task", description: "Learn rails"
 task.save
 
@@ -120,7 +121,14 @@ Evaluated form-data is put into the `params` variable.
 
 ## Authentication
 Easiest done with [devise](https://github.com/heartcombo/devise#starting-with-rails):
-`$ rails generate devise <your-user-model-name>`
+```bash
+$ rails generate devise:install
+# update your config/environments/development.rb, 
+# your config/routes.rb,
+# and app/views/layouts/application.html.erb
+$ rails generate devise <your-user-model-name>
+$ rails db:migrate
+```
 
 
 ## Console
