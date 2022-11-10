@@ -4,11 +4,16 @@ $
 \newcommand\colspace[1]{\mathcal C_{#1}}
 \newcommand\rowspace[1]{\mathcal R_{#1}}
 \newcommand\solspace[1]{\mathcal S_{#1}}
-\newcommand\dimension[1]{\text{dim}_#1}
+\newcommand\dimension[1]{\text{dim}(#1)}
 \newcommand\rank[1]{\text{rank}_#1}
 \gdef\symm{\text{sym}}
 \gdef\rops{\text{rops}}
 \gdef\cops{\text{cops}}
+\gdef\myarray#1{
+    \begin{bmatrix}
+        #1 \\
+    \end{bmatrix}
+}
 $
 
 
@@ -86,7 +91,7 @@ We can now print an overview of the different spaces that are associated with a 
 
 <img src="images/four_spaces.png">
 
-The rowspace of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The columspace of A can be visualized using the vector-image of A: it contains all the points that are spanned by A. 
+The row-space of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The column-space of A can be visualized using the vector-image of A: it contains all the points that are spanned by A. 
 Notice how we included the previous theorem: any combination $x$ of a particular solution $x_r$ and any vector in the nullspace $x_n$ is also a solution.
 
 
@@ -96,7 +101,7 @@ We should look in more detail at this graphic. Note, for example, that \nullspac
 >
 >>    $$
 >>        \begin{aligned}
->>            w^T v &= 0  & \text{ with } \thereis u: \mtrx{A}^T u = w \\
+>>            w^T v &= 0  & \text{ with } \exists u: \mtrx{A}^T u = w \\
 >>            u^T \mtrx{A} v &= 0 & \text{ with } \mtrx{A}v = 0 \\
 >>            u^T 0 &= 0 & \text{ which is trivially true.}
 >>        \end{aligned}
@@ -104,7 +109,7 @@ We should look in more detail at this graphic. Note, for example, that \nullspac
 >> Thus, \nullspace{A} and \colspace{A^T} only intersect in $\vec{0}$.
 
 
-However, note that $\reals^n \geq \nullspace{A} \union \colspace{A^T}$. As an example, consider $\mtrx{A} = \begin{bmatrix}
+However, note that $\reals^n \geq \nullspace{A} \cup \colspace{A^T}$. As an example, consider $\mtrx{A} = \begin{bmatrix}
     1 & 0 \\
     0 & 0
 \end{bmatrix}$. We get $\nullspace{A} = \begin{bmatrix}
@@ -113,11 +118,14 @@ However, note that $\reals^n \geq \nullspace{A} \union \colspace{A^T}$. As an ex
     x \\ 0
 \end{bmatrix}$. Now consider $\vec{v} = \begin{bmatrix}
     1 \\ 1
-\end{bmatrix}$, which is neither in \nullspace{A} nor in \colspace{A^T}. As illustration, look at [fig.](nullspace_rowspace_lowrank).
+\end{bmatrix}$, which is neither in $\nullspace{A}$ nor in $\colspace{A^T}$. As illustration, look at [fig.](nullspace_rowspace_lowrank).
 
-\begin{figure}[H] <a id="nullspace_rowspace_lowrank"></a>
-    **When $A$ is not full rank, there are infinitely many vectors $v$ that are neither in \rowspace{A} nor in \nullspace{A}. When it comes to spatial dimensions, $1 + 1 \neq 2$!**
-        <img src="images/nullspace_rowspace_lowrank.png">
+<img src="images/nullspace_rowspace_lowrank.png">
+    
+    
+**When $A$ is not full rank, there are infinitely many vectors $v$ that are neither in \rowspace{A} nor in \nullspace{A}. When it comes to spatial dimensions, $1 + 1 \neq 2$!**
+        
+<img src="images/nullspace_rowspace_lowrank.png">
 
 
 
@@ -247,7 +255,7 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 > **Theorem** <a id="lin_indep_if_no_bx0"></a>
 > A better definition could be stated as such: $B$ is linearly independent, if the only solution to $Bx = 0$ is the zero-vector.
 >
-> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$. Proof that $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
+> Suppose $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$. Proof that $\mtrx{B}\vec{x} = \vec{0} \to \vec{x} = \vec{0}$
 >
 >> Suppose $\mtrx{B} \vec{x} = \vec{0}$. Proof that $\vec{x} = \vec{0}$
 >>
@@ -263,7 +271,7 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 >>>> 
 >>>> This contradicts the statement that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
 >>
->> Suppose $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$. Proof that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
+>> Suppose $\mtrx{B}\vec{x} = \vec{0} \to \vec{x} = \vec{0}$. Proof that $\forall \vec{b} \in \mtrx{B}: \vec{b} \neq \sum_{B/b} \alpha_i \vec{b}_i$
 >>
 >>> Let $\vec{b_0} \in \mtrx{B}$. Proof that $\vec{b}_0 \neq \sum_{B/b_0} \alpha_i \vec{b}_i$
 >>>
@@ -274,7 +282,7 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 >>>>>
 >>>>> In matrix notation: $\vec{0} = \mtrx{B} \vec{\alpha}$, with a non-zero $\vec{\alpha}$.
 >>>>>
->>>>> This contradicts our assumption that $\mtrx{B}\vec{x} = \vec{0} \then \vec{x} = \vec{0}$
+>>>>> This contradicts our assumption that $\mtrx{B}\vec{x} = \vec{0} \to \vec{x} = \vec{0}$
 
 
 > **Definition** 
@@ -310,11 +318,11 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 > Let $ \mtrx{A} \vec{x} = 0 $ and $ \vec{x} \neq \vec{0}$. Then it must hold that $\det{\mtrx{A}} = 0$.
 >
 > In fact, this holds in two directions:
-> $$ \thereis \vec{x} \neq \vec{0}: \mtrx{A} \vec{x} = 0  \iff \det{\mtrx{A}} = 0 $$
+> $$ \exists \vec{x} \neq \vec{0}: \mtrx{A} \vec{x} = 0  \iff \det{\mtrx{A}} = 0 $$
 >
  > We can prove this making use of [theorem](lin_indep_if_no_bx0). From the given it follows that $\mtrx{A}$ is linearly dependent.
  >
- > Thus $\thereis \vec{a} \in \mtrx{A}: \vec{a} = \sum_{A/a} \alpha_i \vec{a}_i$. In the case of a $2 \times 2$ matrix this expression becomes very simple: $\vec{a}_1 = \alpha \vec{a}_2$. 
+ > Thus $\exists \vec{a} \in \mtrx{A}: \vec{a} = \sum_{A/a} \alpha_i \vec{a}_i$. In the case of a $2 \times 2$ matrix this expression becomes very simple: $\vec{a}_1 = \alpha \vec{a}_2$. 
 >
 > Breaking $\vec{a}_1$ into its components  
 > - $a_{11} = \alpha a_{12}$
@@ -356,10 +364,10 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 > **Theorem**
-> $ \nullspace{A} = \{ 0 \} \then \det{A} \neq 0 $
+> $ \nullspace{A} = \{ 0 \} \to \det{A} \neq 0 $
 >
 > This is almost self-proving. 
->>  $\nullspace{A} = \{ 0 \}$ is equivalent to writing $\mtrx{A} \vec{x} = \vec{0} \then \vec{x} = \vec{0}$.
+>>  $\nullspace{A} = \{ 0 \}$ is equivalent to writing $\mtrx{A} \vec{x} = \vec{0} \to \vec{x} = \vec{0}$.
 >>
 >>  By [theorem](lin_indep_if_no_bx0) this means that $\mtrx{A}$ is linearly independent.
 >>
@@ -369,7 +377,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 > **Theorem**
 > Let $A: X \to Y$. Then:
-> $$ \nullspace{A} = \{ 0 \} \then \colspace{A} = Y $$
+> $$ \nullspace{A} = \{ 0 \} \to \colspace{A} = Y $$
 
 
 <img src="images/A_from_X_to_Y.png">
@@ -388,7 +396,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 
 
 > **Theorem**
-> $$ A:basis_{\colspace{A}} \then r_A = n $$
+> $$ A:basis_{\colspace{A}} \to r_A = n $$
 
 
 
@@ -448,7 +456,7 @@ $$
     \begin{aligned}
         A e &= \lambda e \\
         ( A - \lambda I ) e &= 0 \\
-        \det{A - \lambda I} &= 0 \text{ using [theorem](det_0)}
+        \det{A - \lambda I} &= 0 \text{ using theorem det0}
     \end{aligned}
 $$
 
@@ -458,7 +466,7 @@ Any *square* matrix can be eigenvector (aka. spectrally) decomposed: $\mtrx{A} =
 
 Once at a sprint-discussion I wondered why principal components (see about those later) were all orthogonal. Here's the proof why. (Note that the proof only holds for symmetric matrices - which, in PCA, $C_A$ is indeed symmetric.)
 > **Theorem** <a id="symm_then_orth"></a>
-> $\mtrx{A}: \symm \then \mtrx{E}_A: \perp$
+> $\mtrx{A}: \symm \to \mtrx{E}_A: \perp$
 >
 > For any matrix $A$, symmetric or not, and for any vectors $x$ and $y$, eigenvectors or not, it holds:
 > $$\forall A, \forall x, y: <Ax, y> = <x, A^Ty>$$
@@ -484,7 +492,7 @@ Once at a sprint-discussion I wondered why principal components (see about those
 
 
 > **Theorem**
-  >As a corollary, the eigenvalue decomposition can be simplified: $\mtrx{A}: \symm \then \mtrx{A} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^{-1} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^T$
+  >As a corollary, the eigenvalue decomposition can be simplified: $\mtrx{A}: \symm \to \mtrx{A} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^{-1} = \mtrx{X} \mtrx{\Lambda} \mtrx{X}^T$
 
 
 **Interpretation of eigenvalues**
@@ -631,7 +639,7 @@ Then we can express the covariance of $\mtrx{X}$ as $\mtrx{C}_X = \mtrx{X}^T \mt
 
 We want to find a transformation $\mtrx{P}$ such that $\mtrx{Y} = \mtrx{X} \mtrx{P}$ is uncorrelated. We'll prove that such a matrix does exist.
 $$
-    \thereis \mtrx{P}: \mtrx{Y} = \mtrx{X} \mtrx{P} \land \mtrx{C}_Y: \text{diag}
+    \exists \mtrx{P}: \mtrx{Y} = \mtrx{X} \mtrx{P} \land \mtrx{C}_Y: \text{diag}
 $$
 
 Try $\mtrx{P} = \mtrx{E}_{C_X}$. Then:
@@ -647,7 +655,7 @@ $$
 Thus $C_Y = \Lambda_{C_X}$, which is diagonal, as required.
 
 
-Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. Then we use: $\mtrx{X} = \mtrx{A} - \mtrx{\mu}$, the matrix with its *row*-mean subtracted. With that $C_X = \mtrx{X} \mtrx{X}^T$ and $\thereis \mtrx{P}: Y = \mtrx{P}\mtrx{X}$. Try $\mtrx{E}_{C_X}$
+Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. Then we use: $\mtrx{X} = \mtrx{A} - \mtrx{\mu}$, the matrix with its *row*-mean subtracted. With that $C_X = \mtrx{X} \mtrx{X}^T$ and $\exists \mtrx{P}: Y = \mtrx{P}\mtrx{X}$. Try $\mtrx{E}_{C_X}$
 
 ### Example: Eigenfaces are a very fun example of PCA.
 
@@ -718,7 +726,7 @@ For $C^{-1}$ to exist, we require $C$ to be full-rank, which means that $A$ must
 >
 > $$ n_A = c - r > 0 $$
 >
-> That is, the nullspace is nonempty. Thus $\thereis x : Ax = 0$
+> That is, the nullspace is nonempty. Thus $\exists x : Ax = 0$
 >
 > Now try $B' = B + x$
 >
@@ -763,7 +771,7 @@ There are two cases: a system is either consistent or inconsistent. The follwing
 We proof a few of those equivalences just for the hell of it. 
 
 > There is exactly one solution if and only if the determinant is nonzero.
->> Proof that $|A| = 0 \iff \thereis ! \vec{x} : A \vec{x} = \vec{b} $
+>> Proof that $|A| = 0 \iff \exists ! \vec{x} : A \vec{x} = \vec{b} $
 
 
 On the other hand, in the inconsistent case, the follwing statements are equivalent:
@@ -790,9 +798,9 @@ $$\vec{x} = \begin{bmatrix} \vec{p}_1 && \vec{p}_2 \end{bmatrix} \begin{bmatrix}
 Here is a problem that bothered me for a while: a line needs one parameter, a plane two. An ellipsoid, too, needs two parameters. Are there any linear geometric objects in $\reals^3$ that require more than three parameters? The answer is: no. Here is the proof. 
 
 > For any $3 \times 4$ matrix, there is a $3 \times 3$ matrix that has the same column space, that is, that describes the same geometrical body. 
->> Proof that $\forall A(3 \times 4) \thereis A'(3 \times 3): \colspace{A} = \colspace{A'}$
->>> Let $A_0(3 \times4)$. Proof that $\thereis A': \colspace{A_0} = \colspace{A'}$
->>>> We know [from](proofBaseSizeEqualsSpaceDimension) that $\thereis \vec{a}_0 \in A_0: \vec{a}_0:ld$. So Try $A' = A_0/\vec{a_0}$.
+>> Proof that $\forall A(3 \times 4) \exists A'(3 \times 3): \colspace{A} = \colspace{A'}$
+>>> Let $A_0(3 \times4)$. Proof that $\exists A': \colspace{A_0} = \colspace{A'}$
+>>>> We know [from](proofBaseSizeEqualsSpaceDimension) that $\exists \vec{a}_0 \in A_0: \vec{a}_0:ld$. So Try $A' = A_0/\vec{a_0}$.
 >>>>
 >>>> Indeed, now $A_0$ and $A'$ both form a base of the same space. So they must have the same column space. 
 
