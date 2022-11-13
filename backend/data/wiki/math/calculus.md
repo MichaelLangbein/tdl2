@@ -1,12 +1,12 @@
-$
-\gdef\then{\to}
-\gdef\thereis{\exists}
-\gdef\iff{\leftrightarrow}
-\gdef\intersection{\cap}
-\gdef\union{\cup}
-\gdef\reals{\mathbb{R}}
-\gdef\naturals{\mathbb{N}}
-\gdef\diff#1{\mathop{d#1}}
+$$
+\def\then{\to}
+\def\thereis{\exists}
+\def\iff{\leftrightarrow}
+\def\intersection{\cap}
+\def\union{\cup}
+\def\reals{\mathbb{R}}
+\def\naturals{\mathbb{N}}
+\def\diff#1{\mathop{d#1}}
 
 \gdef\subs#1#2{#1_{#2}}
 \gdef\std#1{\subs{#1}{std}}
@@ -25,7 +25,7 @@ $
 \gdef\symm{\text{sym}}
 \gdef\orthtxt{\text{orth}}
 \gdef\PSD{\text{PSD}}
-$
+$$
 
 # Calculus
 
@@ -47,10 +47,10 @@ We will use the following axioms:
  - $0:std$
  - $\forall n \in \naturals: n:std \then (n+1):std $
  - $\thereis n \in \naturals: n:nstd $
- - External induction: Induction  over \std{n} about \pext{A}: \\ 
-    $ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n)$
- - Internal induction: Induction over \pnstd{n} about A: \\
-    $ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $
+ - External induction: Induction  over $\std{n}$ about $\pext{A}$: 
+    $$ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n) $$
+ - Internal induction: Induction over $\pnstd{n}$ about A:
+    $$ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $$
 
 The rationale over the two induction-axioms is simple. Ordinary induction is about $A$ over \std{n}. 
 External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones. 
@@ -110,7 +110,7 @@ It is notable that you can never reach a standard number when adding nonstandard
 >
 > We proceed by proving the equivalent $(n+m):std \then (n:std \lor m:std)$
 >
-> Suppose $(n+m):std$}{$(n:std \lor m:std)$
+> Suppose $(n+m):std$. Proof that $(n:std \lor m:std)$
 >> Without loss of generality, suppose $n:nst$ Proof that $m:std$
 >>
 >> By contradiction. Suppose $m:nst$. Proof that this leads to a contradiction.
@@ -130,15 +130,15 @@ It is notable that you can never reach a standard number when adding nonstandard
 ### Fourier
 ### Laplace
 
-\subsection{Euler's formula}
-Proof: Consider the function $f(t)=e^{-it}(cost+isint)$ for $t \in \reals$. By the quotient rule
-$$ f'(t) = e^{-it} (i\ cos(t) - \sin(t)) -ie^{-it} (\cos(t) + i \sin(t)) = 0 $$
-identically for all $t \in \reals$. Hence, $f$ is constant everywhere. Since $f(0)=1$, it follows that $f(t)=1$ identically. Therefore, $e^{it}=cost+isint$ for all $t \in \reals$, as claimed.
+### Euler's formula
+Proof: Consider the function $f(t)=e^{-it}(\cos{t}+i\sin{t})$ for $t \in \reals$. By the quotient rule
+$$ f'(t) = e^{-it} (i\cos(t) - \sin(t)) -ie^{-it} (\cos(t) + i \sin(t)) = 0 $$
+identically for all $t \in \reals$. Hence, $f$ is constant everywhere. Since $f(0)=1$, it follows that $f(t)=1$ identically. Therefore, $e^{it}=\cos{t}+i\sin{t}$ for all $t \in \reals$, as claimed.
 
 
 # Integration
 
-The infinitessimal view of calculus makes it quite easy to prove theorems. Consider this illustration of how definite integrals work.
+The infinitesimal view of calculus makes it quite easy to prove theorems. Consider this illustration of how definite integrals work.
 
 $$
     \begin{aligned}
@@ -165,7 +165,8 @@ $x$ does get a lot simpler after differentiation, whereas $e^x$ doesn't, so the 
 
 We then use the following: 
 
-$$ \int u \diff{v} = uv - \int v \diff{u} $$\footnote{The proof goes like this: Starting with the product rule of differentiation: $(ab)' = a'b + ba'$ we get $(ab)' - a'b = ba'$ and  $ab - \int a'b \diff{x} = \int ba' \diff{x} $}
+$$ \int u \diff{v} = uv - \int v \diff{u} $$
+\footnote{The proof goes like this: Starting with the product rule of differentiation: $(ab)' = a'b + ba'$ we get $(ab)' - a'b = ba'$ and  $ab - \int a'b \diff{x} = \int ba' \diff{x} $}
 
 Since we chose $u = x$ we have $\diff{u} = \diff{x}$, and from $\diff{v} = e^x \diff{x}$ we get $v = e^x$. This yields us: 
 
@@ -178,7 +179,7 @@ as the solution.
 
 Integration over a vector, integration along a vector, integration along a surface. 
 
-You can find a nice introduction (mostly in the second part of) this pdf: \inlinecode{http://www.maths.gla.ac.uk/~cc/2A/2A_notes/2A_chap4.pdf} and here `http://geocalc.clas.asu.edu/pdf-preAdobe8/SIMP_CAL.pdf`
+You can find a nice introduction (mostly in the second part of) this pdf: `http://www.maths.gla.ac.uk/~cc/2A/2A_notes/2A_chap4.pdf` and here `http://geocalc.clas.asu.edu/pdf-preAdobe8/SIMP_CAL.pdf`
 
 
 ### Constraint optimization using Lagrange multipliers

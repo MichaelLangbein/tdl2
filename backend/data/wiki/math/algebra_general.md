@@ -1,3 +1,14 @@
+$$
+\def\innerprod{\cdot}
+\def\orth{\perp}
+\def\diff{\mathop{d}}
+\def\samplespace{\Omega}
+\def\outerprod{\wedge}
+\def\innerprodbr{< #1 , #2 >}
+$$
+
+
+
 # General algebra
 In the following sections, we will take care to differentiate between the definition of a concept (like of an inner product) and its implementation. The definition of an inner product is based on properties that a thing has to fulfill, whereas the implementation begins with a definition and is then followed by a proof that the properties hold under that definition.
 
@@ -28,7 +39,7 @@ The implementations of the above defined scalar product and vector addition are 
 
 
 
-**Subspaces of vector-spaces**
+## Subspaces of vector-spaces
 A set $U$ is a subspace of a vector-space $V$, iff $U \subset V$ and $U$ is a vector-space.
 
 
@@ -38,15 +49,14 @@ A set $U$ is a subspace of a vector-space $V$, iff $U \subset V$ and $U$ is a ve
 
 
 
-**linear independence** 
+## linear independence
 The elements in $A$, a subset of a vector-space, are linearly independent iff $\forall \alpha_1, ...,\alpha_n: [( \sum \alpha_i \vec{a}_i = 0 ) \iff ( \alpha_1 = \alpha_2 = ... = 0 )]$. Note that this reduces automatically to $\forall \alpha_1, ...,\alpha_n: [\sum_i^n \alpha_i b_i = 0 \to (\alpha_1 = ... = \alpha_n = 0)]$, because the $\leftarrow$ case is always true. 
 
 Consequently, linear dependence is defined as $B:ld \equiv \exists\alpha_1, ..., \alpha_2: [(\alpha_1 \neq 0 \lor ... \lor \alpha_n \neq 0) \land ( \sum_i^n \alpha_i b_i = 0 )]$.
 
 
-\begin{proof}
-    Prove that iff $B:ld$, then one of the elements of $B$ is a linear combination of the others. 
-\end{proof}
+
+> Prove that iff $B:ld$, then one of the elements of $B$ is a linear combination of the others. 
 
 Consider the span of two integers (like in the die-hard water-jug problem). They are always linearly dependent. For example a base $B = [2, 3]$ is linearly dependent because $\frac{-3}{2}2 + 1\cdot3 = 0$.
 
@@ -54,7 +64,7 @@ Consider the span of two integers (like in the die-hard water-jug problem). They
 
 
 
-**Bases**
+## Bases
 A set $B$ is a base to a vector-space $V$ iff $ B \subseteq V \land  \forall v \in V: \exists! \alpha_1, ..., \alpha_n : v = \sum_i \alpha_i b_i $. It is easy to prove that this means that
 $ B:baseV \iff ( B:li \land B:spanV ) $. 
 
@@ -64,25 +74,22 @@ $ B:baseV \iff ( B:li \land B:spanV ) $.
 
 That means to get a base for $\reals^2$, we never need more than two vectors. We'll prove this for the example of $S = \reals^2$:
 
-\begin{proof} <a id="proofBaseSizeEqualsSpaceDimension"></a>
-For any three vectors chosen from $\reals^2$, at least one must be a linear combination of the others. \\
-    \subprf{$\vec{a}, \vec{b}, \vec{c} \in \reals^2$ }{ $\vec{a}:ld(\vec{b}, \vec{c}) \lor \vec{b}:ld(\vec{a}, \vec{c}) \lor \vec{c}:ld(\vec{a}, \vec{b})$ }{
-        
-        \subprf{Without loss of generality, assume $ \vec{a}:li(\vec{b}, \vec{c}) $ and $\vec{b}:li(\vec{a}, \vec{c})$}{$\vec{c}:ld(\vec{a}, \vec{b})$}{
-        
-            $\vec{a}$ and $\vec{b}$ form a base for $\reals^2$. That means any $\vec{x} \in \reals^2$ is a linear combination of these two ... including $\vec{c}$.
-        
-        }
-    }
-\end{proof}
+> <a id="proofBaseSizeEqualsSpaceDimension"></a>
+> For any three vectors chosen from $\reals^2$, at least one must be a linear combination of the others.
+>> Assume that $\vec{a}, \vec{b}, \vec{c} \in \reals^2$ Proof that $\vec{a}:ld(\vec{b}, \vec{c}) \lor \vec{b}:ld(\vec{a}, \vec{c}) \lor \vec{c}:ld(\vec{a}, \vec{b})$ 
+>>>
+>>> Without loss of generality, assume $ \vec{a}:li(\vec{b}, \vec{c}) $ and $\vec{b}:li(\vec{a}, \vec{c})$. Proof that $\vec{c}:ld(\vec{a}, \vec{b})$
+>>>   
+>>>> $\vec{a}$ and $\vec{b}$ form a base for $\reals^2$. That means any $\vec{x} \in \reals^2$ is a linear combination of these two ... including $\vec{c}$.
+
 
 > **Theorem**
-    [Every vector-space has a basis]
-\end{theorem}
+>    [Every vector-space has a basis]
+
 
 > **Theorem**
-    [All bases of a vector-space $S$ have the same size]
-\end{theorem}
+>    [All bases of a vector-space $S$ have the same size]
+
 
 
 
@@ -169,43 +176,35 @@ $$ \vec{v} \innerprod \vec{w} = \sum_n v_n w_n $$
 
 The following is a proof that the two implementations of inner product are equivalent. 
 
-\begin{proof}
-    \subprf{Suppose $\vec{u} = u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3} $ and $\vec{v} = v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3} $.}{$\vec{u} \innerprod \vec{v} = \sum_n v_n u_n$}{
-        
-        $ \vec{u} \innerprod \vec{v} = (u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3}) \innerprod (v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3}) $ \\
-        
-        This is written out as $u_1 v_1 (\vec{e_1}\innerprod \vec{e_1}) + u_1 v_2 (\vec{e_1}\innerprod \vec{e_2}) + ...$ \\
-        
-        Of this, almost all terms cancel out, leaving $ u_1 v_1 + u_2 v_2 + u_3 v_3 $
-    }
-\end{proof}
+
+>Suppose $\vec{u} = u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3} $ and $\vec{v} = v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3} $. Proof that $\vec{u} \innerprod \vec{v} = \sum_n v_n u_n$
+>
+>> $ \vec{u} \innerprod \vec{v} = (u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3}) \innerprod (v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3}) $ 
+>>     
+>> This is written out as $u_1 v_1 (\vec{e_1}\innerprod \vec{e_1}) + u_1 v_2 (\vec{e_1}\innerprod \vec{e_2}) + ...$     
+>> Of this, almost all terms cancel out, leaving $ u_1 v_1 + u_2 v_2 + u_3 v_3 $
+
 
 Note that if we were to chose a *non*orthonormal basis, the inner product would not be reduced so nicely.
 
 
 
-\begin{table}[ht]
-**Important implemantations of vector spaces, inner product spaces and algebras**
-\begin{tabular}{@{}llllll@{}}
-\toprule
-                    & \multicolumn{2}{l}{Vector space} & \multicolumn{2}{l}{Inner product space}            & Algebra                                                  \\ 
-                    & scalar prod      & addition      & inner prod                     & norm                   & outer prod                                               \\ 
-\midrule
-$\reals^n$          &                  &               & $\sum_n u_i v_i$               & $\sqrt{\sum_i v_i^2}$  &                                                          \\
-$\reals^n$ in polar &                  &               &                                &                        &                                                          \\
-$C_{[a,b]}$         &                  &               & $\int_a^b u(t) v(t) \diff{t} $ &                        &                                                          \\
-$X$ on \samplespace &                  &               & E[XY]                          & E[X]                   &                                                          \\
-matrices            &                  &               &                                &                        & $(\sum_x \sum_y a_x b_y)_{i,j}$ (aka.linear algebra)     \\
-$G^3$               &                  &               &$\vec{v} \innerprod \vec{u}$    &                        & $\vec{v} \outerprod \vec{u}$ (aka.geometric algebra)     \\
-$\reals$            &                  &               &                                &                        & (aka. ordinary algebra)                                  \\
-Booleans            &                  &               &                                &                        & (aka. boolean algebra)                                   \\
-\bottomrule
-\end{tabular}
+**Important implementations of vector spaces, inner product spaces and algebras**
+|                     | Vector space                     | Inner product space                     | Algebra                        |                       |                                                      |
+|---------------------|----------------------------------|-----------------------------------------|--------------------------------|-----------------------|------------------------------------------------------|
+|                     | scalar prod                      | addition                                | inner prod                     | norm                  | outer prod                                           |
+| $\reals^n$          |                                  |                                         | $\sum_n u_i v_i$               | $\sqrt{\sum_i v_i^2}$ |                                                      |
+| $\reals^n$ in polar |                                  |                                         |                                |                       |                                                      |
+| $C_{[a,b]}$         |                                  |                                         | $\int_a^b u(t) v(t) \diff{t} $ |                       |                                                      |
+| $X$ on $\samplespace$ |                                  |                                         | E[XY]                          | E[X]                  |                                                      |
+| matrices            |                                  |                                         |                                |                       | $(\sum_x \sum_y a_x b_y)_{i,j}$ (aka.linear algebra) |
+| $G^3$               |                                  |                                         | $\vec{v} \innerprod \vec{u}$   |                       | $\vec{v} \outerprod \vec{u}$ (aka.geometric algebra) |
+| $\reals$            |                                  |                                         |                                |                       | (aka. ordinary algebra)                              |
+| Booleans            |                                  |                                         |                                |                       | (aka. boolean algebra)                               |
 
-\vspace{1ex}
-\raggedright \begin{footnotesize} A few comments to the different spaces shown here. $X$ on \samplespace is a inner product space very similar to $C_{[a,b]}$, but note that \samplespace itself is not neccessarily even a vectorsace. \end{footnotesize}
 
-\end{table}
+A few comments to the different spaces shown here. $X$ on $\samplespace$ is a inner product space very similar to $C_{[a,b]}$, but note that $\samplespace$ itself is not necessarily even a vector-space.
+
 
 Here is one more example of an inner product. Consider the vector-space $L^2(\reals^2 \to \reals^3)$, that is, the space of square-integrable functions that take two input arguments $\vec{x}$ and return a 3-vector $\vec{y}$. How would you define an inner product to turn this into an inner-product-space? Well, the choice is up to you, but most often one choses: 
 
@@ -226,52 +225,45 @@ $$ <f, g> := \int_{\reals^2} <f(\vec{x}), g(\vec{x})>_i \diff{\vec{x}} $$
 
 
 
-\subsection{Excursion: More on orthogonality and preview of function decompositions}
+## Excursion: More on orthogonality and preview of function decompositions
 
 Orthogonality turns out to be an important concept for statistics and signal analysis, so we'll look at it in a little more detail here. Why is orthogonality so important though? Linear independence allows us to take a complex signal and decompose it into simpler, independent parts. Orthogonality ensures that these parts are easy to calculate. 
 
-Although conceptually similar, orthogonality is a stricter concept than linear independence. It requires an inner product space instead of just a vector space. Also, two vectors may be linearly independent, but not orthogonal (allthough we can use Gram-Schmidt orthogonalisation to make any li vectors orthogonal).
+Although conceptually similar, orthogonality is a stricter concept than linear independence. It requires an inner product space instead of just a vector space. Also, two vectors may be linearly independent, but not orthogonal (although we can use Gram-Schmidt orthogonalization to make any li vectors orthogonal).
 
-\begin{proof} If a set of vectors is orthogonal, then it is linearly independent: $B:orth \to B:li$. \\
-    \subprf{Suppose that $\forall b_i, b_j \in B: b_i \innerprod b_j = 0$}{$\forall \alpha_1, ..., \alpha_n: \sum \alpha_i b_i = 0 \to \alpha_1 = ... = \alpha_n = 0$}{
-        
-        \subprf{Let $\alpha_1^0, ..., \alpha_n^0$ be chosen. Suppose $\sum \alpha_i^0 b_i = 0$}{$\alpha_1 = ... = \alpha_n = 0$}{
-        
-            \subprf{}{$\alpha_j^0 = 0$ for any $j \in [1, n]$}{
-            
-                $\sum \alpha_i^0 b_i = 0$ \\
-                Multiplied by $b_j$: \\
-                $\sum \alpha_i^0 b_i \innerprod b_j = 0 \innerprod b_j$ \\
-                With $B:orth$: \\
-                $\alpha_j^0 = 0$ \\
-            }
-        }
-    }
-\end{proof}
+> If a set of vectors is orthogonal, then it is linearly independent: $B:orth \to B:li$.
+>> Suppose that $\forall b_i, b_j \in B: b_i \innerprod b_j = 0$. Proof that $\forall \alpha_1, ..., \alpha_n: \sum \alpha_i b_i = 0 \to \alpha_1 = ... = \alpha_n = 0$
+>>    
+>>> Let $\alpha_1^0, ..., \alpha_n^0$ be chosen. Suppose $\sum \alpha_i^0 b_i = 0$. Proof that $\alpha_1 = ... = \alpha_n = 0$
+>>>
+>>>> Proof that $\alpha_j^0 = 0$ for any $j \in [1, n]$
+>>>>            
+>>>> $$ \sum \alpha_i^0 b_i = 0 $$
+>>>> Multiplied by $b_j$:
+>>>> $$ \sum \alpha_i^0 b_i \innerprod b_j = 0 \innerprod b_j $$
+>>>> With $B:orth$:
+>>>> $$ \alpha_j^0 = 0 $$
+
 This is profound. For example, the cos-sin-Fourier-basis is hard to prove to be linearly independent. But we can use the *stricter* property of orthogonality to prove that it must also be linearly independent. 
 
-It is good to know that although orthogonality helps us to prove linear independence, it doesn't help us to prove that a set is a base, because for that we also need the set to span the whole space. 
-\begin{proof} In the infinite dimensional case, a orthogonal set $B \subseteq V$ does not have to be a base of $V$. A good example would be a set of linear functions in $V = C_{[a,b]}$ - they can never span quadratic functions. 
-\end{proof}
+> It is good to know that although orthogonality helps us to prove linear independence, it doesn't help us to prove that a set is a base, because for that we also need the set to span the whole space. 
+>> In the infinite dimensional case, a orthogonal set $B \subseteq V$ does not have to be a base of $V$. A good example would be a set of linear functions in $V = C_{[a,b]}$ - they can never span quadratic functions. 
 
-**Fourier decomposition** <a id="fourierDecomposition"></a>
+
+### Fourier decomposition <a id="fourierDecomposition"></a>
 In every vector-space a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \innerprod b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
 
-\begin{proof} Let $B$ be an orthonormal base of $V$. Then for any $\vec{v} \in V$ the $n$th coefficient $\alpha_n$ can be easily calculated as \innerprodbr{\vec{v}}{\vec{b_n}} \\
-
-\subprf{
-    For any vector-space it holds that $\forall \vec{v} \in V: \exists\alpha_1, ..., \alpha_N: \sum \alpha_k \vec{b_k} = \vec{v}$. \\
-    Suppose $B$ to be orthonormal.
-}{ $ \alpha_n = \innerprodbr{\vec{v}}{\vec{b_n}} $ }{
-    
-    $ \innerprodbr{\vec{v}}{\vec{b_n}} = \innerprodbr{\sum \alpha_k \vec{b_k}}{\vec{b_n}} $ \\
-    
-    $ = \alpha_0 \innerprodbr{\vec{b_0}}{\vec{b_n}} + \alpha_1 \innerprodbr{\vec{b_1}}{\vec{b_n}} + ... + \alpha_n \innerprodbr{\vec{b_n}}{\vec{b_n}} + ... + \alpha_N \innerprodbr{\vec{b_N}}{\vec{b_n}}$ \\
-    
-    $ = \alpha_0 0 + \alpha_1 0 + ... \alpha_n 1 + ... \alpha_N 0$
-}
-
-\end{proof}
+> Let $B$ be an orthonormal base of $V$. Then for any $\vec{v} \in V$ the $n$th coefficient $\alpha_n$ can be easily calculated as $<\vec{v}, \vec{b_n}>$
+>
+>> For any vector-space it holds that $\forall \vec{v} \in V: \exists\alpha_1, ..., \alpha_N: \sum \alpha_k \vec{b_k} = \vec{v}$.
+>> Suppose $B$ to be orthonormal.
+>> Proof that $ \alpha_n = <\vec{v}, \vec{b_n}> $ 
+>>
+>>> $ <\vec{v}, \vec{b_n}> = <\sum \alpha_k \vec{b_k}, \vec{b_n}> $
+>>>
+>>> $ = \alpha_0 <\vec{b_0}, \vec{b_n}> + \alpha_1 <\vec{b_1}, \vec{b_n}> + ... + \alpha_n <\vec{b_n}, \vec{b_n}> + ... + \alpha_N <\vec{b_N}, \vec{b_n}>$
+>>>
+>>> $ = \alpha_0 0 + \alpha_1 0 + ... \alpha_n 1 + ... \alpha_N 0$
 
 This is much easier than the case where the base is *not* orthonormal. If that is the case, we have to calulate the coefficients $\alpha_n$ by using the projections: 
 
@@ -286,9 +278,9 @@ Calling the matrix $[\vec{b_1}, \vec{b_2}, ..., \vec{b_N}  ]$ the basematrix $B$
 $$ \vec{v} = B \vec{\alpha} $$
 $$ B^{-1} \vec{v} = \vec{\alpha} $$
 
-This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N^3} operation, and matrix multiplication is still a \BigTheta{N^{>2.3}} operation. Contrary to that, the evaluation of a plynomal is a \BigTheta{N} operation when using Horners method. 
+This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N^3} operation, and matrix multiplication is still a \BigTheta{N^{>2.3}} operation. Contrary to that, the evaluation of a polynomial is a \BigTheta{N} operation when using Horners method. 
 
-### Gram-Schmidt orthogonalisation For every set of li vectors we can find a set of orthogonal vectors like this: 
+### Gram-Schmidt orthogonalization For every set of li vectors we can find a set of orthogonal vectors like this: 
 
  - $b_1 = v_1$
  - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$

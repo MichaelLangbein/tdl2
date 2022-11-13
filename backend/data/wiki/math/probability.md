@@ -30,7 +30,7 @@ We define the probability of an event as:
 $$\probFunct[E] = \sum_{\omega \in E} \probFunct[\omega]$$
 
 > **Definition** [Random variable]
-> A random variable is a function mapping a $\omega$ from \samplespace  to the reals. 
+> A random variable is a function mapping a $\omega$ from $\samplespace$  to the reals. 
 > $$ X(\omega) : \samplespace \to \reals$$
 
 Note that a random variable strictly takes a single $\omega$ as argument, not a set of outcomes. 
@@ -41,7 +41,7 @@ $$\probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega]$$
 
 
 **From sample-space to probability of a random variable**
-          <img src="images/prob.png">
+<img src="images/prob.png">
 
 
 
@@ -94,7 +94,7 @@ Notice the following facts:
 >  This is proven by induction. 
 >> Base case:
 >> $\probFunct(A_1 \cup A_2) = \probFunct(A_1) + \probFunct(A_2) - \probFunct(A_1 \cap A_2) $
->> This is tirivally true when looking at a Venn Diagramm. 
+>> This is trivially true when looking at a Venn diagram. 
 >
 >> Induction step. Suppose that... 
     
