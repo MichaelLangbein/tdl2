@@ -22,8 +22,8 @@ $
 
 ## Neural networks
 
-### Backpropagation
-The analytical way of deriving the backpropagation algorithm consist of just a few steps. 
+### Back-propagation
+The analytical way of deriving the back-propagation algorithm consist of just a few steps. 
 A few definitions: 
 
 
@@ -35,8 +35,10 @@ A few definitions:
 Let's first consider only the top layer. 
 
 $$
+\begin{aligned}
     \partDiff{e}{x_{t_0}^L} &= \frac{1}{2} \sum_t \partDiff{}{x_{t_0}^L} (\vec{y}^*_t - \vec{y}^L_t)^2  \\
                             &= (y_{t_0}^* - y_{t_0}^L) f'(x_{t_0}) 
+\end{aligned}
 $$
 
 Or, in vector form: 
@@ -49,11 +51,11 @@ $$
 That part was easy. But how do we obtain the same differential for *any* layer $l$?
 
 $$
-\begin{align}
+\begin{aligned}
 \partDiff{e}{x_{f_0}^l} &= \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{x_t^{l+1}}{x_{f_0}^l}  \\
                         &= \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{}{x_{f_0}^l} ( \sum_f W_{t,f}^{l+1} y_f^l ) \\
                         &= \sum_t \partDiff{e}{x_t^{l+1}} W_{t,f_0}^{l+1} f'(x_{f_0}^l)
-\end{align}
+\end{aligned}
 $$
 
 Or, in vector form: 
