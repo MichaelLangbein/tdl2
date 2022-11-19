@@ -276,13 +276,6 @@ struct ScenekitView : UIViewRepresentable {
         cameraNode.position = SCNVector3(x: 10, y: 5, z: 10)
         cameraNode.look(at: SCNVector3(x: 0, y: 0, z: 0))
 
-        // create and add a light to the scene
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light!.type = .omni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
-
         // create and add an ambient light to the scene
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
@@ -318,6 +311,41 @@ struct ScenekitView : UIViewRepresentable {
 }
 
 ```
+
+
+
+### Camera
+
+#### **Camera operations**:
+- To display a scene, you must designate a node whose camera property contains a camera object as the point of view.
+
+- A camera’s direction of view is always along the negative z-axis of the node’s local coordinate system.
+
+- To point the camera at different parts of your scene, use the position, rotation, or transform property of the node containing it.
+    - `allowsCameraControl` let's the user move the camera-node around
+    - You can customize that camera-control by setting a `defaultCameraController: SCNCameraController` object
+
+- Alternatively, to ensure that a camera always points at a particular element of your scene even when that element moves, attach a `SCNLookAtConstraint` object to the node containing the camera.
+
+
+#### **Camera-parameters**:
+- `sensorHeight`: The vertical size of the camera's imaging plane, in millimeters. Default: 24mm.
+- `focalLength`: The camera's focal length, in millimeters. Default: 50mm
+- `fieldOfView`: The vertical or horizontal viewing angle of the camera. Default: 60°
+- aspectRatio? See further down...
+
+Explanation and calculation:
+- The `sensorHeight` and `focalLength` properties determine the camera's horizontal and vertical viewing angles using terms that model physical camera devices. 
+- Alternatively, you can work with viewing angle directly though the `fieldOfView` property. 
+- For example, with the default sensor height of 24 mm and default focal length of 50 mm, the vertical field of view is 60°.
+- Setting the `fieldOfView` property causes SceneKit to automatically recalculate the `focalLength` value, and setting the `sensorHeight` or `focalLength` property recalculates `fieldOfView`.
+
+
+- **I think**: The camera gets it's aspect-ratio from the scene's frame.
+    - Ah, indeed: 'The fieldOfView property measures view angle in a single primary direction, determined by this projectionDirection property. For the other direction, SceneKit automatically adjusts field of view depending on the aspect ratio of the view presenting the scene.' (from [here](https://developer.apple.com/documentation/scenekit/scncamera/2878134-projectiondirection))
+
+
+- **I think**: that change to the aspect ratio is applied to the camera's projection-matrix as soon as the camera's node is attached to the scene.
 
 ### Custom shaders
 
