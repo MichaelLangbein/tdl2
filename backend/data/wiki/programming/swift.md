@@ -350,6 +350,15 @@ Explanation and calculation:
     - Adding the camera to the scene does not update the camera's projection-matrix.
     - Remarkably, setting the camera's `zNear` and `zFar` properties does update the projection-matrix.
     - So we can conclude that SceneKit applies the aspect-ratio externally, maybe within SCNScene, but not through the camera's projection-matrix.
+    - But there is something interesting going on: does SceneKit loose some image-data?
+        - Experiment: Create a SCNScene with aspect-ratio 1.5.
+        - Place an item on the very right edge of the camera-screen - on the part of the screen that lies outside of its central rectangle.
+        - The camera's projection-matrix applied to that item will give a projected x-coordinate greater than one ... since the camera's projection-matrix doesn't normalize the screen by its width; i.e. it doesn't squish the screen's edges together.
+        - Since this point is now outside of the clipping-spaces [-1, 1] range, it should not be visible.
+        - If it is visible, that means that scene-kit does apply the aspect-ratio before sending the image to the clipping-space.
+
+
+Remarkably, `threejs` does that differently. There, a `PerspectiveCamera` does take aspect-ratio as one of its constructor arguments. 
 
 ### Custom shaders
 
