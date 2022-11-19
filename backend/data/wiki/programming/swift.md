@@ -346,6 +346,10 @@ Explanation and calculation:
 
 
 - **I think**: that change to the aspect ratio is applied to the camera's projection-matrix as soon as the camera's node is attached to the scene.
+    - That is in fact **not the case!**
+    - Adding the camera to the scene does not update the camera's projection-matrix.
+    - Remarkably, setting the camera's `zNear` and `zFar` properties does update the projection-matrix.
+    - So we can conclude that SceneKit applies the aspect-ratio externally, maybe within SCNScene, but not through the camera's projection-matrix.
 
 ### Custom shaders
 
