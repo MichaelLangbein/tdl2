@@ -360,6 +360,8 @@ https://www.kodeco.com/5156-rwdevcon-2018-vault/lessons/16
 - Simplest: Snippet injection with `SCNShadable`
 - Post-processing: Custom shaders with `SCNTechnique`
 
+
+#### **With snippet injection**:
 ```swift
 // Example of snippet injection
 let geometry = SCNBox(width: 2.3, height: 1.2, length: 1.2, chamferRadius: 0.5)
@@ -373,6 +375,56 @@ geometry.shaderModifiers = [
 ]
 let figure = SCNNode( geometry: geometry )
 scene.rootNode.addChildNode(figure)
+```
+
+#### **With post processor**:
+```swift
+let color2alphaPass = [
+    "draw": "DRAW_QUAD",                    // only draw a quad that encompasses whole screen
+    "program": "color2alpha",               // name of shader-files
+    "inputs": [
+        "colorSampler": "COLOR",            // sampler2D of color-buffer
+        "a_position": "a_position-symbol"   // atribute: vertex position
+    ]
+]
+
+camera.technique = SCNTechnique.init(dictionary: [
+    "passes": ["color2alpha": color2alphaPass],     // only one pass needed
+    "sequence": ["color2alpha"],                    // order of passes
+    "symbols": [                                    // list of symbols used in those passes
+        "a_position-symbol": ["semantic": "vertex"]
+    ]       // only need to provide vertex-position.
+            // reason: color-buffer always available.
+            // if you wanted to provide some variable
+            // that scenekit doesn't know about,
+            // use `technique.setValue`
+            // and `type` instead of `semantic`
+])
+// Resoures placed at:
+// https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle
+```
+```glsl
+// color2alpha.vsh
+attribute vec4 a_position;
+varying vec2 uv;
+
+void main() {
+    gl_Position = a_position;
+    // simply passing along texture-coordinate
+    uv = (a_position.uv + 1.0) * 0.5;
+}
+```
+```glsl
+// color2alpha.fsh
+uniform sampler2D colorSampler;
+varying vec2 uv;
+
+void main() {
+    vec4 oldColor = texture2D(colorSampler, uv);
+    float whiteness = (oldColor.x + oldColor.y + oldColor.z) / 3.0;
+    vec4 newColor = vec4(oldColor.xyz, whiteness);
+    gl_FragColor = newColor;
+}
 ```
 
 

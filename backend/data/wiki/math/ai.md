@@ -664,20 +664,22 @@ def optimalStrategy():
 
 ### Contraction mapping: background information
 Contraction mapping is an elegant way of increasing the performance of dynamic programming.
-For some functions $f$ it allows us to replace recursive calls ...
+For some functions `calcA` it allows us to replace recursive calls ...
 ```python
-def f(arg):
-    return ... f(arg) ... # recursive
-f(a)
+def calcA(i):
+    return something(calcA(j)) # recursive
+
+A[i] = calcA(i)
 ```
 ... with an easing-code:
 ```python
-def f(a, fOld):
-    return ... fOld ... # non-recursive
-fNew = 0
-while |fNew - fOld| > e:
-    fOld = fNew
-    fNew = f(a, fOld)
+def calcA(Aold)
+    return something(Aold) # non-recursive
+
+Anew = [0, 0, 0]
+while |Anew - Aold| > e:
+    Aold = Anew
+    Anew = calcA(Aold)
 ```
 
 A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
@@ -689,8 +691,8 @@ $$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq  |x_1 - x_2|$$
 
 In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ *again* to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
 
-- If a function is a contraction, it has one unique fixed point $x_{fix}$.
-- $ \forall x \in X: x, f(x), f(f(x)), ... $ converges to the fixed point $x_{fix}$
+- If a function is a contraction, it has at most one fixed point $x_{fix}$.
+- $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
 
 
 
