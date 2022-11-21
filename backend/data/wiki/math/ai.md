@@ -663,24 +663,17 @@ def optimalStrategy():
 ```
 
 ### Contraction mapping: background information
-Contraction mapping is an elegant way of increasing the performance of dynamic programming.
-For some functions `calcA` it allows us to replace recursive calls ...
-```python
-def calcA(i):
-    return something(calcA(j)) # recursive
 
-A[i] = calcA(i)
-```
-... with an easing-code:
-```python
-def calcA(Aold)
-    return something(Aold) # non-recursive
+Imagine we want to find an $x$ such that 
+$$ x = f(x) $$
+We first try candidate $x_0$.
+$$
+    f(x_0) \to x_1, x_1 \neq x_0 \\
+    f(x_1) \to x_2, x_2 \neq x_1 \\
+    f(x_2) \to x_3, x_3 \approx x_2
+$$
+How did that work? It's because $f$ is a **contraction**.
 
-Anew = [0, 0, 0]
-while |Anew - Aold| > e:
-    Aold = Anew
-    Anew = calcA(Aold)
-```
 
 A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
 $$ f(x_{fix}) = x_{fix} $$
@@ -695,6 +688,23 @@ In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to
 - $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
 
 
+Applied to programming, we can replace a recursive calculation ...
+```python
+def calcA(i):
+    return something(calcA(j)) # recursive
+
+A[i] = calcA(i)
+```
+... with a non-recursive easing-code:
+```python
+def calcA(Aold):
+    return something(Aold) # non-recursive
+
+Anew = [0, 0, 0]
+while |Anew - Aold| > e:
+    Aold = Anew
+    Anew = calcA(Aold)
+```
 
 
 Applying this to our MDP:
