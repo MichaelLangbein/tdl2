@@ -603,7 +603,7 @@ A policies value is calculated recursively:
 $$ V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')] $$
 But in practice, that $V(s')$ is problematic: this keeps recursing down until at some point `isEndState(s) == true`.
 
-We can get a better performance by employing **contraction mapping**:
+We can get a better performance by employing **contraction mapping** aka. **fixed-point iteration**:
 $$
 \begin{aligned}
   V^{new}, & V^{old}: \text{dictionaries} \\
@@ -661,6 +661,8 @@ def optimalStrategy():
     return strategy
 
 ```
+It is important to note that other strategies than contraction-mapping might be better - like Simplex-Gradient-Descent.
+Contraction-mapping only converges in certain cases (see below), and if it does, it does so not very fast.
 
 ### **Contraction mapping: background information**
 
