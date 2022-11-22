@@ -683,14 +683,13 @@ def gradDesc(f, x):
     alpha = 0.01
     s = 10000
     sMax = 0.001
-    fx = f(x)
     while s > sMax:
+        fx = f(x)
         dfdx = np.asarray([
             (f( x + deltaX ) - fx) / deltaX[0],
             (f( x + deltaY ) - fx) / deltaY[1],
         ])
         x = x - alpha * dfdx
-        fx = f(x)
         s = size(dfdx)
     return x
 
