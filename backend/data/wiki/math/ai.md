@@ -662,7 +662,7 @@ def optimalStrategy():
 
 ```
 
-### Contraction mapping: background information
+### **Contraction mapping: background information**
 
 Imagine we want to find an $x$ such that 
 $$ x = f(x) $$
@@ -672,20 +672,26 @@ $$
     f(x_1) \to x_2, x_2 \neq x_1 \\
     f(x_2) \to x_3, x_3 \approx x_2
 $$
-How did that work? It's because $f$ is a **contraction**.
+How did that work? It's because $f$ is a **contraction**, and this algorithm is called **fixed point iteration**.
 
 
-A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
-$$ f(x_{fix}) = x_{fix} $$
+> A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
+> $$ f(x_{fix}) = x_{fix} $$
 
 
-A **contraction** is a function $f: X \to X$ for which:
-$$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq  |x_1 - x_2|$$
+> A **contraction** is a function $f: X \to X$ for which:
+> $$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq  \alpha |x_1 - x_2|$$ 
+> for some fixed $\alpha < 1$.
+>
+> In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ *again* to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
 
-In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ *again* to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
+That is: a function is a contraction if its slope $\frac{f(x + \delta) - f(x)}{\delta}$ is less than one for any $x$ and any $\delta$. Notice that e.g. a linear function is not a contraction if it's slope is too large. $\sin(x)$ isn't a contraction, either. *But*: even if a function is not a contraction, a [slight variant of that function might be one](https://math.stackexchange.com/questions/2389656/iterative-method-to-solve-fx-x).
 
-- If a function is a contraction, it has at most one fixed point $x_{fix}$.
-- $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
+
+Contractions have useful properties:
+
+> - If a function is a contraction, it has at most one fixed point $x_{fix}$.
+> - $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
 
 
 Applied to programming, we can replace a recursive calculation ...
