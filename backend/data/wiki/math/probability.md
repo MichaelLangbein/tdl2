@@ -7,7 +7,7 @@ $$
 
 # Basics
 
-### Probability space
+## Probability space
 
 Probability works on some basic entities:
 - $\samplespace$ is a nonempty set called the sample-space. 
@@ -99,7 +99,7 @@ Notice the following facts:
 >> Induction step. Suppose that... 
     
 
-### A few lemmas on conditional probability <a id="condPropLemmas"></a>
+## A few lemmas on conditional probability <a id="condPropLemmas"></a>
 
 In a "causal" chain of events $A, B, C$ we can integrate out the middle-event $B$.
 $$
@@ -131,7 +131,7 @@ $$
 $$
 
 
-\subsection{Decomposing variance - the road to sensitivity analysis}
+## Decomposing variance - the road to sensitivity analysis
 
 **Expressing variance as expectation** ...
 $$
@@ -232,7 +232,7 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
 
 
 
-### Probabilistic fallacies
+## Probabilistic fallacies
 
 - T-Test interpretation: If $\probFunct[A|B] = x$, then this does *not* mean that $\probFunct[A|\overline{B}] = 1 - x$.
 - Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$

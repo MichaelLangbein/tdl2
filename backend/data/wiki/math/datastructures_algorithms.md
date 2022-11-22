@@ -611,6 +611,112 @@ class Memory {
 
 ```
 
+
+# Optimization
+
+## Fixed-point iteration
+
+Imagine we want to find an $x$ such that 
+$$ x = f(x) $$
+We first try candidate $x_0$.
+$$
+    f(x_0) \to x_1, x_1 \neq x_0 \\
+    f(x_1) \to x_2, x_2 \neq x_1 \\
+    f(x_2) \to x_3, x_3 \approx x_2
+$$
+How did that work? It's because $f$ is a **contraction**.
+
+
+A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
+$$ f(x_{fix}) = x_{fix} $$
+
+
+A **contraction** is a function $f: X \to X$ for which:
+$$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq  |x_1 - x_2|$$
+
+In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ *again* to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
+
+- If a function is a contraction, it has at most one fixed point $x_{fix}$.
+- $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
+
+
+Applied to programming, we can replace a recursive calculation ...
+```python
+def calcA(i):
+    return something(calcA(j)) # recursive
+
+A[i] = calcA(i)
+```
+... with a non-recursive easing-code:
+```python
+def calcA(Aold):
+    return something(Aold) # non-recursive
+
+Anew = [0, 0, 0]
+while |Anew - Aold| > e:
+    Aold = Anew
+    Anew = calcA(Aold)
+```
+
+## Simplex gradient descent
+Fixed point iteration only works in certain cases and even then is slow. A gradient-descent optimization is often faster at converging.
+
+Problem: 
+$$ \text{min}_x f(x) $$
+Algorithm: 
+$$ 
+    \Delta_0 = - \alpha \frac{df}{dx}|x_0  \\
+    x_1 = x_0 + \Delta_0
+$$
+
+
+```python
+def f(x):
+    return 1 - (x[0]-4)**3 + (x[1]-1)**2
+
+def size(v):
+    return np.sum(v * v)
+
+def gradDesc(f, x):
+    deltaX = np.asarray([0.001, 0.0])
+    deltaY = np.asarray([0.0, 0.001])
+    alpha = 0.01
+    s = 10000
+    sMax = 0.001
+    fx = f(x)
+    while s > sMax:
+        dfdx = np.asarray([
+            (f( x + deltaX ) - fx) / deltaX[0],
+            (f( x + deltaY ) - fx) / deltaY[1],
+        ])
+        x = x - alpha * dfdx
+        fx = f(x)
+        s = size(dfdx)
+    return x
+
+gradDesc(f, np.asarray([1, 1]))
+
+```
+
+## Simulated annealing
+
+
+## Optimization vs dynamic programming
+Dynamic programming is all about finding x by determining it from the lowest case up.
+That is nicely rigorous, but sometimes we're better off using a different strategy.
+Instead of using $f$ to find $x$, we suggest an $x_0$, see if it fits $f$, and iterate.
+That is, often we can make dynamic programming faster by turning it into an optimization-problem.
+But: contrary to dynamic programming, optimization can get stuck in local minima.
+
+|                     | Computational effort                    | Guaranteed quality               |
+|---------------------|-----------------------------------------|----------------------------------|
+| dynamic programming | Explores (almost) full space            | will find optimum                |
+| optimization        | Explores only one (a few) zig-zag paths | might get stuck in local minimum |
+|                     |                                         |                                  |
+
+
+
+
 # Data-structures
 
 |                | search | insert | remove |
