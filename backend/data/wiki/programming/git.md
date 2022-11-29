@@ -4,10 +4,26 @@
 
 - `origin`: default name for your remote repository
     
-- `head`: *your* last *commit* on the current branch. Does not yet include non-committed changes. 
+- `HEAD`: *your* last *commit* on the current branch. Does not yet include non-committed changes. 
     - When you switch branches with `git checkout`, the HEAD revision changes to point to the tip of the new branch.
     - When you do a `git pull`, your working directory may contain new stuff, which your head is lagging behind. To see the difference between the working dir and your last commit, do `git diff HEAD`
+
 - `index`: The index is a single, large, binary file in baseOfRepo/.git/index, which lists all files in the current branch, their sha1 checksums, time stamps and the file name
+
+
+
+## Relative commit-naming scheme:
+- `<commit>~2`: grand-parent of commit. Usually the commit you'll work with will be `HEAD`.
+    - `<commit>~` is synonymous to `<commit>~1` which means: parent of commit
+- `<commit>^2`: 
+    - For a commit with only one parent, `~` and `^` mean the same thing. 
+    - For a merge-commit, `<commit>^1` means the first parent of commit, `<commit>^2` means the second parent of commit.
+        - In `commit = merge main into feature`, we'll have `main = commit^2` and `feature = commit^1` (I think)
+    - `<commit>^ === <commit>^1`
+    - `<commit>^0 === commit`
+- You can chain those operators:
+    - `<commit>~2^1~2` means: go to comit's grand-parent. That grand-parent was a merge - at that merge, go to the first of the merged branches. Within that first branch, go another two generations directly up.
+
 
 
 <img src="../assets/programming/git_workflow.jpg" />
@@ -52,12 +68,13 @@ git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
 
 ## Merge vs. rebase
 
-<img src="../assets/programmin/../programming/merge_vs_rebase.png" />
+<img src="../assets/programming/merge_vs_rebase.png" />
 
 
 **Reverting and resetting** is best explained in this post: `https://stackoverflow.com/questions/4114095/how-to-revert-git-repository-to-a-previous-commit}. Basically, we have these options: 
     -`git revert <lastGoodCommitHash>..HEAD` will execute the inverse of all the operations and commit them as a new commit. This way, the old history stays intact.
     -`git reset <lastGoodCommitHash>` will un-stage all the commits from `<firstBadCommitHash>..HEAD`. This way, you're rewriting history, which is really only good if you're working alone on a repo.
+        - after a revert, a push to remote only works with the force `-f` flag.
 
 
 
@@ -66,7 +83,7 @@ git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
 # checkout prev (older) revision
 git_prev() {
     git checkout HEAD~
-
+}
 
 # checkout next (newer) commit
 git_next() {
@@ -74,7 +91,7 @@ git_next() {
     HASH=`git rev-parse $BRANCH`
     PREV=`git rev-list --topo-order HEAD..$HASH | tail -1`
     git checkout $PREV
-
+}
 ```
 
 ## Undoing commits
