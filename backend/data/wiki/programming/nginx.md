@@ -1,6 +1,16 @@
 # nginx
 Based on [this article](https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms) by digital ocean.
 
+## Permissions
+On linux, only `root` may listen to ports below 1024.
+For that reason, the nginx *master*process runs as root.
+It spawns *worker*processes though that run as `nginx` or `www-data`: `ps-aux | grep nginx`
+
+Your web-files need have permissions that allow the user `nginx` to access them. 
+Usually thats `644` for files and `755` for directories.
+
+
+
 ## `server` block
 A virtual server.
 - `listen`: 

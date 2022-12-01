@@ -94,6 +94,7 @@ PPA's worth knowing:
 - `usermod -a -G <group-to-add-user-to> <user-to-add-to-group>`
 - `chown -R <new-owner-name> <file-name>`
 - `chgrp -R <new-owner-group> <file-name>`
+- `chmod -R g+rw <target>`
 
 
 
