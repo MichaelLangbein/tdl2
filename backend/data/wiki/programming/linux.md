@@ -97,6 +97,35 @@ PPA's worth knowing:
 - `chmod -R g+rw <target>`
 
 
+## SE-linux
+Additional security layer made by NSA. Common in RHEL and Centos.
+It adds *labels* to your files and processes. For that, your file-system gets periodically *re-labeled*.
+
+
+There are multiple labels: user_u, role_r, type_t. Together they are called a *context*.
+There is a source-context `scontext` and a target-context `tcontext`.
+
+
+You can modify both the labels as well as the rules applied to the labels.
+
+### Finding permission problems
+- `getenforce`: check if SE-linux is active
+- `setenforce 0/1`: deactivate/activate SE-linux
+- `cat /var/log/audit/audit.log | grep <processid>`: Check SE-linux log to see if it has interfered with your process
+    - `cat /var/log/audit/audit.log | grep <processid> | audit2why`: Clear-text explanation of why an operation was not permitted (nice!)
+- `ls -ahltZ`: Check SE-linux labels on your file
+- `ps -auxZ`: Check SE-linux labels on your process
+- `sesearch`: search rules for keword
+
+### Solving permission problems
+- `semanage`: 
+- `setsebool`: 
+- `chcon`: Change the labels (=the context) for a file. 
+    - Example: Making all files in dir accessible by nginx: `chcon -R -v --type=httpd_sys_content_t riesgos/frontend`
+- `restorecon`: 
+
+
+
 
 ## network
 

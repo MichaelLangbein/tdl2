@@ -31,7 +31,8 @@ Images:
 
 ## PCI (payment card industry) rules
 ### firewall
-### 
+### se-linux
+See linux.md
 
 ## nmap
 
