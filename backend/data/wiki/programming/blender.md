@@ -1,5 +1,28 @@
 # Blender
 
+## Modelling
+Simple 20min tutorial on basics of face-sculpting: https://www.youtube.com/watch?v=GiUAmKZRf9I&t=939s
+
+
+
+
+
+## Draping
+
+### Shrink-wrap modifier
+
+### UV-mapping
+
+
+
+
+
+
+## Exporting
+When exporting, make sure that your textures are included and that all modifiers are applied. 
+
+
+
 ## Textures
 
 ### Color- aka. diffuse- aka. albedo-texture
@@ -12,6 +35,12 @@ Normals. When using a normalmap-texture with a principled BSDF, make sure you co
 Use with principled BSDF
 
 ### Roughness map
+
+
+
+
+
+
 
 
 ## Materials
@@ -64,6 +93,10 @@ Some materials have two layers to them. Example: car paint (metallic) or protect
 Requires metallic == 0
 Ideally with roughness == 0, base-color very light
 Makes things like glass.
+
+
+
+
 
 
 ## Liquid
