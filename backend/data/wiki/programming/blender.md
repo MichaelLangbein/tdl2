@@ -13,6 +13,17 @@ Simple 20min tutorial on basics of face-sculpting: https://www.youtube.com/watch
 
 ### UV-mapping
 
+- On the side: open uv-mapping view; load in an image
+- Go into camera: select and `CTRL+0` (in object-mode)
+- Add background image to camera
+- Adjust camera resolution to fit background image
+- Move camera so that image lies over model
+- Select model in edit-mode.
+- Project vertices onto texture: hit `u` followed by `uv-unwrap`
+- Select model in object mode
+- Add a material (ideally Emission)
+- Click on yellow dot left of `color`, pick image
+
 
 
 
