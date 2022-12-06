@@ -50,3 +50,10 @@ Then $a_n = \frac{(d/dx)^n \frac{-x}{-1 + x + x^2} | 0}{n!} $
 ## When it doesn't apply:
 
 ## When it's just too complicated:
+
+
+## Applications
+
+- Programming: finding closed-form expressions for recurrence-relations
+- Statistics: finding closed-form expressions for recurrent combinations
+- From [stackexchange](https://math.stackexchange.com/questions/25430/why-are-generating-functions-useful): Closed form formulas are overrated. When they exist, generating function techniques can often help you find them; when they don't, the generating function is the next best thing, and it turns out to be much more powerful than it looks at first glance. For example, most generating functions are actually meromorphic functions, and this means that one can deduce asymptotic information about a sequence from the locations of the poles of its generating function. This is, for example, how one deduces the asymptotic of the partition numbers.
