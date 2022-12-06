@@ -38,6 +38,21 @@ $$g(x) = \frac{-x}{-1 + x + x^2}$$
 
 Then $a_n = \frac{(d/dx)^n \frac{-x}{-1 + x + x^2} | 0}{n!} $
 
+Getting an explicit form of that derivative:
+$a_n = \frac{2^{-n-1} [2(1 + \sqrt{5})^n - 2(1-\sqrt{5})^n] }{\sqrt(5)}$
+
+In code: 
+```python
+import math as m
+
+def fib(n):
+    a = 2**(-n-1)
+    b = (1 + m.sqrt(5))**n
+    c = (1 - m.sqrt(5))**n
+    d = m.sqrt(5)
+    return a * (2*b - 2*c) / d
+```
+
 
 ## Addition
 
