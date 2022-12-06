@@ -1,10 +1,69 @@
 # Basics
 
-- **classpath**: classes that can get compiled into your artifact
-- **javac**: 
-- **java**: 
+
+```bash
+mkdir main
+touch main/Greeter.java
+touch main/Main.java
+
+echo `
+        package main;
+        public class Greeter {
+            public static String sayHi() {
+                return "Hi there, java!";
+            }
+        }
+` > main/Greeter.java
+
+echo `
+        package main;
+        import main.Greeter;
+        public class Main {
+            public static void main(String[] args) {
+                String greeting = Greeter.sayHi();
+                System.out.println(greeting);
+            }
+        }
+` > main/Main.java
+
+javac main/Main.java
+java main.Main
+```
+
+Java has this weird thing where it's not being compiled into a single executable.
+Instead, `javac` creates *several* `*.class` files, all containing JVM-bytecode.
+But since things are in multiple files, `java` now needs to know how to resolve those files when imported from another location.
+
+Per default for that java looks through the `CLASSPATH`: `java main.class -classpath ./my/libs/`.
+But we can also *package* the compiled `*.class` files into a standard structure.
+In *jar*s, the `MANIFEST.MF` file tells java where it can find compiled files and which file to start from: `java -jar myPackagedApp.jar`.
+
+<small>(Really, this is very similar to `tsc`s default behavior when compiling to javascript. Also like `tsc`, java does not require a standard directory-structure - classes appear in the same dir as their `.java` counterparts. Only with the birth of package-formats (war and jar) did java's deeply nested folder-structures appear.)</small>
+
+- **classpath**: java-runtime looks for imports in those dirs.
 - **jar**:
-- **war**: 
+    ```
+    META-INF/
+        MANIFEST.MF  # may contain additional metadata about the files stored in the archive
+    com/
+        baeldung/
+            MyApplication.class
+    ```
+- **war**:
+    ```
+    META-INF/
+        MANIFEST.MF
+    WEB-INF/
+        web.xml  # information for servlet-container on where the start.class is
+        jsp/
+            helloWorld.jsp
+        classes/
+            static/
+            templates/
+            application.properties
+        lib/
+            // *.jar files as libs
+    ```
 
 # Settings
 
@@ -120,6 +179,14 @@ Contrary to CGI programs, a servlet only is started once and then sits there run
 For a servlet to run in a servlet-container, it must simply extend the class `HttpServlet`. Also, the servlet needs a `web.xml` file. That file tells the container which requests should go to this servlet, where the base dir is, which class extended `HttpServlet`.
 
 
+**Important files and dirs**:
+Tomcat expects applets to be saved under `tomcat/webapps` in the *war*-packaging-format:
+- `tomcat/webapps/MyServlet/`
+    - `./src/` <-- source-files
+    - `./WEB-INF/`
+        - `./classes/` <-- compiled java-byte-code
+        - `./*.html`
+        - `./web.xml` <-- meta-data
 
 
 Place the following in an eclipse "dynamic-web-project"'s src-folder:
@@ -416,9 +483,17 @@ Relations are the most important and most difficult part of JPA.
 - Many-to-many relations: creates an intermediate id-mapping table.
 
 
-# Spring
+# Spring(-Boot)
 
 A backend-framework centered around dependency injection.
+ - In your `pom.xml` declare `providers` to add functionality to your project
+ - In your code, implement an interface exposed by that `provider` to use it in your app.
+ - Common providers:
+    - `jpa` for database-access
+    - ``
 
 
 # Geoserver
+Geoserver is the quintessential example of a complex but working java-application.
+
+- 
