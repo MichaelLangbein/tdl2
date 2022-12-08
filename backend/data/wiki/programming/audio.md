@@ -1,6 +1,6 @@
 # Audio
 
-## Hardware
+# Hardware
 Soundcard does digital (PCI) to analog (cinch) conversion.
 PCM is the most common digital audio format.
 
@@ -17,7 +17,7 @@ card 1: PCH [HDA Intel PCH], device 0: CX20751/2 Analog [CX20751/2 Analog]
 - PCH is the soundcard that is connected to the moss-green standard plug.
 - HDMI is for both audio and video. Use this card only if your sound-system is actually connected via the trapezoidal HDMI plug.
 
-## Kernel soundcard-driver
+# Kernel soundcard-driver
 To allow os to read and write to/from soundcard.
 
 - Old: OSS (Open Sound System)
@@ -26,7 +26,7 @@ To allow os to read and write to/from soundcard.
 Many apps can support using ALSA directly.
 But this does not support multiplexing: if an app uses ALSA directly, no other app can use the soundcard.
 
-## Sound-servers: Pulseaudio, Pipewire, Jackd
+# Sound-servers: Pulseaudio, Pipewire, Jackd
 
 Program (client) -> Pulseaudio (server) -> ALSA (driver) -> soundcard
 
@@ -45,7 +45,7 @@ Sound-servers can resample (= adjust sampling rate) and mix multiple audio-strea
 Pulseaudio and jack aren't very compatible. 
 Commonly you add pulseaudio as an input to jack if you want to use both. Not good in terms of latency.
 
-## Common error messages
+# Common error messages
 - `Unable to start JACK server: unable to allocate memory` 
     -> user must be added to `audio` group: `sudo usermod -a -G audio michael`
 - `ALSA: Cannot open PCM device alsa_pcm for playback` -> alsa_pcm is probably hogged by pulseaudio. 
@@ -55,29 +55,29 @@ Commonly you add pulseaudio as an input to jack if you want to use both. Not goo
     - JACK must access the correct soundcard.
     - In settings, deactivate real-time mode and chose your `PCH` card as the interface (not the HDMI card)
 
-## Protocols
-### Open Sound Control
+# Protocols
+## Open Sound Control
 Encodes notes like MIDI does. But can be transferred over TCP.
 Both overtone and sonic-pi have OSC-servers.
 
 
-## Supercollider
+# Supercollider
 
 Supercollider is a simple audio-synthesizer that talks (most commonly) to jackd.
 It has an own language, but languages talk to the supercollider-daemon in a client-server-architecture, so that other languages may use the supercollider-engine, too. Two of the most popular ones are Sonic-PI (ruby) and Overtone (clojure).
 
-## Overtone
+# Overtone
 In the words of Sam Aaron - core-contributor to overtone and creator of sonic-pi - overtone is more low-level than sonic-pi.
 Overtone allows to create new synths on the fly, which sonic-pi doesn't.
 Sonic-pi has more built in abstractions already there ... which you may like or not.
 It's a little like comparing Webgl to threejs.
 
-## Sonic-PI
+# Sonic-PI
 
-### Packages
+## Packages
 Fortunately, there are pre-built packages for linux, too. [This one](https://sonic-pi.net/files/releases/v3.3.1/sonic-pi_3.3.1_2_armhf.deb) worked for me on mint, even though it is intended for ubuntu 20. Remarkably, it even automatically works without me starting jackd.
 
-### Building
+## Building
 Quite tricky.
 As per [github](https://github.com/sonic-pi-net/sonic-pi/blob/dev/BUILD-LINUX.md).
 - Requires cmake
@@ -85,10 +85,10 @@ As per [github](https://github.com/sonic-pi-net/sonic-pi/blob/dev/BUILD-LINUX.md
 - Requires QT: `sudo apt-get install qt5-default libqt5scintilla2-dev libqwt-qt5-dev libqt5svg5-dev qt5-qmake qt5-default qttools5-dev qttools5-dev-tools qtdeclarative5-dev libqt5webkit5-dev qtpositioning5-dev libqt5sensors5-dev qtmultimedia5-dev libffi-dev`
 - Requires latest erlang and elixir - nicely described [here](https://r00t4bl3.com/post/how-to-install-elixir-on-linux-mint-20-ubuntu-20-04-focal-fossa). If you're on Mint, don't forget to edit `/etc/apt/sources.list.d/erlang-solutions.list` replacing `ulyana` with `focal`.
 
-### GUI
+## GUI
 Keyboard-bindings seem to be [emacs-like](https://github.com/sonic-pi-net/sonic-pi/blob/dev/etc/doc/tutorial/B.02-Shortcut-Cheatsheet.md)
 
-## Theory
+# Theory
 
 Based on analog synthesizer.
 
