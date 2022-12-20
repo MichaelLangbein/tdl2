@@ -1,12 +1,12 @@
 # Threejs
 
-## General contepts
+## General concepts
 - `Renderer` an abstraction around your WebGL-context.
   - Data can only be shared within one renderer.
 - `Scene`: a tree of objects
   - Handles nested transformations
 - `Camera`: contains parameters that renderer later uses for projection
-  - Does not need to be added to scene.
+  - Does not need to be added to scene. (Sometimes is added to scene-objects though to follow their movement.)
 
 ## Spaces
 
