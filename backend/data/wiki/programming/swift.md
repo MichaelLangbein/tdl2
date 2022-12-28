@@ -82,6 +82,88 @@ Task(priority: .background) {
 
 # SwiftUI
 
+## Structure
+
+
+- **Assets**:
+    - `AppName/Assets.xcassets`
+    - Contains list of asset-**set**s.
+    - Each set contains one or more variations on the same asset.
+    - **SceneKit-assets**:
+        - `AppName/AppName.scnassets`
+        - Models are commonly saved in this kind of assets-catalog.
+        - Can then be accessed like this: `let sceneShip = SCNScene(named: "art.scnassets/ship.dae")`
+- Settings:
+    - Project:
+        - 
+    - Targets:
+        - Info:
+            - Custom iOS Target Properties:
+                - List here the permissions your app needs
+        - Build-phases
+            - Dependencies
+            - Compile-sources: list of files to compile
+            - Copy-bundle-resources: list of files to include in bundle
+                - automatically includes all `.xcassets` and `.scnassets`
+                - automatically includes all `.plist`s
+- **`plist` files**, aka. property lists: 
+    - XML-config-files
+    
+
+- For post-processing:
+    - http://blog.simonrodriguez.fr/articles/2015/08/a_few_scntechnique_examples.html
+    - https://github.com/kosua20/Technique-iOS 
+    - AppName/Technique.plist
+    - AppName/color2alpha.vsh (the SCNTechnique expects files in the same directory)
+    - AppName/color2alpha.fsh (the SCNTechnique expects files in the same directory)
+    - AppName/SceneKitAssetCatalog.scnassets/LoomisHead.usdz
+    - Access:
+        ```swift
+        if let path = Bundle.main.path(forResource: "drops_technique", ofType: "plist") {
+            if let dict1 = NSDictionary(contentsOfFile: path)  {
+                let dict = dict1 as! [String : AnyObject]
+                let technique = SCNTechnique(dictionary: dict)
+                //Needs the screen size
+                technique?.setValue(NSValue(cgSize: self.view.frame.size.applying(CGAffineTransform(scaleX: 2.0, y: 2.0))), forKeyPath: "size_screen")
+                techniques["Drops"] = technique
+            }
+        }
+        ```
+
+
+                
+.
+├── Loooomity               <-------------------------------- code-dir
+│   ├── Assets.xcassets     <-------------------------------- assets-dir
+│   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
+│   │   ├── AppIcon.appiconset
+│   │   │   └── Contents.json
+│   │   └── Contents.json
+│   ├── ContentView.swift
+│   ├── LoooomityApp.swift
+│   ├── Preview Content
+│   │   └── Preview Assets.xcassets
+│   │       └── Contents.json
+│   └── README.md
+└── Loooomity.xcodeproj     <------------------------------- settings-dir
+    ├── project.pbxproj     <------------------------------- project-settings
+    ├── project.xcworkspace  <------------------------------ workspace-settings (= which external resources to include, ...)
+    │   ├── contents.xcworkspacedata
+    │   ├── xcshareddata
+    │   │   ├── IDEWorkspaceChecks.plist
+    │   │   └── swiftpm
+    │   │       └── configuration
+    │   └── xcuserdata
+    │       └── michaellangbein.xcuserdatad
+    │           └── UserInterfaceState.xcuserstate
+    └── xcuserdata          <------------------------------- userdata-settings
+        └── michaellangbein.xcuserdatad
+            └── xcschemes
+                └── xcschememanagement.plist
+                
+
+
 
 ## Passing callbacks to views
 
@@ -123,8 +205,10 @@ struct ProcessorView: View {
 
 ## State
 
+** An update to a state-property of a view will cause the view's body to be re-calculated **
+
 - `@State`: local, primitive state
-- `@ObjectBinding`: local or passable complex state
+- `@StateObject`: local or passable complex state (there's also `ObjectBinding`, but that's getting less used)
 - `$variableName`: two-way binding
 - `@EnvironmentObject`: global state
 
@@ -446,6 +530,10 @@ void main() {
 
 ## Using UIKit Components in SwiftUI Components
 Details from this article: https://itnext.io/using-uiview-in-swiftui-ec4e2b39451b
+
+** Updates in state re-render a whole tree in swift-ui. However, they don't cause a re-render of a ViewController.
+Its UIViewControllerRepresentable will call the `update` method, but not the `create` method.
+In other words: your complex state in ViewControllers is safe from re-calculating. **
 
 ```swift
 
