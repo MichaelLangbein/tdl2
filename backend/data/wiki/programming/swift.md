@@ -764,3 +764,5 @@ https://www.revenuecat.com/blog/engineering/ios-in-app-subscription-tutorial-wit
     - For testing, attach this file to your scheme
     - For deployment, don't forget to remove it.
     - Maybe better copy the whole scheme for testing-purposes (so you can't accidentally publish it)
+
+For a free-trial period followed by a one-time-purchase, make the actual app free and add a non-consumable IAP, that activates after 7 days.

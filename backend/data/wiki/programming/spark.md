@@ -1,11 +1,11 @@
-# Hadoop
+# MapReduce
 
 ## Concepts
 
 - **HDFS**: Hadoop distributed file storage
   - shared nothing
   - blocks of data stored on different nodes
-- **Workflow**: a series of jobs
+- **Workflow**: a DAG of jobs ... not part of hadoop; requires a *workflow-scheduler* like airflow, spark or dask.
   - **Job**: a pair of map- and reduce-instructions.
     - **Task**: a part of a job located on one machine, near its input-data.
 - **Map**:
@@ -16,7 +16,8 @@
     - then each reducer collects data with its key and merge-sorts.
 - **Reduce**:
   - One reduce-task for each key
-- **Scheduler** attempts to places steps on the same machine where the data is located.
+    - The phase where the reducers get the data for their keys is called the **shuffle**.
+- **YARN-Scheduler** attempts to places steps on the same machine where the data is located.
   - Mappers are placed on the machines where their input is.
     - Number of map-tasks: == number of input-file-blocks
   - Reducers are placed on the machines where their output will go.
@@ -83,12 +84,23 @@ volumes:
 
 # Spark
 
+Spark lets you create DAG's of many map/reduce-steps distributed over many nodes.
+Note the slash: a spark-operation may be a map only, or a reduce only, or a combination of multiple.
+
+
+## Versus MapReduce
+- MapReduce saves all its results in HDFS after computation. Spark keeps data in memory (in so called RDDs). As long as a single node's data fits into its memory, this is a lot faster.
+  - In fact, spark does not come with a data-storage method at all. If you want HDFS, you need to set it up separately.
+- Spark has workflows (as in MapReduce-lingo): instead of sending each map-reduce pair separately, it creates a DAG of all required map/reduce operations.
+- There is no longer a default-sorting step between every map- and reduce-task.
+- The DAG optimizes out all unneccessary map-operations.
+
 ## Concepts
 
 Grand concepts:
 - **Job**: Code which reads input from HDFS or local and writes some output.
-- **Stages**: Jobs are divided into stages. Stages are classified as map- or reduce-stages.
-- **Tasks**: Each stage has some tasks, one task per partition. One task is executed on one partition by one executor (=process).
+  - **Stages**: Jobs are divided into stages. Stages are classified as map- or reduce-stages.
+    - **Tasks**: Each stage has some tasks, one task per partition. One task is executed on one partition by one executor (=process).
 - **Master**: The machine on which the driver-program runs.
     - **Driver**: a program that creates a `SparkContext` which it uses to schedule jobs through the cluster-manager.
 - **Slave**: A machine on which an executor-program runs.
@@ -119,7 +131,7 @@ More details:
     - Immutable, distributed, split into multiple partitions.
 - **HDFS**: Hadoop distributed file-storage
     - An RDD written to disk(s).
-    - Blocks of data are replicated over multiple nodes.
+    - You *can* chose to set up HDFS as your data-storage - spark can read such files. But you don't have to, and spark does not come with a data-storage solution included.
 
 
 
@@ -178,17 +190,48 @@ df = spark.createDataFrame(
     - ... or save it to an external storage (eg HDFS)
     - `reduce, collect, first, treeAggregate, histogram, stdev, saveAsTextFile, ...`
 
+## Distributing large data across cluster
+This depends on what your storage solution is.
+Common solutions are HDFS, S3, or ...
+```python
+```
 
+## Getting results back to master
+```python
+myDf = spark.createDataFrame([ ['Michael', 36], ['Andreas', 33]], ['Name', 'Age'])
+myDf.write.format('csv').option("header", "true").save("relative/to/execpath/on/master")
+# <-- will save to target-path on master one csv-file per worker
+```
+On master:
+```bash
+root@ef5e9026bf46:/opt/spark/relative/to/execpath/on/master# cat part-00000-db13f36f-a92a-4a8c-a1f9-9954fd3056dc-c000.csv 
+Name,Age
+root@ef5e9026bf46:/opt/spark/relative/to/execpath/on/master# cat part-00007-db13f36f-a92a-4a8c-a1f9-9954fd3056dc-c000.csv 
+Name,Age
+Michael,36
+root@ef5e9026bf46:/opt/spark/relative/to/execpath/on/master# cat part-00015-db13f36f-a92a-4a8c-a1f9-9954fd3056dc-c000.csv 
+Name,Age
+Andreas,33
+```
+
+## Caching
+- Workers manage their own cache.
+- You can manually trigger caching with `df.cache()`
+- **Checkpointing** can be used to truncate DAGs. The results of checkpointing are commited to disk.
 
 # Example application: calculating damage in Lima
 
 ## Store exposure data in cluster
+By loading it from the webservice
 
 ## Store intensity data in cluster
+By uploading the file
 
 ## Calculate damage
+Operations on rdds
 
 ## Return location of largest damage
+Save back results to master
 
 ## Create graphic
 
@@ -370,3 +413,14 @@ services:
         --executor-memory 1G \
         /opt/spark-apps/main.py
     ```
+
+
+# Dask
+Like spark, dask takes your code and creates a DAG of map-reduce steps to be distributed over many nodes.
+Contrary to spark, 
+- Its written in python
+- It supports numpy (ie. multi-dimensional arrays; RDD's are basically one-dimensional)
+
+However, it has a lot less issues so far: https://insights.stackoverflow.com/trends?tags=apache-spark%2Cpyspark%2Cdask%2Chadoop%2Cairflow
+On the other hand, the numpy and pandas maintainers are also working on dask.
+ 
