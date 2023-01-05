@@ -750,9 +750,17 @@ Very much like Rx.
 
 # Publishing an app
 
-## Signing apps
+# StoreKit2
+https://www.revenuecat.com/blog/engineering/ios-in-app-subscription-tutorial-with-storekit-2-and-swift/#h-final-notes
 
-## Provisioning
-
-### Provisioning profile
-
+- Since iOS 15
+- In-App-Purchases (IAPs)
+    - Consumable
+    - Non-consumable: bought once, won't expire. Expl: unlocking premium features.
+- Subscriptions:
+    - Auto-renewing
+    - Non-renewing
+- You can test store-kit-behaviour without setting it up in app-store-connect by using a *StoreKit config-file*
+    - For testing, attach this file to your scheme
+    - For deployment, don't forget to remove it.
+    - Maybe better copy the whole scheme for testing-purposes (so you can't accidentally publish it)
