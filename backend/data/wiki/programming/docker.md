@@ -29,11 +29,10 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
         - `prune -a`: removes un-used, dangling images
             
   - `container`
-      - `run -p 4000:80 -d --name=<nameofyourcontaineralllowercase> <nameofyourappalllowercase>` execute that package (where `-p 4000:80` means *map the containers port 80 to the systems port 4000* and `-d` stands for *detached*, i.e. get back control of your command-line after starting the container). `run` is actually a shorthand for `create` and `start`. 
-          - *--expose*: makes a port available inside of a docker-network.
-          - *--publish*: is the long-form of *-p*. It makes the port available outside of a docker-network.        
-              - `run -it ...` creates a new container from an image
-              - `start -i ...` starts up an existing container
+      - `run -p 4000:80 -d --name=<nameofyourcontaineralllowercase> <nameofyourappalllowercase>` execute that package. `run` is actually a shorthand for `create` and `start`.      
+            - `run -it ...` creates a new container from an image and makes it interactive
+            - `start -i ...` starts up an existing container
+          - `--rm` removes the container again after it has been executed.
       - `logs --tail 100 --since <minutes> --timestamps --follow <containerid>`: All `stdout` and `stderr` (?) goes to this log
       - `cp /path/to/local/file.html my-nginx:/var/www/html`
       - `exec`
@@ -63,6 +62,7 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
 - `docker compose` 
     - `up <optional-container-name>`: builds containers if not already there, starts if not already started
         - `--build`: force rebuild
+          - `--no-cache`: ignore cached layers; re-build from scratch
         - `--no-deps`:  don't (re-)start linked containers
     - `build <optional-container-name>`: only builds, doesn't start containers.
         -  `--no-cache`: ignore cached layers; re-build from scratch
