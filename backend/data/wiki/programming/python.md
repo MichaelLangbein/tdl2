@@ -34,9 +34,11 @@ Cheat-sheet:
     - Or just alter `.condarc`
   - create 
     - --name <new-env-name>
-    - --name <new-env-name> --file path/to/environment.yml
   - activate <env-name>
   - env 
     - list
     - export --no-builds | grep -v "prefix" > environment.yml
     - remove --name <env-name>
+    - create --name <new-env-name> --file path/to/environment.yml  (weirdly, `conda create --name xx --file yy.yml` does not work sometimes, but `conda env create --name xx --file yy.yml`.)
+Conda to pip:
+  - pip list --format=freeze > requirements.txt

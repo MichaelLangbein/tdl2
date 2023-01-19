@@ -775,4 +775,19 @@ Activate this testing-apple-id on your phone in settings/app-store/sandbox-accou
 
 ## TestFlight
 TestFlight uses the sandbox environment for in-app purchases.
+# StoreKit2
+https://www.revenuecat.com/blog/engineering/ios-in-app-subscription-tutorial-with-storekit-2-and-swift/#h-final-notes
 
+- Since iOS 15
+- In-App-Purchases (IAPs)
+    - Consumable
+    - Non-consumable: bought once, won't expire. Expl: unlocking premium features.
+- Subscriptions:
+    - Auto-renewing
+    - Non-renewing
+- You can test store-kit-behavior without setting it up in app-store-connect by using a *StoreKit config-file*
+    - For testing, attach this file to your scheme
+    - For deployment, don't forget to remove it.
+    - Maybe better copy the whole scheme for testing-purposes (so you can't accidentally publish it)
+
+For a free-trial period followed by a one-time-purchase, make the actual app free and add a non-consumable IAP, that activates after 7 days.
