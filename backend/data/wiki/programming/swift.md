@@ -750,9 +750,29 @@ Very much like Rx.
 
 # Publishing an app
 
-## Signing apps
+# In App Purchases
 
-## Provisioning
+Current issue:
+    Does connect to app-store, but does not find any products.
+    => State == .newUser
+    Should I do TestFlight-Tests with a schema that does include the StoreKit.test.config?!
+        No. You should set up a Sandbox-Environment. TestFlight will use that environment.
+            But a sandbox should automatically be created for every tester ....
+                ... Oh, I haven't yet subscribed to Annex 2: AppStoreConnect/Agreements/PaidApps. Does it work now? (https://stackoverflow.com/questions/60203717/unity-iap-not-working-in-apple-testflight/60227781#60227781)
+                    W8-BEN
+                
+## Sandbox
+For testing scenarios using data you set up in App Store Connect.
 
-### Provisioning profile
+### Creating a sandbox-user
+Annoyingly, this requires you to set up a test-user with a real email-address that is *not* your own, actual apple-id-email-address.
+Activate this testing-apple-id on your phone in settings/app-store/sandbox-account
+
+### Connecting sandbox-user with IAPs: sign in to app-store with sandbox-user
+
+
+### Connecting app with sandbox
+
+## TestFlight
+TestFlight uses the sandbox environment for in-app purchases.
 
