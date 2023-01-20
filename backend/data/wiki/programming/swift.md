@@ -163,7 +163,21 @@ Task(priority: .background) {
                 └── xcschememanagement.plist
                 
 
+## Views and modifiers
+- Views: ZStack, Text, ...
+- Modifiers: font(), background(), clipShape(), ...
 
+Custom modifiers: 
+```swift
+struct TextBubble: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .backgroundColor(.systemGrey)
+            .borderRadius(5)
+    }
+}
+```
 
 ## Passing callbacks to views
 
@@ -742,10 +756,6 @@ struct CameraPreviewStreamView: UIViewControllerRepresentable {
 }
 
 ```
-
-
-## Combine
-Very much like Rx.
 
 
 
