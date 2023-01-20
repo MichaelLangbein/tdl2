@@ -169,7 +169,7 @@ Task(priority: .background) {
 
 ```swift
 struct ContentView: View {
-    @State var bodyText = "Initial body text "
+    @State var bodyText = "Initial body text"
     var body: some View {
         VStack {
             Text(bodyText)
@@ -211,6 +211,10 @@ struct ProcessorView: View {
 - `@StateObject`: local or passable complex state (there's also `ObjectBinding`, but that's getting less used)
 - `$variableName`: two-way binding
 - `@EnvironmentObject`: global state
+    - An Environment object does not need to be passed down from view to view
+    - Every view can access it as `@EnvironmentObject var someObject`
+    - For downstream views to be able to access that object, some root object needs to have made it available, usually through `@StateObject var theObject` followed by `childView.environmentObject(theObject)`
+    - The environment-object needs to be an `ObservableObject` and all its observed properties need to be `@Published`.
 
 ```swift
 @State var toggled = false
