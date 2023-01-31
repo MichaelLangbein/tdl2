@@ -28,5 +28,6 @@
     "Any time you want to procrastinate, it's because something's not right. Find out why.",
     "Good things don't just come to you. You must go out and get them.",
     "State must be serializable and separate from logic. You can ensure this is to keep state in a database from the beginning. (Riesgos: step-state and step-data in database, but step-function in code)",
-    "Reasoning can be automated. Experience cannot."
+    "Reasoning can be automated. Experience cannot.",
+    "Building is hard. You must make the process enjoyable, because it will take longer than you think. Not only the app must be beautiful, but so must your office."
 ]
