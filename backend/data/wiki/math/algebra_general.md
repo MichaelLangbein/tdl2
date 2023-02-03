@@ -34,7 +34,83 @@ The most common vector-spaces are certainly $\reals^n$ and function-spaces.
 The implementations of the above defined scalar product and vector addition are trivial.
 
 
+```typescript
 
+export abstract class VectorSpace<Vector> {
+    abstract create(data: any): Vector
+    abstract add(a: Vector, b: Vector): Vector
+    abstract isElement(u: any): u is Vector
+    abstract equals(a: Vector, b: Vector): Boolean
+    abstract zero(): Vector
+    /** scalar product */
+    abstract sp(scalar: number, v: Vector): Vector
+    abstract random(): Vector
+}
+
+
+describe(`Testing if ${name} is a proper vector-space`, () => {
+
+    // Part zero: closedness
+    
+    test('closed under vector addition', () => {
+        const v1 = a.random();
+        const v2 = a.random();
+        const v3 = a.add(v1, v2);
+        expect(a.isElement(v3));
+    })
+
+    test('closed under scalar product', () => {
+        let v = a.random();
+        let alpha = 0.5;
+        let u = a.sp(alpha, v);
+        expect(a.isElement(u));
+    })
+
+    // Part one: vector addition properties
+
+    test('vector addition is associative: (v + u) + w = v + (u + w)', () => {
+        const v = a.random();
+        const u = a.random();
+        const w = a.random();
+        const s1 = a.add(a.add(v, u), w)
+        const s2 = a.add(v, a.add(u, w))
+        expect(a.equals(s1, s2));
+    })
+
+    test('vector addition is commutative: v + u = u + v', () => {
+        const v = a.random();
+        const u = a.random();
+        const s1 = a.add(v, u);
+        const s2 = a.add(u, v);
+        expect(a.equals(s1, s2));
+    })
+
+    test('additive identity: v + 0 = v', () => {
+        const zero = a.zero();
+        const v = a.random();
+        const s = a.add(v, zero);
+        expect(a.equals(v, s));
+    })
+
+    // Part two: scalar-product and vector-addition are distributive
+
+    test('scalar-product and vector-addition are distributive: a(v + u) = av + au', () => {
+        const v = a.random();
+        const u = a.random();
+        const alpha = 0.1;
+        const beta = 2.4;
+
+        const r1 = a.sp(alpha, a.add(v, u));
+        const r2 = a.add(a.sp(alpha, v), a.sp(alpha, u));
+        expect(a.equals(r1, r2));
+
+        const r3 = a.sp((alpha + beta), v)
+        const r4 = a.add(a.sp(alpha, v), a.sp(beta, v));
+        expect(a.equals(r3, r4));
+    })
+})
+
+```
 
 
 
@@ -126,16 +202,82 @@ And finally angles:
 $$ cos\theta = \frac{\vec{v} \innerprod \vec{u}}{|\vec{v}||\vec{u}|}$$
 
 
+```typescript
+export abstract class InnerProductSpace<Vector> extends VectorSpace<Vector> {
+    /** inner product */
+    abstract ipr(a: Vector, b: Vector): number;
+
+    /** |v| */
+    norm(v: Vector): number {
+        return this.ipr(v, v);
+    }
+
+    orthogonal(u: Vector, v: Vector): Boolean {
+        return this.ipr(u, v) === 0;
+    }
+
+    angle(u: Vector, v: Vector): number {
+        const enumerator = this.ipr(u, v);
+        const denominator = this.norm(u) * this.norm(v);
+        const cosTheta = enumerator / denominator;
+        const theta = Math.acos(cosTheta);
+        return theta;
+    }
+}
+
+describe(`Testing if ${name} is a proper inner product space`, () => {
+
+    test("Inner-product and scalar-product are associative: (au).v = a(u.v)", () => {
+        const u = i.random();
+        const v = i.random();
+        const alpha = Math.random();
+        const p1 = i.ipr( i.sp(alpha, u), v);
+        const p2 = alpha * i.ipr(u, v);
+        expect(p1 === p2);
+    })
+
+    test("Inner-product and vector-addition are distributive: (u + v).w = u.w + v.w", () => {
+        const u = i.random();
+        const v = i.random();
+        const w = i.random();
+        const p1 = i.ipr( i.add(u, v), w )
+        const p2 = i.ipr(u, w) + i.ipr(v, w);
+        expect(p1 === p2);
+    })
+
+    test("Inner-product is commutative: u.v = v.u", () => {
+        const u = i.random();
+        const v = i.random();
+        const p1 = i.ipr(u, v);
+        const p2 = i.ipr(v, u);
+        expect(p1 === p2);
+    })
+
+    test("Inner-product > 0", () => {
+        const u = i.random()
+        const z = i.zero();
+        if (!i.equals(u, z)) {
+            const p = i.ipr(u, u);
+            expect(p > 0.0);
+        }
+    })
+});
+
+```
+
+
+
 
 As one nice little application, consider this statement. 
-\begin{proof}
-    \subprf{Suppose $|\vec{u}| = |\vec{v}|$.}{$\vec{u} + \vec{v} \orth \vec{u} - \vec{v}$}{
-        This is to prove that $(\vec{u} + \vec{v}) \innerprod (\vec{u} - \vec{v}) = 0$ \\
-        The above can be rewritten to $\vec{u} \innerprod \vec{u} - \vec{u} \innerprod \vec{v} + \vec{v} \innerprod \vec{u} - \vec{v} \innerprod \vec{v}$ \\
-        The two middle terms cancel out, and the two outer terms equal $|\vec{u}|^2$ and $|\vec{v}|^2$, respectively. \\
-        Usign the given, these terms are equal.
-    }
-\end{proof}
+> Suppose $|\vec{u}| = |\vec{v}|$. Prove that $\vec{u} + \vec{v} \orth \vec{u} - \vec{v}$
+>> This is to prove that $(\vec{u} + \vec{v}) \innerprod (\vec{u} - \vec{v}) = 0$
+>>
+>> The above can be rewritten to $ \vec{u} \innerprod \vec{u} - \vec{u} \innerprod \vec{v} + \vec{v} \innerprod \vec{u} - \vec{v} \innerprod \vec{v} $
+>>
+>> The two middle terms cancel out, and the two outer terms equal $ |\vec{u}|^2$ and $|\vec{v}|^2 $, respectively.
+>>
+>> Usign the given, these terms are equal.
+
 
 Other properties of the norm are also easily proved:
 
@@ -148,18 +290,15 @@ Other properties of the norm are also easily proved:
 
 Two more important statements that can be proven for the general inner product spaces are the pythagorean theorem and the Cauchy-Schwartz inequality. 
 
-\begin{proof}
-    Pythagorean theorem.\\
-    \subprf{Suppose $\vec{u} \orth \vec{v}$.}{$|\vec{u}|^2 + |\vec{v}|^2 = |\vec{u} + \vec{v}|^2 $}{
-    }
-\end{proof}
+
+> **Pythagorean theorem**
+>
+> Suppose $\vec{u} \orth \vec{v}$. Prove that $|\vec{u}|^2 + |\vec{v}|^2 = |\vec{u} + \vec{v}|^2 $.  ...
 
 
-\begin{proof}
-    Cauchy-Schwartz inequality.\\
-    \subprf{}{$|\vec{u}||\vec{v}| \geq |\vec{u} \innerprod \vec{v}| $}{
-    }
-\end{proof}
+> **Cauchy-Schwartz inequality**
+> Prove that $|\vec{u}||\vec{v}| \geq |\vec{u} \innerprod \vec{v}| $
+
 
 
 An implementation of this inner product in dimension-free oriented length-space would be:
@@ -291,3 +430,6 @@ This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N
 **Orthogonal complement**
 
 
+# Outer product spaces and tensors
+The outer product of two vectors is a matrix.
+More generally, the outer product of two tensors is another tensor.
