@@ -43,7 +43,7 @@ let dict = [
 ```swift
 // on main thread
 // main does all UI activity
-// prioretized over other threads
+// prioritized over other threads
 DispatchQueue.main.async {
     foo()
 }
@@ -59,20 +59,23 @@ DispatchQueue.global(
 }
 ```
 
-## Async await
-Swift has the `async/await` keywords.
-To call an async-function, you have to be in a `Task` context.
-Tasks happen on the calling thread (usually the main thread) by default.
+### Async await
+Great notes [here](https://www.swiftbysundell.com/articles/the-role-tasks-play-in-swift-concurrency/).
 
-```
-func callApi() async {
+Swift has the `async/await` keywords. They are another way to do multi-threading.
+
+To call an async-function, you have to be in a `Task` context.
+Tasks begin on the calling thread (except if it's a `detached` task). Everything after an `await` keyword, however, might run on another thread.
+
+```swift
+func callApi() async -> [User] {
     let url = URL(string: "https://picksum.photos/200")
     let (data, _) = await URLSession.shared.data(from: url, delegate: nil)
     return data
 }
 
 Task(priority: .background) {
-    let data = await callApi()
+    let users = await callApi()
 }
 ```
 
