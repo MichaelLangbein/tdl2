@@ -1,6 +1,6 @@
 # Linux
 
-## Disks and mounts
+# Disks and mounts
 - `/etc/fstab`: config-file to mount devices
 - `mount`: cli to mount devices
 - `df -h`: show disk usage
@@ -23,13 +23,13 @@ File-system types:
 
 It can happen that you define a networked mount using `/etc/fstab` but still have to use the `mount` command to enter credentials.
 
-## apt
+# apt
 
  - `apt-cache policy <package-name>`: get the version of a candidate before installing it
  - `dpkg -l |grep <package-name>`: check if a package is already installed
 
 
-## Repo's
+# Repo's
 Aka. PPA: personal package archive.
 PPA's worth knowing:
  - Main: from Canonical
@@ -51,7 +51,7 @@ PPA's worth knowing:
   - remove package: `apt remove apache2` or `apt purge apache2` (also deletes config files)
 
 
-## Other package-mechanisms
+# Other package-mechanisms
 
 - apt
     - Distribution-dependent
@@ -69,7 +69,7 @@ PPA's worth knowing:
     - https://appimage.github.io/apps/ 
 
 
-## directories
+# directories
 
 - `/bin`: system-wide executables
 - `/sbin`: system-wide executables for admin
@@ -86,7 +86,7 @@ PPA's worth knowing:
         - `/lib`: object-files and libraries
 
 
-## user-management, ownership
+# user-management, ownership
 
 - `whoami`
 - `groups <username>`: list groups
@@ -97,7 +97,7 @@ PPA's worth knowing:
 - `chmod -R g+rw <target>`
 
 
-## SE-linux
+# SE-linux
 Additional security layer made by NSA. Common in RHEL and Centos.
 It adds *labels* to your files and processes. For that, your file-system gets periodically *re-labeled*.
 
@@ -108,7 +108,7 @@ There is a source-context `scontext` and a target-context `tcontext`.
 
 You can modify both the labels as well as the rules applied to the labels.
 
-### Finding permission problems
+## Finding permission problems
 - `getenforce`: check if SE-linux is active
 - `setenforce 0/1`: deactivate/activate SE-linux
 - `cat /var/log/audit/audit.log | grep <processid>`: Check SE-linux log to see if it has interfered with your process
@@ -117,7 +117,7 @@ You can modify both the labels as well as the rules applied to the labels.
 - `ps -auxZ`: Check SE-linux labels on your process
 - `sesearch`: search rules for keword
 
-### Solving permission problems
+## Solving permission problems
 - `semanage`: 
 - `setsebool`: 
 - `chcon`: Change the labels (=the context) for a file. 
@@ -127,13 +127,28 @@ You can modify both the labels as well as the rules applied to the labels.
 
 
 
-## network
+# network
 
 - `iptables -L`: show firewall rules
 - `lsof -i -P -n`: show open files (also includes sockets, so useful for web-ports)
+- Setting up a webserver: `nc -l 9090`
+- own ip: `hostname -I`
+
+## UFW
+Notes from [here](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-20-04-de).
+Wrapper around `iptables` and `nftables`
+### Standard rules
+- `ufw default deny incoming`  **Danger**: might cut your ssh connection! (at least, once you call `enable`)
+- `ufw default allow outgoing`
+- `ufw allow ssh`
+- `ufw allow http`
+- `ufw allow https`
+- `ufw allow 9090`
+- `ufw allow 9090/tcp`
+- `ufw enable`
 
 
-## processes and threads
+# processes and threads
 - processes `fork()`: creates a copy of the parent process. Copies all of it's associated memory-pages. (never copies read-only pages; only write pages)
   - copy-on-write fork: an optimization of fork. 
     - Like fork, but only copies a writeable pages when they are actually written to.
@@ -151,7 +166,7 @@ You can modify both the labels as well as the rules applied to the labels.
 
 
 
-## My wifi
+# My wifi
 Provider: M-net
 `inxi -Fxz`
 Network:   Device-1: Realtek RTL8111/8168/8411 PCI Express Gigabit Ethernet 

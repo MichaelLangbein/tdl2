@@ -430,6 +430,71 @@ This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N
 **Orthogonal complement**
 
 
-# Outer product spaces and tensors
-The outer product of two vectors is a matrix.
-More generally, the outer product of two tensors is another tensor.
+# Linear maps and how they yield matrices
+A linear map is a function $f$ from vector-space $A$ to vector-space $B$ that:
+ - ... preserves vector-addition: $f(u+v) = f(u) + f(v)$
+ - ... preserves scalar-product: $f(\alpha v) = \alpha f(v)$
+
+```typescript
+export type LinearMap<VectorA, VectorB> = (a: VectorA) => VectorB;
+
+type LinMapStruct<S, D> = {
+    sourceVectorSpace: VectorSpace<S>,
+    destinationVectorSpace: VectorSpace<D>,
+    linMap: LinearMap<S, D>
+}
+
+for (const key in lmps) {
+    const {sourceVectorSpace: s, destinationVectorSpace: d, linMap} = lmps[key];
+
+    describe(`Testing that ${key} is a linear map`, () => {
+        
+        it(`Preserves addition`, () => {
+            const a = s.random();
+            const b = s.random();
+            const f_ab = linMap(s.add(a, b));
+            const fa_fb = d.add(linMap(a), linMap(b));
+            expect(d.equals(f_ab, fa_fb));
+        });
+
+        it(`Preserves scalar-product`, () => {
+            const a = s.random();
+            const alpha = Math.random();
+            const f_alpha_a = linMap(s.sp(alpha, a));
+            const alpha_fa = d.sp(alpha, linMap(a));
+            expect(d.equals(f_alpha_a, alpha_fa));
+        });
+    }); 
+}
+```
+
+## Constructing matrices
+Assume that the vector-space $V$ is of finite dimension and has a basis $B_V = (b_{v1}, b_{v2}, ...)$.
+So does the vector-space $W$ with basis $B_W = (b_{w1}, b_{w2}, ...)$.
+Let $f$ be a linear map $V \to W$.
+
+Then: 
+$$\forall v \in V: v = \alpha_1 b_{v1} + \alpha_2 b_{v2} + ...$$
+$$f(v) = \alpha_1 f(b_{v1}) + \alpha_2 f(b_{v2}) + ...$$
+$f(b_{vj}) \in W$. As such: 
+$$f(b_{vj}) = \beta_{1j} b_{w1} + \beta_{2j} b_{w2} + ...$$
+Define the matrix $F$ as 
+$$
+F = \begin{bmatrix}
+    \beta_{11} & \beta_{12} & ... \\
+    \beta_{21} & \beta_{22} & ... \\
+    ... 
+\end{bmatrix}
+$$
+
+
+## Matrices are a vector-space by themselves
+
+## Matrix multiplication is a chain of linear maps
+
+
+
+# Multilinear maps and how they yield tensors
+A linear map is a mapping $V \to W$.
+A multi-linear map is a mapping $V_1 \times V_2 \times ... V_n \to W$.
+The *linear* part is fulfilled if 
