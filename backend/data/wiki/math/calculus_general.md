@@ -64,3 +64,20 @@ $g(X): \mathscr{X} \to \mathscr{B}$ can be represented as $G$ of dimensions $(b,
 $G'$ has dimensions $(b, c, v, u)$, just like $G$.
 
 
+# Gradient descent
+Let $f: X \to Y$.
+Gradient descent iterates the algorithm: 
+
+$$ y_1 = y_0 - \alpha f'|_{x_0} $$
+
+<font size="1">
+Example with matrices:
+
+$$ y = M x $$
+$$ f'|_x = M'|_x x + M x'|_x $$
+$$       = 0       + M 1 |_x $$
+$$       =           M 1 x $$
+$$       =           M x $$
+Thus 
+$$ y_1 = y_0 - \alpha M x_0 $$
+</font>
