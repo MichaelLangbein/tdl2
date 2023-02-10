@@ -64,20 +64,20 @@ $g(X): \mathscr{X} \to \mathscr{B}$ can be represented as $G$ of dimensions $(b,
 $G'$ has dimensions $(b, c, v, u)$, just like $G$.
 
 
-# Gradient descent
-Let $f: X \to Y$.
-Gradient descent iterates the algorithm: 
+# Gradient
+The gradient is something different than the derivative.
+Usually, gradients are only defined on functions that map to $\Reals$.
+- $ f: X \to \Reals $
+- $ f': X \to \Reals $ must have the same signature as $f$ by the definition of Fréchet derivatives.
+- $ \nabla f: X \to X $
 
-$$ y_1 = y_0 - \alpha f'|_{x_0} $$
+The gradient is defined as:
 
-<font size="1">
-Example with matrices:
+$$ \nabla f |_{x_0} := [ \frac{\partial f}{\partial x_{r, c}}|_{x_0} ]_{r, c}$$
 
-$$ y = M x $$
-$$ f'|_x = M'|_x x + M x'|_x $$
-$$       = 0       + M 1 |_x $$
-$$       =           M 1 x $$
-$$       =           M x $$
-Thus 
-$$ y_1 = y_0 - \alpha M x_0 $$
-</font>
+
+## Gradient descent
+
+$$ x_1 = x_0 - \alpha \nabla f |_{x_0} $$
+
+Gradient descent works with the gradient, not the derivative, because evaluating the derivative at $x_0$ would yield $y' \in Y \neq X$.
