@@ -73,7 +73,7 @@ Usually, gradients are only defined on functions that map to $\Reals$.
 
 The gradient is defined as:
 
-$$ \nabla f |_{x_0} := [ \frac{\partial f}{\partial x_{r, c}}|_{x_0} ]_{r, c}$$
+$$ \nabla f |_{x_0} := \left[  \frac{\partial f}{\partial x_{r, c, ...}}|_{x_0}  \right]_{r, c, ...} \in X$$
 
 
 ## Gradient descent
@@ -81,3 +81,11 @@ $$ \nabla f |_{x_0} := [ \frac{\partial f}{\partial x_{r, c}}|_{x_0} ]_{r, c}$$
 $$ x_1 = x_0 - \alpha \nabla f |_{x_0} $$
 
 Gradient descent works with the gradient, not the derivative, because evaluating the derivative at $x_0$ would yield $y' \in Y \neq X$.
+
+If $f: \Reals^2 \to \Reals$, where the input is the flat ground-plane in a 3d-coordinate system and the output is a sufrace's height, the gradient is a vector that strictly only lives on the ground-plane.
+
+
+## Product rule for gradients
+
+
+## Chain rule for gradients

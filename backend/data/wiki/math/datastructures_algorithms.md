@@ -678,19 +678,19 @@ def size(v):
     return np.sum(v * v)
 
 def gradDesc(f, x):
-    deltaX = np.asarray([0.001, 0.0])
-    deltaY = np.asarray([0.0, 0.001])
+    dx1 = np.asarray([0.001, 0.0])
+    dx2 = np.asarray([0.0, 0.001])
     alpha = 0.01
     s = 10000
     sMax = 0.001
     while s > sMax:
         fx = f(x)
-        dfdx = np.asarray([
-            (f( x + deltaX ) - fx) / deltaX[0],
-            (f( x + deltaY ) - fx) / deltaY[1],
+        grad = np.asarray([
+            ( f(x + dx1) - fx ) / dx1[0],
+            ( f(x + dx2) - fx ) / dx2[1],
         ])
-        x = x - alpha * dfdx
-        s = size(dfdx)
+        x = x - alpha * grad
+        s = size(grad)
     return x
 
 gradDesc(f, np.asarray([1, 1]))
