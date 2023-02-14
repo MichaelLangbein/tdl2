@@ -1,16 +1,50 @@
 # Design
 
-## Assets
-- https://sketchfab.com/
 
-## Colors
+## Objectives
+## Aspects
+### Aspects using color
+- Color palette
+### Aspects using typography
+- Types of fonts
+- Matching fonts
+### Aspects using composition
+- Foreground-background
+- Dominance
+- Similarity
+- Rhythm
+- Texture
+- Direction
+- Contrast
+- Hierarchy
+
+
+
+
+
+
+
+
+
+## Resources
+
+### General
+- https://dribbble.com/tags/ui
+
+### Assets
+- https://sketchfab.com/
+- https://www.pexels.com/de-de/
+
+### Colors
 - https://paletton.com
 - https://colorbrewer2.org
 - https://londonimageinstitute.com/how-to-empower-yourself-with-color-psychology/
 
-## Process
 
-### 1. Content & Feeling
+
+# Process
+
+## 1. Content & Feeling
 
 1.  What information do we want to convey?
     1. Design: how to best convey that information
@@ -19,7 +53,7 @@
 3. Who is the recipient?
 4. Call to action: a simple way to act upon the desired info & feeling
 
-#### 1.1. Information design
+### 1.1. Information design
 How to convey information
 - intro
 - info
@@ -45,7 +79,7 @@ Using:
 Typically, a row in your csv is a mark, and a column is a channel.
 
 
-#### 2.1. Art direction
+### 2.1. Art direction
 How to make somebody feel
 
 - Are there any colors you don't like?
@@ -59,3 +93,5 @@ How to make somebody feel
 ##### Font
 
 <img src="../assets/programming/fonts.png">
+
+
