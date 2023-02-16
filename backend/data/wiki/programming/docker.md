@@ -75,7 +75,7 @@ Usually, you write your own dockerfile that specifies as a dependency a more gen
 To stop, rebuild and restart a single container:
 `sudo docker-compose stop router && sudo docker-compose build router && sudo docker-compose start -d router`
 Or better (*should* work): 
-`sudo docker compose build --no-deps router`
+`sudo docker compose up --build --no-deps -d router`
 
 
 ## Dockerfile syntax
@@ -306,3 +306,14 @@ docker container run --rm alpine:latest bin/sh -c "whoami"
 Docker creates a new network interface `docker0`. This is the interface to the *default bridge*.
 New containers are by default deployed in the docker0/bridge network.
 Every new container then has its own interface (visible as `vethXXXX` in ifconfig) which are virtually plugged in to the docker0-bridge
+
+
+### Docker and UFW
+- Docker has an option `--iptables` which is in by default
+- This allows docker to modify the iptables ... **without UFW noticing**(!)
+- More yet: when docker connects the host to a container with `ports: <from>:<to>`, then it **also exposes the port `<from>` to the network** through iptables.
+
+I don't know why this is the default behavior, but it is actually pretty dangerous.
+This way, even if you have configured your ufw correctly, you can accidentially open a port to the outside that you thought was only going to be used inside the host.
+
+https://github.com/chaifeng/ufw-docker
