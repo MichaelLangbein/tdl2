@@ -21,6 +21,13 @@
 
 
 
+## Gaze tracking
+[Kirtley, 2018: How Images Draw The Eye](https://d1wqtxts1xzle7.cloudfront.net/83340544/0276237417693564-libre.pdf?1649278514=&response-content-disposition=inline%3B+filename%3DHow_Images_Draw_the_Eye.pdf&Expires=1676635930&Signature=XdO4HodkDkoY-W65qcntpcNsCmMV9nXAKzOvH4G2WfJcgJW8aVcRwcGtQYf0xq23ZGiK6iVfdkyj2OOfzbG1qgxhVI6eJwy2ZdSS2TyhiCuTIQeDRqQte8HwqQUM213ye~wPa-eK-81uA7zfx1lQVAFe0af5cPqroZfknoQZ6A9yzxyegrwFSYQquHR9RBeyGqnUlpe5ag29lfFFrTSZFq7PieK2PoPavEg4V4IWHyMCdqqJinLykmaTNIWB0eFTr4wAEKinoMBbz9CEjkqq9ZAYqTezQGwizXoTUXUsCaEupVnRwbPiEp--TQ3mSQthjwUREGj4oGJckWJMcqPqZw__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
+
+- People *always* are more attractive than anything else
+- Especially their faces
+- Outisde of people, contrast, edges etc. do have an impact
+- Loomis' suggested paths of entry and exit seem to not hold up.
 
 
 
