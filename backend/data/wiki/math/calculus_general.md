@@ -4,7 +4,9 @@
 Let $X$ and $Y$ be normed vector-spaces.
 If $f$ is a function $f: X \to Y$ then its derivative $f'$ is a function $f': X \to Y$ such that: 
 
-$$ \lim_{\delta \to 0} \frac{| f(x + \delta) - f(x) - f'(\delta) |}{|\delta|} = 0 $$
+$$ \lim_{\delta \to 0} \frac{| f(x + \delta) - f(x) - f'(\delta) |_Y}{|\delta|_X} = 0 $$
+
+Where $||_X$ is the norm in the normed vector-space $X$.
 
 This is the [Fréchet derivative](https://en.wikipedia.org/wiki/Fr%C3%A9chet_derivative), a somewhat more general definition of derivatives that works for objects of any dimension.
 
@@ -73,8 +75,12 @@ Usually, gradients are only defined on functions that map to $\Reals$.
 
 The gradient is defined as:
 
-$$ \nabla f |_{x_0} := \left[  \frac{\partial f}{\partial x_{r, c, ...}}|_{x_0}  \right]_{r, c, ...} \in X$$
+$$ \nabla f |_{x_0} := \left[  \frac{\partial f}{\partial x_{r, c, ...}}|_{x_0}  \right]_{r, c, ...}$$
 
+There is some generalization possible, though.
+$$ f: \Reals^n \to \Reals^m $$
+$$ \text{Derivative: } f': \Reals^n \to \Reals^m $$
+$$ \text{Gradient: } \nabla f: \Reals^n \to \Reals^{n*m}$$
 
 ## Gradient descent
 
@@ -82,10 +88,39 @@ $$ x_1 = x_0 - \alpha \nabla f |_{x_0} $$
 
 Gradient descent works with the gradient, not the derivative, because evaluating the derivative at $x_0$ would yield $y' \in Y \neq X$.
 
-If $f: \Reals^2 \to \Reals$, where the input is the flat ground-plane in a 3d-coordinate system and the output is a sufrace's height, the gradient is a vector that strictly only lives on the ground-plane.
+If $f: \Reals^2 \to \Reals$, where the input is the flat ground-plane in a 3d-coordinate system and the output is a surface's height, the gradient is a vector that strictly only lives on the ground-plane.
 
-
-## Product rule for gradients
 
 
 ## Chain rule for gradients
+$$ f: \Reals^3 \to \Reals $$
+$$ f(x) = g(h(x)) $$
+$$ g: \Reals^2 \to \Reals $$
+$$ f: \Reals^3 \to \Reals^2 $$
+$$ \underbrace{\nabla_x f}_3: (\underbrace{\nabla_h g}_{2}) @ (\underbrace{\nabla_x h}_{2 \times 3}) $$
+Where @ symbolizes a matrix multiplication.
+
+Here, $\nabla_x h$ is defined as: 
+
+$$ \nabla_x h = 
+\begin{bmatrix}
+    \frac{\partial h_1}{\partial x_1} && \frac{\partial h_1}{\partial x_2} && \frac{\partial h_1}{\partial x_3} \\
+    \frac{\partial h_2}{\partial x_1} && \frac{\partial h_2}{\partial x_2} && \frac{\partial h_2}{\partial x_3} \\
+\end{bmatrix}
+$$
+That is, take the shape of $h$ (2) and for each element in there, put in a shape of $x$ (3).
+
+Note how we've re-written $\nabla_x f$ as a matrix-expression. This is not to be confused with the fact that linear functions can be represented with matrices - this chain-rule also holds for non-linear functions.
+In the same vein, applying $x$ to $\nabla_x h$ is **not** a matrix-multiplication, even though the dimensions would check out:
+
+$$ 
+\nabla_x h(x) = 
+\begin{bmatrix}
+    \frac{\partial h_1}{\partial x_1}(x) && \frac{\partial h_1}{\partial x_2}(x) && \frac{\partial h_1}{\partial x_3}(x) \\
+    \frac{\partial h_2}{\partial x_1}(x) && \frac{\partial h_2}{\partial x_2}(x) && \frac{\partial h_2}{\partial x_3}(x) \\
+\end{bmatrix}
+\neq 
+\nabla_x h @ x
+$$
+
+## Product rule for gradients
