@@ -279,6 +279,134 @@ struct ToggleWriterView: View {
 }
 ```
 
+## Redux 
+SwiftUI, like any React-like framework, really lends itself to Redux-style state-management: 
+
+```swift
+import Foundation
+
+
+enum Phase {
+    case nothing, loading, doneLoading, error(message: String)
+}
+
+struct AppState {
+    var person: Person?
+    var planet: Planet?
+    var phase: Phase
+}
+
+let initialState = AppState(
+    person: nil,
+    planet: nil,
+    phase: .nothing
+)
+
+struct SendPersonRequestAction {
+    let id: Int
+}
+struct SendPersonRequestSuccessAction {
+    let person: Person
+}
+struct SendPersonRequestFailureAction {
+    let error: String
+}
+struct SendPlanetRequestAction {
+    let id: Int
+}
+struct SendPlanetRequestSuccessAction {
+    let planet: Planet
+}
+struct SendPlanetRequestFailureAction {
+    let error: String
+}
+
+enum Action {
+    case requestPerson(SendPersonRequestAction), personSuccess(SendPersonRequestSuccessAction), personFailure(SendPersonRequestFailureAction),
+         requestPlanet(SendPlanetRequestAction), planetSuccess(SendPlanetRequestSuccessAction), planetFailure(SendPlanetRequestFailureAction)
+}
+
+class StateService: ObservableObject {
+    
+    @Published @MainActor private(set) var state: AppState = initialState
+    
+    func action(_ action: Action) {
+        // This line is still on calling thread ...
+        Task {
+            // ... but the next line, after the `await` keyword, is already somewhere else.
+            await self.fireOffSideEffects(action, self.state)
+            let newState = await self.reduceState(action, self.state)
+            await setState(newState: newState)
+        }
+    }
+    
+    @MainActor private func setState(newState: AppState) {
+        self.state = newState
+    }
+    
+    private func fireOffSideEffects(_ action: Action, _ state: AppState) {
+        switch action {
+        case .requestPerson(let r):
+            Task {
+                let id = r.id
+                do {
+                    let person = try await requestPerson(id)
+                    self.action(.personSuccess(SendPersonRequestSuccessAction(person: person)))
+                } catch {
+                    print(error)
+                    self.action(.personFailure(SendPersonRequestFailureAction(error: error.localizedDescription)))
+                }
+            }
+        case .requestPlanet(let r):
+            Task {
+                let id = r.id
+                do {
+                    let planet = try await requestPlanet(id)
+                    self.action(.planetSuccess(SendPlanetRequestSuccessAction(planet: planet)))
+                } catch {
+                    print(error)
+                    self.action(.planetFailure(SendPlanetRequestFailureAction(error: error.localizedDescription)))
+                }
+            }
+        default:
+            return
+        }
+    }
+    
+    private func reduceState(_ action: Action, _ oldState: AppState) -> AppState {
+        var state = oldState
+        switch action {
+            
+        case .requestPerson:
+            state.person = nil
+            state.phase = .loading
+            return state
+        case .personSuccess(let v):
+            state.person = v.person
+            state.phase = .doneLoading
+            return state
+            
+        case .requestPlanet:
+            state.planet = nil
+            state.phase = .loading
+            return state
+        case .planetSuccess(let v):
+            state.phase = .doneLoading
+            state.planet = v.planet
+            return state
+            
+        case .personFailure(let v):
+            state.phase = .error(message: v.error)
+            return state
+        case .planetFailure(let v):
+            state.phase = .error(message: v.error)
+            return state
+        }
+    }
+}
+
+```
+
 
 ## Images
 - `Image`: SwiftUI Image - a swiftui view that can also load images from disk
