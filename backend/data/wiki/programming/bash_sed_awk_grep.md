@@ -51,7 +51,12 @@ done
 ```
 
 # Awk
-For editing tabulated text.
+For managing tabular data.
+
+Take care to use single quotes, not double quotes. Otherwise bash will try to resolve a variable named `$2`.
+```bash
+docker volume ls | awk '{print $2}'
+```
 
 # Sed
 For editing unstructured text.
