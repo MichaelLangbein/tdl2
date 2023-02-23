@@ -1,6 +1,83 @@
 # General calculus
 
-# Derivative and differential
+All of this as layed out in [calculus on manifolds by Michael Spivak](http://www.strangebeautiful.com/other-texts/spivak-calc-manifolds.pdf).
+
+## Notation
+- $f$: a function
+- $f: U \to V$: a function's signature
+- $f(x, y) = x^2 - 3y$ a functions body.
+- $f(x)$ a function handle, not applied to a concrete input yet.
+- $f(x_0)$ a function applied to a concrete input. If $f: U \to V$, then $f(x_0) \in V$, *not* function valued. Spivak likes to use $a$ instead of $x_0$ for concrete values.
+- $\lambda_x$ a function of $x$, $\lambda_{x_0}$ the return value of that function applied to a concrete value $x_0$.
+
+# Derivative
+
+## For scalar valued functions
+$f: U \to \Reals$ is *differentiable* at $x_0 \in U$ iff there is a *number* $f'(x_0)$ such that:
+$$\lim_{\Delta \to 0} \frac{f(x_0 + \Delta) - f(x_0)}{\Delta} = f'(x_0)$$
+Note how $f'(x_0)$ is just a number. If such a number exists for every $x \in U$, then $f'$ is a function,
+and we get the derivative at any $x$ by applying that function to $x$. Then it holds that 
+$$f': U \to \Reals$$
+
+## Generally 
+$f: U \to V$ is *differentiable* at $x_0$ iff $\exists \lambda_{x_0} \in L(U, V)$ (that is, $\lambda_{x_0}$ is a linear map from $U \to V$) such that:
+$$ \lim_{\Delta \to 0} \frac{|f(x_0 + \Delta) - f(x_0) - \lambda_{x_0}(\Delta)|}{|\Delta|} = 0 $$
+
+We call $\lambda_{x_0}$ the **differential** $Df(x_0)$ at $x_0$.
+
+If there is such a $\lambda_x$ for any $x \in U$, then 
+$$ \lambda_x = Df(x) \text{ which has the signature } U \to L(U, V)$$
+
+Note that we stated $\lambda_{x_0} \in L(U, V)$, i.e. that $\lambda$ at a particular $x_0$ is a linear map. However, that does *not* mean that $\lambda_x$ is linear ... only that $\lambda_{x_0}$ is. $\lambda_x$ is a higher level function that returns elements of $L(U, V)$, $\lambda_{x_0}$ *is* an element of $L(U,V)$, and $\lambda_{x_0}$ applied to some $\Delta \in U$ is an element of $V$: $\lambda_{x_0} (\Delta) = v \in V$.
+
+For clarity, let's call the point $x_0 \in U$ where we have obtained $Df(x_0)$ the *derivation-point*, and the point $\Delta \in U$ which is fed into $Df(x_0)$ the *application-point*. $Df$ may be non-linear in the derivation-point, but once calculated for the derivation-point that result will be linear in the application-point.
+
+### Example
+Consider $f(x, y) = sin(x)$. Spivak proves that $Df(x_0, y_0) = cos(x_0) \cdot x$. 
+Note how $Df(x, y)$ (a function) is non-linear in the derivation-point, but how $Df(x_0, y_0)$ (a function's output) is linear in the application-point.
+
+
+## Theorems
+
+### Matrix representation
+If $U, V$ are both finite and have a basis, then $Df(x_0)$ can be expressed as a matrix with dimensions $|V| \times |U|$.
+
+### $\lambda_x$ is unique
+
+### Chain rule
+If $f: \Reals^n \to \Reals^m$ is differentiable at $x_0$ and $g: \Reals^m \to \Reals^p$ is differentiable at $x_0$, then the composition $(g \circ f): \Reals^n \to \Reals^p$ with $(g \circ f)(x) := g(f(x))$ is differentiable at $x_0$ and 
+$$ D(g \circ f)(x_0) = Dg(f(x_0)) \circ Df(x_0)$$ 
+
+### Product rule
+(from [math-overflow](https://math.stackexchange.com/questions/366922/product-rule-for-matrix-functions))
+
+## Partial derivatives
+$f: \Reals^n \to \Reals$ then the partial derivative is defined as:
+$$ D_if(x_0) := \lim_{\Delta \to 0}\frac{f(x_{0, 1}, x_{0, 2}, ...x_{0, i} + \Delta, ...) - f(x_{0, 1}, x_{0, 2}, ...x_{0, i}, ...)}{\Delta}$$
+... that is, $D_if(x_0)$ is just an ordinary 1-d-derivative.
+
+## Partial derivatives as a simple means to calculate the full derivative
+If $f: \Reals^n \to \Reals^m$ is differentiable at $x_0$ (that is, if $Df(x_0)$ exists at $x_0$), then $D_if_j(x_0)$ exists for all $i, j$ and they relate like so:
+$$ Df(x_0) = \begin{bmatrix}
+    ... &             & ... \\
+        & D_cf_r(x_0) &     \\
+    ... &             & ... \\
+\end{bmatrix} $$
+
+The inverse is only true if all $D_if_j(x_0)$ are also continuous at $x_0$. Then:
+If all $D_if_j(x_0)$ exist *and* are continuous at $x_0$, then $Df(x_0)$ exists and they relate as above.
+
+
+
+
+
+
+
+
+
+
+
+<!-- # Derivative and differential
 Let $X$ and $Y$ be normed vector-spaces.
 If $f$ is a function $f: X \to Y$ then its derivative $f'$ is a function $f': X \to Y$ such that: 
 
@@ -123,4 +200,4 @@ $$
 \nabla_x h @ x
 $$
 
-## Product rule for gradients
+## Product rule for gradients -->
