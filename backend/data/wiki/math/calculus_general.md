@@ -1,6 +1,7 @@
 # General calculus
 
 All of this as layed out in [calculus on manifolds by Michael Spivak](http://www.strangebeautiful.com/other-texts/spivak-calc-manifolds.pdf).
+I think one of the best applied books on my level may be [d2l.ai](http://www.d2l.ai/chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html#multivariate-chain-rule)
 
 ## Notation
 - $f$: a function
