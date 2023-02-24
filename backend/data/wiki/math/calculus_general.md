@@ -3,6 +3,9 @@
 All of this as layed out in [calculus on manifolds by Michael Spivak](http://www.strangebeautiful.com/other-texts/spivak-calc-manifolds.pdf).
 I think one of the best applied books on my level may be [d2l.ai](http://www.d2l.ai/chapter_appendix-mathematics-for-deep-learning/multivariable-calculus.html#multivariate-chain-rule)
 
+
+
+
 ## Notation
 - $f$: a function
 - $f: U \to V$: a function's signature
@@ -11,7 +14,13 @@ I think one of the best applied books on my level may be [d2l.ai](http://www.d2l
 - $f(x_0)$ a function applied to a concrete input. If $f: U \to V$, then $f(x_0) \in V$, *not* function valued. Spivak likes to use $a$ instead of $x_0$ for concrete values.
 - $\lambda_x$ a function of $x$, $\lambda_{x_0}$ the return value of that function applied to a concrete value $x_0$.
 
+
+
+
+
 # Derivative
+
+
 
 ## For scalar valued functions
 $f: U \to \Reals$ is *differentiable* at $x_0 \in U$ iff there is a *number* $f'(x_0)$ such that:
@@ -19,6 +28,8 @@ $$\lim_{\Delta \to 0} \frac{f(x_0 + \Delta) - f(x_0)}{\Delta} = f'(x_0)$$
 Note how $f'(x_0)$ is just a number. If such a number exists for every $x \in U$, then $f'$ is a function,
 and we get the derivative at any $x$ by applying that function to $x$. Then it holds that 
 $$f': U \to \Reals$$
+
+
 
 ## Generally 
 $f: U \to V$ is *differentiable* at $x_0$ iff $\exists \lambda_{x_0} \in L(U, V)$ (that is, $\lambda_{x_0}$ is a linear map from $U \to V$) such that:
@@ -38,24 +49,40 @@ Consider $f(x, y) = sin(x)$. Spivak proves that $Df(x_0, y_0) = cos(x_0) \cdot x
 Note how $Df(x, y)$ (a function) is non-linear in the derivation-point, but how $Df(x_0, y_0)$ (a function's output) is linear in the application-point.
 
 
+
+
+
 ## Theorems
+
+
 
 ### Matrix representation
 If $U, V$ are both finite and have a basis, then $Df(x_0)$ can be expressed as a matrix with dimensions $|V| \times |U|$.
 
+
+
 ### $\lambda_x$ is unique
+
+
 
 ### Chain rule
 If $f: \Reals^n \to \Reals^m$ is differentiable at $x_0$ and $g: \Reals^m \to \Reals^p$ is differentiable at $x_0$, then the composition $(g \circ f): \Reals^n \to \Reals^p$ with $(g \circ f)(x) := g(f(x))$ is differentiable at $x_0$ and 
 $$ D(g \circ f)(x_0) = Dg(f(x_0)) \circ Df(x_0)$$ 
 
+
+
 ### Product rule
-(from [math-overflow](https://math.stackexchange.com/questions/366922/product-rule-for-matrix-functions))
+(from [math-overflow](https://math.stackexchange.com/questions/366922/product-rule-for-matrix-functions) ... but also [maybe there is no good solution](https://math.stackexchange.com/questions/3123856/derivative-w-r-t-x-of-matrix-product-axbx?rq=1))
+
+
 
 ## Partial derivatives
 $f: \Reals^n \to \Reals$ then the partial derivative is defined as:
 $$ D_if(x_0) := \lim_{\Delta \to 0}\frac{f(x_{0, 1}, x_{0, 2}, ...x_{0, i} + \Delta, ...) - f(x_{0, 1}, x_{0, 2}, ...x_{0, i}, ...)}{\Delta}$$
 ... that is, $D_if(x_0)$ is just an ordinary 1-d-derivative.
+
+
+
 
 ## Partial derivatives as a simple means to calculate the full derivative
 If $f: \Reals^n \to \Reals^m$ is differentiable at $x_0$ (that is, if $Df(x_0)$ exists at $x_0$), then $D_if_j(x_0)$ exists for all $i, j$ and they relate like so:
@@ -68,6 +95,10 @@ $$ Df(x_0) = \begin{bmatrix}
 The inverse is only true if all $D_if_j(x_0)$ are also continuous at $x_0$. Then:
 If all $D_if_j(x_0)$ exist *and* are continuous at $x_0$, then $Df(x_0)$ exists and they relate as above.
 
+
+## Gradients
+\nabla f(x_0)
+$$\nabla f(x_0) = [Df(x_0)]^T$$
 
 
 
