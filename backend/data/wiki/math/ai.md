@@ -165,6 +165,26 @@ For one, that is a requirement for the matrix-trick. But also this makes checkin
  - we can be sure that $\nabla_{v}s$ =  `grad_s_v = node.grad_s_v(v, at, grad_s_node)` has the dimensions of `v.eval(at)`.
 
 
+#### **Pseudocode**
+```python
+class Node:
+    def grad_s_v(self, v, at, grad_s_node):
+        if v in self.variables:
+            grad_node_v = .... # shallow derivative
+            grad_s_v = grad_s_node @ grad_node_v # chain-rule up to v
+            return grad_s_v
+
+def grad(node, x, at, grad_s_node):
+    total = 0
+    for v in node.variables:
+        grad_s_v = op.grad_s_v(v, at, grad_s_node)   # chain-rule up to v, shallow part
+        grad_s_x_partialv = grad(v, x, at, grad_s_v) # chain-rule deeper
+        total += grad_s_x_partialv
+    return total
+```
+
+
+#### **Implementation**
 ```python 
 import numpy as np
 from helpers import eye, matMul, memoized
