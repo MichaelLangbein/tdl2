@@ -126,7 +126,351 @@ $$ f(x_1, x_2) = h_2( h_11(x_1), h_12(x_2))$$
 We will prove that a deep net needs less neurons than a shallow one to approximate this function.
 
 
+## Autodiff
+Writing an autodiffer comes with a few tricks of the trade, without which such an implementation becomes very tricky.
 
+ 1. **Chain rule first**:
+    The chain rule protects your nodes from having to calculate deep derivatives.
+ 2. **Pass $\nabla_{node}s$ = `grad_s_node` to `op.grad_s_v(v, at, grad_s_node)`**:
+    So you can do the matrix-diff-trick
+ 3. **Only allow derivatives of scalar-valued functions**:
+    On one hand this helps with the matrix trick; on the other this makes it simple to check the dimensions of gradients.
+
+
+In detail.
+
+#### 0. **The matrix trick**
+It's hard to calculate 
+$$ \frac{\partial MN}{\partial M}$$
+For one, this requires tensor-calculus, and also this is an object of dimension $ |MN| \times |M| $.
+
+Not only is this hard, but such higher-dimensional matrices easily exceed even modern computers RAM.
+But there is a trick: if there's a scalar-valued function $s$ *on top* of $MN$, that complicated $\frac{\partial MN}{\partial M}$ reduces to $N^T$ - which is just two dimensional.
+
+$$ \frac{\partial s(MN)}{\partial M} = \frac{\partial s(MN)}{\partial MN} \frac{\partial MN}{\partial M} = \frac{\partial s(MN)}{\partial MN} N^T$$
+$$ \frac{\partial s(MN)}{\partial N} = \frac{\partial s(MN)}{\partial MN} \frac{\partial MN}{\partial N} = M^T \frac{\partial s(MN)}{\partial MN} $$
+We don't need to bother with the case where $M$ or $N$ are functions of $x$, either, since we'll use the chain rule in which protects us from having to think about $M$ or $N$ being functions of other variables.
+
+#### 1. **Chain rule first**
+Calculating deep derivatives is hard. But the chain rule protects us from that:
+$$ \frac{\partial f(g(x))}{\partial x} = \frac{\partial f(g)}{\partial g} \frac{\partial g(x)}{\partial x} $$
+Only the part $\frac{\partial f(g)}{\partial g}$ will be calculated by our nodes. And this expression is evaluated under the assumption, that $g$ is not function of any deeper variables.
+
+#### 2. **Pass $\nabla_{node}s$ = `grad_s_node` to `op.grad_s_v(v, at, grad_s_node)`**
+The matrix trick (0) only works if there is a scalar-valued function on top of the expressoin $MN$. That scalar-valued function's gradient $\nabla_{NM}s$ must be passed to $NM$`.grad_s_v` so that the expression $M^T \frac{\partial s}{\partial MN}$ can be evaluated at all.
+
+#### 3. **Only allow derivatives of scalar-valued functions**
+For one, that is a requirement for the matrix-trick. But also this makes checking the dimensions of our gradients trivial: 
+ - we can be sure that $\nabla_{node}s$ =  `grad_s_node` has the dimensions of `node.eval(at)`
+ - we can be sure that $\nabla_{v}s$ =  `grad_s_v = node.grad_s_v(v, at, grad_s_node)` has the dimensions of `v.eval(at)`.
+
+
+```python 
+import numpy as np
+from helpers import eye, matMul, memoized
+
+
+class Node():
+    def eval(self, at):
+        pass
+    def grad_s_v(self, v, at, grad_s_node):
+        """
+            returns grad_s_v 
+            by calculating grad_s_node @ grad_node_v
+            v must be a variable of the node;
+            i.e. grad_node_v must be a shallow gradient.
+            otherwise returns None
+        """
+        pass
+    def getVariables(self):
+        pass
+    def __str__(self):
+        pass
+    def __repr__(self):
+        return self.__str__()
+
+
+class Constant(Node):
+    def __init__(self, value):
+        if not type(value) is np.ndarray:
+            value = np.array(value)
+        self.value = value
+
+    def eval(self, at):
+        return self.value
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        return np.zeros(grad_s_node.shape)
+
+    def getVariables(self):
+        return []
+
+    def __str__(self):
+        return f"{self.value}"
+
+
+class Variable(Node):
+    def __init__(self, name):
+        self.name = name
+
+    def eval(self, at):
+        if self.name in at:
+            return at[self.name]
+        
+    def grad_s_v(self, v, at, grad_s_node):
+        if self == x:
+            return grad_s_node
+    
+    def getVariables(self):
+        return []
+    
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Plus(Node):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def eval(self, at):
+        return  eval(self.a, at) +  eval(self.b, at)
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.a or v == self.b:
+            return grad_s_node
+
+    def getVariables(self):
+        return [self.a, self.b]
+        
+    def __str__(self):
+        return f"({self.a} + {self.b})"
+    
+
+class Minus(Node):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def eval(self, at):
+        return eval(self.a, at) - eval(self.b, at)
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.a:
+            return grad_s_node
+        if v == self.b:
+            return -grad_s_node
+
+    def getVariables(self):
+        return [self.a, self.b]
+        
+    def __str__(self):
+        return f"({self.a} - {self.b})"
+    
+   
+class Mult(Node):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def eval(self, at):
+        return eval(self.a, at) * eval(self.b, at)
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.a:
+            return grad_s_node @ eval(self.b, at)
+        if v == self.b:
+            return grad_s_node @ eval(self.a, at)
+        
+    def getVariables(self):
+        return [self.a, self.b]
+    
+    def __str__(self):
+        return f"({self.a} * {self.b})"
+
+
+class Exp(Node):
+    def __init__(self, a):
+        self.a = a
+
+    def eval(self, at):
+        aV = eval(self.a, at)
+        return np.exp(aV)
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.a:
+            aV = eval(self.a, at)
+            grad_node_v = np.eye(len(aV)) * (aV * np.exp(aV))
+            return grad_s_node @ grad_node_v
+
+    def getVariables(self):
+        return [self.a]
+    
+    def __str__(self):
+        return f"exp({self.a})"
+
+
+class MatMul(Node):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def eval(self, at):
+        aV = eval(self.a, at)
+        bV = eval(self.b, at)
+        return aV @ bV
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        """
+          Important:
+          ----------
+
+          this assumes that  this expression ` Node=A@B `
+          is part of a larger expression ` f(Node) `, which is scalar valued.
+          If that's the case, then
+
+          `` df/dA = df/dNode * dNode/dA = df/dNode * B^T ``
+
+          and
+
+          `` df/dB = df/dNode * dNode/dB = A^T * df/dNode``
+          
+          https://mostafa-samir.github.io/auto-diff-pt2/
+        """
+
+        vVal = eval(v, at)
+        if v == self.a:
+            bV =  eval(self.b, at)
+            (a, b, nrDims) = self.__reshape(vVal, grad_s_node, bV.T)
+            return matMul(a, b, nrDims)
+        if v == self.b:
+            aV =  eval(self.a, at)
+            (a, b, nrDims) = self.__reshape(vVal, aV.T, grad_s_node)
+            return matMul(a, b, nrDims)
+        
+    def __reshape(self, target, a, b):
+        resultShape = a.shape[:-1] + b.shape[1:]
+        if resultShape == target.shape:
+            return (a, b, 1)
+        if len(resultShape) < len(target.shape):
+            a = np.reshape(a, a.shape + (1,))
+            b = np.reshape(b, (1,) + b.shape)
+            return self.__reshape(target, a, b)
+
+    
+    def getVariables(self):
+        return [self.a, self.b]
+        
+    def __str__(self):
+        return f"({self.a} @ {self.b})"
+
+
+class InnerSum(Node):
+    def __init__(self, v):
+        self.v = v
+
+    def eval(self, at):
+        vVal =  eval(self.v, at)
+        return np.sum(vVal)
+
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.v:
+            vVal =  eval(self.v, at)
+            grad_node_v = np.ones(vVal.shape)
+            return grad_s_node * grad_node_v
+
+    def getVariables(self):
+        return [self.v]
+    
+    def __str__(self):
+        return f"sum({self.v})"
+
+
+class ScalarProd(Node):
+    def __init__(self, scalar, a):
+        self.a = a
+        self.scalar = scalar
+
+    def eval(self, at):
+        aVal =  eval(self.a, at)
+        aTimesS = aVal * self.scalar
+        return aTimesS
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.a:
+            return self.scalar * grad_s_node
+
+    def getVariables(self):
+        return [self.a]
+    
+    def __str__(self):
+        return f"({self.scalar} * {self.a})"
+
+
+class ScalarPower(Node):
+    def __init__(self, a, scalar):
+        self.a = a
+        self.scalar = scalar
+
+    def eval(self, at):
+        aVal =  eval(self.a, at)
+        aPowS = np.power(aVal, self.scalar)
+        return aPowS
+    
+    def grad_s_v(self, v, at, grad_s_node):
+        if v == self.a:
+            aVal =  eval(self.a, at)
+            singleValues = self.scalar * np.power(aVal, self.scalar - 1)
+            grad_node_x = np.eye(len(singleValues)) * singleValues
+            return grad_s_node @ grad_node_x
+
+    def getVariables(self):
+        return [self.a]
+    
+    def __str__(self):
+        return f"{self.a}^{self.scalar}"
+    
+
+def Sigmoid(x):
+    minX = ScalarProd(-1, x)
+    ex = Exp(minX)
+    one = Constant(1)
+    body = Plus(one, ex)
+    sigm = ScalarPower(body, -1)
+    return sigm
+
+def Sse(observation, simulation):
+    errors = Minus(observation, simulation)
+    squaredErrors = ScalarPower(errors, 2)
+    sse = InnerSum(squaredErrors)
+    return sse
+
+
+@memoized
+def eval(op, at):
+    return op.eval(at)
+
+
+@memoized
+def grad_s_x_through_op(op, x, at, grad_s_op):
+    if op == x:
+        return grad_s_op
+    grad_s_x_total = 0
+    for v in op.getVariables():
+        grad_s_v = op.grad_s_v(v, at, grad_s_op)
+        grad_s_x_total += grad_s_x_through_op(v, x, at, grad_s_v)
+    return grad_s_x_total
+
+
+
+def gradient(op, x, at):
+    opV = op.eval(at)
+    if opV.shape != ():
+        raise Exception(f"Can only do gradients on scalar-valued expressions. This expression has shape {opV.shape}: {opV}")
+    grad_op_x_Val = grad_s_x_through_op(op, x, at, np.array(1.0))
+    return grad_op_x_Val
+
+```
 
 
 ### Convolutional networks
