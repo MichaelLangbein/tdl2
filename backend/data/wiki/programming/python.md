@@ -19,7 +19,7 @@ For this to work, compilers like `g++` and dev-packages like `python-dev` (conta
 
 ## conda
 Better than venv because:
-- allows non-python binaries (like gdal, tensorflow, libblas, yfinance, ...))
+- allows non-python binaries (like gdal, tensorflow, libblas, yfinance, ...)
 - not bound to local python-version
 
 Cheat-sheet:

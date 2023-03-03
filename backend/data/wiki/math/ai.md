@@ -174,6 +174,7 @@ class Node:
             grad_s_v = grad_s_node @ grad_node_v # chain-rule up to v
             return grad_s_v
 
+# The idea here is to push grad_s_node further and further down the graph
 def grad(node, x, at, grad_s_node):
     total = 0
     for v in node.variables:
