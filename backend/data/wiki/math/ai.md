@@ -494,7 +494,7 @@ def gradient(op, x, at):
 ```
 
 
-### Convolutional networks
+## Convolutional networks
 
 These are the networks most commonly found employed in image-classification. Really, they are just a simplified version of our backpropagation-networks (they are even trained using an only slightly altered algorithm). Instead of connecting every node from layer $l$ to every node of layer $l+1$, they impose some restrictions on the connection-matrix:
 
@@ -549,6 +549,65 @@ And the  backwards step:
 $$ \partDiff{e}{\vec{x}^l} = \partDiff{e}{\vec{y}^l} \partDiff{\vec{y}^l}{\vec{x}^l}  = \delta^l  $$
 $$ \partDiff{e}{\vec{w}^l} = 0 $$
 $$ \delta^{l-1} = \frac{1}{4} \partDiff{e}{\vec{x}^l}  $$
+
+
+## Self-attention
+```python
+class SelfAttentionLayer(Layer):
+    def __init__(self, name, input):
+        """
+        https://www.youtube.com/watch?v=KmAISyVvE1Y
+        sequence-to-sequence layer.
+        simply creates more meaningful embeddings.
+        no parameters.
+
+        Example: 
+        Sentence: "Restaurant was not terrible"
+        Usually, the presence of the word "terrible" means a negative sentiment
+        But "terrible" and "not" together can interact and yield a positive sentiment
+
+        Nice analogy:
+        Word:                                person
+        Word's embedding:        (input[i])  person, expressed by their interests
+        Interests^T * Interests: (W)         how much do different interests relate (example: 'arts' and 'music')  - like in recommender systems
+        W * Interests^T:         (output[i]) person's interests corrected for how the interests bleed over into other interests
+                                             = word embedding corrected by how every dim of embedding relates to other dims
+        """
+        self.name = name
+
+        WPrime = MatMul(Transpose(input), input)
+        W = Softmax(WPrime)
+        outputT = MatMul(W, Transpose(input))
+
+        self.input = input
+        self.output = Transpose(outputT)
+
+    def getParaValues(self):
+        return {}
+    
+    def update(self, error, at):
+        return
+
+```
+
+Interpretation: self attention takes in data and exaggerates it: it stretches big differences out even more and shrinks down already small differences.
+
+Proof: 
+This becomes visible when we realize that $X^T X$ is a covariance-matrix (since $X$ will likely be centered around 0).
+$$ Cov = X^T X $$
+$$ Y^T = Cov X^T $$
+Through eigenvalue-decomposition:
+$$ Cov = E_c \Lambda_C E_c^{-1} $$
+Because $Cov$ is symmetric:
+$$ Cov = E_c \Lambda_C E_c^T $$
+$$ Cov X^T = E_c \Lambda_C E_c^T X^T $$
+
+- $E_c^T X^T$ projects $X^T$ into eigenvector space. That is exactly the same thing that PCA does, by the way!
+- $\Lambda_C E_c^T X^T$ scales the projected data. Where there is already lot of variance, the data gets streched even more, where there is little, it gets compressed.
+- $E_c \Lambda_C E_c^T X^T$ converts the stretched data back.
+
+For comparison, in PCA we have $Y = X E_c$. Thus $Y^T = E_c^T X^T$. Because $C$ is symmetric, this equals $E_c^{-1} X^T$ ... and that is the projection of $X^T$ into eigenvector space.
+
 
 
 ### Self organizing maps
