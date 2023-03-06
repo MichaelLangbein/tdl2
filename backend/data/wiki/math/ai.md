@@ -598,9 +598,9 @@ $$ Cov = X^T X $$
 $$ Y^T = Cov X^T $$
 Through eigenvalue-decomposition:
 $$ Cov = E_c \Lambda_C E_c^{-1} $$
-Because $Cov$ is symmetric:
+Because $Cov$ is symmetric we have $E_C^{-1} = E_C^T$:
 $$ Cov = E_c \Lambda_C E_c^T $$
-$$ Cov X^T = E_c \Lambda_C E_c^T X^T $$
+$$ Cov X^T = \underbrace{E_c \underbrace{\Lambda_C \underbrace{E_c^T X^T}_{\text{Projects $X^T$ into eigenvector space}}}_{\text{Scales projected data by $\lambda$s}}}_{\text{Projects back}}   $$
 
 - $E_c^T X^T$ projects $X^T$ into eigenvector space. That is exactly the same thing that PCA does, by the way!
 - $\Lambda_C E_c^T X^T$ scales the projected data. Where there is already lot of variance, the data gets streched even more, where there is little, it gets compressed.
