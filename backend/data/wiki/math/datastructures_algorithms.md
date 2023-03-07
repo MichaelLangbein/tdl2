@@ -740,6 +740,7 @@ def pca(data, cutoff):
 ```
 
 ## K-means clustering
+
 ```python
 def kMeansClustering(data, k, repeats = 3):
     ranges = getRanges(data)
@@ -766,3 +767,21 @@ def varianceForMeans(means, data):
     variances = getVariances(assignment, means, data)
     return means, variances
 ```
+
+
+# Transformation based algorithms
+
+## Fourier (-> Frequency space)
+- Transform image to frequency space
+- Draw something simple into the frequency-image
+- Transform it back
+Creates nice loops in curves
+
+## Eigenvalues (-> Eigenvector space)
+Example: multiplication with covariance matrix
+- Transforms points to eigenvector space (= where it's aligned with the axes)
+- Scales aligned points by eigenvalues
+- Transforms back
+Reduces small differences, exaggerates large differences
+
+## 
