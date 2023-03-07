@@ -608,7 +608,7 @@ $$ Cov X^T = \underbrace{E_c \underbrace{\Lambda_C \underbrace{E_c^T X^T}_{\text
 
 For comparison, in PCA we have $Y = X E_c$. Thus $Y^T = E_c^T X^T$. Because $C$ is symmetric, this equals $E_c^{-1} X^T$ ... and that is the projection of $X^T$ into eigenvector space.
 
-
+<img width="50%" src="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/programming/X_PCA_CovX.png" />
 
 ### Self organizing maps
 Self organizing maps are another, fundamentally different type of neural network. Where feedforward nets employ supervised learning with backpropagation, SOM's do unsupervised learning with a competitive algorithm. 
