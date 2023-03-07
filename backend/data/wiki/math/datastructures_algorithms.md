@@ -724,3 +724,45 @@ But: contrary to dynamic programming, optimization can get stuck in local minima
 | sorted array   | log(n) | n      | n      |
 | linked list    | n      | 1      | n      |
 | BST (balanced) | log(n) | log(n) | log(n) |
+
+
+
+
+# Data-analysis 
+
+## PCA
+```python
+def pca(data, cutoff):
+    eigenvals, eigenvecs = np.linalg.eigenh(data)
+    eigenvecsCutoff = eigenvecs[:cutoff]
+    dataSimplified = data @ eigenvecsCutoff
+    return dataSimplified
+```
+
+## K-means clustering
+```python
+def kMeansClustering(data, k, repeats = 3):
+    ranges = getRanges(data)
+
+    bestMeans = []
+    lowestVariance = np.infty
+    for _ in range(repeats):
+        means0 = pickRandomPoints(ranges, k)
+        means, variances = varianceForMeans(means0, data)
+        varianceSum = np.sum(variances)
+        if varianceSum < lowestVariance:
+            lowestVariance = varianceSum
+            bestMeans = means
+    
+    return bestMeans
+
+def varianceForMeans(means, data):
+    assignment = assignPointsTo(data, means)
+    oldAssignment = None
+    while assignment != oldAssignment:
+        means = getMeans(assignment, data)
+        oldAssignment = assignment
+        assignment = assignPointsTo(data, means)
+    variances = getVariances(assignment, means, data)
+    return means, variances
+```
