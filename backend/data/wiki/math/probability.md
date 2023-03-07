@@ -41,7 +41,7 @@ $$\probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega]$$
 
 
 **From sample-space to probability of a random variable**
-<img src="images/prob.png">
+<img src="./../assets/programming/prob.png">
 
 
 
@@ -178,7 +178,7 @@ $$
 
 
 **Illustration of the law of total variance**
-          <img src="images/law_of_total_variance.jpg">
+          <img src="../assets/programming/law_of_total_variance.jpg">
 
  
  
