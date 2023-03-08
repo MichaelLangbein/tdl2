@@ -138,7 +138,7 @@ But since in gaussian processes we assume multivariate-normals, this can be done
 
 Consider a multivariate normal distribution on, say, 400 dimensions $N(\vec{\mu}, \mathbf{\Sigma})$. Those 400 dimensions could, for example, be pixel-values in a 20 by 20 image.
 Now assume that out of those 400 dimensions we have measurements for $s$ samples, leaving a rest $r = 400 - s$.
-For multivariate-normal distributions, we can easily and analytically obtain the conditional distribution $P(\vec{y}_r | \vec{y}_s) = N(\hat{\vec{\mu}}, \hat{\mathbf{\Sigma}})$.
+For multivariate-normal distributions, we can easily and analytically obtain the conditional distribution $P(\vec{y}_r | \vec{y}_s) = N(\hat{\vec{\mu_r}}, \hat{\mathbf{\Sigma_r}})$.
 
 Split $\vec{y}$ like so:
 $$ 
