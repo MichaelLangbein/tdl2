@@ -608,7 +608,7 @@ $$ Cov X^T = \underbrace{E_c \underbrace{\Lambda_C \underbrace{E_c^T X^T}_{\text
 
 For comparison, in PCA we have $Y = X E_c$. Thus $Y^T = E_c^T X^T$. Because $C$ is symmetric, this equals $E_c^{-1} X^T$ ... and that is the projection of $X^T$ into eigenvector space.
 
-<img width="50%" src="../assets/programming/X_PCA_CovX.png" />
+<img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/X_PCA_CovX.png" />
 
 A somewhat advanced setup allows the attention-layer to modify $X$ in different ways.
 Instead of calculating `softmax(X.T @ X) @ X.T` it multiplies $X$ with three different weight-matrixes: 

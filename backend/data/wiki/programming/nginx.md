@@ -176,7 +176,7 @@ Nginx has made some dubious decisions when it comes to naming.
 URI's are a superset of URL's, but nginx uses `$request_uri` to mean path and parameters.
 
 ## Reverse- and forward-proxy
-<img src="../assets/programming/../../programming/proxy_types.jpg" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/../../programming/proxy_types.jpg" />
 
 ```nginx
 # handling http to ws connection upgrade

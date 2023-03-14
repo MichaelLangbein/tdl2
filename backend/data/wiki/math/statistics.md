@@ -118,7 +118,7 @@ sample3 = prior.rvs()
 
 
 3 samples from prior $P(\mathbf{Y})$: <br/>
-<img src="../assets/programming/gp_prior_samples.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/gp_prior_samples.png" />
 
 
 
@@ -194,7 +194,7 @@ We can now plot the `meanPosterior` around our `samples`. Doing so we obtain the
 
 
 Samples and fitted posterior fit together well
-<img  src="../assets/programming/gp_posterior_samples.png" />
+<img  src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/gp_posterior_samples.png" />
 
 
 
@@ -476,7 +476,7 @@ So we can calculate the terms $P(B)$ and $P(A|B)$ from our given $P(A)$ and $P(B
 ## Hidden-state models
 
 Hidden Markov state model
-<img  src="../assets/programming/hidden_markov_states.jpg" />
+<img  src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/hidden_markov_states.jpg" />
 
 
 Imagine a model as in the image above.
@@ -580,5 +580,5 @@ Note that there are two experimental setups that can use t-tests:
 
 
 Statistical test decision tree
-<img  src="../assets/programming/statistical_test_decision_tree.png" />
+<img  src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/statistical_test_decision_tree.png" />
 

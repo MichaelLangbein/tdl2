@@ -65,7 +65,7 @@ Jeder Vorfall kommt zwei mal vor: einmal auf der Soll- und einmal auf der Haben-
 Kleinunternehmen und Freiberufler sind ausgenommen von dieser Pflicht.
 Jeder eingetragene Kaufmann - dh jeder im Handelsregister eingetragene - muss doppelte Buchhaltung führen. Jede Körperschaft ebenfalls.
 
-<img src="../assets/doppelte_buchführung.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/doppelte_buchführung.png">
 
 
 Summe der Aktiva muss gleich der Summe der Passiva sein.

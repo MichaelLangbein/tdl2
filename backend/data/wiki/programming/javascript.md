@@ -33,7 +33,7 @@ michael.__proto__; // Object
 ```
 
 ### Built in hierarchy
-<img scr="../assets/programming/js_builtin_hierarchy.jpg" />
+<img scr="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/js_builtin_hierarchy.jpg" />
 
 
 ### Function constructors

@@ -89,7 +89,7 @@ Therefore, when searching for the special solutions to a problem $Ab = 0$, we ca
 
 We can now print an overview of the different spaces that are associated with a matrix $A$ of dimension $m \cdot n$ and rank $r$.
 
-<img src="images/four_spaces.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/four_spaces.png">
 
 The row-space of $A$ can be visualized using the line-intersection view of matrix-equations: it contains all the points that lie in the intersection of all the lines that make up the matrix. The column-space of A can be visualized using the vector-image of A: it contains all the points that are spanned by A. 
 Notice how we included the previous theorem: any combination $x$ of a particular solution $x_r$ and any vector in the nullspace $x_n$ is also a solution.
@@ -120,12 +120,12 @@ However, note that $\reals^n \geq \nullspace{A} \cup \colspace{A^T}$. As an exam
     1 \\ 1
 \end{bmatrix}$, which is neither in $\nullspace{A}$ nor in $\colspace{A^T}$. As illustration, look at [fig.](nullspace_rowspace_lowrank).
 
-<img src="images/nullspace_rowspace_lowrank.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/nullspace_rowspace_lowrank.png">
     
     
 **When $A$ is not full rank, there are infinitely many vectors $v$ that are neither in \rowspace{A} nor in \nullspace{A}. When it comes to spatial dimensions, $1 + 1 \neq 2$!**
         
-<img src="images/nullspace_rowspace_lowrank.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/nullspace_rowspace_lowrank.png">
 
 
 
@@ -300,7 +300,7 @@ As an example, consider the case of a rotation. A diagonal rotation can be repro
 
 ## Determinant
 
-<img src="images/determinant.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/determinant.png">
 
 
 > **Definition** Consider a $2 \times 2$ matrix $\mtrx{A}$ 
@@ -380,7 +380,7 @@ If your determinant is zero, that means that your matrix $A$ is a transformation
 > $$ \nullspace{A} = \{ 0 \} \to \colspace{A} = Y $$
 
 
-<img src="images/A_from_X_to_Y.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/A_from_X_to_Y.png">
 
 > **Theorem**
 > Rank nullity: this is a fundamental theorem of linear algebra.
@@ -690,11 +690,11 @@ Note: Sometimes we care not about $cov(n_1, n_2)$ but about $cov(m_1, m_2)$. The
 ```
 
 **First eigenfaces**
-        <img src="images/eigenface1.png">
+        <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/eigenface1.png">
 
 
 **Reconstructing a faces from its percentages of the eigenfaces**
-        <img src="images/eigenface_reconstructed.png">
+        <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/eigenface_reconstructed.png">
 
 
 

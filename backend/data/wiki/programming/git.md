@@ -26,7 +26,7 @@
 
 
 
-<img src="../assets/programming/git_workflow.jpg" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/git_workflow.jpg" />
 
 **Merging remote changes on master into local master** It can happen that somebody else has been messing with the master before you had a chance to commit your own changes. You will notice this by seeing your `git push} fail. In that case, try to first merge the remote changes into your local copy before pushing again. 
 ```
@@ -68,7 +68,7 @@ git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
 
 ## Merge vs. rebase
 
-<img src="../assets/programming/merge_vs_rebase.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/merge_vs_rebase.png" />
 
 
 **Reverting and resetting** is best explained in this post: `https://stackoverflow.com/questions/4114095/how-to-revert-git-repository-to-a-previous-commit}. Basically, we have these options: 

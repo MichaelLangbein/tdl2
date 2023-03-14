@@ -111,7 +111,7 @@ Consider two sets:
 - $\mathbb{C} := \{ C | C = C^* \odot s \land e \notin s \}$
 - $\mathbb{D} := \{ D | D = C \odot e \land C \in \mathbb{C}  \}$
 
-<img src="../assets/programming/flp_sets_c_d.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/flp_sets_c_d.png" />
 
 Then lemma 3 can be reformulated as:
 $$
@@ -143,11 +143,11 @@ Thus: $ \exists E_0: \text{unival-0} $
 <div style="display: flex; flex-direction:row;">
       <div>
             <p>Case 1</p>
-            <img src="../assets/programming/flp_e0_f0.png" height="123px" />
+            <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/flp_e0_f0.png" height="123px" />
       </div>
       <div>
             <p>Case 2</p>
-            <img src="../assets/programming/flp_f0_e0.png" height="160px" />
+            <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/flp_f0_e0.png" height="160px" />
       </div>
 </div>
 
@@ -182,7 +182,7 @@ If $e' = (m', p')$ and $e = (m, p)$ and $p \neq p'$, then we can apply lemma 1 t
 
 With this, we have $C_0 \odot s_1 = C_0 \odot s_2 = D_1$
 
-<img src="../assets/programming/flp_lemma_33.png"/>
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/flp_lemma_33.png"/>
 
 We know from lemma 3.2 that $D_0:\text{unival-0}$, thus all events starting from $D_0$ can only lead to another $\text{unival-0}$ configuration. But we also know that $D_1:\text{unival-1}$ - and $D_1$ can be reached from $D_0$ via $e'$. A contradiction.
 
@@ -191,7 +191,7 @@ We know from lemma 3.2 that $D_0:\text{unival-0}$, thus all events starting from
 
 Let $s$ be a deciding sequence in which $p$ plays no part. There is a deciding run, because we assumed that our algorithm is always correct.
 
-<img src="../assets/programming/flp_lemma_34.png"/>
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/flp_lemma_34.png"/>
 
 As we can see in the graphic, $A$ is bivalent, because we can move to both $E_0$ and $E_1$ from $A$. But $s$ was supposed to be a deciding run, so $A$ must be univalent. Again, this is a contradiction.
 
@@ -201,7 +201,7 @@ As we can see in the graphic, $A$ is bivalent, because we can move to both $E_0$
 
 Really FLP proves that of failure-tolerance, termination and agreement all consensus-algorithms must chose at most 2.
 
-<img src="../assets/programming/flp_triangle.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/flp_triangle.png">
 
 Especially, termination is often replaced to $P(\text{termination}) \approx 1$. That is what raft and ben-or do. The worst enemy of consensus is a Byzantine network that always delays and delivers the exact wrong message. By randomizing the consensus, even an evil network only has a small chance to find the right message to delay... and that chance gets ever smaller with each iteration.
 
@@ -235,7 +235,7 @@ Consider your servers and a client.
 There are nowadays no *distributed* databases that are not partition tolerant - it is illusionary to assume that a network cannot be partitioned. (However, if your database will always stay on one machine only, feel free to design for CA)
 If a distributed database provides the acid-properties, then it must chose consistency (CP) over availability (AP) according to the cap theorem. An available (AP) database cannot provide acid-transactions.
 
-<img src="../assets/programming/cap_triangle.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/cap_triangle.png" />
 
 Just as in the FLP-triangle we relaxed termination to probabilistic termination, in CAP we commonly replace consistency with eventual consistency.
 

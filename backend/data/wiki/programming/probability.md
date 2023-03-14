@@ -19,7 +19,7 @@ Random variables
 - $P(X=x_0) = \Sigma_{X^{-1}(x_0)} Pr(\omega)$
 
 
-<img src="../assets/programming/prob.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/prob.png">
 
 
 ## Conditional probability
@@ -42,4 +42,4 @@ $$
 
 
 ## Practical example: estimation using probability or regression
-<img src="../assets/programming/prob_vs_reg.jpg">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/prob_vs_reg.jpg">

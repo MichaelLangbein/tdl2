@@ -75,7 +75,7 @@ Endenergie nach Energieträger (2018)
 |Insgesamt 	                                   | 8.963 	        | 100,0 %   |
 
 
-<img src="../assets/science/endenergie_nach_sektor.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/endenergie_nach_sektor.png" />
 
 Pro Konsument:
  - Verkehr:  2743 PJ / 80 Mio / 365 d = 26 kWh / d

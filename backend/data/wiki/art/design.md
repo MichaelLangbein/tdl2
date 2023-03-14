@@ -95,10 +95,10 @@ How to make somebody feel
 
 ##### Color
 
-<img src="../assets/programming/color_emotions.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/color_emotions.png">
 
 ##### Font
 
-<img src="../assets/programming/fonts.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/fonts.png">
 
 

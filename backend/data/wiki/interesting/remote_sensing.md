@@ -27,15 +27,15 @@ Radar satellites have their own 'light' source: they actively send out radio-rad
 
 
 *Frequencies capable of penetrating the atmosphere*
-<img src="../assets/science/rs_atmospheric_absorption.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/rs_atmospheric_absorption.png" />
 
 
 *Guide to the selection of frequencies in VIS \& NIR range*
-<img src="../assets/science/rs_vis_nir_curves.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/rs_vis_nir_curves.png" />
 
 
 *Example of important groups in VIS \& NIR*
-<img width="30%" src="../assets/science/rs_vis_nir_groups.png" />
+<img width="30%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/rs_vis_nir_groups.png" />
 
 
 ## Orbital periods and acquisition
@@ -365,12 +365,12 @@ This yields this very nice image below. It segments  objects into:
 
 
 *Weßling after PCA on the 10 biggest S2 channels*
-<img src="../assets/science/pca_wessling.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/pca_wessling.png" />
 
 
 We can add an interpretation to the different combination-weights:
 *Interpretation of the most important primary components*
-<img src="../assets/science/pca_wessling_pcs.png" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/pca_wessling_pcs.png" />
 
 
 
@@ -442,7 +442,7 @@ plt.imshow(classesImg, cmap="Set3")
 
 This classifies our Weßling scene quite nicely.
 **Supervised classification of Weßling scene using maximum-likelihood**
-<img src="images/max_likelihood_wessling.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/max_likelihood_wessling.png">
 
 
 
