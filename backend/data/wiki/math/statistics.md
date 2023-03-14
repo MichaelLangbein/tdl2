@@ -127,7 +127,7 @@ Which of these millions of surfaces are most likely given those observations? We
 
 
 Observations $\mathbf{D}$. Which field $\mathbf{Y}$ is most likely to have produced these observations?
-<img width="305" src="../assets/programming/gp_observations.jpg" />
+<img width="305" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/gp_observations.jpg" />
 
 
 We can calculate the posterior using 
