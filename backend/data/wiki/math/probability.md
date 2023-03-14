@@ -178,7 +178,7 @@ $$
 
 
 **Illustration of the law of total variance**
-          <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/law_of_total_variance.jpg">
+<img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/law_of_total_variance.jpg">
 
  
  
