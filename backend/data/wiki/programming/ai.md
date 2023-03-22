@@ -1,4 +1,54 @@
-# Deep learning
+# Keras
+
+
+## Save and load model data
+```python
+model = keras.models.load_model('path/to/location')
+model.save('path/to/location')
+```
+
+## Plot history
+```python
+print(history.history.keys())
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+```
+
+## Preprocessing
+- `keras.preprocessing.image`: load_img
+- `keras_cv.layers.Augmenter`: 
+    - `keras_cv.layers.CenterCrop`
+    - `keras_cv.layers.RandomFlip`
+    - `keras_cv.layers.Rescaling`
+- `tf.image`
+  - `rgb_to_grayscale`
+
+## Sequences
+```python
+class MyLoader(keras.utils.Sequence):
+  def __len__(self):
+    ...
+  def __getitem__(self, idx):
+    ...
+```
+
+## Custom Model
+```python
+class MyModel(keras.Model):
+  
+```
+
+## Gradient-Tape
+Tensorflow has switchted to eager-execution some time ago.
+In this mode, no gradient-information is being stored, though.
+
+
+
+
+
+
+
+# Articles
 
 ## Word-embedding layers
 Convert a word into a vector. Common word embeddings can be downloaded from [here](https://www.deepset.ai/german-word-embeddings)

@@ -83,7 +83,13 @@ Important functions:
 
 
 
-## Models
+## Models and Migrations
+- Model: the object-template for ORM outputs
+- Migration: code that changes the database
+If you want changes in the database, create a migration.
+If you want to add extra-powers to the data once it has been read from the database, change the model.
+
+
 `./bin/rails generate model Task title:string description:text`
 - Creates a migration file in `db/migrate`
 
@@ -102,12 +108,16 @@ tasks = Task.all
 
 Field-types:
  - `name:string`: A short string
- - `name:text`: A variable length string
- - `creator:references --- belongs_to`: Points to a parent-object's id field as a foreign-key. A many-to-one relation.
+ - `body:text`: A variable length string
+ - `author:references` in cli becomes in model `belongs_to`: Points to a parent-object's id field as a foreign-key. A many-to-one relation.
    - To add the parent's side of the relation, edit `app/models/creator.rb` and add the line `has_many :articles, dependent: :destroy`.
      - This is not required, but if we do add that, then we can get all the articles by a given creator with `@creator.articles`.
- - `avatar:attachment --- has_one_attached`: Points to a file in active_storage.
- - `photos:attachments --- has_many_attached`: Points to files in active_storage.
+ - `avatar:attachment` in cli becomes in model `has_one_attached`: Points to a file in active_storage.
+ - `photos:attachments` in cli becomes in model `has_many_attached`: Points to files in active_storage.
+
+
+### Migrations
+- CLI: `rails g migration AddNameToSubscribers name:string`
 
 
 
