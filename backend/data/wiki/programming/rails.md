@@ -85,9 +85,11 @@ Important functions:
 
 ## Models and Migrations
 - Model: the object-template for ORM outputs
+    - If you want to add extra-powers to the data once it has been read from the database, change the model.
 - Migration: code that changes the database
-If you want changes in the database, create a migration.
-If you want to add extra-powers to the data once it has been read from the database, change the model.
+    - If you want changes in the database, create a migration.
+- Notably, django does not distinguish that strictly between an active-record object (a model) and a migration. Django creates migrations based on diff's on the models.
+
 
 
 `./bin/rails generate model Task title:string description:text`
