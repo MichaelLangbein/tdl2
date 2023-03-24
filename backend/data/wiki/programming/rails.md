@@ -20,12 +20,15 @@
     - `controller <name> <method-names>`
     - `scaffold <name> [field:type]`
     - `migration <migration-description>`
+  - `destroy`: undoes a `generate`.
+    - `model <name>`
+    - ... identical to the above ...
   - `console`
   - `db`
     - `:migrate`
     - `:rollback`
-      - `VERSION=<roll-back-all-including-this-date>`
-
+      - `VERSION=<roll-back-all-up-to-but-not-including-this-date>`
+  - `test`
 
 
 
