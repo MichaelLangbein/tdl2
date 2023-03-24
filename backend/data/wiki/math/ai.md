@@ -620,6 +620,17 @@ V = X * Wv
 A = softmax(Q.T @ K) @ V.T
 ```
 
+## Stable diffusion
+
+<img width="100%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/stable_diffusion.jpg" />
+
+- GAN's used to be the dominant way of making images.
+- But they tend to get stuck: once a generator finds one convincing face, it keeps making only that one.
+- SD works by trying to remove noise from what it thinks is an image - but actually is just random noise.
+- Training on SD is still hard, so instead of training a big UNet, one compresses the input-image with a GAN-encoder and expands the UNet's output again with a GAN's decoder. One then trains the UNet on the compressed image. This reduces parameters and training-time.
+
+
+
 ### Self organizing maps
 Self organizing maps are another, fundamentally different type of neural network. Where feedforward nets employ supervised learning with backpropagation, SOM's do unsupervised learning with a competitive algorithm. 
 
