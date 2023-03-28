@@ -1,6 +1,4 @@
 $$
-\def\innerprod{\cdot}
-\def\orth{\perp}
 \def\diff{\mathop{d}}
 \def\samplespace{\Omega}
 \def\outerprod{\wedge}
@@ -180,10 +178,10 @@ Vector spaces don't define anything about lengths, angles or projections. This l
 
 > **Definition** [Inner product space] The inner product is defined as any operation that has the following properties:
 
- - $(a\vec{u}) \innerprod \vec{v} = a (\vec{u} \innerprod \vec{v}) $
- - $(\vec{u} + \vec{v}) \innerprod \vec{w} = \vec{u} \innerprod \vec{w} + \vec{v} \innerprod \vec{w}$
- - $\vec{u} \innerprod \vec{v} = \vec{v} \innerprod \vec{u}$
- - $\vec{v} \neq \vec{0} \to \vec{v} \innerprod \vec{v} > 0$
+ - $(a\vec{u}) \cdot \vec{v} = a (\vec{u} \cdot \vec{v}) $
+ - $(\vec{u} + \vec{v}) \cdot \vec{w} = \vec{u} \cdot \vec{w} + \vec{v} \cdot \vec{w}$
+ - $\vec{u} \cdot \vec{v} = \vec{v} \cdot \vec{u}$
+ - $\vec{v} \neq \vec{0} \to \vec{v} \cdot \vec{v} > 0$
 
 
 
@@ -191,15 +189,15 @@ In inner product spaces, we can define norms, orthogonality, and angles.
 
 As for norms:
 
-$$ |\vec{v}|^2 = \vec{n} \innerprod \vec{n} $$
+$$ |\vec{v}|^2 = \vec{n} \cdot \vec{n} $$
 
 And orthogonality:
 
-$$ \vec{v} \orth \vec{u} \iff \vec{v} \innerprod \vec{u} = 0$$
+$$ \vec{v} \perp \vec{u} \iff \vec{v} \cdot \vec{u} = 0$$
 
 And finally angles: 
 
-$$ cos\theta = \frac{\vec{v} \innerprod \vec{u}}{|\vec{v}||\vec{u}|}$$
+$$ cos\theta = \frac{\vec{v} \cdot \vec{u}}{|\vec{v}||\vec{u}|}$$
 
 
 ```typescript
@@ -269,10 +267,10 @@ describe(`Testing if ${name} is a proper inner product space`, () => {
 
 
 As one nice little application, consider this statement. 
-> Suppose $|\vec{u}| = |\vec{v}|$. Prove that $\vec{u} + \vec{v} \orth \vec{u} - \vec{v}$
->> This is to prove that $(\vec{u} + \vec{v}) \innerprod (\vec{u} - \vec{v}) = 0$
+> Suppose $|\vec{u}| = |\vec{v}|$. Prove that $\vec{u} + \vec{v} \perp \vec{u} - \vec{v}$
+>> This is to prove that $(\vec{u} + \vec{v}) \cdot (\vec{u} - \vec{v}) = 0$
 >>
->> The above can be rewritten to $ \vec{u} \innerprod \vec{u} - \vec{u} \innerprod \vec{v} + \vec{v} \innerprod \vec{u} - \vec{v} \innerprod \vec{v} $
+>> The above can be rewritten to $ \vec{u} \cdot \vec{u} - \vec{u} \cdot \vec{v} + \vec{v} \cdot \vec{u} - \vec{v} \cdot \vec{v} $
 >>
 >> The two middle terms cancel out, and the two outer terms equal $ |\vec{u}|^2$ and $|\vec{v}|^2 $, respectively.
 >>
@@ -293,34 +291,34 @@ Two more important statements that can be proven for the general inner product s
 
 > **Pythagorean theorem**
 >
-> Suppose $\vec{u} \orth \vec{v}$. Prove that $|\vec{u}|^2 + |\vec{v}|^2 = |\vec{u} + \vec{v}|^2 $.  ...
+> Suppose $\vec{u} \perp \vec{v}$. Prove that $|\vec{u}|^2 + |\vec{v}|^2 = |\vec{u} + \vec{v}|^2 $.  ...
 
 
 > **Cauchy-Schwartz inequality**
-> Prove that $|\vec{u}||\vec{v}| \geq |\vec{u} \innerprod \vec{v}| $
+> Prove that $|\vec{u}||\vec{v}| \geq |\vec{u} \cdot \vec{v}| $
 
 
 
 An implementation of this inner product in dimension-free oriented length-space would be:
 
-$$\vec{v} \innerprod \vec{w} = |\vec{v}||\vec{w}|cos\theta$$
+$$\vec{v} \cdot \vec{w} = |\vec{v}||\vec{w}|cos\theta$$
 
 Based on this definition, the projection of $\vec{v}$ onto $\vec{u}$ is defined as: 
 
-$$ P_{\vec{u}}(\vec{v}) = |\vec{v}| cos\theta \frac{\vec{u}}{|\vec{u}|} = \frac{\vec{u} \innerprod \vec{v}}{|\vec{u}|^2} \vec{u} $$
+$$ P_{\vec{u}}(\vec{v}) = |\vec{v}| cos\theta \frac{\vec{u}}{|\vec{u}|} = \frac{\vec{u} \cdot \vec{v}}{|\vec{u}|^2} \vec{u} $$
 
 The direct equivalent of this inner product from oriented length space to $\reals^n$ would be:
 
-$$ \vec{v} \innerprod \vec{w} = \sum_n v_n w_n $$
+$$ \vec{v} \cdot \vec{w} = \sum_n v_n w_n $$
 
 The following is a proof that the two implementations of inner product are equivalent. 
 
 
->Suppose $\vec{u} = u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3} $ and $\vec{v} = v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3} $. Proof that $\vec{u} \innerprod \vec{v} = \sum_n v_n u_n$
+>Suppose $\vec{u} = u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3} $ and $\vec{v} = v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3} $. Proof that $\vec{u} \cdot \vec{v} = \sum_n v_n u_n$
 >
->> $ \vec{u} \innerprod \vec{v} = (u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3}) \innerprod (v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3}) $ 
+>> $ \vec{u} \cdot \vec{v} = (u_1 \vec{e_1} + u_2 \vec{e_2} + u_3 \vec{e_3}) \cdot (v_1 \vec{e_1} + v_2 \vec{e_2} + v_3 \vec{e_3}) $ 
 >>     
->> This is written out as $u_1 v_1 (\vec{e_1}\innerprod \vec{e_1}) + u_1 v_2 (\vec{e_1}\innerprod \vec{e_2}) + ...$     
+>> This is written out as $u_1 v_1 (\vec{e_1}\cdot \vec{e_1}) + u_1 v_2 (\vec{e_1}\cdot \vec{e_2}) + ...$     
 >> Of this, almost all terms cancel out, leaving $ u_1 v_1 + u_2 v_2 + u_3 v_3 $
 
 
@@ -337,7 +335,7 @@ Note that if we were to chose a *non*orthonormal basis, the inner product would 
 | $C_{[a,b]}$         |                                  |                                         | $\int_a^b u(t) v(t) \diff{t} $ |                       |                                                      |
 | $X$ on $\samplespace$ |                                  |                                         | E[XY]                          | E[X]                  |                                                      |
 | matrices            |                                  |                                         |                                |                       | $(\sum_x \sum_y a_x b_y)_{i,j}$ (aka.linear algebra) |
-| $G^3$               |                                  |                                         | $\vec{v} \innerprod \vec{u}$   |                       | $\vec{v} \outerprod \vec{u}$ (aka.geometric algebra) |
+| $G^3$               |                                  |                                         | $\vec{v} \cdot \vec{u}$   |                       | $\vec{v} \outerprod \vec{u}$ (aka.geometric algebra) |
 | $\reals$            |                                  |                                         |                                |                       | (aka. ordinary algebra)                              |
 | Booleans            |                                  |                                         |                                |                       | (aka. boolean algebra)                               |
 
@@ -371,7 +369,7 @@ Orthogonality turns out to be an important concept for statistics and signal ana
 Although conceptually similar, orthogonality is a stricter concept than linear independence. It requires an inner product space instead of just a vector space. Also, two vectors may be linearly independent, but not orthogonal (although we can use Gram-Schmidt orthogonalization to make any li vectors orthogonal).
 
 > If a set of vectors is orthogonal, then it is linearly independent: $B:orth \to B:li$.
->> Suppose that $\forall b_i, b_j \in B: b_i \innerprod b_j = 0$. Proof that $\forall \alpha_1, ..., \alpha_n: \sum \alpha_i b_i = 0 \to \alpha_1 = ... = \alpha_n = 0$
+>> Suppose that $\forall b_i, b_j \in B: b_i \cdot b_j = 0$. Proof that $\forall \alpha_1, ..., \alpha_n: \sum \alpha_i b_i = 0 \to \alpha_1 = ... = \alpha_n = 0$
 >>    
 >>> Let $\alpha_1^0, ..., \alpha_n^0$ be chosen. Suppose $\sum \alpha_i^0 b_i = 0$. Proof that $\alpha_1 = ... = \alpha_n = 0$
 >>>
@@ -379,7 +377,7 @@ Although conceptually similar, orthogonality is a stricter concept than linear i
 >>>>            
 >>>> $$ \sum \alpha_i^0 b_i = 0 $$
 >>>> Multiplied by $b_j$:
->>>> $$ \sum \alpha_i^0 b_i \innerprod b_j = 0 \innerprod b_j $$
+>>>> $$ \sum \alpha_i^0 b_i \cdot b_j = 0 \cdot b_j $$
 >>>> With $B:orth$:
 >>>> $$ \alpha_j^0 = 0 $$
 
@@ -390,7 +388,7 @@ This is profound. For example, the cos-sin-Fourier-basis is hard to prove to be 
 
 
 ### Fourier decomposition <a id="fourierDecomposition"></a>
-In every vector-space a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \innerprod b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
+In every vector-space a vector can be expressed as a sum of the basevectors like this: $v = \alpha_1 b_1 + \alpha_2 b_2 + ...$ If the base is orthonormal, we additionally get the benefit that the coefficients $\alpha$ are very easy to calculate: $\alpha_i = v \cdot b_i$. This way of calculating the coefficients is called the Fourier decomposition. 
 
 > Let $B$ be an orthonormal base of $V$. Then for any $\vec{v} \in V$ the $n$th coefficient $\alpha_n$ can be easily calculated as $<\vec{v}, \vec{b_n}>$
 >
@@ -406,7 +404,7 @@ In every vector-space a vector can be expressed as a sum of the basevectors like
 
 This is much easier than the case where the base is *not* orthonormal. If that is the case, we have to calulate the coefficients $\alpha_n$ by using the projections: 
 
-$$ \vec{v} = \sum \alpha_k \vec{b_k} \text{, with } \alpha_k = \gamma_k P_{\vec{b_k}}(\vec{v}) =  \gamma_k \frac{\vec{b_n} \innerprod \vec{v}}{|\vec{b_n}|^2}\vec{b_n} \text{, with  $\gamma_k$ to be determined.}$$
+$$ \vec{v} = \sum \alpha_k \vec{b_k} \text{, with } \alpha_k = \gamma_k P_{\vec{b_k}}(\vec{v}) =  \gamma_k \frac{\vec{b_n} \cdot \vec{v}}{|\vec{b_n}|^2}\vec{b_n} \text{, with  $\gamma_k$ to be determined.}$$
 
 An alternative, but equally expensive method would be to use linear algebra:
 
@@ -422,7 +420,7 @@ This looks simple enough, but unfortunately, inverting a matrix is a \BigTheta{N
 ### Gram-Schmidt orthogonalization For every set of li vectors we can find a set of orthogonal vectors like this: 
 
  - $b_1 = v_1$
- - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \innerprod b_1}{b_1 \innerprod b_1}b_1$
+ - $b_2 = v_2 - prj(v_2, b_1) = v_2 - \frac{v_2 \cdot b_1}{b_1 \cdot b_1}b_1$
  - $b_3 = v_3 - prj(v_3, b_2) - prj(v_3, b_1)$
  - ...
 
