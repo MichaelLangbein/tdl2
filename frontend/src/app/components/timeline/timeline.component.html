@@ -1,0 +1,7 @@
+<div *ngIf="bestEstimate" class="container">
+    <div class="timeline">
+        <div class="completionBar" [style.width]="percentage + '%'"></div>
+        {{ percentage }}%
+    </div>
+    <p>Expected time left: {{ (bestEstimate - active) | secondsToTimestring }}</p>
+</div>

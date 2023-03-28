@@ -18,6 +18,9 @@
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">
     <p>Time active: {{ currentTask.secondsActive | secondsToTimestring }}</p>
+
+    <app-timeline *ngIf="estimate" [estimate]="estimate" [active]="currentTask.secondsActive"></app-timeline>
+
     <ul>
         <li *ngFor="let attachment of currentTask.attachments">
             <a [href]="attachment.path" target="_blank">

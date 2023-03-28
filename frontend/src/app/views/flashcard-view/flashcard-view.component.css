@@ -14,6 +14,25 @@
 
 .card {}
 
+.cardFront {
+    margin: 0.25rem;
+}
+
+.cardBack {
+    margin: 0.25rem;
+}
+
+.cardControls {
+    margin: 0.25rem;
+}
+
+.cardStats {
+    margin: 0.25rem;
+    color: var(--color-light-grey);
+}
+
+
+
 form {
     margin: 0 1rem 0 1rem;
 }

@@ -9,15 +9,22 @@ import { CardRow, CardService, TopicRow } from 'src/app/services/card.service';
 })
 export class FlashcardViewComponent implements OnInit {
   
+  public editing = false;
   public reveal = false;
+
   public activeTopic: TopicRow | undefined;
   public activeCard: CardRow | undefined;
   public topics: TopicRow[] = [];
   public cards: CardRow[] = [];
+
   public createTopicForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.minLength(2)])
   });
   public createCardForm = new FormGroup({
+    front: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    back: new FormControl('', [Validators.required, Validators.minLength(2)])
+  });
+  public editCardForm = new FormGroup({
     front: new FormControl('', [Validators.required, Validators.minLength(2)]),
     back: new FormControl('', [Validators.required, Validators.minLength(2)])
   });
@@ -34,6 +41,7 @@ export class FlashcardViewComponent implements OnInit {
     this.activeTopic = topic;
     this.cardSvc.getCards(topic.id).subscribe(cards => {
       this.cards = cards;
+      this.orderCards();
     });
   }
 
@@ -50,6 +58,8 @@ export class FlashcardViewComponent implements OnInit {
 
   public setCard(card: CardRow) {
     this.activeCard = card;
+    this.reveal = false;
+    this.editing = false;
   }
 
   public createCard() {
@@ -64,8 +74,65 @@ export class FlashcardViewComponent implements OnInit {
     }
   }
 
-  public updateCard(card: CardRow, result: 'Good' | 'OK' | 'Bad') {
-    console.log(`updating card`, card, result);
+  public cardRated(card: CardRow, result: 'Good' | 'OK' | 'Bad') {
+    switch (result) {
+      case 'Good':
+        card.goodAnswers += 1;
+        break;
+      case 'OK':
+        card.okAnswers += 1;
+        break;
+      case 'Bad':
+        card.badAnswers += 1;
+        break;
+    }
+    this.cardSvc.updateCard(card).subscribe(updatedCard => this.setFromUpdated(updatedCard));
   }
 
+  public setEditing(card: CardRow) {
+    this.editing = true;
+    this.editCardForm.controls["front"].setValue(card.front);
+    this.editCardForm.controls["back"].setValue(card.back);
+  }
+
+  public updateCard() {
+    const front = this.editCardForm.value.front;
+    const back = this.editCardForm.value.back;
+    const activeCard = this.activeCard;
+    if (!activeCard || !front || !back) {
+      console.error(`Couldn't update card ${activeCard} with ${front} and ${back}`);
+      return;
+    };
+    activeCard.front = front;
+    activeCard.back = back;
+    this.cardSvc.updateCard(activeCard).subscribe(updated => this.setFromUpdated(updated));
+    this.editing = false;
+  }
+
+  private setFromUpdated(updatedCard: CardRow) {
+    const originalCard = this.cards.find(c => c.id === updatedCard.id);
+    if (!originalCard) return;
+    const index = this.cards.indexOf(originalCard);
+    this.cards[index] = updatedCard;
+    this.orderCards();
+  }
+
+  private orderCards() {
+    this.cards.sort((a, b) => {
+      const pointsA = getOrderingPoints(a);
+      const pointsB = getOrderingPoints(b);
+      return pointsA - pointsB;
+    });
+  }
+
+}
+
+
+function getOrderingPoints(card: CardRow): number {
+  let points = 0;
+  points -= 10 * card.badAnswers;
+  points +=  1 * card.okAnswers;
+  points += 10 * card.goodAnswers;
+  points += (card.badAnswers + card.okAnswers + card.goodAnswers);
+  return points;
 }

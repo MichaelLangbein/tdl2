@@ -7,7 +7,7 @@
     <tr *ngFor="let row of data">
         <td>{{ row.id }}</td>
         <td>{{ row.title }}</td>
-        <td>{{ row.secondsActive }}</td>
+        <td>{{ row.secondsActive | secondsToTimestring }}</td>
     </tr>
 </table>
 <button (click)="loadData()">Load...</button>
