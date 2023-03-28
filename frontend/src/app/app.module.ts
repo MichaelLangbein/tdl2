@@ -22,6 +22,7 @@ import { UpcomingEntryComponent } from './components/upcoming/upcoming-entry/upc
 import { FormDragListComponent } from './components/form-drag-list/form-drag-list.component';
 import { FlashcardViewComponent } from './views/flashcard-view/flashcard-view.component';
 import { SearchEntryComponent } from './components/search/search-entry/search-entry.component';
+import { TimelineComponent } from './components/timeline/timeline.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { SearchEntryComponent } from './components/search/search-entry/search-en
     UpcomingEntryComponent,
     FormDragListComponent,
     FlashcardViewComponent,
-    SearchEntryComponent
+    SearchEntryComponent,
+    TimelineComponent
   ],
   imports: [
     BrowserModule,

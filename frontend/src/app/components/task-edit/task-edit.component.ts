@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, tap, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, Observable, BehaviorSubject } from 'rxjs';
+import { secondsToTimestring } from 'src/app/pipes/seconds-to-timestring.pipe';
+import { EstimateService } from 'src/app/services/estimate.service';
 import { TaskService, TaskTree } from 'src/app/services/task.service';
 
 @Component({
@@ -11,17 +13,18 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
 export class TaskEditComponent implements OnInit {
 
   showDeleteModal = false;
-  currentTask$: Observable<TaskTree | null>;
+  currentTask$ = new BehaviorSubject<TaskTree | null>(null);
   form: FormGroup;
+  estimate: any = undefined;
 
-  constructor(private taskSvc: TaskService) {
+  constructor(private taskSvc: TaskService, private estimateSvc: EstimateService) {
     this.form = new FormGroup({
       title: new FormControl(),
       description: new FormControl(),
       deadline: new FormControl()
     });
 
-    this.currentTask$ = this.taskSvc.watchCurrentTask();
+    this.taskSvc.watchCurrentTask().subscribe(this.currentTask$);
 
     this.currentTask$.subscribe(task => {
       if (task) {
@@ -33,6 +36,8 @@ export class TaskEditComponent implements OnInit {
           // prevents looping between `currentTask$` and `valueChanges`
           emitEvent: false,
         });
+
+        this.estimate = this.estimateSvc.estimateCached(task.id);
       }
     });
 
@@ -44,8 +49,7 @@ export class TaskEditComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   addChildTask()  {
     this.taskSvc.addChildToCurrent("untitled", "");
@@ -56,7 +60,18 @@ export class TaskEditComponent implements OnInit {
   }
 
   estimateTime() {
-    this.taskSvc.estimateCurrent()!.subscribe(r => console.log(r));
+    const currentTask = this.currentTask$.value;
+    if (currentTask === null) return;
+    this.estimateSvc.estimateLive(currentTask.id).subscribe((r: any) => {
+      const d = new Date();
+      const newText = `
+        Latest estimate: ${d.toISOString()} ${d.toLocaleTimeString()}
+            buvs: ${secondsToTimestring(r['buvs'])}
+            tdvs: ${secondsToTimestring(r['tdvs'])}
+      `;
+      this.appendToDescription(newText);
+      this.estimate = r;
+    });
   }
 
   completeTask() {
@@ -68,39 +83,36 @@ export class TaskEditComponent implements OnInit {
   }
 
   template() {
-    const currentValue = this.form.value;
-    this.form.setValue({
-      ... currentValue,
-      description: currentValue.description += `
+    const textToAppend = `
 
-1.  Understand the problem
-    * What are you asked to find or show?
-    * Can you restate the problem in your own words?
-    * Can you think of a picture or a diagram that might help you understand the problem?
-    * Is there enough information to enable you to find a solution?
-    * Do you understand all the words used in stating the problem?
-    * Do you need to ask a question to get the answer?
-2.  Make a plan
-    * Guess and check
-    * Make an orderly list
-    * Eliminate possibilities
-    * Use symmetry
-    * Consider special cases
-    * Use direct reasoning
-    * Solve an equation
-    * Look for a pattern
-    * Draw a picture
-    * Solve a simpler problem
-    * Use a model
-    * Work backward
-    * Use a formula
-    * Be creative
-    * Use your head/noggin
-3.  Carry out the plan.
-4. If you can't solve a problem, then there is an easier problem you can solve: find it.
-5.  Look back on your work. How could it be better?
-      `
-    });
+    1.  Understand the problem
+        * What are you asked to find or show?
+        * Can you restate the problem in your own words?
+        * Can you think of a picture or a diagram that might help you understand the problem?
+        * Is there enough information to enable you to find a solution?
+        * Do you understand all the words used in stating the problem?
+        * Do you need to ask a question to get the answer?
+    2.  Make a plan
+        * Guess and check
+        * Make an orderly list
+        * Eliminate possibilities
+        * Use symmetry
+        * Consider special cases
+        * Use direct reasoning
+        * Solve an equation
+        * Look for a pattern
+        * Draw a picture
+        * Solve a simpler problem
+        * Use a model
+        * Work backward
+        * Use a formula
+        * Be creative
+        * Use your head/noggin
+    3.  Carry out the plan.
+    4. If you can't solve a problem, then there is an easier problem you can solve: find it.
+    5.  Look back on your work. How could it be better?
+          `;
+    this.appendToDescription(textToAppend);
   }
 
   deleteTask() {
@@ -112,6 +124,13 @@ export class TaskEditComponent implements OnInit {
     this.taskSvc.removeAttachmentFromCurrent(attachmentId);
   }
 
+  private appendToDescription(textToAppend: string) {
+    const currentValue = this.form.value;
+    this.form.setValue({
+      ... currentValue,
+      description: currentValue.description += textToAppend
+    });
+  }
 }
 
 
@@ -134,3 +153,4 @@ function shallowEqual(o1: any, o2: any) {
   }
   return true;
 }
+
