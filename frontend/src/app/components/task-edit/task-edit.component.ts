@@ -68,6 +68,7 @@ export class TaskEditComponent implements OnInit {
         Latest estimate: ${d.toISOString()} ${d.toLocaleTimeString()}
             buvs: ${secondsToTimestring(r['buvs'])}
             tdvs: ${secondsToTimestring(r['tdvs'])}
+            estimated percentage: ${Math.round(100 * currentTask.secondsActive / ((r['buvs'] + r['tdvs']) / 2))}%
       `;
       this.appendToDescription(newText);
       this.estimate = r;
