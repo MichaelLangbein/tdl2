@@ -42,6 +42,6 @@ export class CardService {
   }
 
   public updateCard(card: CardRow) {
-    return this.http.patch<CardRow[]>(`http://localhost:1410/cards/topics/${card.topicId}/cards/${card.id}/update`, card);
+    return this.http.patch<CardRow>(`http://localhost:1410/cards/topics/${card.topicId}/cards/${card.id}/update`, card);
   }
 }

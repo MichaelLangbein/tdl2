@@ -47,21 +47,49 @@
     <div class="card" *ngIf="activeCard">
         <h3>Card</h3>
 
-        <h5>Front</h5>
-        <div>
-            {{ activeCard.front }}
-        </div>
-        <h5>Back</h5>
-
-        <div *ngIf="!reveal">
-            <button (click)="reveal = true">Reveal...</button>
-        </div>
-        <div *ngIf="reveal">
-            {{ activeCard.back }}
+        <div class="cardFront">
+            <h5>Front</h5>
             <div>
-                <button (click)="updateCard(activeCard, 'Good')">Good</button>
-                <button (click)="updateCard(activeCard, 'OK')">OK</button>
-                <button (click)="updateCard(activeCard, 'Bad')">Bad</button>
+                {{ activeCard.front }}
+            </div>
+        </div>
+
+        <div class="cardBack">
+            <h5>Back</h5>
+    
+            <div *ngIf="!reveal" class="cardControls">
+                <button (click)="reveal = true">Reveal...</button>
+            </div>
+    
+            <div *ngIf="reveal">
+                <div [innerHTML]="activeCard.back"></div>
+                <div class="cardControls">
+                    <button (click)="cardRated(activeCard, 'Good')">Good</button>
+                    <button (click)="cardRated(activeCard, 'OK')">OK</button>
+                    <button (click)="cardRated(activeCard, 'Bad')">Bad</button>
+                    <button (click)="setEditing(activeCard)">Edit</button>
+                </div>
+            </div>
+    
+            <div class="cardStats">
+                <p>Good: {{ activeCard.goodAnswers }}</p>
+                <p>OK: {{ activeCard.okAnswers }}</p>
+                <p>Bad: {{ activeCard.badAnswers }}</p>
+            </div>
+    
+            <div *ngIf="editing">
+                <form [formGroup]="editCardForm">
+                    <h3>Update card</h3>
+                    <div class="formElement">
+                        <label for="front">Front:</label>
+                        <textarea type="text" name="front" id="front" formControlName="front"></textarea>
+                    </div>
+                    <div class="formElement">
+                        <label for="back">Back:</label>
+                        <textarea type="text" name="back" id="back" formControlName="back"></textarea>
+                    </div>
+                    <button type="submit" (click)="updateCard()" [disabled]="!editCardForm.valid">Update</button>
+                </form>
             </div>
         </div>
 
