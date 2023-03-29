@@ -11,6 +11,53 @@ Still, when doing a first, exploratory analysis, you should focus on a very smal
 `sudo apt-get install postgis -y`
 `service postgresql status`
 
+Or with one docker-container: 
+```bash
+docker image pull postgis/postgis:11-3.3
+docker container run -e POSTGRES_PASSWORD=mysecretpassword -d --name=mypostgis postgis/postgis
+docker exec -it mypostgis psql -U postgres
+```
+
+Or with pg-admin:
+```yml
+version: "3.8"
+services:
+  db:
+    image: postgis/postgis
+    restart: always
+    ports:
+      - "54320:5432"
+    networks:
+      - pg
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - /some/local/dir:/var/lib/postgresql/data  # mount to bring in your own data
+      - local_pgdata:/var/lib/postgresql/data     # volume to maintain state
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "5050:80"
+    networks:
+      - pg
+    environment:
+      PGADMIN_DEFAULT_EMAIL: raj@nola.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+    - pgadmin-data:/var/lib/pgadmin    # volume to remember configuration
+
+networks:
+  pg:
+
+volumes:
+  pgadmin-data:
+  local_pgdata:
+```
+Note: the above setup can connect to the database in the connection-window with the hostname `db`, not `http://db`.
+
+
 Fist steps: create user as in https://wiki.postgresql.org/wiki/First_steps 
 
 Log in to admin db
