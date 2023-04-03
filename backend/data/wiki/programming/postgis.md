@@ -11,6 +11,55 @@ Still, when doing a first, exploratory analysis, you should focus on a very smal
 `sudo apt-get install postgis -y`
 `service postgresql status`
 
+Or with one docker-container: 
+```bash
+docker image pull postgis/postgis:11-3.3
+docker container run -e POSTGRES_PASSWORD=mysecretpassword -d --name=mypostgis postgis/postgis
+docker exec -it mypostgis psql -U postgres
+```
+
+Or with pg-admin:
+```yml
+version: "3.8"
+services:
+  db:
+    image: postgis/postgis
+    restart: always
+    ports:
+      - "54320:5432"
+    networks:
+      - pg
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - /some/local/dir:/var/lib/postgresql/data  # mount to bring in your own data
+      - pg-data:/var/lib/postgresql/data     # volume to maintain state
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "5050:80"
+    networks:
+      - pg
+    environment:
+      PGADMIN_DEFAULT_EMAIL: raj@nola.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+    - pgadmin-data:/var/lib/pgadmin    # volume to remember configuration
+
+networks:
+  pg:
+
+volumes:
+  pg-data:
+  pgadmin-data:
+```
+Note: 
+ - the above setup can connect to the database in the connection-window with the hostname `db`, not `http://db`.
+ - on the db-machine, you might have to re-install postgis to get gdal and raster2pgsql.
+
+
 Fist steps: create user as in https://wiki.postgresql.org/wiki/First_steps 
 
 Log in to admin db
@@ -30,6 +79,38 @@ Good admin tool: pgAdmin3
 - `\i <file-name>`: execute psql commands from a file
 - `\copy`
 
+
+## Extensions
+- Extension-manager: `pgxn`
+    - `pgxn install h3`
+- Activating extension: 
+    - `create extension h3;`
+
+## H3
+```bash
+apt install postgis make cmake pgxnclient wget postgresql-server-dev-15
+# potentially install cmake manually:
+# wget https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2.tar.gz
+# mv cmake-3.26.1-linux-x86_64.sh /opt/
+# cd /opt
+# chmod +x cmake-3.26.1-linux-x86_64.sh
+# ./cmake-3.26.1-linux-x86_64.sh
+# ln -s /opt/cmake-3.26.1-linux-x86_64/bin/* /usr/local/bin/
+pgxn install h3
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS public.heat
+(
+    index h3index NOT NULL,
+    resolution smallint NOT NULL,
+    value integer,
+    CONSTRAINT heat_pkey PRIMARY KEY (index)
+)
+```
+
+## Raster data
+- `raster2pgsql` takes a raster-file and imports it as tiles of some wxh into a table.
 
 ## Performance-settings
 
