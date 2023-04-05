@@ -13,6 +13,7 @@ Quelle: https://www.computerwoche.de/a/us-exportkontrolle-fuer-apps-das-muessen-
     - mehr als 128 Bit für Elliptische-Kurven-Kryptografie.
   - Ausnahme: wenn man nur die Betriebs-System-eigenen default Verschlüsselungen verwendet
 
+Dass die USA ihre Export-Regeln Leuten aufbürgen, die keine US-Bürger sind, sondern nur amerikanische Unterteile mit einbauen, ist angeblich völkerrechtswiedrig, aber den Aufwand einfach nicht wert.
 
 ## Europäische Exportkontrolle:
 Quelle: https://www.ihk-exportakademie.de/Kurse/Seminare/4078/

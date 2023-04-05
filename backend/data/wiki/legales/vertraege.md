@@ -38,8 +38,14 @@ Noch besser: verwende den upwork beispielvertrag
 
 ## Haftung
 Auch bei fahrlässigen Schäden haftet der Dienstleister.
-Unabhängig von dem, was im Vertrag steht, gilt immer die *gesetzliche Haftung*: wenn der Dienstleister irgend einen Schaden verursacht, muss er dafür zahlen.
+
+Es gibt zwei Arten von Haftung:
+    - Vertragliche Haftung: der Lieferer hat seine Versprechen im Vertrag gebrochen.
+    - Deliktische Haftung: der Lieferer hat ein Gesetz gebrochen. 
+
+Unabhängig von dem, was im Vertrag steht, gilt immer die *gesetzliche (=deliktische) Haftung*: wenn der Dienstleister irgend einen Schaden verursacht, muss er dafür zahlen.
 Dieser gesetzliche Schaden ist aber relativ höher-schwellig: er tritt erst bei echtem finanziellen oder persönlichen Schaden ein.
+(Selbst wenn es *keinen* Vertrag gibt ist der Lieferer immer noch haftbar, wenn durch sein Produkt ein Schaden entsteht).
 
 Niederschwelliger dagegen ist die vertragliche Haftung.
 Gegen diese kann man sich immerhin absichern, in dem man die Haftung im Vertrag regelt.
@@ -48,3 +54,10 @@ Häufige Klauseln (können auch zusammen vorkommen):
     - Maximale Haftung = Auftragswert
     - Maximale Haftung = was auch immer meine Versicherung zu bezahlen bereit ist.
 
+
+### Spezialfall: Haftung von Wetterdiensten
+Wetterdienste werden häufiger wegen Schaden durch falsche Vorhersagen verklagt.
+Sie sind besonders angreifbar, wenn sie einem Kunden vertraglich gute Vorhersagen zugesagt haben.
+Aber selbst wenn sie ihre Vorhersagen der Öffentlichkeit verfügbar machen, sind sie noch immer verklagbar.
+Meistens verlieren die klagenden, aber es gibt hier Graubereiche.
+http://sciencepolicy.colorado.edu/admin/publication_files/2003.31.pdf
