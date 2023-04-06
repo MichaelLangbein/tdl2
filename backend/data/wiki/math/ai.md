@@ -690,131 +690,238 @@ The most important variables are
 
 
 ```python
+
+class Object:
+    def __init__(self, description):
+        self.description = description
+
+    def __repr__(self):
+        return self.description
+
+
+class Relation(Object):
+    def __init__(self, description):
+        super(Relation, self).__init__(description)
+
+
+
+class Variable:
+    def __init__(self, description, cls=Object):
+        self.description = description
+        self.cls = cls
+
+    def __repr__(self):
+        return self.description
+
+
+class Rule:
+    def __init__(self, condition, consequence):
+        self.condition = condition
+        self.consequence = consequence
+
+    def __eq__(self, other):
+        if isinstance(other, Rule):
+            if other.condition == self.condition and other.consequence == self.consequence:
+                return True
+        return False
+
+    def __repr__(self):
+        return f"if {self.condition} => {self.consequence}"
+
+
+def getVariables(query):
+    vrbls = []
+    isSingleWord = False if isinstance(query, tuple) else True
+    if isSingleWord:
+        query = (query,)
+    for word in query:
+        if isinstance(word, Variable):
+            vrbls.append(word)
+        elif isinstance(word, tuple):
+            subVrbls = getVariables(word)
+            vrbls += subVrbls
+    return vrbls
+
+
+def substitute(query, tDict):
+    # sanity check
+    variablesInQuery = getVariables(query)
+    newVrblValuesInDict = getVariables(tDict.values())
+    for v in variablesInQuery:
+        if v in newVrblValuesInDict:
+            raise Exception(f"The phrase {query} already has a variable named '{v}'. Please rename this variable.")
+
+    substituted = []
+    for word in query:
+        if isinstance(word, Variable):
+            if word in tDict:
+                substituted.append(tDict[word])
+            else:
+                substituted.append(word)
+        elif isinstance(word, tuple):
+            subSubstituted = substitute(word, tDict)
+            substituted.append(subSubstituted)
+        else:
+            substituted.append(word)
+    return tuple(substituted)
+
+
+def matches(vQuery, fact):
+    if len(vQuery) != len(fact):
+        return False
+    tDict = {}
+    for vw, fw in zip(vQuery, fact):
+        if isinstance(vw, Variable):
+            if vw in tDict and fw != tDict[vw]:  # a variable must not be set with two different values.
+                return False
+            tDict[vw] = fw
+        elif vw != fw:
+            return False
+    return tDict
+
+
 class InferenceEngine:
     def __init__(self):
         self.facts = []
         self.rules = []
+        self.learned = []
+        self.ongoingRules = []
 
     def addFact(self, *fact):
         if fact not in self.facts:
-            self.facts.append(fact)  # add the fact
-            print(f"Just learned that {fact}")
-        for arg in fact[1:]:
-            if not self.__isVariable(arg):
-                self.addFact(arg) # add all arguments
+            self.facts.append(fact)
 
-    def addRule(self, conditions, consequence):
-        newRule = {'conditions': conditions, 'consequence': consequence}
-        if not newRule in self.rules:
-            self.rules.append(newRule)
-            print(f"Just learned that {newRule}")
+    def addRule(self, condition, consequence):
+        rule = Rule(condition, consequence)
+        if rule not in self.rules:
+            self.rules.append(rule)
+    
+    def addLearned(self, *query):
+        if len(getVariables(query)) == 0:
+            if query not in self.learned:
+                self.learned.append(query)
 
-    def eval(self, *statement):
-        print(f"Evaluating whether '{statement}' holds true")
-        fact = self.__searchFacts(*statement)
-        if fact:
-            return fact
-        fact = self.__tryToProve(*statement)
-        if fact:
-            return fact
-        print(f"No, '{statement}' holds not true")
-        return False
+    def matchInFacts(self, *query):
+        for fact in self.facts + self.learned:
+            tDict = matches(query, fact)
+            if tDict is not False:
+                yield tDict
 
-    def __searchFacts(self, *statement):
-        for fact in self.facts:
-            if self.__statementsMatch(fact, statement):
-                return fact
-        return False
+    def matchInRules(self, *query):
+        if query not in self.learned:
+            for rule in self.rules:
+                tDict = matches(rule.consequence, query)
+                if tDict:
+                    substRule = Rule(substitute(rule.condition, tDict), query)
+                    self.addLearned(*query)
+                    yield substRule
 
-    def __tryToProve(self, *statement):
-        # a professional inference engine would probably use Rete here
-        candidateRules = self.__findCandidateRules(*statement)
-        for candidateRule in candidateRules:
-            substitutedRule = self.__setRuleVariablesByStatement(candidateRule, statement)
-            facts = self.__evalAll(substitutedRule['conditions'])
-            if facts:
-                substitutedRule = self.__setRuleVariablesByStatements(substitutedRule, facts)
-                self.addFact(*substitutedRule['consequence'])
-                return substitutedRule['consequence']
-        return False
+    def eval(self, *query):
+        print(f"now evaluating: {query}")
+        operator = query[0]
+        operands = query[1:]
+        if operator in ['and', 'or', 'calc', 'unequal', 'not']:  # special forms
+            if operator == 'and':
+                for tDict in self.And(*operands):
+                    yield tDict
+            elif operator == 'or':
+                for tDict in self.Or(*operands):
+                    yield tDict
+            elif operator == 'calc':
+                function = operands[0]
+                args = operands[1:]
+                for tDict in function(args):
+                    yield tDict
+            elif operator == 'not':
+                for tDict in self.Not(*operands):
+                    yield tDict
+            elif operator == 'unequal':
+                if operands[0] != operands[1]:
+                    yield {}
+        else:
+            for tDict in self.matchInFacts(*query):
+                yield tDict
+            for rule in self.matchInRules(*query):
+                if rule not in self.ongoingRules:
+                    self.ongoingRules.append(rule)
+                    for tDict in self.eval(*(rule.condition)):
+                        yield tDict
+                    self.ongoingRules.remove(rule)
+                else:
+                    print("break because rule already going on.")
 
-    def __evalAll(self, statements):
-        facts = []
-        for statement in statements:
-            fact = self.eval(*statement)
-            if not fact:
-                return False
+
+    def evalAndSubstitute(self, *query):
+        for tDict in self.eval(*query):
+            yield substitute(query, tDict)
+
+    def __repr__(self):
+        return 'IE'
+
+    def And(self, firstArg, *restArgs):
+        """
+            The first conjunct creates a stream of tDicts.
+            Every subsequent conjunct filters that stream.
+            Cancels early when the stream has become empty.
+        """
+        for tDict in self.eval(*firstArg):
+            if len(restArgs) == 0:
+                yield tDict
             else:
-                facts.append(fact)
-        return facts
+                restArgs = [substitute(arg, tDict) for arg in restArgs]
+                for subTDict in self.And(*restArgs):
+                    tDict.update(subTDict)
+                    yield tDict
+            
+    def Or(self, *args):
+        yield
 
-    '''
-    -----------------  helpers -------------------------
-    '''
+    def Not(self, *args):
+        yield
 
-    def __setRuleVariablesByStatements(self, rule, statements):
-        newRule = dict(rule)
-        for statement in statements:
-            newRule = self.__setRuleVariablesByStatement(newRule, statement)
-        return newRule
-
-    def __setRuleVariablesByStatement(self, rule, statement):
-        substitutionDict = {}
-        for ruleArg, stateArg in zip(rule['consequence'][1:], statement[1:]):
-            if self.__isVariable(ruleArg):
-                substitutionDict[ruleArg] = stateArg
-        return self.__setRuleVariablesByDict(rule, substitutionDict)
-
-    def __setRuleVariablesByDict(self, rule, subsDict):
-        newRule = {'conditions': [], 'consequence': None}
-        for condition in rule['conditions']:
-            newCondition = self.__setVariablesByDict(condition, subsDict)
-            newRule['conditions'].append(newCondition)
-        newConsequence = self.__setVariablesByDict(rule['consequence'], subsDict)
-        newRule['consequence'] = newConsequence
-        return newRule
-
-    def __setVariablesByDict(self, statement, subsDict):
-        newStatement = [statement[0]]
-        for arg in statement[1:]:
-            if self.__isVariable(arg) and arg in subsDict:
-                newStatement.append(subsDict[arg])
-            else:
-                newStatement.append(arg)
-        return newStatement
-
-    def __findCandidateRules(self, *statement):
-        candidates = []
-        for rule in self.rules:
-            if self.__statementsMatch(rule['consequence'], statement):
-                candidates.append(rule)
-        return candidates
-
-    def __statementsMatch(self, statementOne, statementTwo):
-        for wordOne, wordTwo in zip(statementOne, statementTwo):
-            oneIsVal = not self.__isVariable(wordOne)
-            twoIsVal = not self.__isVariable(wordTwo)
-            if oneIsVal and twoIsVal: # ? (oneIsVar and twoIsVar) or (not oneIsVar and not twoIsVar):
-                if wordOne != wordTwo:
-                    return False
-        return True
-
-    def __isVariable(self, arg):
-        return isinstance(arg, str) and arg[0].isupper()
+    def allCombinations(self, listOfGenerators):
+        firstGen = listOfGenerators[0]
+        restGen = listOfGenerators[1:]
+        if len(restGen) == 0:
+            for result in firstGen:
+                yield [result]
+        else:
+            for result in firstGen:
+                for subresults in self.allCombinations(restGen):  # TODO: performance? 'self.allCombinations' is called repeatedly!
+                    yield [result] + subresults
 
 
 
 
+ie = InferenceEngine()
+michael = Object('Michael')
+andreas = Object('Andreas')
+volker = Object('Volker')
+bruder = Relation('Bruder')
+vater = Relation('Vater')
+X = Variable('jemand')
+Y = Variable('noch jemand')
+V = Variable('vater')
 
-if __name__ == '__main__':
-    e = InferenceEngine() 
+ie.addFact(michael)
+ie.addFact(andreas)
+ie.addFact(volker)
+ie.addFact(bruder, michael, andreas)
+ie.addFact(vater, michael, volker)
+ie.addRule(('and', (vater, X, V),
+                    (bruder, X, Y)),
+            (vater, Y, V))
 
-    # Test 0: obligatory Socrates test
-    e.addRule([
-        ['man', 'X']
-    ], ['mortal', 'X'])
-    e.addFact('man', 'socrates')
-    print(e.eval('mortal', 'Y'))
+jemands = ie.matchInFacts(X)
+self.assertTrue( len(toList(jemands)) == 3 )
+
+vaterWenn = ie.matchInRules(vater, A, B)
+self.assertTrue( toList(vaterWenn)[0].condition == ('and', (vater, X, B), 
+                                                (bruder, X, A)) )
+
+volkerIstMeinesBrudersVater = ie.eval('and', (bruder, michael, A),
+                                            (vater, A, volker))
+print(toList(volkerIstMeinesBrudersVater, 1))
 ```
 
 
