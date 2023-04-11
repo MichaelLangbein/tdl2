@@ -271,5 +271,5 @@ console.log("this is root, running in zone ", Zone.current.name);
 
 
 ## Common rxjs operators
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs1.png">
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs2.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs1.jpg">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs2.jpg">
