@@ -33,6 +33,8 @@
     - if *lbl* is the name of a commit, 
         - make workdir == commit
         - move HEAD to commit
+    - if *lbl* is a file name,
+        - undo changes in file and reset it to state in HEAD.
 
 - `merge`:
     - splices in commits by time of commit
@@ -44,6 +46,12 @@
 - `remote`:
     - `fetch && merge` == `pull`
     - `push`
+
+- `--`
+    - A unix-convention: `--` means: treat every argument after this point as a file name, no matter what it looks like.
+    - Also means: treat what comes before as *not* a filename.
+    - `git checkout <something> --`: check out a branch or commit named `something`
+    - `git checkout -- <something>`: check out a file named `something`
 
 
 <img width="35%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/git_workflow.jpg" />
