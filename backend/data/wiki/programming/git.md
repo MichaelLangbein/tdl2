@@ -38,10 +38,13 @@
 
 - `merge`:
     - splices in commits by time of commit
+    - after a merge, you get one merge-commit with two parents
+    - after a merge, after deleting the merged in branch, you can no longer tell if a commit came from the source- or target-branch.
 
 - `rebase`:
     - removes branch from where it had branched off
     - places it at end of target-branch
+    - after a rebase you can no longer tell if a commit came from the source- or target-branch.
 
 - `remote`:
     - `fetch && merge` == `pull`
