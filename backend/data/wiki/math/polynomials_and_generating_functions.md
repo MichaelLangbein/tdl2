@@ -1,3 +1,34 @@
+# Series
+
+## Some series I know:
+
+**Name unknown**:
+$$ \sum_{t=1}^n t = \frac{n^2}{2} + \frac{n}{2} $$
+... from using the 'half rectangle' argument.
+
+**Geometric series**:
+$$ \begin{aligned}
+    \sum_{t=1}^n a^t = s_n \\
+    \frac{s_n}{a} - 1 = s_n - a^n \\
+    s_n = \frac{a - a^{n+1}}{1-a}
+\end{aligned} $$
+
+**Name unknown**:
+$$ \begin{aligned}
+    \sum_{t=1}^n ta^t = s_n \\
+    s_n - \frac{s_n}{a} &= -1 - \sum_{t=1}^{n-1} a^t + na^n \\
+                        &= -1 - \text{geometric}(1..n-1) + na^n \\
+\end{aligned} $$
+
+## Convergence
+
+# Polynomials
+
+## Multiplication
+
+$$\sum_{i=0}^\infty a_i \sum_{i=0}^\infty b_i = \sum_{m=0}^\infty x^m \sum_{i=0}^m a_i b_{m-i}$$
+
+
 # Generating functions
 
 <small>Theoretically we can get closed form expressions for recursive functions using generating functions.
