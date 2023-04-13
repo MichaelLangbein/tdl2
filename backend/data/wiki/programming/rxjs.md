@@ -183,86 +183,79 @@ interface ZoneSpec {
     onCancelTask?;
     onHasTask?;
 }
-    
+
+
 class Zone {
-    private static _current: Zone = new Zone(null, {name: 'Base'});
-    private _parent: Zone;
-    private zoneSpec: ZoneSpec;
-    
-    constructor(parent: Zone, zoneSpec: ZoneSpec) {
-        this._parent = parent;
-        this.zoneSpec = zoneSpec;
-    }
-    
-    static get current() {
-        return Zone._current;
-    }
-    
-    get name() {
-        return this.zoneSpec.name;
-    }
-    
-    get parent() {
-        return this._parent;
-    }
-    
-    get(key: string) {
-        return this.zoneSpec.props ? this.zoneSpec.props[key] : null;
-    }
-    
-    fork(newZoneSpec: ZoneSpec) {
-        for (const key in this.zoneSpec) {
-        if (key != 'name') {
-            if (!newZoneSpec[key]) {
-            newZoneSpec[key] = this.zoneSpec[key];
-            }
-        }
-        }
-        return new Zone(Zone.current, newZoneSpec);
-    }
-    
-    run(callback) {
-        Zone._current = this;
-        callback();
-        Zone._current = this.parent;
-    }
-    
+  static current: Zone = new Zone(null, {name: 'Base'});
+  readonly parent: Zone;
+  private zoneSpec: ZoneSpec;
+  
+  constructor(parent: Zone, zoneSpec: ZoneSpec) {
+      this.parent = parent;
+      this.zoneSpec = zoneSpec;
+  }
+  
+  get name() {
+      return this.zoneSpec.name;
+  }
+
+  get(key: string) {
+      return this.zoneSpec.props ? this.zoneSpec.props[key] : null;
+  }
+  
+  fork(newZoneSpec: ZoneSpec) {
+      for (const key in this.zoneSpec) {
+      if (key != 'name') {
+          if (!newZoneSpec[key]) {
+          newZoneSpec[key] = this.zoneSpec[key];
+          }
+      }
+      }
+      return new Zone(Zone.current, newZoneSpec);
+  }
+  
+  run(callback) {
+      Zone.current = this;
+      callback();
+      Zone.current = this.parent;
+  }
+  
 }
 
 
 const _setTimeout = (callback, time) => {
-const zoneOnCreateTime = Zone.current;
-const wrappedCallback = () => {
-    zoneOnCreateTime.run(callback);
-};
-setTimeout(wrappedCallback, time);
+    const zoneOnCreateTime = Zone.current;
+    const wrappedCallback = () => {
+        zoneOnCreateTime.run(callback);
+    };
+    setTimeout(wrappedCallback, time);
 }
 
 
 const zoneBC = Zone.current.fork({
-name: 'BC',
-props: {
-    message: "Hi! You can only see me inside BC!"
-}
+    name: 'BC',
+    props: {
+        message: "Hi! You can only see me inside BC!"
+    }
 });
 
 
 function c() {
-console.log("executing c in zone ", Zone.current.name);
-console.log("Here's the message data: ", Zone.current.get('message'));
+    console.log("executing c in zone ", Zone.current.name);
+    console.log("Here's the message data: ", Zone.current.get('message'));
 }
 
 function b() {
-console.log("executing b in zone ", Zone.current.name);
-console.log("Here's the message data: ", Zone.current.get('message'));
-_setTimeout(c, 2000);
-// c();
+    console.log("executing b in zone ", Zone.current.name);
+    console.log("Here's the message data: ", Zone.current.get('message'));
+    _setTimeout(c, 2000);
+    // c();
 }
 
 function a() {
-console.log("executing a in zone ", Zone.current.name);
-console.log("Here's the message data: ", Zone.current.get('message'));
-zoneBC.run(b);
+    console.log("executing a in zone ", Zone.current.name);
+    console.log("Here's the message data: ", Zone.current.get('message'));
+    zoneBC.run(b);
 }
 
 a();
