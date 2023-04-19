@@ -264,5 +264,12 @@ console.log("this is root, running in zone ", Zone.current.name);
 
 
 ## Common rxjs operators
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs1.jpg">
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs2.jpg">
+<img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs1.jpg">
+<img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs2.jpg">
+
+Downstream observables, never mind if they are hot or cold, pull data from upstream observables.
+- Hot upstream observables are shared between downstream observables, 
+- cold upstream observables are created anew for each downstream subscriber 
+    - even if those downstream subscribers are later merged together again.
+<img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs3.jpg">
+
