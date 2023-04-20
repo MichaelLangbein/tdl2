@@ -99,8 +99,9 @@ Reverting and resetting is best explained [in this post](https://stackoverflow.c
 Those two things have little in common ... except when you've accidentially added a file and need to remove it.
 
 - `git reset --<mode> <commit> [-- <file>]`
-    - sets `HEAD` to `<commit>`
-    - sets current-branch-pointer to `<commit>`
+    - only if **no** `-- <file>` given:
+	- sets `HEAD` to `<commit>`
+        - sets current-branch-pointer to `<commit>`
     - `--mode mixed` (default)
         - resets index
         - doesn't touch working tree
