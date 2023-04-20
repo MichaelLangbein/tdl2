@@ -92,7 +92,38 @@ Reverting and resetting is best explained [in this post](https://stackoverflow.c
     - `--soft` will keep changes in staging
 
 
+# Reset and rm
+- `reset` moves the current branch-tip-pointer and HEAD to some older point.
+- `rm` removes a file from the index.
 
+Those two things have little in common ... except when you've accidentially added a file and need to remove it.
+
+- `git reset --<mode> <commit> [-- <file>]`
+    - sets `HEAD` to `<commit>`
+    - sets current-branch-pointer to `<commit>`
+    - `--mode mixed` (default)
+        - resets index
+        - doesn't touch working tree
+    - `--mode soft`
+        - doesn't touch index
+        - doesn't touch working tree
+    - `--mode hard`
+        - resets index
+        - resets working tree
+
+
+Whereas git rm:
+- `git rm <file>`
+    - removes file from index
+    - removes file from worktree
+- `git rm --cached <file>`
+    - removes file from index
+    - doesn't touch working tree
+
+Notably: 
+- changes with `rm` are added after the current tip of the branch.
+- changes with `reset` mean that we move back in the branch.
+- only `reset` makes a file disappear from history, `rm` only removes it after it's been added.
 
 
 # Merging remote changes on master into local master
