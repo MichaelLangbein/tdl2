@@ -1,5 +1,35 @@
 # Linux
 
+
+# Basics 
+
+- Firmware: 
+  - BIOS (low-level, Assembly)
+  - UEFI
+- Bootloaders: 
+  - grub (heavy)
+  - syslinux (light)
+  - systemd-boot
+- Kernel: linux (pid=0)
+- Init process: Starts background services (pid=1). 
+  - initd
+  - upstart (simple, synchronous)
+  - systemd (systemctl, today default. lazy. lots of extra features).
+- Window managers: 
+  - x11 (server-client model)
+  - wayland (modern, less cruft, still unstable)
+- GUI libs: 
+  - GTK (c) 
+  - Qt (C++, cross-platform for x11, wayland, win32 or cocoa)
+- Desktops: 
+  - KDE (based on Qt). Expl: Kubuntu, Plasma
+  - gnome2 (based on GTK). Forks: Mate
+  - gnome3 (based on GTK). Forks: Cinnamon 
+  - xfce (based on GTK).
+  - unity (based on GTK, deprecated).
+  - pantheon (based on GTK, borrows a lot from gnome3, used in elementaryOS)
+
+
 # Disks and mounts
 - `/etc/fstab`: config-file to mount devices
 - `mount`: cli to mount devices
