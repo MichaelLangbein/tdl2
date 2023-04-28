@@ -1,3 +1,56 @@
+# Asymptotic analysis
+The name *asymptotic* analysis is well chosen (for once). 
+- AA only tells us about the behaviour of algorithms as their numbers become *very* big.
+- AA deals with the **rate of growth**, not absolute values
+
+
+Big-oh is the approximate upper bound, little-oh is the next graph *higher* than that.
+
+## Big Oh
+$$ f \in O(g) \iff  \exists k:  \exists  x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
+- What is meant: $f$'s rate of growth is within that of $g$
+- Explanation: $f$ will always remain within a fixed linear multiplication (*k) from $g$. $f$ won't ever grow out of the reach of $kg$.
+
+## Little Oh
+$$ f \in o(g) \iff \forall k:  \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
+- What is meant: $f$'s rate of growth is a factor smaller than $g$
+- Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
+
+## Comparision $O$ and $o$:
+- True for big-oh, false for little-oh:
+    - $x^2 \in O(x^2)$
+    - $x^2 \in O(x^2 + x)$
+    - $x^2 \in O(2000 x^2)$
+- True for little-oh (and therefore automatically true for big-oh):
+    - $x^2 \in o(x^3)$
+    - $x^2 \in o(x!)$
+    - $\ln(x) \in o(x)$
+
+
+## Others:
+- Lower bounds: Omega
+- Upper and lower bound: Theta
+
+## Best, worst, average case:
+Those have nothing to do with $O$, $\Theta$ or $\Omega$. 
+For each of those three we can calculate $O$, $\Theta$ or $\Omega$ individually.
+
+So, a thorough analysis would consist of:
+
+- best case:
+    - $O$
+    - $\Omega$
+    - $\Theta$
+- average:
+    - $O$
+    - $\Omega$
+    - $\Theta$
+- worst case:
+    - $O$
+    - $\Omega$
+    - $\Theta$
+
+
 # Streaming algorithms
 
 
