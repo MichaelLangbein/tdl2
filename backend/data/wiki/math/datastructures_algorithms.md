@@ -1,4 +1,6 @@
 # Asymptotic analysis
+Aka. Landau-symbols.
+
 The name *asymptotic* analysis is well chosen (for once). 
 - AA only tells us about the behaviour of algorithms as their numbers become *very* big.
 - AA deals with the **rate of growth**, not absolute values
@@ -30,6 +32,49 @@ $$ f \in o(g) \iff \forall k:  \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg
 ## Others:
 - Lower bounds: Omega
 - Upper and lower bound: Theta
+
+## Rules for $O$
+
+1. $O( cte * pow ) = O(pow)$
+2. $f_1: O(g_1)$ and $f_2: O(g_2)$ then $f_1 + f_2: O(\max(g_1, g_2))$ 
+3. $f_1: O(g_1)$ and $f_2: O(g_2)$ then $f_1 \cdot f_2: O(g_1 \cdot g_2)$
+4. $f \cdot O(g) = O(f \cdot g)$
+5. $O cte < O \log(x) < O\sqrt{x} < O n < O n\log(x) < O x^{cte} < O 2^x < O x! $
+
+Proof of 1:
+> Prove $f \in O(ng) \to f \in O(g)$
+>
+>> Suppose $f \in O(ng)$.
+>>
+>> That means  $\exists k:  \exists  x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x)n$. Call this $k_0$.
+>>
+>>> Prove $f \in O(g)$, that, is: $\exists k:  \exists  x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x)$
+>>>
+>>> Try $k = nk_0$. Rest is trivial.
+
+Partial proof of 2: 
+> Proof that $f \in O(x^2 + x) \to f \in O(x^2)$
+>
+>> Suppose $f \in O(x^2 + x)$.
+>>
+>> That means $\exists k_0:  \exists  x_0: \forall x > x_0: f(x) \leq k_0(x^2 + x)$. 
+>>
+>>> Proof that $f \in O(x^2)$, that is, proof that $\exists k_1: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq x^2$
+>>>
+>>> Worst case. Assume $f(x) = k_0(x^2 + x)$
+>>>
+>>> Inspiration: try to prove that $f(x) = x + 1$ is $O(x)$.
+>>> 
+>>> Try $k_1 = k_0 + 0.0000001$ ... or for simplicity: try $k_1 = k_0 + 1$.
+>>>
+>>>> Try $n_1 = k_0$
+>>>>
+>>>>> Prove that $\forall n > k_0: f(n) \leq k_1 n^2$.
+>>>>>
+>>>>> That is: $\forall n > k_0: k_0(n^2 + n) \leq (k_0 + 1)n^2 $.
+>>>>>
+>>>>> Now this is trivial.
+
 
 ## Best, worst, average case:
 Those have nothing to do with $O$, $\Theta$ or $\Omega$. 
