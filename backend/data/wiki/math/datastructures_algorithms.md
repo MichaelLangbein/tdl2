@@ -63,7 +63,7 @@ Partial proof of 2:
 >>>
 >>> Worst case. Assume $f(x) = k_0(x^2 + x)$
 >>>
->>> Inspiration: try to prove that $f(x) = x + 1$ is $O(x)$.
+>>> **Inspiration**: try to prove that $f(x) = x + 1$ is $O(x)$.
 >>> 
 >>> Try $k_1 = k_0 + 0.0000001$ ... or for simplicity: try $k_1 = k_0 + 1$.
 >>>
@@ -810,6 +810,62 @@ But: contrary to dynamic programming, optimization can get stuck in local minima
 | dynamic programming | Explores (almost) full space            | will find optimum                |
 | optimization        | Explores only one (a few) zig-zag paths | might get stuck in local minimum |
 |                     |                                         |                                  |
+
+
+
+
+
+
+# Databases and indices
+
+The curious case of compound-queries.
+
+Consider this situation.
+
+ - you have a table `table` with columns `a` and `b`, each with an index on it.
+ - you want to execute the query `select * from table as t where a=a_0 and b=b_0`
+ - what would your execution strategy be?
+
+My first idea was this:
+```python
+as = db.select('a', a0)               # O(log(n))
+out = as.filter(row => row.b == b0)   # O(|as|)
+```
+... with $n$ being the number of rows in the table.
+
+This is $O(\log(n) + |$`as`$|)$ ... which in the worst case being $|$`as`$|=n$.
+
+Thus $O(\log(n) + n) = O(n)$.
+
+However, this is what postgres does:
+```
+r1 = query index on a for a0
+r2 = query index on b for b0
+out = bitmap-and on r1, r2
+```
+
+I was very confused, because I thought that meant:
+```python
+as = db.select('a', a0)  # O(log(n))
+bs = db.select('b', b0)  # O(log(n))
+out = bitmapAnd(as, bs)  # probably requires a merge, so kinda like merge-sort and thus O(n * log(n)) ?!
+```
+This would have meant that postgres did something that was $O(\log(n) + \log(n) + n\log(n)) = O(n\log(n))$ ... which is clearly worse than my implementation!
+
+But [after some research](https://www.postgresql.org/docs/current/indexes-bitmap-scans.html), this is what postgres really does:
+
+```python
+bitmapA = toBitmapRow(index('a', a0))   # O(log(n))
+bitmapB = toBitmapRow(index('b', b0))   # O(log(n))
+locations = bitmapAnd(bitmapA, bitmapB) # O(n)
+values = table.getValuesAt(locations)   # O(|values == 1|)
+```
+... which is also just $O(n)$.
+
+Instead of returning the actual values in lines 1 and 2, postgres returns a datastructure of ones and zeros of length exactly $n$. Gliding along two such bitmap-lines is just $O(n)$ and gives us the indices that postgres needs to fetch the actual values from. 
+
+
+
 
 
 
