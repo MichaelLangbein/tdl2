@@ -858,7 +858,7 @@ But [after some research](https://www.postgresql.org/docs/current/indexes-bitmap
 bitmapA = toBitmapRow(index('a', a0))   # O(log(n))
 bitmapB = toBitmapRow(index('b', b0))   # O(log(n))
 locations = bitmapAnd(bitmapA, bitmapB) # O(n)
-values = table.getValuesAt(locations)   # O(|values == 1|)
+values = table.getValuesAt(locations)   # O(n)
 ```
 ... which is also just $O(n)$.
 
