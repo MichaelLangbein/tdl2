@@ -332,4 +332,9 @@ export class Interpreter {
 }
 ```
 
-## 
+## More complex languages
+Lisp is an extremely simple language.
+- More complex languages will not only have expressions, but also statements (lines of code that don't evaluate to a value).
+- If you do importing, you'll need to not only build an AST, but also a *symbol table*.
+    - That symbol table may even persist into the final executable
+    - C object files keep their symbol table so that the symbols can be resolved by a linker.
