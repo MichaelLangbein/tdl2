@@ -26,19 +26,13 @@ app
    - really, the view here is much rather a *controller*.
 
 
-### Common errors
- - Reverse for 'project' with keyword arguments '{'pk': ''}' not found.
-   - either there is no url named 'project'
-   - or the argument pk has not been set to a concrete value.
- - Generic detail view SprintCreate must be called with either an object pk or a slug in the URLconf.
-   - you're referencing self.object too early.
 
-### Users
+## Users
 
  - user
  - group
 
-### Forms
+## Forms
 
  - ModelForm:
    - ```python
@@ -53,3 +47,41 @@ app
             model = Project
             form = ProjectForm
       ```
+
+## Models
+Rails requires you to maintain a file for models (=the way data is read from the db into an object) and another for migrations (the way data is put into the db).
+Django does not distinguish in this way between models and migrations - migrations are created automatically from diffs on your model file and the current db-state.
+
+```shell
+python manage.py makemigrations
+python manage.py migrate
+```
+
+```python
+from django.db import models 
+
+class Reporter(models.Model):
+  full_name = models.CharField(max_length=70) 
+  def __str__(self):
+    return self.full_name
+
+class Article(models.Model):
+  pub_date = models.DateField()
+  headline = models.CharField(max_length=200)
+  content = models.TextField()
+  reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
+  def __str__(self): 
+    return self.headline
+```
+
+## Views (aka. controllers)
+
+## Template (aka. view)
+
+
+## Common errors
+ - Reverse for 'project' with keyword arguments '{'pk': ''}' not found.
+   - either there is no url named 'project'
+   - or the argument pk has not been set to a concrete value.
+ - Generic detail view SprintCreate must be called with either an object pk or a slug in the URLconf.
+   - you're referencing self.object too early.
