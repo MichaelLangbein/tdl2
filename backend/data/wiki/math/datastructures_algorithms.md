@@ -1,3 +1,101 @@
+# Asymptotic analysis
+Aka. Landau-symbols.
+
+The name *asymptotic* analysis is well chosen (for once). 
+- AA only tells us about the behaviour of algorithms as their numbers become *very* big.
+- AA deals with the **rate of growth**, not absolute values
+
+
+Big-oh is the approximate upper bound, little-oh is the next graph *higher* than that.
+
+## Big Oh
+$$ f \in O(g) \iff  \exists k:  \exists  x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
+- What is meant: $f$'s rate of growth is within that of $g$
+- Explanation: $f$ will always remain within a fixed linear multiplication (*k) from $g$. $f$ won't ever grow out of the reach of $kg$.
+
+## Little Oh
+$$ f \in o(g) \iff \forall k:  \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
+- What is meant: $f$'s rate of growth is a factor smaller than $g$
+- Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
+
+## Comparision $O$ and $o$:
+- True for big-oh, false for little-oh:
+    - $x^2 \in O(x^2)$
+    - $x^2 \in O(x^2 + x)$
+    - $x^2 \in O(2000 x^2)$
+- True for little-oh (and therefore automatically true for big-oh):
+    - $x^2 \in o(x^3)$
+    - $x^2 \in o(x!)$
+    - $\ln(x) \in o(x)$
+
+
+## Others:
+- Lower bounds: Omega
+- Upper and lower bound: Theta
+
+## Rules for $O$
+
+1. $O( cte * pow ) = O(pow)$
+2. $f_1: O(g_1)$ and $f_2: O(g_2)$ then $f_1 + f_2: O(\max(g_1, g_2))$ 
+3. $f_1: O(g_1)$ and $f_2: O(g_2)$ then $f_1 \cdot f_2: O(g_1 \cdot g_2)$
+4. $f \cdot O(g) = O(f \cdot g)$
+5. $O cte < O \log(x) < O\sqrt{x} < O n < O n\log(x) < O x^{cte} < O 2^x < O x! $
+
+Proof of 1:
+> Prove $f \in O(ng) \to f \in O(g)$
+>
+>> Suppose $f \in O(ng)$.
+>>
+>> That means  $\exists k:  \exists  x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x)n$. Call this $k_0$.
+>>
+>>> Prove $f \in O(g)$, that, is: $\exists k:  \exists  x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x)$
+>>>
+>>> Try $k = nk_0$. Rest is trivial.
+
+Partial proof of 2: 
+> Proof that $f \in O(x^2 + x) \to f \in O(x^2)$
+>
+>> Suppose $f \in O(x^2 + x)$.
+>>
+>> That means $\exists k_0:  \exists  x_0: \forall x > x_0: f(x) \leq k_0(x^2 + x)$. 
+>>
+>>> Proof that $f \in O(x^2)$, that is, proof that $\exists k_1: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq x^2$
+>>>
+>>> Worst case. Assume $f(x) = k_0(x^2 + x)$
+>>>
+>>> **Inspiration**: try to prove that $f(x) = x + 1$ is $O(x)$.
+>>> 
+>>> Try $k_1 = k_0 + 0.0000001$ ... or for simplicity: try $k_1 = k_0 + 1$.
+>>>
+>>>> Try $n_1 = k_0$
+>>>>
+>>>>> Prove that $\forall n > k_0: f(n) \leq k_1 n^2$.
+>>>>>
+>>>>> That is: $\forall n > k_0: k_0(n^2 + n) \leq (k_0 + 1)n^2 $.
+>>>>>
+>>>>> Now this is trivial.
+
+
+## Best, worst, average case:
+Those have nothing to do with $O$, $\Theta$ or $\Omega$. 
+For each of those three we can calculate $O$, $\Theta$ or $\Omega$ individually.
+
+So, a thorough analysis would consist of:
+
+- best case:
+    - $O$
+    - $\Omega$
+    - $\Theta$
+- average:
+    - $O$
+    - $\Omega$
+    - $\Theta$
+- worst case:
+    - $O$
+    - $\Omega$
+    - $\Theta$
+
+
 # Streaming algorithms
 
 
@@ -712,6 +810,62 @@ But: contrary to dynamic programming, optimization can get stuck in local minima
 | dynamic programming | Explores (almost) full space            | will find optimum                |
 | optimization        | Explores only one (a few) zig-zag paths | might get stuck in local minimum |
 |                     |                                         |                                  |
+
+
+
+
+
+
+# Databases and indices
+
+The curious case of compound-queries.
+
+Consider this situation.
+
+ - you have a table `table` with columns `a` and `b`, each with an index on it.
+ - you want to execute the query `select * from table as t where a=a_0 and b=b_0`
+ - what would your execution strategy be?
+
+My first idea was this:
+```python
+as = db.select('a', a0)               # O(log(n))
+out = as.filter(row => row.b == b0)   # O(|as|)
+```
+... with $n$ being the number of rows in the table.
+
+This is $O(\log(n) + |$`as`$|)$ ... which in the worst case being $|$`as`$|=n$.
+
+Thus $O(\log(n) + n) = O(n)$.
+
+However, this is what postgres does:
+```
+r1 = query index on a for a0
+r2 = query index on b for b0
+out = bitmap-and on r1, r2
+```
+
+I was very confused, because I thought that meant:
+```python
+as = db.select('a', a0)  # O(log(n))
+bs = db.select('b', b0)  # O(log(n))
+out = bitmapAnd(as, bs)  # probably requires a merge, so kinda like merge-sort and thus O(n * log(n)) ?!
+```
+This would have meant that postgres did something that was $O(\log(n) + \log(n) + n\log(n)) = O(n\log(n))$ ... which is clearly worse than my implementation!
+
+But [after some research](https://www.postgresql.org/docs/current/indexes-bitmap-scans.html), this is what postgres really does:
+
+```python
+bitmapA = toBitmapRow(index('a', a0))   # O(log(n))
+bitmapB = toBitmapRow(index('b', b0))   # O(log(n))
+locations = bitmapAnd(bitmapA, bitmapB) # O(n)
+values = table.getValuesAt(locations)   # O(n)
+```
+... which is also just $O(n)$.
+
+Instead of returning the actual values in lines 1 and 2, postgres returns a datastructure of ones and zeros of length exactly $n$. Gliding along two such bitmap-lines is just $O(n)$ and gives us the indices that postgres needs to fetch the actual values from. 
+
+
+
 
 
 

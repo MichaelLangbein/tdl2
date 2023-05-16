@@ -3,10 +3,10 @@
 # General theory
 
 ## Memory allocation
-By default, memory is allocated statically to the stack. By using ` malloc} and \inlinecode{free `, you can instead allocate memory dynamically on the heap.
+By default, memory is allocated statically to the stack. By using ` malloc` and `free`, you can instead allocate memory dynamically on the heap.
 
 ## Threading
-Threads are created by making a copy of the orignal process.
+Threads are created by making a copy of the original process.
 Threads share the same memory with their parents.
 
 
@@ -15,9 +15,9 @@ Threads share the same memory with their parents.
 |---------------|--------------------------------------------------------------------------|-----------------------------------------------------------|
 | Creation      | Copy of mother process                                                   |                                                           |
 | Memory        | Own memory                                                               | Shared memory                                             |
-| Communication | Communicates with mother through syscalls, pipes and files               | Can directly call methods of mother process               |
-| Usecase       | Ideal if mother and subprocesses must be separated for security reasons, | Ideal if thread output to be processed by mother process, |
-|               | like apache-server does                                                  | because no piping neccessary                              |
+| Communication | Communicates with mother through sys-calls, pipes and files              | Can directly call methods of mother process               |
+| Use-case      | Ideal if mother and subprocesses must be separated for security reasons, | Ideal if thread output to be processed by mother process, |
+|               | like apache-server does                                                  | because no piping necessary                               |
 
 
 
@@ -93,7 +93,7 @@ gfg@ubuntu:~/$
 
 Please note that above is simple example to show how threads work. Accessing a global variable in a thread is generally a bad idea. What if thread 2 has priority over thread 1 and thread 1 needs to change the variable. In practice, if it is required to access global variable by multiple threads, then they should be accessed using a mutex.
 
-## Getting data from C to another programm
+## Getting data from C to another program
 
 
 | Pipe                         | Socket                 |
@@ -130,7 +130,7 @@ int * a_ptr = &a;
 ```
 
 - When assigning, `*` means: "make it a pointer".
-- When qerying, `*` means: "get the value behind the pointer".
+- When querying, `*` means: "get the value behind the pointer".
 - `&` always means: "get the address".
 
 
@@ -209,9 +209,9 @@ somefunct(&arr[0]);
 ## Array decay: Functions don't return arrays, either
 
 Functions return single values just fine, but arrays only by pointer. 
-$arrFunct$ must save array on heap and return pointer to the heap.
-The calling function must know the arrays size in advance or be given a struct with metainfo about the size.
-The calling function must also later deallocate the array.
+`arrFunct` must save array on heap and return pointer to the heap.
+The calling function must know the arrays size in advance or be given a struct with meta-info about the size.
+The calling function must also later de-allocate the array.
 
 ```c
 int * arrOnHeap(){
@@ -227,7 +227,7 @@ int * arr_ptr = arrOnHeap();
 
 
 ## Array syntax 
-Java and c have some weird differences in array initialisation. Consider array litterals: 
+Java and c have some weird differences in array initialization. Consider array literals: 
 ```
 int coeffs[5] = {1, 2, 3, 4, 5}; // c
 int[] coeffs = {1, 2, 3, 4, 5};  // java
@@ -301,7 +301,7 @@ void island_destroy(Island* i){
 ## Passing functions as variables
 
 This is our entry to functional programming in c.
-A functionname is really just a pointer to the memory location where the function code is stored. So we can use the function name as a pointer.
+A function-name is really just a pointer to the memory location where the function code is stored. So we can use the function name as a pointer.
 
 Of course, functions have different types. That's why we can't just write 
 ```c
@@ -410,11 +410,39 @@ $a$ is equal to: `H E L L O \0 `
 $b$ is equal to a `pointer` pointing to `W O R L D \0`
 
 
+## Bit manipulation
+
+- `(1 << 3)`
+    - put a one into the 4th position
+    - ==> yields 8
+
+- `int a = (1 << 3); int b = (1 << 0); a | b`
+    - `|`: put a one in resulting bin if there is on at that location in either a or b.
+    - = put one into 4th and one into 0th position
+    - ==> yields 9
+
+- `int a = (1 << 3) | (1 << 2);  int b = (1 << 2);  a & b`
+    - `&`: put a 1 in resulting bin if there is one at that location in both a and b.
+
+```c
+#include <stdio.h>
+int main() {
+    int a = (1 << 3) | (1 << 2);
+    int b = (1 << 1);
+    printf("Value: %i\n", a & b);
+    return 0;
+}
+```
+
 
 
 ## Header files
 
-Header files are how we can expose only a subset of a file to main.c. Really they contain only the function signatures, not their implementation. In that way, c basically forces you to import *everything* as an interface. 
+Header files are how we can expose only a subset of a file to main.c. They contain only function signatures, not their implementation.
+
+- When the compiler includes .c files, the importing file would have to be re-compiled when the included file changes. But we like make to be lazy.
+- When the compiler includes .c files, the program cannot make use of os-provided implementations of a .h file.
+- Header files provide a simple mechanism of making functions private or public.
 
 
 ```c

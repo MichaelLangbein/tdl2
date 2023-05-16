@@ -2,11 +2,19 @@
 
 ## Some series I know:
 
-**Name unknown**:
+**Triangular series**:
+
 $$ \sum_{t=1}^n t = \frac{n^2}{2} + \frac{n}{2} $$
 ... from using the 'half rectangle' argument.
 
+**Elementary geometric series:**
+
+$$ \sum_{t=1}^n \frac{1}{2^t} $$
+Converges to $1$ ... proven by filling out a 1x1 square.
+Relates to the more general geometric series through $a = 1/2$.
+
 **Geometric series**:
+
 $$ \begin{aligned}
     \sum_{t=1}^n a^t = s_n \\
     \frac{s_n}{a} - 1 = s_n - a^n \\
@@ -14,6 +22,7 @@ $$ \begin{aligned}
 \end{aligned} $$
 
 **Name unknown**:
+
 $$ \begin{aligned}
     \sum_{t=1}^n ta^t = s_n \\
     s_n - \frac{s_n}{a} &= -1 - \sum_{t=1}^{n-1} a^t + na^n \\
