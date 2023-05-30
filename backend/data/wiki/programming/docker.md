@@ -246,6 +246,11 @@ In docker-compose.yml:
  - In global volume-section, specify a named entry: `mysql-data:   `
  - In container-level volume-section, specify a mapping: `mysql-data:/var/lib/mysql`
 
+
+Inspecting a volume:
+`docker container run --rm -it -v=<volume-to-inspect>:/tmp/myvolume busybox /bin/bash`
+
+
 ### Bind-mounts
 Serves as a way for us to edit files while the container is running.
 

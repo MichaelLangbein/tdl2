@@ -159,6 +159,8 @@ You can modify both the labels as well as the rules applied to the labels.
 
 # network
 
+- `/etc/resolv.conf`: specifies nameservers (DNS) in order of search preference.
+- `/etc/hosts.conf`: overrides all nameservers by mapping urls/shortnames to IPs.
 - `iptables -L`: show firewall rules
 - `lsof -i -P -n`: show open files (also includes sockets, so useful for web-ports)
 - Setting up a webserver: `nc -l 9090`
