@@ -3,6 +3,22 @@
 
 # Basics 
 
+- Hardware:
+  - CPU
+    - x86 (most Desktops)
+    - ARM (mobile phones and IMacs)
+    - RISC-V (Open-source)
+  - GPU
+    - SIMD (many variants)
+    - RISK-V (under construction)
+  - Controllers
+    - CPU is connected to controllers
+    - The controllers talk to devices
+    - CPU talks to controllers by reading and setting values to their registers
+    - These registers are mapped to a separate section of memory (MMIO)
+    - Often, CPU doesn't actually talk to a device-specific controller, but to a bus-controller, which then talks to a device-controller at a rate that fits the device (this way the CPU needs not slow down to the device-speed)
+
+
 - Firmware: 
   - BIOS (low-level, Assembly)
   - UEFI

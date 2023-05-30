@@ -322,3 +322,16 @@ I don't know why this is the default behavior, but it is actually pretty dangero
 This way, even if you have configured your ufw correctly, you can accidentially open a port to the outside that you thought was only going to be used inside the host.
 
 https://github.com/chaifeng/ufw-docker
+
+
+
+## Common caveats
+- `CMD` vs `ENTRYPOINT`
+    - Usually, `ENTRYPOINT` is the name of the bash in which `CMD` will be executed.
+    - That means `CMD` are the arguments fed to `ENTRYPOINT`
+    - 
+- `ENV` vs `ARG`
+   - `ARG` will be available only at build time. Use this to update config-files on building.
+   - `ENV` will be available at run time. Use this to set environment-config in running process
+       - You can use `ENV` for updating config-files, too. For this, the `sed` code for updating that config file must be somewhere inside `CMD`.
+       - But this will make `CMD` very long. Better create a `start.sh` script, which is run by `CMD`.
