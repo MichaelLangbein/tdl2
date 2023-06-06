@@ -102,3 +102,12 @@ How to make somebody feel
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/fonts.png">
 
 
+Google fonts most similar to the above:
+- Serif:
+  - Humanist: Garamond -> EB Garamond
+  - Realist: Baskerville -> Libre Baskerville
+  - Geometric: Bodoni -> Libre Bodoni
+- Sans:
+  - Humanist: Frutiger -> Hind
+  - Realist: Helvetica -> Questrial, Roboto
+  - Geometric: Futura -> Nunito
