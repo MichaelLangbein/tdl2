@@ -32,6 +32,7 @@ $
     - gives step-by-step, slow, logic reasoning
     - gives thinking back to past events and analyzing them
     - machines don't have that
+    - Humans without memory have trouble learning new things through reasoning, but can learn through much repetition on the *behavioral brain* level
 
 
 # Machine learning
