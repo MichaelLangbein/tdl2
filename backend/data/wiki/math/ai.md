@@ -17,6 +17,22 @@ $
 }
 $
 
+# Human cognition
+
+- lizard brain
+    - gives will to live
+    - gives aesthetic feeling
+    - machines don't have that
+- behavioral brain
+    - learnt behavior
+    - like sports-movements, riding a bike, ...
+    - that's what backprop-deep-learning does.
+- conscious brain
+    - requires memory
+    - gives step-by-step, slow, logic reasoning
+    - gives thinking back to past events and analyzing them
+    - machines don't have that
+
 
 # Machine learning
 
