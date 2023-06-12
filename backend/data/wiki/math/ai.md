@@ -26,6 +26,7 @@ $
 - behavioral brain
     - learnt behavior
     - like sports-movements, riding a bike, ...
+    - makes frustrated if response to action is not as expected
     - that's what backprop-deep-learning does.
 - conscious brain
     - requires memory
