@@ -105,15 +105,6 @@ Query this map via `http://localhost/cgi-bin/mapserv?map=/var/www/.map&mode=map&
 
 ## WMS-TIME
 
-- requires two layers: https://mapserver.org/ogc/wms_time.html#example-of-wms-t-with-postgis-tile-index-for-raster-imagery
-  - one for index
-    - contains a tile-index: https://mapserver.org/optimization/tileindex.html
-    - could probably also be a sqlite-connection : https://mapserver.org/input/vector/sqlite.html
-    - can be just created with gdaltindex: https://gdal.org/programs/gdaltindex.html
-    - or with a python script: https://gis.stackexchange.com/questions/442928/create-tileindex-by-time-for-mapserver
-  - one for raster data
-
-
 
 ```bash
 # https://mapserver.org/utilities/tile4ms.html
@@ -136,9 +127,36 @@ from osgeo import gdal
 import geopandas as gpd
 from shapely.geometry import box
 
+#%%
+thisDir = os.path.dirname(os.path.realpath(__file__))
 
-StartDir = "/full/path/to/data/"
-indexFileName = "tileIndex.shp"
+#%% creating data
+noDataValue = -9999
+rows = 40
+cols = 40
+bbox = { "lonMin": 11.214, "latMin": 48.064, "lonMax": 11.338, "latMax": 48.117 }
+
+trueData = makeGaussianSample(cols, rows)
+transform = makeTransform(rows, cols, bbox)
+
+timeSteps = 30
+deltaC = int(cols / timeSteps)
+deltaTime = 60 * 60
+startTimeString = "14.10.1986"
+startTime = time.mktime(datetime.datetime.strptime(startTimeString, "%d.%m.%Y").timetuple())
+
+for t in range(timeSteps):
+    currentTime = int(startTime + t * deltaTime)
+    startCol = t * deltaC
+    endCol   = startCol + deltaC
+    data = np.ones((rows, cols)) * noDataValue
+    data[:, startCol:endCol] = trueData[:, startCol:endCol]
+    saveToTif(f"./out/data_{currentTime}.tif", data, "EPSG:4326", transform, noDataValue, currentTime)
+
+
+#%% creating metadata
+dataDir = os.path.join(thisDir, "out")
+indexFileName = os.path.join(dataDir, "tileIndex.shp")
 
 def getBounds(path):
     raster = gdal.Open(path)
@@ -147,40 +165,60 @@ def getBounds(path):
     lry = uly + (raster.RasterYSize * yres)
     return box(lrx, lry, ulx, uly)
 
-df = gpd.GeoDataFrame(columns=['filePath', 'geometry','timeStamp'])
-for fname in os.listdir(StartDir):
+rows = []
+for fname in os.listdir(dataDir):
     if fname.endswith(".tif"):
-        fullname = os.path.join(StartDir, fname)
+        fullname = os.path.join(dataDir, fname)
         ds=gdal.Open(fullname)
         metadata=ds.GetMetadata()
         ds=None
-        df = df.append({'filePath': fullname, 'geometry': getBounds(fullname),'timeStamp': metadata['timexxx']}, ignore_index=True)
+        newRow = {'filePath': fullname, 'geometry': getBounds(fullname),'timeStamp': metadata['timexxx']}
+        rows.append(newRow)
 
+df = gpd.GeoDataFrame.from_dict(rows)
 df.to_file(indexFileName)
 ```
 
 
 ```yml
-LAYER
- NAME "someRasterLayer"
- TYPE RASTER
- STATUS ON
- DEBUG ON
- PROJECTION
-   "init=epsg:4326"
- END
+MAP
+  IMAGETYPE      PNG
+  EXTENT         11.214 48.064 11.338 48.117
+  SIZE           400 300
+  IMAGECOLOR     255 255 255  # the above lines are only so that a non-wms request works, too.
+  PROJECTION
+    "init=epsg:4326"
+  END
+  
+  LAYER
+    NAME "someRasterLayer"
+    TYPE RASTER
+    STATUS ON
+    DEBUG ON
+   
+    METADATA
+      "wms_title"         "my time-enabled raster layer"
+      "wms_srs"           "EPSG:4326"
+      "wms_extent"        "11.214 48.064 11.338 48.117"
+      "wms_timeextent"    "1986-10-14T00:00:00Z/1986-10-15T05:00:00Z/PT1H"
+      "wms_timedefault"   "1986-10-14T00:00:00Z"
+      "wms_timeitem"      "timeStamp"            # `timeStamp` is a column in your tileindex-shapefile
+      "wms_enable_request" "*"
+    END
+    OFFSITE 0 0 0
+    TILEINDEX "./data/tileIndex.shp"
+    TILEITEM "filePath"                          # `filePath` is a column in `tileindex.shp` table with varchar of the filepath to each image
+     FILTER (`[timeStamp]` = `1986-10-14T00:00:00Z`)  # just so there's a default value for non-wms requests, too.
+  END
 
- METADATA
-   "wms_title" "my time-enabled raster layer"
-   "wms_srs"   "EPSG:4326"
-   "wms_extent" "-126 24 -66 50"
-   "wms_timeextent" "2003-08-01/2006-12-31/PT5M"
-   "wms_timeitem" "timeStamp"                      # `timeStamp` is a column in your tileindex-shapefile
-   "wms_timedefault" "2006-06-23T03:10:00Z"
-   "wms_enable_request" "*"
- END
- OFFSITE 0 0 0
- TILEINDEX "./path/to/tileindex.shp"
- TILEITEM "filePath"                             # `filePath` is a column in `tileindex.shp` table with varchar of the filepath to each image
 END
+# vim: set syntax=yaml:
 ```
+
+Access this with 
+- http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mymap.map&&mode=map&layer=someRasterLayer
+- http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mymap.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities
+- http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mymap.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=someRasterLayer&STYLES=&SRS=EPSG:4326&BBOX=11.214,48.064,11.338,48.117&WIDTH=400&HEIGHT=300&FORMAT=image/png&TIME=1986-10-14T02:00:00Z
+
+
+@TODO: might a csv also work as tile-index? It should! https://mapserver.org/input/vector/ogr.html
