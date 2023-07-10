@@ -56,11 +56,18 @@ end
 # named function
 # always defined inside a module
 defmodule Adding do 
+
     def plus_three(number) do
         number + 3
     end
+
     def plus_four(number), do: number + 4     #  `, do:` single line shorthand
+
     defp plus_five(number), do: number + 5    # private member
+
+    def divide(a, b) when b != 0 do
+        a / b
+    end
 end
 
 Enum.map [1, 2, 3], &(Adding.plus_three &1)
@@ -80,4 +87,20 @@ x = 4
 
 ```
 
-## control structures
+## behaviors and protocols
+```elixir
+defprotocol Printable do
+    def to_csv(data)
+end
+
+defimpl Printable, for: Map do
+    def to_csv(map) do
+        Map.keys(map)
+            |> Enum.map(fn key -> map[key] end)
+            |> Enum.join(",")
+    end
+end
+
+m = %{foo: "bar", baz: "ball"}
+Printable.to_csv(m)
+```
