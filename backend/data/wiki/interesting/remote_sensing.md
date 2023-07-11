@@ -173,6 +173,8 @@ For some reason, people have decided that S3-L2-W should be hosted on another pa
 
 **NASA's ECS** (Earth observation center Core System) is a vast catalogue of ...
 
+**Earth explorer** (https://earthexplorer.usgs.gov/) USGS access point to Landsat and others. Manual download via UI great, API terrible
+
 **Kaggle** (see [here](https://www.kaggle.com/search?q=sentinel) ) is a useful source for ready-labeled datasets for training.
 
 **Amazon S3** keeps a lot of satellite data as COGs. 
@@ -184,6 +186,12 @@ For some reason, people have decided that S3-L2-W should be hosted on another pa
 - Landsat from [here](https://landsat-pds.s3.amazonaws.com/c1/L8/139/045/LC08_L1TP_139045_20170304_20170316_01_T1/LC08_L1TP_139045_20170304_20170316_01_T1)
 
 The coverage is still pretty inconsistent and spotty. It makes sense to fall back to updated, curated lists like [this one](https://github.com/Fernerkundung/awesome-sentinel).
+
+
+**PLANET** is a large US firm which has acquired ...
+ - VanderSat: a dutch agricultural satellite company which creates [soil-moisture and land-surface-temperature data](https://docs.vandersat.com/VanderSat_Data_Products.html#land-surface-temperature-lst-teff) from the microwave-satellites AMSR-2 (owned by JAXA) and -E (owned by NASA, on Aqua) ...which is weird, because usually you do thermal from infra-red, not microwave.
+ - Synergise: Slovenian company that created Sentinelhub
+ - Rapid Eye: one of first private constellations, optical, Berlin 
 
 
 ## Obtaining data

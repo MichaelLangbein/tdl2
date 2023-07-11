@@ -129,6 +129,8 @@ from shapely.geometry import box
 
 #%%
 thisDir = os.path.dirname(os.path.realpath(__file__))
+dataDir = os.path.join(thisDir, "out")
+indexFileName = os.path.join(dataDir, "tileIndex.shp")
 
 #%% creating data
 noDataValue = -9999
@@ -151,12 +153,11 @@ for t in range(timeSteps):
     endCol   = startCol + deltaC
     data = np.ones((rows, cols)) * noDataValue
     data[:, startCol:endCol] = trueData[:, startCol:endCol]
-    saveToTif(f"./out/data_{currentTime}.tif", data, "EPSG:4326", transform, noDataValue, currentTime)
+    saveToTif(f"{dataDir}]/data_{currentTime}.tif", data, "EPSG:4326", transform, noDataValue, currentTime)
 
 
 #%% creating metadata
-dataDir = os.path.join(thisDir, "out")
-indexFileName = os.path.join(dataDir, "tileIndex.shp")
+
 
 def getBounds(path):
     raster = gdal.Open(path)
@@ -220,5 +221,9 @@ Access this with
 - http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mymap.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities
 - http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mymap.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=someRasterLayer&STYLES=&SRS=EPSG:4326&BBOX=11.214,48.064,11.338,48.117&WIDTH=400&HEIGHT=300&FORMAT=image/png&TIME=1986-10-14T02:00:00Z
 
-
-@TODO: might a csv also work as tile-index? It should! https://mapserver.org/input/vector/ogr.html
+### Also works with CSV instead of shapefile
+```python
+pdf = pd.DataFrame(df.assign(geometry=df["geometry"].apply(lambda p: p.wkt)))
+pdf.to_csv(indexFileName)
+```
+And then replace the `TILEINDEX` file-ending.

@@ -52,12 +52,12 @@ Nettostromverbrauch nach Abnehmer:
 
 
 Endenergieverbrauch nach Abnehmer: (2018)
-| Sektor 	                                     |  absolut [PJ]  | relativ  |
+| Sektor 	                                       |  absolut [PJ]  | relativ  |
 |------------------------------------------------|----------------|----------|
 | Verkehr 	                                     |   2.743 	      |  30,6 %  |
 | Bergbau, Verarbeitendes Gewerbe (Industrie) 	 |   2.601 	      |  29,0 %  |
-| Private Haushalte 	                         |   2.320 	      |  25,8 %  |
-| Gewerbe, Handel, Dienstleistungen 	         |   1.299 	      |  14,5 %  |
+| Private Haushalte 	                           |   2.320 	      |  25,8 %  |
+| Gewerbe, Handel, Dienstleistungen 	           |   1.299 	      |  14,5 %  |
 
 
 Endenergie nach Energieträger (2018)
@@ -66,18 +66,18 @@ Endenergie nach Energieträger (2018)
 |Kraftstoffe und übrige Mineralölprodukte 	   | 2.693 	        | 30,0 %    |
 |Gase                                          | 2.294 	        | 25,6 %    |
 |Strom 	                                       | 1.848 	        | 20,6 %    |
-|Brennholz, Brenntorf, Klärschlamm und Müll    | 735 	        |  8,2 %    |
-|Heizöl leicht 	                               | 542 	        |  6,0 %    |
-|Fernwärme 	                                   | 394 	        |  4,4 %    |
-|Steinkohle 	                               | 360 	        |  4,0 %    |
-|Braunkohle 	                               | 86 	        |  1,0 %    |
-|Heizöl schwer 	                               | 11 	        |  0,1 %    |
+|Brennholz, Brenntorf, Klärschlamm und Müll    | 735 	          |  8,2 %    |
+|Heizöl leicht 	                               | 542 	          |  6,0 %    |
+|Fernwärme 	                                   | 394 	          |  4,4 %    |
+|Steinkohle 	                                 | 360 	          |  4,0 %    |
+|Braunkohle 	                                 | 86 	          |  1,0 %    |
+|Heizöl schwer 	                               | 11 	          |  0,1 %    |
 |Insgesamt 	                                   | 8.963 	        | 100,0 %   |
 
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/endenergie_nach_sektor.png" />
 
-Pro Konsument:
+Endenergie pro Konsument:
  - Verkehr:  2743 PJ / 80 Mio / 365 d = 26 kWh / d
  - Haushalt: 2320 PJ / 80 Mio / 365 d = 22 kWh / d
 
@@ -105,3 +105,8 @@ Der Zielwert von 18 % wurde im Jahr 2020 mit einem Anteil von 19,3 % deutlich ü
 
 ## Paris
 Um das 2.0°C Ziel zu erreichen, 
+
+
+
+### Gebäude
+https://www.umweltbundesamt.de/daten/umweltindikatoren/indikator-energieverbrauch-fuer-gebaeude#welche-bedeutung-hat-der-indikator
