@@ -122,43 +122,55 @@ gdaltindex -tileindex filePath -write_absolute_path ./tileIndex.shp ./data/elev_
 
 or, most thoroughly:
 ```python
-import os, sys
+#%%
+import time
+import datetime
+import numpy as np
+from raster import makeTransform, saveToTif
+from gaussian import makeGaussianSample
 from osgeo import gdal
+import pandas as pd
 import geopandas as gpd
 from shapely.geometry import box
+import os 
+
 
 #%%
 thisDir = os.path.dirname(os.path.realpath(__file__))
-dataDir = os.path.join(thisDir, "out")
+dataDir = os.path.join(thisDir, "data")
+if not os.path.exists(dataDir):
+    os.makedirs(dataDir)
 indexFileName = os.path.join(dataDir, "tileIndex.shp")
+
 
 #%% creating data
 noDataValue = -9999
 rows = 40
-cols = 40
+cols = 60
 bbox = { "lonMin": 11.214, "latMin": 48.064, "lonMax": 11.338, "latMax": 48.117 }
 
 trueData = makeGaussianSample(cols, rows)
+trueData = np.uint8(trueData * 255)
 transform = makeTransform(rows, cols, bbox)
 
 timeSteps = 30
 deltaC = int(cols / timeSteps)
 deltaTime = 60 * 60
 startTimeString = "14.10.1986"
-startTime = time.mktime(datetime.datetime.strptime(startTimeString, "%d.%m.%Y").timetuple())
+startTime = time.mktime(
+    datetime.datetime.strptime(startTimeString, "%d.%m.%Y").timetuple()
+)
 
 for t in range(timeSteps):
     currentTime = int(startTime + t * deltaTime)
     startCol = t * deltaC
-    endCol   = startCol + deltaC
+    endCol = startCol + deltaC
     data = np.ones((rows, cols)) * noDataValue
     data[:, startCol:endCol] = trueData[:, startCol:endCol]
-    saveToTif(f"{dataDir}]/data_{currentTime}.tif", data, "EPSG:4326", transform, noDataValue, currentTime)
+    saveToTif(f"{dataDir}/data_{currentTime}.tif", data, "EPSG:4326", transform, noDataValue, currentTime)
 
 
 #%% creating metadata
-
-
 def getBounds(path):
     raster = gdal.Open(path)
     ulx, xres, xskew, uly, yskew, yres = raster.GetGeoTransform()
@@ -177,7 +189,12 @@ for fname in os.listdir(dataDir):
         rows.append(newRow)
 
 df = gpd.GeoDataFrame.from_dict(rows)
-df.to_file(indexFileName)
+if indexFileName.endswith(".shp"):
+    df.to_file(indexFileName)
+elif indexFileName.endswith(".csv"):
+    pdf = pd.DataFrame(df.assign(geometry=df["geometry"].apply(lambda p: p.wkt)))
+    pdf.to_csv(indexFileName)
+
 ```
 
 
@@ -209,7 +226,38 @@ MAP
     OFFSITE 0 0 0
     TILEINDEX "./data/tileIndex.shp"
     TILEITEM "filePath"                          # `filePath` is a column in `tileindex.shp` table with varchar of the filepath to each image
-     FILTER (`[timeStamp]` = `1986-10-14T00:00:00Z`)  # just so there's a default value for non-wms requests, too.
+    
+
+    
+    PROCESSING "SCALE=0,255"
+    PROCESSING "SCALE_BUCKETS=4"
+    CLASS
+      EXPRESSION ([pixel] < 50.0)
+      STYLE
+        COLOR 200 0 0
+      END
+    END
+    CLASS
+      EXPRESSION ([pixel] < 100)
+      STYLE
+        COLOR 125 75 0
+      END
+    END
+    CLASS
+      EXPRESSION ([pixel] < 150)
+      STYLE
+        COLOR 100 100 0
+      END
+    END
+    CLASS
+      EXPRESSION ([pixel] >= 150)
+      STYLE
+        COLOR 50 150 0
+      END
+    END
+
+    
+    FILTER (`[timeStamp]` = `1986-10-14T00:00:00Z`)  # just so there's a default value for non-wms requests, too.
   END
 
 END
@@ -227,3 +275,29 @@ pdf = pd.DataFrame(df.assign(geometry=df["geometry"].apply(lambda p: p.wkt)))
 pdf.to_csv(indexFileName)
 ```
 And then replace the `TILEINDEX` file-ending.
+
+
+### dockerizing
+```Dockerfile
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.7.0 as buildStage
+
+# workdir: deliberately using same name as deployment target in runStage
+# this is because createData saves absolute file-paths to index-file
+WORKDIR /etc/mapserver/   
+
+
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
+COPY . .
+RUN pip3 install -r requirements.txt
+RUN python3 ./createData.py
+
+
+FROM camptocamp/mapserver:7.6-20-04 as runStage
+
+
+COPY --from=buildStage /etc/mapserver/data /etc/mapserver/data
+# this container expects the mapfile to be named `mapserver.map`
+COPY --from=buildStage /etc/mapserver/mapserver.map /etc/mapserver/
+
+```
