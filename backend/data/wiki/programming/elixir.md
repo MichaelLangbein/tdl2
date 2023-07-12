@@ -1,5 +1,7 @@
 # Elixir
 
+Shell: `iex`
+
 ## data structures
 ```elixir
 
@@ -104,3 +106,61 @@ end
 m = %{foo: "bar", baz: "ball"}
 Printable.to_csv(m)
 ```
+
+
+# Processes
+
+```elixir
+# spawning
+
+pid = spawn(fn -> 1 + 2 end)
+Process.alive? pid
+
+
+# sending and receiving
+
+send(self(), {:hello, "world"})
+
+receive do
+    {:hello, msg} -> IO.puts msg
+    {:world, _} -> "Won't match"
+end
+
+
+# if you want to crash the parent process when the child fails, use `spawn_link`
+
+# Register a process so it can be accessed under some other handle than it's id
+Process.register(pid, :myProcess)
+send(:myProcess, %{some: "message"})
+```
+
+# Tasks
+Like processes, but many convenience functions and better error reporting.
+
+
+# State
+
+We're using a process as a key-value state store.
+
+```elixir
+defmodule KV do
+
+    def start_link do
+        Task.start_link(fn -> loop %{} end)
+    end
+
+    def loop(map) do
+        receive do
+            {:get, key, caller} -> 
+                    value = Map.get(map, key)
+                    send caller, value
+                    loop map
+            {:put, key, value} -> 
+                    loop Map.put(map, key, value)
+        end
+    end
+
+end
+```
+Actually, there is already an existing abstraction for exactly this purpose for us: an `Agent`.
+Another abstraction would be a `GenServer`.
