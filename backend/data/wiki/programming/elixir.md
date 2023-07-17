@@ -143,24 +143,53 @@ Like processes, but many convenience functions and better error reporting.
 We're using a process as a key-value state store.
 
 ```elixir
-defmodule KV do
+defmodule Store do
 
-    def start_link do
-        Task.start_link(fn -> loop %{} end)
-    end
+  def init() do
+    # Module, :funcName, [list or args]
+    spawn(Store, :loop, [%{}])
+  end
 
-    def loop(map) do
-        receive do
-            {:get, key, caller} -> 
-                    value = Map.get(map, key)
-                    send caller, value
-                    loop map
-            {:put, key, value} -> 
-                    loop Map.put(map, key, value)
-        end
-    end
+  def loop(state) do
+    receive do
+      {senderPid, :set, key, value} ->
+        state = Map.put(state, key, value)
+        send(senderPid, {:setResult, :ok})
+        loop(state)
+      {senderPid, :get, key} ->
+        {:ok, value} = Map.fetch(state, key)
+        send(senderPid, {:getResult, value})
+        loop(state)
+      end
+  end
+
 
 end
+
+
+storePid = Store.init()
+send(storePid, {self(), :set, :firstEntry, "Hi there!"})
+send(storePid, {self(), :set, :secondtEntry, "How are you?"})
+send(storePid, {self(), :get, :firstEntry})
+
+rec = fn() ->
+  receive do
+    {:setResult, value} ->
+      IO.puts value
+    {:getResult, value} ->
+      IO.puts value
+  end
+end
+
+rec.()
+rec.()
+rec.()
 ```
 Actually, there is already an existing abstraction for exactly this purpose for us: an `Agent`.
 Another abstraction would be a `GenServer`.
+
+
+
+# RIESGOS
+
+- use `Stream` to notify parent when new data comes in?
