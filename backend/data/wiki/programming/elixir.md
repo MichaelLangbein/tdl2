@@ -75,6 +75,22 @@ end
 Enum.map [1, 2, 3], &(Adding.plus_three &1)
 ```
 
+### Closures
+```elixir
+# closures exist (add knows about value)
+# but cannot mutate outside state (return value always the same)
+# nor will they be updated when closed-in variables are changed from outside
+value = 1
+add = fn (something) ->
+  value = value + something
+  IO.puts value
+end
+add.(2)   # -> 3
+add.(2)   # -> 3
+value = value + 4
+add.(2)   # -> 3
+```
+
 
 ## pattern matching
 
@@ -89,7 +105,7 @@ x = 4
 
 ```
 
-## behaviors and protocols
+## Protocols
 ```elixir
 defprotocol Printable do
     def to_csv(data)
@@ -106,6 +122,12 @@ end
 m = %{foo: "bar", baz: "ball"}
 Printable.to_csv(m)
 ```
+
+## Behaviours
+```elixir
+
+```
+
 
 
 # Processes
