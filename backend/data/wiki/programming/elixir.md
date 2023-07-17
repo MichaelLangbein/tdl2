@@ -160,10 +160,9 @@ send(:myProcess, %{some: "message"})
 Like processes, but many convenience functions and better error reporting.
 
 
-# State
 
-We're using a process as a key-value state store.
-
+# Abstractions
+Consider this basic app:
 ```elixir
 defmodule Store do
 
@@ -207,8 +206,66 @@ rec.()
 rec.()
 rec.()
 ```
-Actually, there is already an existing abstraction for exactly this purpose for us: an `Agent`.
-Another abstraction would be a `GenServer`.
+
+
+## GenServer
+The basic task can be re-written simpler with [GenServer](https://github.com/elixir-lang/elixir/blob/main/lib/elixir/lib/gen_server.ex): 
+```elixir
+defmodule Store do
+  use GenServer
+
+  def init(state) do
+    {:ok, state}
+  end
+
+  def handle_call({:set, key, value}, _from, state) do
+    newState = Map.put(state, key, value)
+    {:reply, :ok, newState}
+  end
+
+  def handle_call({:get, key}, _from, state) do
+    {:ok, value} = Map.fetch(state, key)
+    {:reply, value, state}
+  end
+
+end
+
+
+{:ok, pid} = GenServer.start(Store, %{})                             # will call Store.init
+IO.puts GenServer.call(pid, {:set, :firstEntry, "Hi there!"})        # will call Store.handle_call
+IO.puts GenServer.call(pid, {:set, :secondEntry, "How are you?"})    # will call Store.handle_call
+IO.puts GenServer.call(pid, {:get, :firstEntry})                     # will call Store.handle_call
+```
+GenServer additionally has `cast` and `handle_cast`, which is like `call` but asynchronous.
+
+
+
+## Agent
+The basic task can be re-written simpler with Agent.
+Agent is implemented [on top of GenServer](https://github.com/elixir-lang/elixir/blob/v1.9.1/lib/elixir/lib/agent.ex).
+```elixir
+defmodule Store do
+  use Agent
+
+  def init(state) do
+    Agent.start(fn () -> state end, name: __MODULE__)
+  end
+
+  def set(key, value) do
+    Agent.update(__MODULE__, fn(state) -> Map.put(state, key, value) end)
+  end
+
+  def get(key) do
+    Agent.get(__MODULE__, fn(state) -> Map.fetch(state, key) |> elem(1) end)
+  end
+end
+
+
+Store.init(%{})                                     # Store is now a singleton
+IO.puts Store.set(:firstEntry, "Hi there!")         # 
+IO.puts Store.set(:secondEntry, "How are you?")
+IO.puts Store.get(:firstEntry)
+```
 
 
 
