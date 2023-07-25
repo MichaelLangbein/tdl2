@@ -499,6 +499,127 @@ sentinelsat \\
 ```
 
 
+
+### STAC
+```ts
+/**
+ * assets: link to raw data
+ * links: link to other STAC-data-structures
+ * 
+ * An item might be a scene, and its assets would be a band each.
+ * 
+ * Items are sometimes paginated as a FeatureCollection with a link = "next"
+ * and a link = "previous". 
+ */
+interface Item extends GeoJSON.Feature {
+    stac_version: number,
+    stac_extensions: Extension[],
+    links: Link[],
+    assets: Asset[],
+    collection: string
+}
+
+interface Catalog {
+    stac_version: number,
+    stac_extensions?: Extension[],
+    id: string,
+    type: "Catalog",
+    description: string,
+    links: Link[],
+    title?: string,
+}
+
+interface Collection extends Catalog {
+    license: string,
+    extent: {spatial, temporal},
+    providers: Privider[],
+    keywords: string[],
+    assets: Asset[],
+    summaries?: Summary[]
+}
+```
+
+### COG's
+https://medium.com/planet-stories/a-handy-introduction-to-cloud-optimized-geotiffs-1f2c9e716ec3
+
+**TIFF**
+ - head
+   - first 2 bytes: byte order
+     - 49 49 == little endian
+   - next 2 bytes: the number 42; to indicate that this is a tiff
+     - 2a 00 == 42 in little endian
+   - next 4 bytes: offset to first IFD
+- IFD: Image file directory
+  - tiffs are divided up into pages, which are individual images within a tiff.
+  - consists of:
+     - first 2 bytes: nr of tags
+     - next 12 bytes * nr of tags: tag-data
+     - next 4 bytes: offset to next IFD or 0 if no more IFDs.
+- Tag:
+   - consists of:
+     - fist 2 bytes: tag id
+     - next 2 bytes: tag datatype
+     - next 4 bytes: nr of values
+     - then: tag-data or pointer to data
+- Important tags:
+   - TileWidth
+   - TileLength
+   - TileOffsets
+   - TileByteCounts
+
+
+**GeoTIFF**
+- Additional tags:
+   - for geo-referencing
+
+**COG**
+- A GeoTiff
+- With guarantees that the following file structure is maintained:
+ - first TIFF header
+ - then all IFDs (1, 2, 3, ..., last)
+ - then image data for the IFDs (last, ..., 3, 2, 1)
+This way we know from the header and ifd's which range in the file to request for a given tile.
+Requests are made with a HTTP `Range` header on a GET request.
+I guess that image 1 contains images 2,3,4,5; image 2 contains images 6,7,8,9; etc.
+
+
+```js
+import "./style.css";
+import { fromUrl } from "geotiff";
+
+
+// https://github.com/geotiffjs/geotiff.js/
+
+const cogUrl = "https://oin-hotosm.s3.amazonaws.com/56f9b5a963ebf4bc00074e70/0/56f9c2d42b67227a79b4faec.tif";
+
+// makes a Range-request for bytes 0-65.536 to get the header (range is just a guess; but surely the header fits in that many bytes.)
+const tif = await fromUrl(cogUrl);  
+
+// makes a Range-request (Range: bytes=48955392-49020928) to retrieve the image-*description* for the image with index 1
+const firstImageDescription = await tif.getImage(5);  
+
+// The below only work on images with affine transform
+// console.log(firstImageDescription.getOrigin());
+// console.log(firstImageDescription.getResolution());
+// console.log(firstImageDescription.getBoundingBox());
+
+// get actual raster data
+// much bigger request (Range: bytes=49020928-65142784 = 16MB) <-- but smaller the deeper the image is in the pyramid. Returns Uint8Array[]
+// const raster = await firstImageDescription.readRasters();
+
+
+// get only a window out of an image
+const left = 50;
+const top = 10;
+const right = 150;
+const bottom = 60;  // these coordinates are relative image pixels, not geographic
+// makes several requests to fetch only the window
+const data = await firstImageDescription.readRasters({ window: [left, top, right, bottom] }); 
+console.log(data)
+```
+
+
+
 ## Image preprocessing
 
 ## Image segmentation
