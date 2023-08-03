@@ -173,7 +173,7 @@ Svelte's reactivity is triggered by assignments. Methods that *mutate* arrays or
 
 But: assignments to properties of objects *will*.
 
-But but: assignements to proprties of properties of objects *won't*.
+But but: assignments to properties of properties of objects *won't*.
 
 A simple rule of thumb: **the updated variable must directly appear on the left hand side of the assignment**.
 
