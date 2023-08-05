@@ -81,6 +81,13 @@ for key, val := range values {
 type CartesianPlaneData struct {
 	x, y float64
 }
+
+// instantiating structs
+myCoord := CartesianPlaneData{11.23, 54.21}
+someMap := map[string]bool{"entry1": true, "entry2": false}
+// instantiating without assigning values
+someCoord := make(CartesianPlaneData)
+yourMap   :=  make(map[string]bool)
 ```
 
 ## interfaces
@@ -283,8 +290,147 @@ func main() {
 
 
 ## http
+```go
+package main
 
-## async await
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"regexp"
+)
+
+type Fetcher struct {
+	r *regexp.Regexp
+}
+
+func (f Fetcher) Fetch(url string) (body string, urls []string, err error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", nil, err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, readErr := io.ReadAll(resp.Body)
+	if readErr != nil {
+		return "", nil, err
+	}
+	bodyString := string(bodyBytes)
+
+	matches := f.r.FindAllString(bodyString, -1)
+
+	return bodyString, matches, nil
+}
+
+func CrawlNaive(url string, depth int, fetcher Fetcher) {
+
+	if depth <= 0 {
+		return
+	}
+
+	fmt.Printf("fetching url %s ...\n", url)
+	_, urls, err := fetcher.Fetch(url)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, u := range urls {
+		CrawlNaive(u, depth-1, fetcher)
+	}
+}
+
+func CrawlSync(url string, depth int, fetcher Fetcher, urlCache *map[string]bool) {
+
+	if depth <= 0 {
+		return
+	}
+
+	fmt.Printf("fetching url %s ...\n", url)
+	_, urls, err := fetcher.Fetch(url)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	(*urlCache)[url] = true
+
+	for _, u := range urls {
+		_, ok := (*urlCache)[u]
+		if !ok {
+			(*urlCache)[u] = false
+			CrawlSync(u, depth-1, fetcher, urlCache)
+		}
+	}
+}
+
+func CrawlSingleAsync(url string, fetcher *Fetcher) <-chan []string {
+	out := make(chan []string)
+
+	go func() {
+		defer close(out)
+		fmt.Printf("fetching url %s ...\n", url)
+
+		_, urls, err := (*fetcher).Fetch(url)
+
+		if err != nil {
+			// fmt.Println(err)
+			return
+		}
+
+		out <- urls
+	}()
+
+	return out
+}
+
+func CrawlAll(baseUrl string, maxDepth int, fetcher *Fetcher) []string {
+
+	urlsCache := map[string]bool{baseUrl: false}
+
+	for d := 0; d <= maxDepth; d++ {
+
+		// step 1: for all missing entries in urlCache, get a channel to their results
+		inputs := make([](<-chan []string), 0)
+		for url, fetched := range urlsCache {
+			if !fetched {
+				input := CrawlSingleAsync(url, fetcher)
+				urlsCache[url] = true
+				inputs = append(inputs, input)
+			}
+		}
+
+		// step 2: collect all data from the channels, add urls to urlCache
+		for _, input := range inputs {
+			newUrls := <-input
+			for _, newUrl := range newUrls {
+				_, present := urlsCache[newUrl]
+				if !present {
+					urlsCache[newUrl] = false
+				}
+			}
+		}
+	}
+
+	urlsDone := make([]string, 0)
+	for url, fetched := range urlsCache {
+		if fetched {
+			urlsDone = append(urlsDone, url)
+		}
+	}
+	return urlsDone
+}
+
+func main() {
+	baseUrl := "https://golang.org/"
+	r, _ := regexp.Compile(`https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?`)
+	fetcher := Fetcher{r}
+	results := CrawlAll(baseUrl, 2, &fetcher)
+	fmt.Println(len(results))
+}
+
+```
+
+
 
 ## numeric
 https://github.com/gonum/gonum
