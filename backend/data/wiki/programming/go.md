@@ -289,6 +289,12 @@ func main() {
 ```
 
 
+
+
+
+## file io
+
+
 ## http
 ```go
 package main
@@ -438,6 +444,7 @@ https://www.freecodecamp.org/news/scientific-computing-in-golang-using-gonum/
 
 ## Gdal
 https://github.com/lukeroth/gdal
+... actually, might be better for asynchronously reading parts of cogs: https://github.com/airbusgeo/godal
 
 ## Geotiff's
 
