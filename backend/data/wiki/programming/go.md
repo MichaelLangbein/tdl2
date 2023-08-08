@@ -674,8 +674,10 @@ Godal allows you to provide your web-reader as a so-called `VISHandler`:
 ```go
 godal.RegisterVSIHandler("https://", myCogReader)
 file := godal.Open("https://localhost:8000/myfile.tiff")
-// results in call to `myCogReader.readAt(buf, offset)`
+// results in call to `myCogReader.ReadAt(buf, offset)`
 ```
+
+ReadAt is apparently called for the complete file (verify that), but maybe [StreamAt](https://github.com/airbusgeo/osio/blob/main/gcs/gcs.go) is not.
 
 
 ## db's
