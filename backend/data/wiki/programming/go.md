@@ -302,7 +302,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
+
+func fetchSize(fileUrl string) (int, error) {
+	fmt.Printf("Getting size of %s", fileUrl)
+	req, err := http.NewRequest(http.MethodHead, fileUrl, nil)
+	if err != nil {
+		return 0, err
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return 0, err
+	}
+
+	contentLength := res.Header.Get("Content-Length")
+	clInt, err := strconv.Atoi(contentLength)
+
+	return clInt, nil
+}
 
 func fetchRange(fileUrl string, startByte int64, nrBytes int) ([]byte, error) {
 	fmt.Printf("Fetching bytes %d-%d", startByte, startByte+int64(nrBytes))
@@ -338,12 +357,6 @@ func MakeFetchingReader(fileUrl string) *FetchingReader {
 	}
 }
 
-func (r *FetchingReader) getOffsetFor(start int64) (int64, int64) {
-	nearest := int64(r.fetchBytes) * (start / int64(r.fetchBytes))
-	offFromNearest := start % int64(r.fetchBytes)
-	return nearest, offFromNearest
-}
-
 func (r *FetchingReader) getKeysFor(start int64, length int) []int64 {
 	nearest := int64(r.fetchBytes) * (start / int64(r.fetchBytes))
 	keys := []int64{}
@@ -372,19 +385,29 @@ func (r *FetchingReader) getDataAt(off int64, nrBytes int) ([]byte, error) {
 	outputData := make([]byte, nrBytes)
 	outputPos := 0
 
-	for _, key := range keys {
+	for j, key := range keys {
 		keyData, err := r.getDataForKey(key)
 		if err != nil {
 			return outputData, err
 		}
-		for i, keyVal := range keyData {
-			pos := key + int64(i)
-			if off <= pos && pos < (off+int64(nrBytes)) {
-				outputData[outputPos] = keyVal
-				outputPos += 1
-			}
+
+		var startIndex int64 = 0
+		if j <= 0 {
+			startIndex = off - key
+		}
+		var endIndex int64 = int64(r.fetchBytes)
+		if j >= len(keys)-1 {
+			endIndex = (off + int64(nrBytes)) - key
+		}
+		// if (startIndex == 0 && endIndex == int64(r.fetchBytes)) {
+		// 	copy(outputData,
+		// }
+		for i := startIndex; i < endIndex; i++ {
+			outputData[outputPos] = keyData[i]
+			outputPos += 1
 		}
 	}
+
 	return outputData, nil
 }
 
@@ -403,13 +426,23 @@ func (r *FetchingReader) ReadAt(p []byte, off int64) (n int, err error) {
 	if err != nil {
 		return 0, err
 	}
-	for i, val := range data {
-		p[i] = val
-	}
+	copy(p, data)
 	if len(data) < len(p) {
 		return len(data), fmt.Errorf("something went wrong ... did you reach the end of the file?")
 	}
 	return len(data), nil
+}
+
+// Size() is used as a probe to determine wether the given key exists, and should return
+// an error if no such key exists. The actual file size may or may not be effectively used
+// depending on the underlying GDAL driver opening the file
+//
+// It may also optionally implement KeyMultiReader which will be used (only?) by
+// the GTiff driver when reading pixels. If not provided, this
+// VSI implementation will concurrently call ReadAt([]byte,int64)
+func (r *FetchingReader) Size(key string) (int64, error) {
+	size, err := fetchSize(r.fileUrl)
+	return int64(size), err
 }
 
 /*
@@ -461,7 +494,7 @@ func (r *FetchingReader) Read(p []byte) (n int, err error) {
 * the size of the underlying object the behavior of subsequent I/O operations
 * is implementation-dependent.
  */
-func (r FetchingReader) Seek(offset int64, whence int) (int64, error) {
+func (r *FetchingReader) Seek(offset int64, whence int) (int64, error) {
 	switch whence {
 	default:
 		return 0, errors.New("Seek: invalid whence")
@@ -480,7 +513,6 @@ func (r FetchingReader) Seek(offset int64, whence int) (int64, error) {
 }
 
 ```
-
 
 ## http
 
@@ -638,6 +670,12 @@ https://www.freecodecamp.org/news/scientific-computing-in-golang-using-gonum/
 ## Gdal
 https://github.com/lukeroth/gdal
 More idiomatic: https://github.com/airbusgeo/godal
+Godal allows you to provide your web-reader as a so-called `VISHandler`: 
+```go
+godal.RegisterVSIHandler("https://", myCogReader)
+file := godal.Open("https://localhost:8000/myfile.tiff")
+// results in call to `myCogReader.readAt(buf, offset)`
+```
 
 
 ## db's
