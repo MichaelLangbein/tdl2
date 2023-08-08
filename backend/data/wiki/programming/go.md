@@ -678,6 +678,6 @@ file := godal.Open("https://localhost:8000/myfile.tiff")
 ```
 
 ReadAt is apparently called for the complete file (verify that), but maybe [StreamAt](https://github.com/airbusgeo/osio/blob/main/gcs/gcs.go) is not.
-
+Indeed airbus' [osio](https://pkg.go.dev/github.com/airbusgeo/osio#section-readme) seems to be a replacement for my remote-reader.
 
 ## db's
