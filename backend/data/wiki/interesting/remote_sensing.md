@@ -550,7 +550,7 @@ https://landsatlook.usgs.gov/stac-server/search
     &filter=eo:cloud_cover<=20
     &filter-lang=cql-text
 ```
-*Some others* instead implement the [query* extension](https://github.com/stac-api-extensions/query) for the search method:
+*Some others* instead implement the [query extension](https://github.com/stac-api-extensions/query) for the search method:
 ```python
 stacUrl = "https://landsatlook.usgs.gov/stac-server"
 landsatStac = psc.Client.open(stacUrl)
