@@ -71,3 +71,13 @@ If one session lasts 100sec, uses 1GB of data and involves 100 requests, this ge
     - then 8.5 ct / GB
 - ssl certificates:
     - free
+
+
+## AWS Budget
+https://docs.aws.amazon.com/de_de/cost-management/latest/userguide/budgets-create.html
+https://console.aws.amazon.com/cost-management/home
+
+
+## AWS SCP: Service Control Policy
+
+## AWS Activate: Supports small businesses
