@@ -3,7 +3,7 @@
  - Kann ich Freiberufler sein?
     - Bin ich als Ingenieur/Softwareentwickler ein Freiberufler?
         ====> Hotline "Institut freie Berufe"
-   - Pro: Kreative und akademische Arbeit,, Custom auf Kunden zugeschnitten, Studienabschluss, Ingenieur
+   - Pro: Kreative und akademische Arbeit, Custom auf Kunden zugeschnitten, Studienabschluss, Ingenieur
    - Con: Habe vor, langfristig auch Produkte zu verkaufen (= Gebühren für Plugins)
    - Freiberufler zahlen keine Gewerbesteuer... aber gibt es auch Nachteile?
     - Nein, keine Nachteile

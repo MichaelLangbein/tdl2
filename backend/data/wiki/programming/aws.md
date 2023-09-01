@@ -25,6 +25,7 @@ https://aws.amazon.com/s3/pricing/
 
 ## File cache 
 
+Tends to be pretty expensive! Consider using S3.
 
 
 ## EC2: Server hosting
@@ -73,11 +74,37 @@ If one session lasts 100sec, uses 1GB of data and involves 100 requests, this ge
     - free
 
 
-## AWS Budget
-https://docs.aws.amazon.com/de_de/cost-management/latest/userguide/budgets-create.html
-https://console.aws.amazon.com/cost-management/home
+
+# Pricing control
+
+- Monitor usage with [Budgets](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/tracking-free-tier-usage.html#free-budget)
+    
+    - setting a *zero spend budget* using [template](https://docs.aws.amazon.com/cost-management/latest/userguide/budget-templates.html)
+    
+    - [budget actions](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-controls.html) to shut down your services once you exceed a budget
+
+        - there is no "shut down" action ... instead you apply a new policy to a user-account so it can no longer execute expensive services.
+        - todo: add a "do nothing" policy to your app-user .......................................................
+
+- Monitor cost in [Billing console](https://console.aws.amazon.com/billing)
+    - [usage alerts](https://us-east-1.console.aws.amazon.com/billing/home#/preferences)
+
+## Closing account
+- Only closing your account might not stop all services.
+- https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/close-account.html
 
 
-## AWS SCP: Service Control Policy
+# Safety
 
-## AWS Activate: Supports small businesses
+- root account
+    - the one that you sign in with your email (instead of an IAM)
+    - has all permissions
+    - should be used only to:
+        - create and delete users
+        - inspect and set billing
+- user accounts
+
+
+# Lambda: operational
+
+- url

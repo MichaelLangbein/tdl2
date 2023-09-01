@@ -51,7 +51,7 @@ Wie Freiberufler, aber ...
     - Bei Finanzamt
     - Bei Gewerbeamt --> Gewerbeschein
                      --> Damit automatisch Mitglied der IHK
-    - Handelsregistereintrag Freiwillig (siehe e.K.)
+    - Handelsregistereintrag Freiwillig (siehe e.K.) <----- bin *nicht* im Handelsregister.
     - Fantasiename auch ohne Handelsregistereintrag erlaubt, aber muss Eigennamen enthalten (https://www.existenzgruender.de/SharedDocs/BMWi-Expertenforum/Recht/Unternehmensname/Einzelunternehmen-ohne-HR-Eintrag/Kleingewerbe-Logo-mit-Fantasienamen.html)
 - Maximaler Jahresumsatz: 
      max. 18h per Woche und weniger Einkommen als aus Haupttätigkeit
