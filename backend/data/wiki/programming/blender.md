@@ -7,6 +7,26 @@
 
 
 
+# Navigation, origin, Cursor, apply
+
+Cursor
+- you can select a point in the scene that is not related to an object. That selection-location is your cursor.
+- you can for example move an object's origin to the cursor (`object`->`set origin`->`to 3d cursor`).
+- position cursor with <shift>+<right-click (dragging)>, commonly with snapping enabled ("magnet" icon next to proportional edit icon)
+- pie-menu with <shift>+<s>
+
+Origin
+- every object has an origin. It's shown in orange when you select the object.
+- rotating, scaling etc. are relative to the origin.
+- often when editing all of an objects vertices, the origin is left behind in the initial position.
+
+
+Apply all transforms
+- <ctrl>-<a>
+- moves the objects origin back into the world center
+
+
+
 
 # Relation to WebGL
 - geometry nodes: vertex shader
@@ -39,13 +59,15 @@ Part 1: road-segment and road-array
 - select road-segment
 - modifiers: add array-modifier (adjust factor-x, count, etc)
 Part 2: centering
-- select curve and road-array
-- move both objects to world origin
-- make both objects' center-point the world origin (ctrl-a -> location)
+- road-segment: center object in world-center, set object-origin to word-origin
+- path: set origin to world center (by applying all transforms)
 Part 3:
 - select road
 - add modifier: curve
 - select curve
+Part 4: remove artifacts
+- apply array- and curve-modifiers
+- remove bezier curve
 
 
 
