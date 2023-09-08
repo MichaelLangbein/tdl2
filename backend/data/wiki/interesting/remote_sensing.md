@@ -539,6 +539,40 @@ interface Collection extends Catalog {
 }
 ```
 
+*Some* STACs implement the `search` method.
+Commonly with the search method one can use the STAC-API [filter extension](https://github.com/stac-api-extensions/filter):
+```
+https://landsatlook.usgs.gov/stac-server/search
+    ?collections=landsat-c2l1
+    &bbox=9.2752,47.3835,13.0932,48.5816
+    &datetime=2018-02-12T00:00:00Z/2018-03-18T12:31:12Z
+    &limit=10
+    &filter=eo:cloud_cover<=20
+    &filter-lang=cql-text
+```
+*Some others* instead implement the [query extension](https://github.com/stac-api-extensions/query) for the search method:
+```python
+stacUrl = "https://landsatlook.usgs.gov/stac-server"
+landsatStac = psc.Client.open(stacUrl)
+
+# %%
+search = landsatStac.search(
+    bbox = [9.2752, 47.3835, 13.0932, 48.5816],
+    datetime = '2019-06-01/2021-06-01',
+    collections=["landsat-c2l1"],
+    # query works, filter doesnt. That's because Landsatlook conforms to Query, but not to ItemSearch.
+    query = {
+        "platform": {"eq": "LANDSAT_8"},
+        "eo:cloud_cover": {"lte": 10.0}
+    },
+    max_items = 10
+)
+```
+Generally, the filter-extension is recommended over the query extension ... but not yet in widespread use.
+
+Query only works with POST requests, by the way.
+
+
 ### COG's
 https://medium.com/planet-stories/a-handy-introduction-to-cloud-optimized-geotiffs-1f2c9e716ec3
 
