@@ -84,7 +84,20 @@ Part 4: remove artifacts
 - Click on yellow dot left of `color`, pick image
 
 
-
+## Water shader
+Simple and more complex: https://www.youtube.com/watch?v=olnZyeNBIfM
+- Simple
+    - musgrave-texture ->
+    - bump ->
+    - principled bdsf
+        - metal high
+        - roughness low
+- more complex
+    - combine simple water with
+    - transparent bdsf
+    - with fraction determined by lightpath-node (camera path)
+- optional:
+    - add principled volume node to output volume to create a murky sediment
 
 
 
