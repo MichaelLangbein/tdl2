@@ -9,6 +9,7 @@
     - note `map=/home/user/mapserver_quickstart.map` <- must be accessible to apache
 
 
+
 ## apache-config
 
 ### allow cgi

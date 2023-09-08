@@ -1,5 +1,11 @@
 # Blender
 
+## General
+- `F3`: Menu search
+
+
+
+
 ## Modelling
 Simple 20min tutorial on basics of face-sculpting: https://www.youtube.com/watch?v=GiUAmKZRf9I&t=939s
 

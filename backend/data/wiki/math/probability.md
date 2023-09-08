@@ -75,8 +75,8 @@ Here are the tables of probabilities:
 
 |          |     |          |     |
 |----------|-----|----------|-----|
-| $P(B|S)$ | 0.9 | $P(B|T)$ | 0.8 | 
-| $P(G|S)$ | 0.1 | $P(G|T)$ | 0.2 | 
+| $P(B\|S)$ | 0.9 | $P(B\|T)$ | 0.8 | 
+| $P(G\|S)$ | 0.1 | $P(G\|T)$ | 0.2 | 
 
 
 Notice the following facts:
