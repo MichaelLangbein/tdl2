@@ -12,8 +12,8 @@
 Cursor
 - you can select a point in the scene that is not related to an object. That selection-location is your cursor.
 - you can for example move an object's origin to the cursor (`object`->`set origin`->`to 3d cursor`).
-- position cursor with <shift>+<right-click (dragging)>, commonly with snapping enabled ("magnet" icon next to proportional edit icon)
-- pie-menu with <shift>+<s>
+- position cursor with `<shift>+<right-click (dragging)>`, commonly with snapping enabled ("magnet" icon next to proportional edit icon)
+- pie-menu with `<shift>`+`s`
 
 Origin
 - every object has an origin. It's shown in orange when you select the object.
@@ -22,15 +22,8 @@ Origin
 
 
 Apply all transforms
-- <ctrl>-<a>
+- `<ctrl>-<a>`
 - moves the objects origin back into the world center
-
-
-
-
-# Relation to WebGL
-- geometry nodes: vertex shader
-- shader: fragment shader
 
 
 
@@ -57,21 +50,21 @@ https://www.youtube.com/watch?v=MHWjhIr50f0
 - Part 1: curve to (non-finite) mesh
     - draw bezier curve
     - add geometry-node modifier
-    - insert <path-to-mesh> node
-        - input profile: <curve-line-primitive>
+    - insert `<path-to-mesh>` node
+        - input profile: `<curve-line-primitive>`
 - Part 2: exposing uv-map coords
-    - insert <material node> before output
+    - insert `<material node>` before output
         - insert shader
-    - insert <store named attribute> after input, call it `gradient x`
-        - as value, input a <spline parameter>(length)
-    - insert <store named attribute> after profile, call it `gradient y`
-        - as value, input a <spline parameter>(factor)
+    - insert `<store named attribute>` after input, call it `gradient x`
+        - as value, input a `<spline parameter>`(length)
+    - insert `<store named attribute>` after profile, call it `gradient y`
+        - as value, input a `<spline parameter>`(factor)
 - Part 3: importing uv-map coords
     - in shader:
-        - add <attribute> named `gradient x`
-        - add <attribute> named `gradient y`
-        - combine them (as fracs) with a <combine-xyz> as x and y values
-        - input that combination into an <image-texture>'s uv-input
+        - add `<attribute>` named `gradient x`
+        - add `<attribute>` named `gradient y`
+        - combine them (as fracs) with a `<combine-xyz>` as x and y values
+        - input that combination into an `<image-texture>`'s uv-input
 - Part 4: bake
     - object -> convert to mesh
     - texture -> bake

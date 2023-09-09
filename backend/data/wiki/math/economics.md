@@ -39,16 +39,16 @@ In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
 >>
 >> This is a market of shortage. $q$ is determined by the producers: producers will be able to produce a quantity such that their producer-surplus is maximal ... whereas the consumer-surplus might not be.
 >>
->> |               | $p$                                              | $p + \delta$                                      |
+>> |               | $p$                                              | $p + dp$                                      |
 >> |---------------|--------------------------------------------------|---------------------------------------------------|
->> | $q^{supply}$  | optimal: $c^{-1}(p) := q^{supply}_p$             | optimal: $c^{-1}(p + \delta) := q^{supply}_{p + \delta}$   |
->> | $cs(q)\|p$    | $\int^{q^{supply}_p} v dq - pq^{supply}_p$       | $\int^{q^{supply}_{p + \delta}} v dq - (p + \delta)q^{supply}_{p + \delta}$ |
+>> | $q^{supply}$  | optimal: $c^{-1}(p) := q^{supply}_p$             | optimal: $c^{-1}(p + dp) := q^{supply}_{p + dp}$   |
+>> | $cs(q)\|p$    | $\int^{q^{supply}_p} v dq - pq^{supply}_p$       | $\int^{q^{supply}_{p + dp}} v dq - (p + dp)q^{supply}_{p + dp}$ |
 >>
 >> $$ \begin{aligned}
-            cs(q)|p+\delta - cs(q)|p &= \int^{q^{supply}_{p + \delta}} v dq - (p + \delta)q^{supply}_{p + \delta} - \int^{q^{supply}_p} v dq + pq^{supply}_p                                                                             \\
-            &= \int_{q^{supply}_p}^{q^{supply}_{p+\delta}} v dq - p \frac{\partial q^{supply}}{\partial p}\partial p - \delta q_{p+\delta}^{supply}  \\
-            &= v(q^{supply}_{p+\delta}) \partial q^{supply} - p \partial q^{supply} - \delta  q^{supply}_{p+\delta}   \\
-            &\approx v(q) \partial q - p \partial q 
+            cs(q)|p+dp - cs(q)|p &= \int^{q^{supply}_{p + dp}} v dq - (p + dp)q^{supply}_{p + dp} - \int^{q^{supply}_p} v dq + pq^{supply}_p                                                                             \\
+            &= \int_{q^{supply}_p}^{q^{supply}_{p+dp}} v dq - p d q^{supply} -  q_{p+dp}^{supply} dp  \\
+            &= v(q^{supply}_{p+dp}) d q^{supply} - p d q^{supply} -   q^{supply}_{p+dp}  dp  \\
+            &\approx v(q) d q - p d q - q dp
     \end{aligned} $$
 >> Since this is a shortage-market, we have $v(q) > p$, thus the change in $cs$ will always be positive.
 >>
