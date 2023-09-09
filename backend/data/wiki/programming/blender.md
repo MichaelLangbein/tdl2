@@ -53,21 +53,46 @@ Example: trees only on selected area
 - In particle settings, select previously selected vertex group
 
 ## Object along curve
-Example: road-cube to follow along curve
-https://www.youtube.com/watch?v=lRK8UMudejg
-Part 1: road-segment and road-array
-- select road-segment
-- modifiers: add array-modifier (adjust factor-x, count, etc)
-Part 2: centering
-- road-segment: center object in world-center, set object-origin to word-origin
-- path: set origin to world center (by applying all transforms)
-Part 3:
-- select road
-- add modifier: curve
-- select curve
-Part 4: remove artifacts
-- apply array- and curve-modifiers
-- remove bezier curve
+https://www.youtube.com/watch?v=MHWjhIr50f0
+- Part 1: curve to (non-finite) mesh
+    - draw bezier curve
+    - add geometry-node modifier
+    - insert <path-to-mesh> node
+        - input profile: <curve-line-primitive>
+- Part 2: exposing uv-map coords
+    - insert <material node> before output
+        - insert shader
+    - insert <store named attribute> after input, call it `gradient x`
+        - as value, input a <spline parameter>(length)
+    - insert <store named attribute> after profile, call it `gradient y`
+        - as value, input a <spline parameter>(factor)
+- Part 3: importing uv-map coords
+    - in shader:
+        - add <attribute> named `gradient x`
+        - add <attribute> named `gradient y`
+        - combine them (as fracs) with a <combine-xyz> as x and y values
+        - input that combination into an <image-texture>'s uv-input
+- Part 4: bake
+    - object -> convert to mesh
+    - texture -> bake
+
+
+#### Old way
+    Example: road-cube to follow along curve
+    https://www.youtube.com/watch?v=lRK8UMudejg
+    Part 1: road-segment and road-array
+    - select road-segment
+    - modifiers: add array-modifier (adjust factor-x, count, etc)
+    Part 2: centering
+    - road-segment: center object in world-center, set object-origin to word-origin
+    - path: set origin to world center (by applying all transforms)
+    Part 3:
+    - select road
+    - add modifier: curve
+    - select curve
+    Part 4: remove artifacts
+    - apply array- and curve-modifiers
+    - remove bezier curve
 
 
 
@@ -179,6 +204,13 @@ Some special tips for liquids:
 
 
 
+## Exporting to GLTF and Threejs
+- https://discourse.threejs.org/t/how-can-we-use-blenders-3d-model-with-geometry-nodes-in-three-js/40116
+- https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html
+
+- Apply all modifiers
+- Bake every shader node that is an input to a BDSF into a texture input
+- In export menu, make sure that textures are included
 
 
 
@@ -192,10 +224,6 @@ Some special tips for liquids:
 
 
 
-
-
-## Exporting
-When exporting, make sure that your textures are included and that all modifiers are applied. 
 
 
 
