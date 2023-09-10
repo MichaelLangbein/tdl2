@@ -47,7 +47,7 @@ Example: trees only on selected area
 
 ## Object along curve
 https://www.youtube.com/watch?v=MHWjhIr50f0
-- Part 1: curve to (non-finite) mesh
+- Part 1: curve to (non-destructive) mesh
     - draw bezier curve
     - add geometry-node modifier
     - insert `<path-to-mesh>` node

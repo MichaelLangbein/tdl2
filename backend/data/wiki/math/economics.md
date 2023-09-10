@@ -39,30 +39,14 @@ In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
 >>
 >> This is a market of shortage. $q$ is determined by the producers: producers will be able to produce a quantity such that their producer-surplus is maximal ... whereas the consumer-surplus might not be.
 >>
->> |               | $p$                                              | $p + dp$                                      |
->> |---------------|--------------------------------------------------|---------------------------------------------------|
->> | $q^{supply}$  | optimal: $c^{-1}(p) := q^{supply}_p$             | optimal: $c^{-1}(p + dp) := q^{supply}_{p + dp}$   |
->> | $cs(q)\|p$    | $\int^{q^{supply}_p} v dq - pq^{supply}_p$       | $\int^{q^{supply}_{p + dp}} v dq - (p + dp)q^{supply}_{p + dp}$ |
->>
->> $$ \begin{aligned}
-            cs(q)|p+dp - cs(q)|p &= \int^{q^{supply}_{p + dp}} v dq - (p + dp)q^{supply}_{p + dp} - \int^{q^{supply}_p} v dq + pq^{supply}_p                                                                             \\
-            &= \int_{q^{supply}_p}^{q^{supply}_{p+dp}} v dq - p d q^{supply} -  q_{p+dp}^{supply} dp  \\
-            &= v(q^{supply}_{p+dp}) d q^{supply} - p d q^{supply} -   q^{supply}_{p+dp}  dp  \\
-            &\approx v(q) d q - p d q - q dp
-    \end{aligned} $$
->> Since this is a shortage-market, we have $v(q) > p$, thus the change in $cs$ will always be positive.
->>
->> We see that the consumer-surplus is higher even if the price increases, so consumers will tollerate a price-hike.
+
 >
 >> *Case 2*: assume that $p: q^{supply}(p) > q^{demand}(p)$
 >>
->> This is a market of over-supply. $q$ is determined by the consumers: they will be able to consume a quantity such that their consumer-surplus is maximal ... whereas the producer-surplus might not be.
->>
->> |               | $p$               | $p - \delta$             | 
->> |---------------|-------------------|--------------------------|
->> | $q^{demand}$  |                   |                          |
->> | $ps(q)\|p$    |                   |                          |
->>
->> We see that the producer-surplus increases even if the price decreases, so producers will tollerate a drop in prices.
 
 
+
+In a free market, the market-equilibrium is where *social welfare* (consumer- plus producer-surplus) is maximized.
+>
+> *Proof*: 
+>
