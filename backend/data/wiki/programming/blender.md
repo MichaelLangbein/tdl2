@@ -107,12 +107,12 @@ Simple and more complex: https://www.youtube.com/watch?v=olnZyeNBIfM
 - Simple
     - musgrave-texture ->
     - bump ->
-    - principled bdsf
+    - principled BSDF
         - metal high
         - roughness low
 - more complex
     - combine simple water with
-    - transparent bdsf
+    - transparent BSDF
     - with fraction determined by lightpath-node (camera path)
 - optional:
     - add principled volume node to output volume to create a murky sediment
@@ -197,16 +197,27 @@ Some special tips for liquids:
 
 
 
-## Exporting to GLTF and Threejs
+# Exporting to GLTF and Threejs
 - https://discourse.threejs.org/t/how-can-we-use-blenders-3d-model-with-geometry-nodes-in-three-js/40116
 - https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html
 
 - Apply all modifiers
-- Bake every shader node that is an input to a BDSF into a texture input
+- Bake every shader node that is an input to a BSDF into a texture input
 - In export menu, make sure that textures are included
 
 
 
+## Baking
+https://www.youtube.com/watch?v=LLQFopN--LY
+Bake anything that has more than texture-inputs to a BSDF shader.
+- select object
+- open shader-editor 
+- add new image-node ... but *don't connect it to anything*.
+- in right sidebar, go to `renderer > bake`
+- clicking on bake will bake the selected object's surface onto the selected texture-node.
+- now connect the newly baked-in texture-node to the BSDF's color-input
+If you've messed with metallicness or other parameters, repeat the process for those.
+If you've only changed the value of metallicness, but not plugged in a procedural input, instead of a full-fledged texture-node you can just put in a color-node.
 
 
 
