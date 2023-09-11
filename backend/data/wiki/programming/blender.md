@@ -201,9 +201,11 @@ Some special tips for liquids:
 - https://discourse.threejs.org/t/how-can-we-use-blenders-3d-model-with-geometry-nodes-in-three-js/40116
 - https://docs.blender.org/manual/en/latest/addons/import_export/scene_gltf2.html
 
-- Apply all modifiers
-- Bake every shader node that is an input to a BSDF into a texture input
-- In export menu, make sure that textures are included
+- Apply all modifiers (there's an option for that in the export menu)
+    - importantly also applies geometry-nodes
+- Bake every shader that has procedural inputs or non-standard-values to a BSDF.
+    - including auto-generated objects like vines.
+- In export menu, make sure that textures are included.
 
 
 
