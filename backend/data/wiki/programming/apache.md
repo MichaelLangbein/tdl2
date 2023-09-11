@@ -24,3 +24,14 @@ Important settings:
     - `<Directory "/usr/lib/cgi-bin/">`: Tells apache that it should try to access this directory
 - .htaccess
     - 
+
+
+## Users, access
+- commonly runs as `www-data`
+- every directory that apache2 is to serve should have  `rx` rights for www-data.
+
+## Firewall
+`sudo ufw allow 'Apache Full'`
+`sudo ufw enable`
+
+## SSH

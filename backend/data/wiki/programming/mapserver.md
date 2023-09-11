@@ -9,6 +9,9 @@
     - note `map=/home/user/mapserver_quickstart.map` <- must be accessible to apache
 
 
+## Running offline:
+https://mapserver.org/utilities/map2img.html#map2img 
+
 
 ## apache-config
 
@@ -27,6 +30,8 @@ In `/etc/apache2/sites-available/000-default.conf`:
 ### allow dir
 Apache must have access to the directory where you store your .map file and your data.
 Per default, `/var/www/` is apache's webroot. 
+Commonly, we put mapfiles in `/var/www/mapserver/*.map` and data in `/var/www/data/`.
+A mapfile can then write `SHAPEPATH ../data` to access `/var/www/data/`.
 
 
 To add another directory, in `/etc/apache2/sites-available/000-default.conf`:
