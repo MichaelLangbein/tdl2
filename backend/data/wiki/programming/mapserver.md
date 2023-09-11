@@ -109,6 +109,56 @@ END
 Query this map via `http://localhost/cgi-bin/mapserv?map=/var/www/.map&mode=map&layer=states_line&layer=modis`
 
 
+
+## Geojson-data
+
+```yml
+ IMAGETYPE      PNG
+  EXTENT         -77.182712 -12.549659 -76.612665 -11.727448
+  SIZE           400 300
+  SHAPEPATH      "../data"    # path relative to mapfile. If mapfile is in /var/www/mapserver/, then this would be /var/www/data
+  IMAGECOLOR     255 255 255
+
+  LAYER
+      NAME "someName"
+      TYPE POLYGON
+      STATUS ON
+      CONNECTIONTYPE OGR          # connection-type required for geojson
+      CONNECTION "geojson/eqDamageRefUpdated.json"
+      DATA "eqDamageRefUpdated"              # the OGR layername, found through ogrinfo
+
+      CLASS
+              NAME    "damage"
+              STYLE
+                      RANGEITEM       "weighted_damage"
+                      COLORRANGE      "#8cbaa7" "#8cbaa7"
+                      DATARANGE       0.0 1.0
+              END
+              STYLE
+                      RANGEITEM       "weighted_damage"
+                      COLORRANGE      "#e8e9ab" "#e8e9ab"
+                      DATARANGE       1.0 2.0
+              END
+              STYLE
+                      RANGEITEM       "weighted_damage"
+                      COLORRANGE      "#fed7aa" "#fed7aa"
+                      DATARANGE       2.0 3.0
+              END
+              STYLE
+                      RANGEITEM       "weighted_damage"
+                      COLORRANGE      "#d78b8b" "#d78b8b"
+                      DATARANGE       3.0 4.0
+              END
+      END
+
+  END
+
+END
+```
+
+**Severe problem with geojson**: mapserver need to parse whole file for every bbox. Reason: geojson doesn't have a spatial index built in. You're best off converting to a shapefile instead.
+
+
 ## WMS-TIME
 
 
