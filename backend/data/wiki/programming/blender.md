@@ -4,6 +4,7 @@
 # Favorite hotkeys
 - "F3": search
 - "CTRL-ALT-0": put camera into current scene-view
+- GeomNodes: "CTRL-SHIFT + Click on node" -> attaches current node to viewer-node
 
 
 
@@ -213,6 +214,22 @@ Some special tips for liquids:
 
 
 
+
+
+
+# Concepts behind geometry nodes
+- **input-nodes**:
+    - example: index, position, normal, radius, edge-angle, textures,  ...
+    - are what in shaders are called attributes (=per vertex data) and uniforms (=per shader data)
+    - **selection**:
+        - can be dragged to ghe group-input.selection field: then it's an input that is made availble from the geom-node view to the geom-node-modifier menu on the right hand side
+            - the value of that custom input may be set to some vertex-group
+        - can be some math-operation on the index-node
+- **data-flow nodes**:
+    - cylinder, transform, set-tilt, ...
+    - change and pass geometry.
+- **output-nodes**:
+    - 
 
 
 
