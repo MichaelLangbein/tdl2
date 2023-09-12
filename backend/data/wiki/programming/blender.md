@@ -118,6 +118,10 @@ Simple and more complex: https://www.youtube.com/watch?v=olnZyeNBIfM
     - add principled volume node to output volume to create a murky sediment
 
 
+## Line-art post-processing
+- > view-layer
+    - check freestyle
+    - check both outlines and hatching
 
 
 
