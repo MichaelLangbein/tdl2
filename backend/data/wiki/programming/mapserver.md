@@ -9,8 +9,39 @@
     - note `map=/home/user/mapserver_quickstart.map` <- must be accessible to apache
 
 
+## Installation
+
+1. Install apache:
+    ```bash
+    apt-get install -y apache2 apache2-mpm-worker libapache2-mod-fastcgi
+    a2enmod actions fastcgi alias
+    apt-get install libapache2-mod-php5 php5-common php5-cli php5-fpm php5
+    ```
+2. Find apache's cgi-dir: `cat /etc/apache2/sites-available/default | grep 'cgi-bin'`
+3. Move binary to cgi-bin-dir
+
+
 ## Running offline:
 https://mapserver.org/utilities/map2img.html#map2img 
+## Debugging
+https://www.mapserver.org/optimization/debugging.html
+```yml
+MAP
+  ...
+  CONFIG "MS_ERRORFILE" "/tmp/ms_error.txt"
+  DEBUG 5                       # very, very verbose level
+  CONFIG "CPL_DEBUG" "ON"       # to also activate gdal logging
+  CONFIG "CPL_DEBUG" "ON"       # to also activate curl logging
+  CONFIG "CPL_CURL_VERBOSE" "ON"
+  CONFIG "PROJ_DEBUG" "ON"      # to also activate proj logging
+  ...
+  LAYER
+    ...
+  END
+END
+```
+Calling with `map2img -m /var/www/mapserver/mymapfile.map -o test.png -all_debug 5`
+Details on filtereing that output here: https://www.mapserver.org/optimization/debugging.html
 
 
 ## apache-config
@@ -110,7 +141,7 @@ Query this map via `http://localhost/cgi-bin/mapserv?map=/var/www/.map&mode=map&
 
 
 
-## Geojson-data
+## Geojson-data: bad; Flatgeobuf: good.
 
 ```yml
  IMAGETYPE      PNG
@@ -156,7 +187,114 @@ Query this map via `http://localhost/cgi-bin/mapserv?map=/var/www/.map&mode=map&
 END
 ```
 
-**Severe problem with geojson**: mapserver need to parse whole file for every bbox. Reason: geojson doesn't have a spatial index built in. You're best off converting to a shapefile instead.
+**Severe problem with geojson**: mapserver need to parse whole file for every bbox. Reason: geojson doesn't have a spatial index built in. You're best off converting to a shapefile instead... or a flatgeobuf:
+
+
+Example with shapefile (mapserver's default):
+```yml
+MAP
+  IMAGETYPE      PNG
+  EXTENT         -77.182712 -12.549659 -76.612665 -11.727448
+  SIZE           400 300
+  SHAPEPATH      "../data/shp"
+  IMAGECOLOR     255 255 255
+
+	LAYER
+		NAME "someName"
+		TYPE POLYGON
+		STATUS ON
+		DATA 		"peru_70000011/eqDamageRefUpdated.shp"
+
+
+			CLASS
+				NAME	"damage"
+				STYLE
+					RANGEITEM	"buildings"
+					COLORRANGE	"#a0a0a0" "#a0a0a0"
+					DATARANGE	0.0 0.0001
+				END
+				STYLE
+					RANGEITEM	"weighted_d"		# note how the column name is truncated to 10 letters. 
+					COLORRANGE	"#8cbaa7" "#8cbaa7"
+					DATARANGE	0.0 1.0
+				END
+				STYLE
+					RANGEITEM	"weighted_d"
+					COLORRANGE	"#e8e9ab" "#e8e9ab"
+					DATARANGE	1.0 2.0
+				END
+				STYLE
+					RANGEITEM	"weighted_d"
+					COLORRANGE	"#fed7aa" "#fed7aa"
+					DATARANGE	2.0 3.0
+				END
+				STYLE
+					RANGEITEM	"weighted_d"
+					COLORRANGE	"#d78b8b" "#d78b8b"
+					DATARANGE	3.0 4.0
+				END
+			END
+
+	END
+
+END
+```
+
+Example with geobuf:
+```yml
+MAP
+  IMAGETYPE      PNG
+  EXTENT         -77.182712 -12.549659 -76.612665 -11.727448
+  SIZE           400 300
+  SHAPEPATH      "../data"
+  IMAGECOLOR     255 255 255
+
+                    LAYER
+                        NAME "someName"
+                        TYPE POLYGON
+                        STATUS ON
+                        CONNECTIONTYPE  flatgeobuf                      # no need for OGR-connection-type here; mapserver has its own, native drivers for fgb
+                        CONNECTION      "fgb/eqDamageRefUpdated.fgb"
+                        DATA            "eqDamageRefUpdated"              # the OGR layername, found through ogrinfo (make sure ogrinfo supports fgb: `ogrinfo --formats`)
+                        CONNECTIONOPTIONS
+                                "VERIFY_BUFFERS" "NO"                   # helps with performance
+                        END
+
+                        CLASS
+                                NAME    "damage"
+                                STYLE
+                                        RANGEITEM       "buildings"
+                                        COLORRANGE      "#a0a0a0" "#a0a0a0"
+                                        DATARANGE       0.0 0.0001
+                                END
+                                STYLE
+                                        RANGEITEM       "weighted_damage"
+                                        COLORRANGE      "#8cbaa7" "#8cbaa7"
+                                        DATARANGE       0.0 1.0
+                                END
+                                STYLE
+                                        RANGEITEM       "weighted_damage"
+                                        COLORRANGE      "#e8e9ab" "#e8e9ab"
+                                        DATARANGE       1.0 2.0
+                                END
+                                STYLE
+                                        RANGEITEM       "weighted_damage"
+                                        COLORRANGE      "#fed7aa" "#fed7aa"
+                                        DATARANGE       2.0 3.0
+                                END
+                                STYLE
+                                        RANGEITEM       "weighted_damage"
+                                        COLORRANGE      "#d78b8b" "#d78b8b"
+                                        DATARANGE       3.0 4.0
+                                END
+                        END
+
+                    END
+
+END
+```
+
+
 
 
 ## WMS-TIME

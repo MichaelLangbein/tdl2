@@ -117,11 +117,26 @@ Simple and more complex: https://www.youtube.com/watch?v=olnZyeNBIfM
 - optional:
     - add principled volume node to output volume to create a murky sediment
 
+## Wrap one object around another
+Example: rotor-blades
+1. create 1 cylinder (called nose)
+2. create 1 blade
+3. To blade, add array modifier
+    1. set count to 3
+    2. set factors all to 0
+    3. set object offset to "nose"
+    4. Make sure blade's origin is at same location as nose's origin (which doesn't have to be the word-center, though)
+4. rotate nose by 120 degrees
+5. Group blades and nose by first clicking blades, then shift-clicking nose, than `<ctrl>+p`
+
 
 ## Line-art post-processing
 - > view-layer
     - check freestyle
     - check both outlines and hatching
+
+
+
 
 
 

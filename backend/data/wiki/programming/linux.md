@@ -84,7 +84,7 @@ PPA's worth knowing:
  - Restricted: Proprietary drivers
 
 - repos:
-  - update repo-contend: `apt update`
+  - update repo-content: `apt update`
   - list repos: 
     - `apt-cache policy | awk '/http.*amd64/{print$2}' | sort -u`
     - `cat /etc/apt/sources.list.d/*`
