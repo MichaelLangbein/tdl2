@@ -200,44 +200,53 @@ MAP
   IMAGECOLOR     255 255 255
 
 	LAYER
-		NAME "someName"
+		NAME "damage"
 		TYPE POLYGON
 		STATUS ON
 		DATA 		"peru_70000011/eqDamageRefUpdated.shp"
 
-
-			CLASS
-				NAME	"damage"
-				STYLE
-					RANGEITEM	"buildings"
-					COLORRANGE	"#a0a0a0" "#a0a0a0"
-					DATARANGE	0.0 0.0001
-				END
-				STYLE
-					RANGEITEM	"weighted_d"		# note how the column name is truncated to 10 letters. 
-					COLORRANGE	"#8cbaa7" "#8cbaa7"
-					DATARANGE	0.0 1.0
-				END
-				STYLE
-					RANGEITEM	"weighted_d"
-					COLORRANGE	"#e8e9ab" "#e8e9ab"
-					DATARANGE	1.0 2.0
-				END
-				STYLE
-					RANGEITEM	"weighted_d"
-					COLORRANGE	"#fed7aa" "#fed7aa"
-					DATARANGE	2.0 3.0
-				END
-				STYLE
-					RANGEITEM	"weighted_d"
-					COLORRANGE	"#d78b8b" "#d78b8b"
-					DATARANGE	3.0 4.0
-				END
+		# CLASSITEM	"builings" <- not required, because we do complex expressions instead of simple string comparisons (although those would be faster)
+		CLASS
+			NAME 		"empty"
+			EXPRESSION 	( [buildings] <= 0 )		# syntax: https://gis.stackexchange.com/questions/113819/multiple-classitems-in-a-mapfile
+			STYLE
+				COLOR			"#a0a0a0"
+				OUTLINECOLOR	"#6f6f6f"
 			END
+		END
+		CLASS
+			NAME		"damage"
+			EXPRESSION 	( [buildings] > 0 )
+			STYLE
+				RANGEITEM		"weighted_d"		# note how the column name is truncated to 10 letters. 
+				COLORRANGE		"#8cbaa7" "#8cbaa7"
+				OUTLINECOLOR 	"#729787"
+				DATARANGE		0.0 1.0
+			END
+			STYLE
+				RANGEITEM		"weighted_d"
+				COLORRANGE		"#e8e9ab" "#e8e9ab"
+				OUTLINECOLOR	"#c4c490"
+				DATARANGE		1.0 2.0
+			END
+			STYLE
+				RANGEITEM		"weighted_d"
+				COLORRANGE		"#fed7aa" "#fed7aa" 
+				OUTLINECOLOR	"#bfa280"
+				DATARANGE		2.0 3.0
+			END
+			STYLE
+				RANGEITEM		"weighted_d"
+				COLORRANGE		"#d78b8b" "#d78b8b"
+				OUTLINECOLOR	"#a86d6d"
+				DATARANGE		3.0 4.0
+			END
+		END
 
 	END
 
 END
+
 ```
 
 Example with geobuf:
