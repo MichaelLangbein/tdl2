@@ -141,6 +141,12 @@ Example: rotor-blades
     - check freestyle
     - check both outlines and hatching
 
+## Multiple objects with same shader, but each one randomly picking a different texture
+- add `object info` node
+- connect `<object-info>.Random` to `<Color-ramp>(interpolation:linear)`
+- feed `Color-ramp` into texture-mix
+
+
 
 
 

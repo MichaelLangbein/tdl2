@@ -306,6 +306,114 @@ END
 
 
 
+
+
+## Turning into WMS
+https://mapserver.org/ogc/wms_server.html
+
+
+Important factors:
+  - axis order:
+    - geojson: lon, lat
+    - epsg:4326: lat, lon
+    - wms 1.1: lon, lat
+    - wms 1.3: depends on crs
+    - shapefile: depends on crs
+
+```yml
+
+    MAP
+        IMAGETYPE      PNG
+        EXTENT         -77.18271184899999 -12.549658607999959 -76.61266487699999 -11.72744754699994
+        SIZE           400 300
+        SHAPEPATH      "/var/www/data/70000011"
+        IMAGECOLOR     255 255 255
+
+        # <--- start WMS information
+        NAME		"peru_70000011_eqDamageRef"
+        PROJECTION	
+            "init=epsg:4326"			# required; source-data projection
+        END
+        WEB
+            METADATA
+                "wms_title"				"peru_70000011_eqDamageRef"							        # required for GetCapabilities
+                "wms_onlineresource"	"http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/70000011/eqDamageRef.map&version=1.1.0"       # required for GetCapabilities
+                                                                                                        # explicitly setting version=1.1.0, because 1.3.0 seems to have issues with axis-order:
+                                                                                                        # https://mapserver.org/ogc/wms_server.html#coordinate-systems-and-axis-orientation
+                "wms_srs"				"EPSG:4326"													# recomended; projections in which data can be served
+                "wms_enable_request"	"GetCapabilities GetMap GetFeatureInfo GetLegendGraphic"	# mandatory
+            END
+        END
+        # end WMS information ---->
+    
+
+        LAYER
+            NAME 	"damage"
+            TYPE 	POLYGON
+            STATUS 	ON
+            DATA 	"eqDamageRef.shp"
+
+            # <--- start WMS information
+            # PROJECTION: if not given, inherited from MAP
+            METADATA
+                "wms_title"	"damge"   ##required
+                # wms_srs: if not given, inherited from MAP
+            END
+            TEMPLATE	"empty"			# required template for GetFeatureInfo. 
+            # end WMS information ---->
+
+
+            CLASS
+                NAME 		"Sin edificios residenciales"
+                EXPRESSION 	( [buildings] <= 0 )
+                STYLE
+                    COLOR			"#a0a0a0"
+                    OUTLINECOLOR	"#6f6f6f"
+                END
+            END
+            CLASS
+                NAME	"Daño leve"
+                EXPRESSION ([weighted_d] < 1.0)
+                STYLE
+                    COLOR			"#8cbaa7"
+                    OUTLINECOLOR	"#729787"
+                END
+            END
+            CLASS
+                NAME	"Daño moderado"
+                EXPRESSION ([weighted_d] < 2.0)
+                STYLE
+                    COLOR			"#e8e9ab"
+                    OUTLINECOLOR	"#c4c490"
+                END
+            END
+            CLASS
+                NAME	"Daño fuerte"
+                EXPRESSION ( [weighted_d] <= 3.0 )
+                STYLE
+                    COLOR			"#fed7aa"
+                    OUTLINECOLOR	"#bfa280"
+                END
+            END
+            CLASS
+                NAME	"Daño severo"
+                STYLE
+                    COLOR			"#d78b8b"
+                    OUTLINECOLOR	"#a86d6d"
+                END
+            END
+
+        END
+
+    END
+    
+```
+
+query with:
+- http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mapfile4.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities
+- http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mapfile4.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX=-77.2,-12.08,-77.04,-12.05&layers=damage&SRS=EPSG:4326&FORMAT=PNG&WIDTH=256&HEIGHT=256
+
+
 ## WMS-TIME
 
 
