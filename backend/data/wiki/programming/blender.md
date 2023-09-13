@@ -37,8 +37,13 @@ Example: path over grass
 - both into a mix-node
 - fraction = new texture (named "mask")
 - paint onto mask texture inside scene with "texture-paint" mode
+Notes on texture-sizes and repeating:
+- the path mask texture must have the same extent as the uv-map
+- however, the grass- and path-images are allowed to be smaller and repeat.
+- per default they, too, are perfectly covered by the uv-map (of course, since the uv-map is [0,1]^2).
+- to repeat them, insert `texture-coordinate.uv --> mapping.vector --> image-texture.vector` and change the scaling.
 
-## Particles only on cerain areas
+## Particles only on certain areas
 Example: trees only on selected area
 - Create vertex group (Object data properties -> Vertex groups)
     - add vertices to vertex group either by selecting them and then hitting "assign"
