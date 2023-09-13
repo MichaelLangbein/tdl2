@@ -141,12 +141,27 @@ Example: rotor-blades
     - check freestyle
     - check both outlines and hatching
 
-## Multiple objects with same shader, but each one randomly picking a different texture
+## Texturing many buildings: Multiple objects with same shader, but each one randomly picking a different texture
 - add `object info` node
 - connect `<object-info>.Random` to `<Color-ramp>(interpolation:linear)`
 - feed `Color-ramp` into texture-mix
 
+## Creating a fern: self-similar structures with *Capture attribute*:
 
+- create a bezier curve and add a geom-node modifier
+
+Part 1: place same curve along curve
+- `input` -----------------------------------------------> `join geometry` -> `output`
+- `input` -> `curve to points` -> `instances on points` -> `join geometry`
+- `input` ----------------------> `instances on points`
+
+Part 2: scale sub-curves by distance from start-point
+- between `input` and `curve to points`: place `capture attribute`
+    - value to capture: `spline-parameter.factor`
+    - connect captured `attribute` with `instance-on-points.scale`
+
+Part 2 would not have worked without a captured attribute.
+Reason: the child-curve would use its *own* value for `spline-parameter.factor`, which would be 0 at the start of each one of the child-curves.
 
 
 
@@ -229,18 +244,19 @@ Some special tips for liquids:
 
 
 # Concepts behind geometry nodes
-- **input-nodes**:
-    - example: index, position, normal, radius, edge-angle, textures,  ...
-    - are what in shaders are called attributes (=per vertex data) and uniforms (=per shader data)
-    - **selection**:
-        - can be dragged to ghe group-input.selection field: then it's an input that is made availble from the geom-node view to the geom-node-modifier menu on the right hand side
-            - the value of that custom input may be set to some vertex-group
-        - can be some math-operation on the index-node
-- **data-flow nodes**:
-    - cylinder, transform, set-tilt, ...
-    - change and pass geometry.
-- **output-nodes**:
-    - 
+
+## selection
+- can be dragged to ghe group-input.selection field: then it's an input that is made available from the geom-node view to the geom-node-modifier menu on the right hand side
+    - the value of that custom input may be set to some vertex-group
+- can be some math-operation on the index-node
+
+## capture attribute
+- equivalent to a closure 
+- <node1> -> <capture-attribute>+<some input node (like position, spline-parameter, ...)>
+- <node1> -> <some mutation>
+- <captured attribute> can now be used after <some mutation> ... without that value having been mutated.
+
+
 
 
 
