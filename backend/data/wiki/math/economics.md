@@ -62,6 +62,14 @@ In a free market, the market-equilibrium is where *social welfare* (consumer- pl
 
 Objective: maximize $u$ given $\sum q_i x_i = bgt$ 
 
+### Perfectly substitutable
+$$u(a, b) = a + b$$
+
+### Perfectly non-substitutable
+$$u(a, b) = min(a, b)$$
+
+
+### Somewhere in between
 Commonly used utility function: Cobb-Douglas:
 $$ u(\vec{x}) = \prod x_i^{\lambda_i} $$
 where $\lambda_i$ means how much product $i$ contributes.
@@ -86,18 +94,26 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 Then we get:
 $$ L^{opt} = \frac{bgt \cdot \alpha_L}{p_L} $$
 
-My interpretation:
-How does an increase in labor-costs affect the amount of workers employed?
+How does increase in wages affect employment?
+- If labor and kapital are substitutable (*example: workers or machine to build cars*):
+    - if labor initially cheap, now a bit more expensive:
+        - producers only use labor, not machines
+        - producers will reduce employers proportionally to the wage-increase
+    - if labor initially expensive, now a bit more expensive:
+        - producers never had any workers in the first place, because kaptial was more efficient 
+        - so no reduction in employment.
+- If labor and kapital are non-substitutable (*example: programmers and computers to build software*):
+    - if labor initially cheap, now a bit more expensive:
+        - producers use computers and programmers in equal amounts 
+        - they also reduce them in equal amounts
+        - one unit change in wages means little change in neither employment nor kaptial
+    - if labor initially expensive, now a bit more expensive:
+        - producers use computers and programmers in equal amounts
+        - they also reduce them in equal amounts
+        - one unit change in wages means much change in both employment and capital
 
-$$ \frac{\partial L^{opt}}{\partial p_L} = - bgt \cdot \alpha_L \cdot p_L^{-2} $$
 
-Remarkably, this means:
-- if $p_L$ is low, many workers will be fired
-- if $p_L$ is high, few will be fired
-- if $\alpha_L$ is high, that is, if work contributes a lot to the output, then *more* workers will be fired.
-This can't be right, can it?
 
-Counter argument, graphically:
 <img src="../../assets/science/economics_production_theory.png" width="80%">
 - if $p_L$ is low, few workers will be fired
 
