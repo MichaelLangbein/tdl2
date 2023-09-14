@@ -9,6 +9,9 @@
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    sodipodi:docname="economics_production_theory.svg"
+   inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -47,33 +50,33 @@
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <path
-       style="fill:#0000ff;stroke:#c8008f;stroke-width:1.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 288.36903,63.361 543.6434,436.76981"
-       id="path880"
-       sodipodi:nodetypes="cc"
-       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <path
-       style="fill:none;stroke:#c8008f;stroke-width:1.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 287.03214,142.33816 543.6434,436.76981"
-       id="path882"
-       sodipodi:nodetypes="cc"
-       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <path
-       style="fill:none;stroke:#0000b6;stroke-width:2.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 251.84321,246.61112 c 97.40803,-0.4206 255.50277,50.02135 256.03742,188.87549"
+       style="fill:none;stroke:#0000b6;stroke-width:2.69939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 594.6229,407.07718 C 482.1312,407.62549 299.55544,341.86664 298.938,160.84888"
        id="path884"
        sodipodi:nodetypes="cc"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <path
-       style="fill:none;stroke:#0000b6;stroke-width:2.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 241.84321,256.61112 c 97.40803,-0.4206 255.50277,50.02135 256.03742,188.87549"
-       id="path884-5"
+       style="fill:none;stroke:#0000b6;stroke-width:2.69939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1062.4588,360.4669 C 949.9671,361.01521 767.39134,295.25636 766.7739,114.2386"
+       id="path884-4"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#0000b6;stroke-width:2.69939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1092.4588,330.4669 C 979.9671,331.01521 797.39134,265.25636 796.7739,84.2386"
+       id="path884-4-1"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#0000b6;stroke-width:2.69939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 614.6229,387.07718 C 502.1312,387.62549 319.55544,321.86664 318.938,140.84888"
+       id="path884-7"
        sodipodi:nodetypes="cc"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
@@ -107,34 +110,34 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="78.889023"
-       y="266.37289"
+       x="520.94666"
+       y="366.901"
        id="text15478"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
-         x="78.889023"
-         y="266.37289"
+         x="520.94666"
+         y="366.901"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan21526">production frontiers</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="368.18912"
-       y="176.98952"
+       x="282.9472"
+       y="407.68112"
        id="text15478-8"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
-         x="368.18912"
-         y="176.98952"
+         x="282.9472"
+         y="407.68112"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan21526-6">budget curves</tspan><tspan
          sodipodi:role="line"
-         x="368.18912"
-         y="226.98952"
+         x="282.9472"
+         y="457.68112"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan29778" /></text>
     <text
@@ -153,47 +156,15 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Case 1: higher wages when labor is cheap</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 843.53777,121.22626 1.07615,321.83167 342.79158,-1.42424"
+       d="m 733.53777,121.22626 1.07615,321.83167 342.79158,-1.42424"
        id="path876-0"
-       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <path
-       style="fill:#0000ff;stroke:#c8008f;stroke-width:1.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 844.68154,263.65497 1187.4055,441.63369"
-       id="path880-4"
-       sodipodi:nodetypes="cc"
-       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <path
-       style="fill:none;stroke:#c8008f;stroke-width:1.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 844.94529,311.5675 1187.4055,441.63369"
-       id="path882-8"
-       sodipodi:nodetypes="cc"
-       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <path
-       style="fill:none;stroke:#0000b6;stroke-width:2.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 784.55149,276.06249 c 97.40803,-0.4206 255.50281,50.02135 256.03751,188.87549"
-       id="path884-8"
-       sodipodi:nodetypes="cc"
-       inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <path
-       style="fill:none;stroke:#0000b6;stroke-width:2.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 758.55149,302.06249 c 97.40803,-0.4206 255.50281,50.02135 256.03751,188.87549"
-       id="path884-5-8"
-       sodipodi:nodetypes="cc"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="838.32758"
+       x="728.32758"
        y="113.96532"
        id="text5030-9"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
@@ -201,12 +172,12 @@
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
          id="tspan5028-7"
-         x="838.32758"
+         x="728.32758"
          y="113.96532">L</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="1191.8502"
+       x="1081.8502"
        y="455.21042"
        id="text8334-7"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
@@ -214,45 +185,45 @@
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
          id="tspan8332-6"
-         x="1191.8502"
+         x="1081.8502"
          y="455.21042">K</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="632.28296"
-       y="292.89749"
+       x="1023.1604"
+       y="314.66913"
        id="text15478-4"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
-         x="632.28296"
-         y="292.89749"
+         x="1023.1604"
+         y="314.66913"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan21526-3">production frontiers</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="1060.1285"
-       y="361.58246"
+       x="906.51141"
+       y="425.71964"
        id="text15478-8-0"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
-         x="1060.1285"
-         y="361.58246"
+         x="906.51141"
+         y="425.71964"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan21526-6-3">budget curves</tspan><tspan
          sodipodi:role="line"
-         x="1060.1285"
-         y="411.58246"
+         x="906.51141"
+         y="475.71964"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan29778-0" /></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="741.16901"
+       x="631.16901"
        y="60.940369"
        id="text35470-9"
        inkscape:export-filename="/localhome/lang_m13/Desktop/code/tdl2/backend/data/assets/science/economics_production_theory.png"
@@ -260,8 +231,18 @@
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
          id="tspan35468-2"
-         x="741.16901"
+         x="631.16901"
          y="60.940369"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Case 2: higher wages when labor is expensive</tspan></text>
+    <path
+       style="fill:none;stroke:#870078;stroke-width:3.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 287.64291,206.70028 426.59376,437.23953 286.82949,115.77489"
+       id="path2271"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#870078;stroke-width:3.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 734.35119,212.15165 1071.302,442.6909 733.53777,121.22626"
+       id="path2271-8"
+       sodipodi:nodetypes="ccc" />
   </g>
 </svg>

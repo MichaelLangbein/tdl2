@@ -102,4 +102,5 @@ Counter argument, graphically:
 - if $p_L$ is low, few workers will be fired
 
 
+
 ### Applied to consumers
