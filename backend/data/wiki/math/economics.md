@@ -31,7 +31,7 @@ Special cases:
 
 # Markets
 
-In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
+**Theorem 1**: In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
 >
 > *Proof*: By contradiction
 >
@@ -46,10 +46,13 @@ In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
 
 
 
-In a free market, the market-equilibrium is where *social welfare* (consumer- plus producer-surplus) is maximized.
+**Theorem 2**: In a free market, the market-equilibrium is where *social welfare* (consumer- plus producer-surplus) is maximized.
 >
 > *Proof*: 
 >
+
+
+
 
 
 # Producer theory
@@ -83,6 +86,7 @@ Maximizing this utility function $u'$ subject to the budget-constraint (using co
 - We find $K \frac{a}{1-a} \frac{p_K}{p_L} = L$
 - $ L_{opt} = \frac{bgt \cdot a}{p_L} $
 - $ K_{opt} = \frac{bgt \cdot (1 - a)}{p_K} $
+- $ q(L_{opt}, K_{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
 
 
 More generally:
@@ -96,16 +100,48 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
     - That means: increasing capital makes also labor more valuable
     - If that is the case, labor and capital are compliments.
 
+## 3. Theorems:
+
+**Theorem 3**: In a free market, a firm produces an output where $\frac{\partial c}{\partial q} = p$
+>
+> *Proof*: 
+>
+> $\pi(q) = pq - c(q)$
+>
+> $\frac{\partial \pi}{\partial q} = 0 \to p = \frac{\partial c(q)}{\partial q}$
+
 
 
 # Producers to markets
+https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2018/resources/lec-6-costs/
+
 How does the suply curve get its upwards slope?
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/economics_producer_to_market.png" width="80%>
+We want to get the function $q_{supply}(p)$.
 
-- In the short run, a producer can only vary $L$, given $K$.
-- They will minimize their costs by varying labor.
-- As a new $K$ becomes available, 
+It's surprisingly hard to find that function!
+1. First attempt: $q: \frac{\partial \pi}{\partial q} = 0$
+    - leads to $p = 0$ ... which is of course not helpful.
+2. Second attempt: maybe a bit more specific, with $q: \frac{\partial \pi}{\partial K} = 0 \land \frac{\partial \pi}{\partial L} = 0$ and using Cobb-Douglas:
+    - $\pi(K, L)$ has no global maximum - is continously growing. 
+3. Third attempt: maybe when accounting for the $bgt$ constraint?
+    - $ q(L_{opt}, K_{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
+    - But this is not a function of $p$!
 
+
+
+Instead, a step-by-step derivation is required. 
+
+Example with Cobb-Douglas:
+
+**Step 1: optimal supply in the short term**
+
+Optimizing profit $\pi$ with constant $K_0$ leaves only room to vary $L$: $\frac{\partial\pi}{\partial L} = 0$
+
+- $p \frac{\partial q}{\partial L} = p_L$
+- $L^{opt} |K_0 = (\frac{p_L}{pa})^{\frac{1}{a-1}}K_0$
+- $q^{opt}(p)|K_0 = (\frac{p_L}{pa})^{\frac{a}{a-1}}K_0 = (\frac{pa}{p_L})^{\frac{1-a}{a}} K_0$
+
+**Step 2: optimal supply in the long term**
 
 
 
@@ -126,7 +162,7 @@ How does the suply curve get its upwards slope?
 
 # My own notes:
 
-### Effect of wage price on employment:
+### Effect of wages on employment:
 Example:
 ```python
 def isoq(K, q, a):
