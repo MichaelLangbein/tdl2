@@ -118,7 +118,6 @@ This is where game-theory comes into play: it is now up to the firm's managers t
 
 # Implementation
 ```python
-
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
@@ -154,25 +153,20 @@ class Consumer:
 
 
 class Firm:
-    def __init__(self, name: str, a: float, capital: int, wages: int, rent: int, pickCapitalStrategy):
+    def __init__(self, name: str, a: float, capital: int, wages: int, rent: int, pickCapitalStrategy, shouldExitStrategy):
         self.name = name
         self.a = a
         self.capital = capital
         self.wages = wages
         self.rent = rent
         self.pickCapitalStrategy = pickCapitalStrategy
+        self.shouldExitStrategy = shouldExitStrategy
 
-    def pickCapital(self, price):
-        """  """
-        optimalKperL = self.__optimalKperL()
-        self.capital = self.pickCapitalStrategy(self, optimalKperL)
+    def pickCapital(self, market):
+        self.capital = self.pickCapitalStrategy(self, market)
 
-    def shouldExit(self, price):
-        q = self.supply(price)
-        profit = self.profit(q, price)
-        if profit < -0.1:
-            return True
-        return False
+    def shouldExit(self, market):
+        return self.shouldExitStrategy(self, market)
 
     def supply(self, price):
         """
@@ -246,7 +240,7 @@ class Firm:
 
 
 
-def simplePickCapitalStrategy(firm: Firm, optimalKperL):
+def simplePickCapitalStrategy(firm: Firm, market):
     profit = market.averageProfit()
     if profit > 0.01:
         return firm.capital + 1
@@ -254,6 +248,14 @@ def simplePickCapitalStrategy(firm: Firm, optimalKperL):
         return firm.capital - 1
     return firm.capital
 
+
+def simpleShouldExitStrategy(firm: Firm, market):
+    marketPrice, _ = market.settledPriceAndQuantity()
+    q = firm.supply(marketPrice)
+    profit = firm.profit(q, marketPrice)
+    if profit < -0.1:
+        return True
+    return False
 
 
 class Market:
@@ -264,20 +266,23 @@ class Market:
             self.firms.append(self.spawnNewFirm())
         self.consumers = [Consumer() for i in range(nrConsumers)]
 
+
     def spawnNewFirm(self):
         name = f"Firm{len(self.firms)}"
         a = np.random.rand()
         capital = np.random.randint(1, 10)
         wages = np.random.randint(1, 5)
         rent = np.random.randint(1, 5)
-        firm = Firm(name, a, capital, wages, rent, simplePickCapitalStrategy)
+        firm = Firm(name, a, capital, wages, rent, simplePickCapitalStrategy, simpleShouldExitStrategy)
         return firm
+
 
     def supply(self, price):
         q = 0
         for firm in self.firms:
             q += firm.supply(price)
         return q
+
 
     def demand(self, price):
         q = 0
@@ -290,10 +295,10 @@ class Market:
         pCurrent, _ = market.settledPriceAndQuantity()
 
         for firm in self.firms:
-            firm.pickCapital(pCurrent)
+            firm.pickCapital(self)
 
         for firm in self.firms:
-            exit = firm.shouldExit(pCurrent)
+            exit = firm.shouldExit(self)
             if exit:
                 self.firms.remove(firm)
                 print(f"Exit firm {firm.name}")
@@ -318,6 +323,7 @@ class Market:
         qSettled = supply[indx]
         return pSettled, qSettled
     
+
     def averageProfit(self):
         pMarket, _ = self.settledPriceAndQuantity()
         profits = []
@@ -338,6 +344,7 @@ class Plotter:
         self.maxPrice = maxPrice
         self.maxQuantity = maxQuantity
 
+
     def plotMarketSupplyAndDemand(self, market: Market):
         prices = np.linspace(0, self.maxPrice, 100)
         supply = market.supply(prices)
@@ -357,6 +364,7 @@ class Plotter:
         ax.set_xlim(0, self.maxQuantity)
         return fig, ax
     
+
     def plotFirmCurves(self, firm: Firm, market: Market, maxPrice=10):
         prices = np.linspace(0, maxPrice, 100)
         pMarket, _ = market.settledPriceAndQuantity()
@@ -392,22 +400,29 @@ class Plotter:
     
 
 
+
+
+
 plotter = Plotter(10, 1000)
 market = Market('Burgers', 30, 100)
 
-fig, axes = plotter.plotMarketSupplyAndDemand(market)
-fig.show()
-fig, axes = plotter.plotFirmCurves(market.firms[0], market)
-fig.show()
+averageProfits = []
+nrFirms = []
 
-for t in range(100):
+for t in range(70):
     market.longTermCycle()
+    averageProfits.append(market.averageProfit())
+    nrFirms.append(len(market.firms))
 
 fig, axes = plotter.plotMarketSupplyAndDemand(market)
 fig.show()
 fig, axes = plotter.plotFirmCurves(market.firms[0], market)
 fig.show()
 
+#%%
+fig, axes = plt.subplots(1, 1)
+axes.plot(averageProfits)
+axes.plot(nrFirms)
 # %%
 
 
