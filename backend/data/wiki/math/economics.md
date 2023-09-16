@@ -84,19 +84,19 @@ $$ \nabla c(L, K) = \lambda \nabla (q(K, L) - q_0) $$
 $$ q(K, L) = q_0 $$
 
 Written out, this gives us the three equations:
-$$ \frac{\partial c}{\partial L} = \lambda \frac{\partial q}{\partial L} $$ 
-$$ \frac{\partial c}{\partial K} = \lambda \frac{\partial q}{\partial K} $$ 
+$$ \frac{\partial c}{\partial L} = \lambda \frac{\partial q(L, K)}{\partial L} $$ 
+$$ \frac{\partial c}{\partial K} = \lambda \frac{\partial q(L, K)}{\partial K} $$ 
 $$ q(K, L) = q_0 $$
 
 And equating $\lambda$:
-$$ \frac{\partial q}{\partial L} \frac{1}{w} = \frac{\partial q}{\partial K} \frac{1}{r} $$
+$$ \frac{\partial q(L, K)}{\partial L} \frac{1}{w} = \frac{\partial q(L, K)}{\partial K} \frac{1}{r} $$
 
 
 > **Example calculation with Cobb-Douglas**:
 >
 > $q(L, K) = L^a K^{1-a}$
 >
-> Applying this in $\frac{\partial q}{\partial L} \frac{1}{w} = \frac{\partial q}{\partial K} \frac{1}{r}$ we get:
+> Applying this in $\frac{\partial q(L, K)}{\partial L} \frac{1}{w} = \frac{\partial q(L, K)}{\partial K} \frac{1}{r}$ we get:
 >
 > $\frac{K}{L} = \frac{1-a}{a} \frac{w}{r}$
 
