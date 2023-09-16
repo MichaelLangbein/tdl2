@@ -5,6 +5,17 @@ import matplotlib.patches as patches
 
 
 
+"""
+    Things to do better:
+        1. Firms: have them calculate their supply curves once, explicitly, and then make all functions just accessors to those pre-calculated data.
+        2. Don't write firm code specific to Cobb-Douglas. Instead: pass into firm a production function, satisfying the same interface.
+        3. Better `pickCapital` and `shouldExit` strategies.
+        4. Add a `State` class which can raise taxes on both supply and demand (by being added to the cost-curve)
+"""
+
+
+
+
 def intersectionIndex(arr1, arr2):
     distances = np.abs(arr1 - arr2)
     indx = np.argmin(distances)
@@ -22,23 +33,25 @@ class Consumer:
 
 
 class Firm:
-    def __init__(self, name, a, capital, wages, rent):
+    def __init__(self, name: str, a: float, capital: int, wages: int, rent: int, pickCapitalStrategy):
         self.name = name
         self.a = a
         self.capital = capital
         self.wages = wages
         self.rent = rent
+        self.pickCapitalStrategy = pickCapitalStrategy
 
     def pickCapital(self, price):
-        """ 
-            $$ c(q) = r K^{opt}(q) + w L^{opt}(q) $$
-            Minimize $c$ subject to $K, L \in isoq(q)$
-            For this, we must have:
-            $$ \frac{\partial q}{\partial L} \frac{1}{w} = \frac{\partial q}{\partial K} \frac{1}{r} $$
-            For Cobb-Douglas, this yields:
-            $$ K^{opt} = $$
-            $$ $$
-        """
+        """  """
+        optimalKperL = self.__optimalKperL()
+        self.capital = self.pickCapitalStrategy(self, optimalKperL)
+
+    def shouldExit(self, price):
+        q = self.supply(price)
+        profit = self.profit(q, price)
+        if profit < -0.1:
+            return True
+        return False
 
     def supply(self, price):
         """
@@ -58,7 +71,12 @@ class Firm:
         ppw = price * self.a / self.wages
         ppwc = ppw**(self.a / (1 - self.a))
         q = self.capital * ppwc
-        return q
+
+        # adjusting for stopping-condition:
+        avc = self.averageVariableCost(q)
+        qAdjusted = np.where(price >= avc, q, 0)
+
+        return qAdjusted
     
     def cost(self, quantity):
         return self.rent * self.capital + self.wages * self.__laborRequired(quantity)
@@ -101,13 +119,38 @@ class Firm:
     def __marginalLaborRequired(self, quantity):
         return (1/self.a) * quantity**((1-self.a)/self.a) * self.capital**((self.a - 1)/self.a)
 
+    def __optimalKperL(self):
+        return ((1 - self.a) / self.a) * (self.wages / self.rent)
+
+
+
+
+def simplePickCapitalStrategy(firm: Firm, optimalKperL):
+    profit = market.averageProfit()
+    if profit > 0.01:
+        return firm.capital + 1
+    elif profit < -0.1 and firm.capital >= 2:
+        return firm.capital - 1
+    return firm.capital
+
 
 
 class Market:
     def __init__(self, name, nrFirms=0, nrConsumers=0):
         self.name = name
-        self.firms = [Firm(f"Firm{i}", a=0.5, capital=10, wages=3, rent=2) for i in range(nrFirms)]
+        self.firms = []
+        for _ in range(nrFirms):
+            self.firms.append(self.spawnNewFirm())
         self.consumers = [Consumer() for i in range(nrConsumers)]
+
+    def spawnNewFirm(self):
+        name = f"Firm{len(self.firms)}"
+        a = np.random.rand()
+        capital = np.random.randint(1, 10)
+        wages = np.random.randint(1, 5)
+        rent = np.random.randint(1, 5)
+        firm = Firm(name, a, capital, wages, rent, simplePickCapitalStrategy)
+        return firm
 
     def supply(self, price):
         q = 0
@@ -132,11 +175,14 @@ class Market:
             exit = firm.shouldExit(pCurrent)
             if exit:
                 self.firms.remove(firm)
+                print(f"Exit firm {firm.name}")
 
         if allowEntry:
             averageProfit = self.averageProfit()
             if averageProfit > 0:
-                self.firms.append(Firm(f"Firm{len(self.firms)}", a=0.5, capital=10, wages=3, rent=2))
+                newFirm = self.spawnNewFirm()
+                self.firms.append(newFirm)
+                print(f"New firm {newFirm.name}")
 
 
     def settledPriceAndQuantity(self):
@@ -144,20 +190,35 @@ class Market:
         supply = self.supply(prices)
         demand = self.demand(prices)
         indx = intersectionIndex(supply, demand)
+        if not indx:
+            print("Warning: no firms left in market!")
+            return 0, 0
         pSettled = prices[indx]
         qSettled = supply[indx]
         return pSettled, qSettled
+    
+    def averageProfit(self):
+        pMarket, _ = self.settledPriceAndQuantity()
+        profits = []
+        for firm in self.firms:
+            qFirm = firm.supply(pMarket)
+            profitFirm = firm.profit(qFirm, pMarket)
+            profits.append(profitFirm)
+        return np.average(profits)
+
 
 
 
 class Plotter:
-    def __init__(self):
+    def __init__(self, maxPrice, maxQuantity):
         self.demandStyle = 'r'
         self.supplyStyle = 'b'
         self.neutralStyle = 'gray'
+        self.maxPrice = maxPrice
+        self.maxQuantity = maxQuantity
 
-    def plotMarketSupplyAndDemand(self, market: Market, maxPrice=10):
-        prices = np.linspace(0, maxPrice, 100)
+    def plotMarketSupplyAndDemand(self, market: Market):
+        prices = np.linspace(0, self.maxPrice, 100)
         supply = market.supply(prices)
         demand = market.demand(prices)
         pSettled, qSettled = market.settledPriceAndQuantity()
@@ -170,18 +231,18 @@ class Plotter:
         ax.hlines([pSettled], [0], [qSettled], [self.neutralStyle], linestyles='dotted', label=f"p = {np.round(pSettled)}")
         ax.vlines([qSettled], [0], [pSettled], [self.neutralStyle], linestyles='dotted', label=f"q = {np.round(qSettled)}")
         ax.legend()
-        ax.set_title(f"Market for {market.name}")
-        ax.set_ylim(0, maxPrice)
+        ax.set_title(f"Market for {market.name} ({len(market.firms)} firms)")
+        ax.set_ylim(0, self.maxPrice)
+        ax.set_xlim(0, self.maxQuantity)
         return fig, ax
     
     def plotFirmCurves(self, firm: Firm, market: Market, maxPrice=10):
         prices = np.linspace(0, maxPrice, 100)
-        pMarket, _ = market.settledPriceAndQuantity(prices)
+        pMarket, _ = market.settledPriceAndQuantity()
         supply = firm.supply(prices)
         qProduced = firm.supply(pMarket)
 
         averageCosts = firm.averageCost(supply)
-        averageVariableCosts = firm.averageVariableCost(supply)
         profit = firm.profit(qProduced, pMarket)
         profitPerUnit = profit / qProduced
 
@@ -197,12 +258,12 @@ class Plotter:
 
         ax.plot(supply, prices, self.supplyStyle, label='supply=MC')
         ax.plot(supply, averageCosts, 'r.', label='AC')
-        # ax.plot(supply, averageVariableCosts, 'r--', label='AVC')
         ax.hlines([pMarket], [0], [np.max(supply)], [self.neutralStyle], linestyles='dotted', label=f"market-price = {np.round(pMarket)}")
         ax.vlines([qProduced], [0], [pMarket], [self.neutralStyle], linestyles='dotted', label=f"production = {np.round(qProduced)}")
         ax.legend()
         ax.set_title(f"Firm {firm.name} in {market.name}-market")
-        ax.set_ylim(0, maxPrice)
+        ax.set_ylim(0, self.maxPrice)
+        ax.set_xlim(0, self.maxQuantity / len(market.firms))
         return fig, ax
 
 
@@ -213,7 +274,7 @@ class Plotter:
 
 
 
-plotter = Plotter()
+plotter = Plotter(10, 1000)
 market = Market('Burgers', 30, 100)
 
 fig, axes = plotter.plotMarketSupplyAndDemand(market)
@@ -221,10 +282,11 @@ fig.show()
 fig, axes = plotter.plotFirmCurves(market.firms[0], market)
 fig.show()
 
-market.longTermCycle()
+for t in range(100):
+    market.longTermCycle()
 
-axes = Plotter.plotMarketSupplyAndDemand(market)
-axes.show()
+fig, axes = plotter.plotMarketSupplyAndDemand(market)
+fig.show()
 fig, axes = plotter.plotFirmCurves(market.firms[0], market)
 fig.show()
 
