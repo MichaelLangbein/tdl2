@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "python": "/home/michael/miniconda3/envs/thermal/bin/python"
+        },
+        {
             "name": "ts-node index.ts",
             "type": "node",
             "request": "launch",
