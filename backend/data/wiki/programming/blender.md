@@ -179,7 +179,8 @@ Reason: the child-curve would use its *own* value for `spline-parameter.factor`,
             - backface-culling: true
 
 
-
+## Transparent cartoon object
+https://www.youtube.com/watch?v=n9ZNGVvMOSQ
 
 
 
