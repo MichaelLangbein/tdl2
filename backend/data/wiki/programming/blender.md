@@ -165,6 +165,24 @@ Reason: the child-curve would use its *own* value for `spline-parameter.factor`,
 
 
 
+## Cell-shader (aka. Toon Shader)
+1. Filling:
+    - Add shader
+    - bsdf -> `bsdf-to-rgb` -> `color-ramp`(with your choice of colors, linear) -> output
+2. Outline
+    - Add solidify modifier
+        - normals: flip
+        - materials: pick nr of slot of the shader we're making in the next step
+    - Add shader (use it's number in the previous step)
+        - replace principled with diffuse-bsdf, pick a dark color
+        - settings:
+            - backface-culling: true
+
+
+
+
+
+
 
 
 
