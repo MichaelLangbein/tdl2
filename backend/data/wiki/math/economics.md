@@ -442,6 +442,33 @@ Running such a simulation for a long time however tends to yield a few useful re
 
 
 
+# Market interventions
+
+## Effect of subsidies on market
+Free market prices for two competing products.
+- I, the buyer, need to order 10 meals. They could be pizza or burgers, I have no preference (=perfectly substitutable).
+- The marginal price of the $b$th burger is $c(b) = 3b$
+- The marginal prices of the $p$th pizza is $c(p) = 2p$
+- So my total costs are $\int^pc(p)dp + \int^bc(b)db = \frac{3}{2}b^2 + p^2$ 
+- I want to minimize my total costs, subject to the condition $b + p = 10$
+- Minimizing with constrained optimization I get $\frac{p}{b} = \frac{3}{2}$, so I order 6 pizza's and 4 burgers.
+
+The big-burger lobby sees this and convinces congress to subsidize each burger with one dollar.
+This changes the marginal price of the $b$ th burger to $c(b) = 3b - 1$.
+
+- Again optimizing, I would now buy $4.2$ burgers and only $5.8$ pizza's. 
+
+What does this do to the welfare in the system?
+
+The first image shows the unimpeded market.
+<img src="../../assets/science/burgers_pizzas_unimpeded.png" width="70%"/>
+
+The second one shows the effect of the subsidies.
+<img src="../../assets/science/burgers_pizzas_with_subsidies.png" width="70%"/>
+
+
+
+
 
 # Preliminaries: utility functions
 

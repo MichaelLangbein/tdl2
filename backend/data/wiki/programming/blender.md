@@ -263,6 +263,24 @@ Some special tips for liquids:
 
 # Concepts behind geometry nodes
 
+**Socket shapes**:
+- Diamond socket means that the data is different for each point, circle socket means that the data is single for all points. 
+- The diamond socket with the dot simply means that you can use it either as diamond or as circle socket
+- You can pass data from circle to diamond, but not the opposite
+
+**Socket colors**:
+- Grey is a single value
+- Yellow is a tuple containing 3 values; the red, green, and blue channels of a color.
+- Purple is a tuple containing 3 values. Used for vector/coordinate information.
+- Green is a shader closure, representing a description of how light will interact with a surface or volume. This one can only be connected into other green sockets.
+
+Note that these will be converted to/from each other automatically as much as possible:
+- Yellow and purple can be connected to each other without any loss of information (under the hood they are pretty much the same).
+- Grey can be connected to yellow or purple without any loss of information (all three values in the tuple will the same value)
+- Yellow and purple can be connected to gray, but will be converted to a single grayscale value:
+
+
+
 ## selection
 - can be dragged to ghe group-input.selection field: then it's an input that is made available from the geom-node view to the geom-node-modifier menu on the right hand side
     - the value of that custom input may be set to some vertex-group
