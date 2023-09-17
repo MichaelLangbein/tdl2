@@ -27,34 +27,34 @@ Examples:
  - climate change
 
 
-## Hanibal crossing the alps: 0-sum games and dominant strategies
+## Hannibal crossing the alps: 0-sum games and dominant strategies
 
-Hanibal can pick the easy or the hard route to Italy.
-When picking the hard route, he'll lose one batallion.
+Hannibal can pick the easy or the hard route to Italy.
+When picking the hard route, he'll lose one battalion.
 Scipio can defend the hard or the easy path.
-When he meets Hanibal, Scipio will destroy one of Hanibals batallions.
+When he meets Hannibal, Scipio will destroy one of Hannibal's battalions.
 
 |         |      | Scipio |      |
 |         |      | Easy   | Hard |
 |---------|------|--------|------|
-| Hanibal | Easy | 1      | 0    |
+| Hannibal| Easy | 1      | 0    |
 |         | Hard | 1      | 2    |
 
 - For Scipio, there is no *dominating strategy*. 
     - If he defends the easy route,
-        - and Hanibal takes the easy route, Scipio was right to chose the easy route
-        - and Hanibal takes the hard route, Scipio should have defended the hard route
+        - and Hannibal takes the easy route, Scipio was right to chose the easy route
+        - and Hannibal takes the hard route, Scipio should have defended the hard route
     - If he defends the hard route,
         - and Hannibal takes the easy route, Scipio should have defended the easy route
         - and Hannibal takes the hard route, Scipio was right to chose the hard route
 
-Yet, Scipio is well advised to defend the easy route - not because he has a dominating strategy, but because he knows that Hanibal has one.
+Yet, Scipio is well advised to defend the easy route - not because he has a dominating strategy, but because he knows that Hannibal has one.
 
-- Hanibal has a dominating strategy: Choose the easy route.
-    - If Scipio defends the easy route, Hanibal is just as well off fighting Scipio as he is crossing the alps.
-    - If Scipio defends the hard route, Hanibal is way better off taking the easy route.
+- Hannibal has a dominating strategy: Choose the easy route.
+    - If Scipio defends the easy route, Hannibal is just as well off fighting Scipio as he is crossing the alps.
+    - If Scipio defends the hard route, Hannibal is way better off taking the easy route.
 
-So never mind what Scipio does, Hanibal is better of taking the easy route.
+So never mind what Scipio does, Hannibal is better of taking the easy route.
 
 > **Dominating strategy**:
 >
@@ -65,7 +65,7 @@ So never mind what Scipio does, Hanibal is better of taking the easy route.
 > **In picking a strategy, we can always delete dominated strategies.**
 
 
-Note that Hanibal crossing the alps is a *0-sum-game*: there is no global optimum, because the players utilities always sum to 0.
+Note that Hannibal crossing the alps is a *0-sum-game*: there is no global optimum, because the players utilities always sum to 0.
 
 
 ## Why gas-stations are so close to each other: iterative deletion of dominated strategies
