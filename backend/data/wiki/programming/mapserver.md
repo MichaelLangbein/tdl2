@@ -414,6 +414,71 @@ query with:
 - http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/mapfile4.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX=-77.2,-12.08,-77.04,-12.05&layers=damage&SRS=EPSG:4326&FORMAT=PNG&WIDTH=256&HEIGHT=256
 
 
+Also enabling GetFeatureInfo:
+```yml
+MAP
+    #...
+
+    # <--- start WMS information
+    NAME		"peru_70000011_eqDamageRef"
+    PROJECTION	
+        "init=epsg:4326"			# required; source-data projection
+    END
+
+    # Registering geojson as an output format
+    OUTPUTFORMAT  
+        NAME "application/json"
+        DRIVER "OGR/GEOJSON"
+        MIMETYPE "application/json"
+        FORMATOPTION "STORAGE=stream"
+        FORMATOPTION "FORM=SIMPLE"
+    END
+    OUTPUTFORMAT
+        NAME "XML"
+        DRIVER "OGR/GML"
+        MIMETYPE "text/xml"
+        FORMATOPTION "STORAGE=stream"
+        FORMATOPTION "FORM=SIMPLE"
+        FORMATOPTION "USE_FEATUREID=true"    
+      END    
+
+
+    WEB
+        METADATA
+            "wms_title"				                "peru_70000011_eqDamageRef"							        # required for GetCapabilities
+            "wms_onlineresource"	            "http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/70000011/eqDamageRef.map&version=1.1.0"       # required for GetCapabilities
+                                                                                                    # explicitly setting version=1.1.0, because 1.3.0 seems to have issues with axis-order:
+                                                                                                    # https://mapserver.org/ogc/wms_server.html#coordinate-systems-and-axis-orientation
+            "wms_srs"				                  "EPSG:4326"													# recomended; projections in which data can be served
+            "wms_enable_request"	            "GetCapabilities GetMap GetFeatureInfo GetLegendGraphic"	# mandatory
+            "wms_feature_info_mime_type"      "application/json,application/vnd.ogc.gml,text/html,text/plain,text/xml,text/xml; subtype=gml/3.1.1"  # to allow GetFeatureInfo to return geojson
+        END
+    END
+    # end WMS information ---->
+    
+    
+    LAYER
+        NAME 	"damage"
+        TYPE 	POLYGON
+        STATUS 	ON
+        DATA 	"eqDamageRef.shp"
+        
+        # <--- start WMS information
+        # PROJECTION: if not given, inherited from MAP
+        METADATA
+                "wms_title"	"damge"         # required for WMS
+                "wms_include_items" "all"   # required for WMS-GetFeatureRequest
+                "gml_include_items" "all"   # required for WMS-GetFeatureRequest
+        END
+        TEMPLATE	"empty" 	# required for GetFeatureInfo.    
+        
+        #...
+    END
+END
+```
+Query with: http://localhost/cgi-bin/mapserv?map=/var/www/mapserver/70000011/eqDamageRef.map&version=1.1.0&SERVICE=WMS&VERSION=1.1.0&REQUEST=GetFeatureInfo&BBOX=-77.12969038956312318,-12.09794644265776498,-77.0790800200242785,-12.04398300515776299&SRS=EPSG:4326&WIDTH=966&HEIGHT=1030&LAYERS=damage&STYLES=&FORMAT=image/png&QUERY_LAYERS=damage&INFO_FORMAT=application/json&X=113&Y=376
+
+
 ## WMS-TIME
 
 
