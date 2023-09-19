@@ -306,6 +306,8 @@ Consider this setup:
 - You can use $A$ in the `place-instances-on-points` node ...
 - ... but after (to the right of) that node, the instances will not be able to use $A$ before they're realized.
 
+*Example*: in a tree, branches change Euler-orientation with each generation. At the end I want to place clumps of leaves, but I need their orientation to be aligned with the trunk, not the latest branch.
+
 *Reason* (I think): 
 - $A$ will be split between the instances
 - But only after they're realized; because before that they must all have the same data.
