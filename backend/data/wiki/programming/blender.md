@@ -365,7 +365,7 @@ Easiest shown with this setup:
 
 This doesn't work with nested instances, however.
 That's because nested instance rotations are multiplied with their parent-instance rotations.
-
+The `vector` direction of `align-euler-to-vector` is interpreted as being in the parent-instances coordinate system, not in the global coordinate system (verified).
 
 
 # Exporting to GLTF and Threejs
