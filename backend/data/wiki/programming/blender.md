@@ -293,6 +293,22 @@ Note that these will be converted to/from each other automatically as much as po
     - the value of that custom input may be set to some vertex-group
 - can be some math-operation on the index-node
 
+
+## Realizing instances changes their Euler-rotation
+Without realizing: 
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/not_realizing.png">
+
+With realizing:
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/realizing.png">
+
+Reason:
+- Instances are always placed with their z along the parent's z; Then rotation is applied.
+- Realizing an instance sets it's z to the global z - it's like applying transforms.
+- In this case, for the horizontal lines:
+    - before realizing: a line pointing towards `local z`, with `local z` pointed towards `global x` (because first along parent's z == up, then rotated 90 degrees)
+    - after realizing: now a line pointing towards `local x`, with `local z` pointing towards `global z`.
+
+
 ## capture attribute
 - equivalent to a closure 
 - <node1> -> <capture-attribute>+<some input node (like position, spline-parameter, ...)>
@@ -313,9 +329,12 @@ Consider this setup:
 - But only after they're realized; because before that they must all have the same data.
 
 
+
+
+
 ## Align Euler to vector
 
-<img src="../../assets/programming/align_euler_to_vector.png" width="70%">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/align_euler_to_vector.png" width="70%">
 
 Easiest shown with this setup: 
 - create bezier curve

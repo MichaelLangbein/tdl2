@@ -461,10 +461,10 @@ This changes the marginal price of the $b$ th burger to $c(b) = 3b - 1$.
 What does this do to the welfare in the system?
 
 The first image shows the unimpeded market.
-<img src="../../assets/science/burgers_pizzas_unimpeded.png" width="70%"/>
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/burgers_pizzas_unimpeded.png" width="70%"/>
 
 The second one shows the effect of the subsidies.
-<img src="../../assets/science/burgers_pizzas_with_subsidies.png" width="70%"/>
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/burgers_pizzas_with_subsidies.png" width="70%"/>
 
 
 
