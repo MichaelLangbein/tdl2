@@ -263,6 +263,13 @@ Some special tips for liquids:
 
 # Concepts behind geometry nodes
 
+https://blender.stackexchange.com/questions/292009/geometry-nodes-what-does-capture-attribute-add-to-geometry
+
+- read right to left
+    - except circular sockets; they can as well be read left to right, because they have only one value. (i.e. they are calculated for each tree-user once per frame)
+- nodes that are not connected to an output aren't run at all
+
+
 **Socket shapes**:
 - Diamond socket means that the data is different for each point, circle socket means that the data is single for all points. 
 - The diamond socket with the dot simply means that you can use it either as diamond or as circle socket
@@ -291,6 +298,27 @@ Note that these will be converted to/from each other automatically as much as po
 - <node1> -> <capture-attribute>+<some input node (like position, spline-parameter, ...)>
 - <node1> -> <some mutation>
 - <captured attribute> can now be used after <some mutation> ... without that value having been mutated.
+
+**Note**:
+Consider this setup:
+- You have a curve $C$ with a captured attribute $A$
+- You place instances of some object $O$ on the points of that curve. 
+- You can use $A$ in the `place-instances-on-points` node ...
+- ... but after (to the right of) that node, the instances will not be able to use $A$ before they're realized.
+
+*Reason* (I think): 
+- $A$ will be split between the instances
+- But only after they're realized; because before that they must all have the same data.
+
+
+## Align Euler to vector
+
+<img src="../../assets/programming/align_euler_to_vector.png" width="70%">
+
+Easiest shown with this setup: 
+- create bezier curve
+- bezier --> curve-to-points --> instance-on-points (line-curve)
+- curve-to-points.normal --> align-Euler-to-Vector.vector --> instance-on-points.rotation
 
 
 

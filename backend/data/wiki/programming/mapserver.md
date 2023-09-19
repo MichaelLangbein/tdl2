@@ -461,7 +461,7 @@ MAP
         NAME 	"damage"
         TYPE 	POLYGON
         STATUS 	ON
-        DATA 	"eqDamageRef.shp"
+        DATA 	"eqDamageRef.shp"  # Can also be an OGR-sql query
         
         # <--- start WMS information
         # PROJECTION: if not given, inherited from MAP
