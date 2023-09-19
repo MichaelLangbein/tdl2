@@ -288,8 +288,8 @@ Note that these will be converted to/from each other automatically as much as po
 
 
 
-## selection
-- can be dragged to ghe group-input.selection field: then it's an input that is made available from the geom-node view to the geom-node-modifier menu on the right hand side
+## Selections
+- can be dragged to the `group-input.selection` field: then it's an input that is made available from the geom-node view to the geom-node-modifier menu on the right hand side
     - the value of that custom input may be set to some vertex-group
 - can be some math-operation on the index-node
 
@@ -339,13 +339,13 @@ For the same reason we have this effect:
 
 ## Instance rotation
 - in the `instances on points` node
-    - the `rotation` property is multiplied with any previous rotations that have occured.
+    - the `rotation` property is multiplied with any previous rotations that have occured. (verified to be true.)
 
 Inverting rotations is not actually trivial! Blender 4 should have an `invert rotation` node.
 However, [here](https://blenderartists.org/t/correctly-adding-rotations-to-referenced-instances-in-gn-such-as-lights/1452071/3)/[here](https://blenderartists.org/uploads/short-url/aB6JtJKWGQuzmfde4pNkRAC1tLt.blend) seems to be a nice solution.
 
 
-### Scaling elements from their individual center after having been realized
+### Scaling elements from their individual centers after having been realized
 Example: bunches of leaves:
  - instances have been realized because I need their z to go back to global z (since there is not yet a `invert rotation` node)
  - now I want to stretch them out along x and y, but not z (to acchieve a Japanese look)
