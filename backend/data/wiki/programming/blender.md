@@ -264,6 +264,13 @@ Some special tips for liquids:
 
 # Concepts behind geometry nodes
 
+https://blender.stackexchange.com/questions/292009/geometry-nodes-what-does-capture-attribute-add-to-geometry
+
+- read right to left
+    - except circular sockets; they can as well be read left to right, because they have only one value. (i.e. they are calculated for each tree-user once per frame)
+- nodes that are not connected to an output aren't run at all
+
+
 **Socket shapes**:
 - Diamond socket means that the data is different for each point, circle socket means that the data is single for all points. 
 - The diamond socket with the dot simply means that you can use it either as diamond or as circle socket
@@ -282,10 +289,29 @@ Note that these will be converted to/from each other automatically as much as po
 
 
 
-## selection
-- can be dragged to ghe group-input.selection field: then it's an input that is made available from the geom-node view to the geom-node-modifier menu on the right hand side
+## Selections
+- can be dragged to the `group-input.selection` field: then it's an input that is made available from the geom-node view to the geom-node-modifier menu on the right hand side
     - the value of that custom input may be set to some vertex-group
 - can be some math-operation on the index-node
+
+
+### Instance on points + Endpoint selection
+The selection refers to the parent's points, not the instance's.
+
+## Realizing instances changes their Euler-rotation
+Without realizing: 
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/not_realizing.png">
+
+With realizing:
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/realizing.png">
+
+Reason:
+- Instances are always placed with their z along the parent's z; Then rotation is applied.
+- Realizing an instance sets it's z to the global z - it's like applying transforms.
+- In this case, for the horizontal lines:
+    - before realizing: a line pointing towards `local z`, with `local z` pointed towards `global x` (because first along parent's z == up, then rotated 90 degrees)
+    - after realizing: now a line pointing towards `local x`, with `local z` pointing towards `global z`.
+
 
 ## capture attribute
 - equivalent to a closure 
@@ -293,8 +319,54 @@ Note that these will be converted to/from each other automatically as much as po
 - <node1> -> <some mutation>
 - <captured attribute> can now be used after <some mutation> ... without that value having been mutated.
 
+**Note**:
+Consider this setup:
+- You have a curve $C$ with a captured attribute $A$
+- You place instances of some object $O$ on the points of that curve. 
+- You can use $A$ in the `place-instances-on-points` node ...
+- ... but after (to the right of) that node, the instances will not be able to use $A$ before they're realized.
+
+*Example*: in a tree, branches change Euler-orientation with each generation. At the end I want to place clumps of leaves, but I need their orientation to be aligned with the trunk, not the latest branch.
+
+*Reason* (I think): 
+- $A$ will be split between the instances
+- But only after they're realized; because before that they must all have the same data.
+
+For the same reason we have this effect:
+- In a tree, instances of leave-clumps have different orientations.
+- I want to re-set their orientation to global z by using `align Euler to vector`
+- But that can't work before realization, because this rotation only has effect on the first instance?
 
 
+## Instance rotation
+- in the `instances on points` node
+    - the `rotation` property is multiplied with any previous rotations that have occured. (verified to be true.)
+
+Inverting rotations is not actually trivial! Blender 4 should have an `invert rotation` node.
+However, [here](https://blenderartists.org/t/correctly-adding-rotations-to-referenced-instances-in-gn-such-as-lights/1452071/3)/[here](https://blenderartists.org/uploads/short-url/aB6JtJKWGQuzmfde4pNkRAC1tLt.blend) seems to be a nice solution.
+
+
+### Scaling elements from their individual centers after having been realized
+Example: bunches of leaves:
+ - instances have been realized because I need their z to go back to global z (since there is not yet a `invert rotation` node)
+ - now I want to stretch them out along x and y, but not z (to acchieve a Japanese look)
+ - but `Transform` scales from the global center out
+
+Thats what `Scale Elements` is there to solve.
+
+
+## Align Euler to vector
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/align_euler_to_vector.png" width="70%">
+
+Easiest shown with this setup: 
+- create bezier curve
+- bezier --> curve-to-points --> instance-on-points (line-curve)
+- curve-to-points.normal --> align-Euler-to-Vector.vector --> instance-on-points.rotation
+
+This doesn't work with nested instances, however.
+That's because nested instance rotations are multiplied with their parent-instance rotations.
+The `vector` direction of `align-euler-to-vector` is interpreted as being in the parent-instances coordinate system, not in the global coordinate system (verified).
 
 
 # Exporting to GLTF and Threejs
