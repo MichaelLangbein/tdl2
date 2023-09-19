@@ -328,8 +328,22 @@ Consider this setup:
 - $A$ will be split between the instances
 - But only after they're realized; because before that they must all have the same data.
 
+For the same reason we have this effect:
+- In a tree, instances of leave-clumps have different orientations.
+- I want to re-set their orientation to global z by using `align Euler to vector`
+- But that can't work before realization, because this rotation only has effect on the first instance?
 
 
+## Instance on points + Endpoint selection
+The selection refers to the parent's points, not the instance's.
+
+## Scaling elements from their individual center after having been realized
+Example: bunches of leaves:
+ - instances have been realized because I need their z to go back to global z
+ - now I want to stretch them out along x and y, but not z (to acchieve a Japanese look)
+ - but `Transform` scales from the global center out
+
+Thats what `Scale Elements` is there to solve.
 
 
 ## Align Euler to vector
