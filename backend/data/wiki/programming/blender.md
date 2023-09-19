@@ -294,6 +294,9 @@ Note that these will be converted to/from each other automatically as much as po
 - can be some math-operation on the index-node
 
 
+### Instance on points + Endpoint selection
+The selection refers to the parent's points, not the instance's.
+
 ## Realizing instances changes their Euler-rotation
 Without realizing: 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/not_realizing.png">
@@ -334,12 +337,17 @@ For the same reason we have this effect:
 - But that can't work before realization, because this rotation only has effect on the first instance?
 
 
-## Instance on points + Endpoint selection
-The selection refers to the parent's points, not the instance's.
+## Instance rotation
+- in the `instances on points` node
+    - the `rotation` property is multiplied with any previous rotations that have occured.
 
-## Scaling elements from their individual center after having been realized
+Inverting rotations is not actually trivial! Blender 4 should have an `invert rotation` node.
+However, [here](https://blenderartists.org/t/correctly-adding-rotations-to-referenced-instances-in-gn-such-as-lights/1452071/3)/[here](https://blenderartists.org/uploads/short-url/aB6JtJKWGQuzmfde4pNkRAC1tLt.blend) seems to be a nice solution.
+
+
+### Scaling elements from their individual center after having been realized
 Example: bunches of leaves:
- - instances have been realized because I need their z to go back to global z
+ - instances have been realized because I need their z to go back to global z (since there is not yet a `invert rotation` node)
  - now I want to stretch them out along x and y, but not z (to acchieve a Japanese look)
  - but `Transform` scales from the global center out
 
@@ -355,7 +363,8 @@ Easiest shown with this setup:
 - bezier --> curve-to-points --> instance-on-points (line-curve)
 - curve-to-points.normal --> align-Euler-to-Vector.vector --> instance-on-points.rotation
 
-
+This doesn't work with nested instances, however.
+That's because nested instance rotations are multiplied with their parent-instance rotations.
 
 
 
