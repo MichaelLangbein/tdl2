@@ -303,10 +303,10 @@ Note that these will be converted to/from each other automatically as much as po
 
 ## Realizing instances changes their Euler-rotation
 Without realizing: 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/not_realizing.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_not_realizing.png">
 
 With realizing:
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/realizing.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_realizing.png">
 
 Reason:
 - Instances are always placed with their z along the parent's z; Then rotation is applied.
@@ -438,6 +438,11 @@ Reverts incorrectly. Reason:
 - When the $m$ leave-instances try to access the rotation, they don't get the same value that was fed into the parent-branch-instances' initiation-node.
 - Instead, the noise texture gets evaluated another time for the leave-instances, which returns completely different values than those which were used for the branch-instances.
 - So some value does arrive at `rotation`, but it has nothing to do with the rotation that was applied to the parent-branches.
+
+
+**Attempt 4**: Sample nearest
+- `Sample nearest` only works with meshes, not with curves
+- `Sample curve` ignores instances
 
 
 **Solution**:
