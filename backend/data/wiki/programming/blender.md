@@ -327,18 +327,14 @@ Consider this setup:
 - You have a curve $C$ with a captured attribute $A$
 - You place instances of some object $O$ on the points of that curve. 
 - You can use $A$ in the `place-instances-on-points` node ...
-- ... but after (to the right of) that node, the instances will not be able to use $A$ before they're realized.
+- ... but after (to the right of) that node, the instances will not be able to use $A$.
 
 *Example*: in a tree, branches change Euler-orientation with each generation. At the end I want to place clumps of leaves, but I need their orientation to be aligned with the trunk, not the latest branch.
 
-*Reason* (I think): 
-- $A$ will be split between the instances
-- But only after they're realized; because before that they must all have the same data.
+*Reason*: 
+- $A$ on a parent-object will not be passed along to instances placed on top of that object.
+- You could, however, make use of `sample nearest` to get to that parent's attribute after all.
 
-For the same reason we have this effect:
-- In a tree, instances of leave-clumps have different orientations.
-- I want to re-set their orientation to global z by using `align Euler to vector`
-- But that can't work before realization, because this rotation only has effect on the first instance?
 
 
 ## Instance rotation
