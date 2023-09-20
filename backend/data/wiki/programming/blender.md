@@ -25,6 +25,8 @@ Origin
 Apply all transforms
 - `<ctrl>-<a>`
 - moves the objects origin back into the world center
+- what this does: all transforms up to this point have been implemented through transform-matrices (translate, rotate, ...)
+- `apply` applies those matrices to all vertices in the object - so now the matrices become obsolete and are discarded, and the vertices are permanently reshaped.
 
 
 
@@ -296,7 +298,8 @@ Note that these will be converted to/from each other automatically as much as po
 
 
 ### Instance on points + Endpoint selection
-The selection refers to the parent's points, not the instance's.
+- The selection refers to the parent's points, not the instance's.
+- Endpoint-selection works with `subdivide curve`, but not with `curve to points`.
 
 ## Realizing instances changes their Euler-rotation
 Without realizing: 
@@ -367,6 +370,81 @@ Easiest shown with this setup:
 This doesn't work with nested instances, however.
 That's because nested instance rotations are multiplied with their parent-instance rotations.
 The `vector` direction of `align-euler-to-vector` is interpreted as being in the parent-instances coordinate system, not in the global coordinate system (verified).
+
+
+## Instances within instances, and attributes
+Consider this situation:
+- I want to model a tree.
+- The tree consists of branch-instances on a trunk.
+- Initially we'll assume that each branch is angled at a fixed angle from the branch, but in a second step we'll let that angle be random.
+- At the end of the branches I want to place clusters of leaves.
+- Those leaves need to have their z-axis aligned with the global z-axis.
+- For performance reasons I don't want to realize instances.
+
+The leave-instances inherit their Euler-rotation from their parent branches, which are themselves instances.
+My task is now to revert the leaves' rotation without realizing instances.
+
+In the screenshots below, instead of leaves I've placed simple x-y-z-axes, so that you can easily see the instances' rotations. The goal is to have all blue z-axis pointing globally upwards.
+
+
+**Background info**: Here's how I revert a rotation vector:
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_revert_rotation.png">
+(Thanks a lot to @[Robin Betts](https://blender.stackexchange.com/users/35559/robin-betts) for [this](https://blender.stackexchange.com/questions/280467/geometry-nodes-how-to-lock-a-geometrys-global-orientation-using-a-self-object)!)
+
+**Attempt 1**: `align Euler to vector` with the vector being `0, 0, 1`.
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_align_euler.png">
+
+Doesn't work. Reason: the `vector` in `align Euler to vector` is interpreted to be inside the coordinate system of each individual leave-instance. Since the instances are already aligned with z up, this has no effect.
+
+**Attempt 2**: Capture the parent's rotation attribute and revert it.
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_doesnt_revert_at_all.png">
+
+Doesn't do anything. Reason: 
+
+ - There are $n$ parent branches, each with $m$ leave instances on it.
+ - Each leave instance looks to the `rotation` input-field to get it's rotation.
+ - But there each instance finds not $1$, not $m$, but $n$ rotations. 
+ - Blender doesn't know how to match $n$ rotations to $m$ instances, so it does nothing.
+
+
+**Attempt 3**: Take the parent's rotation not as an attribute but as a singular value, and revert that.
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_reverts_correctly.png">
+
+This actually works! Reason:
+
+- Each of the $m$ instances look to the `rotation` field for their rotation.
+- Each one finds exactly the same, $1$ rotation: the one obtained from the pink vector-input with values `(0.0, 1.047, 0.0)`.
+
+
+*But*: this only works if there is a fixed rotation. If instead we use a noise-texture for the rotation, we get the following results: 
+
+**Attempt 2 with noise texture**:
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_noise_doesnt_revert_at_all.png">
+
+Doesn't do anything. Reason:
+
+- Just like *attempt 2*: Blender doesn't know how to match $m$ instances to $n$ attributes, so does nothing.
+
+**Attempt 3 with noise texture**:
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_noise_reverts_incorrectly.png">
+
+Reverts incorrectly. Reason:
+
+- When the $m$ leave-instances try to access the rotation, they don't get the same value that was fed into the parent-branch-instances' initiation-node.
+- Instead, the noise texture gets evaluated another time for the leave-instances, which returns completely different values than those which were used for the branch-instances.
+- So some value does arrive at `rotation`, but it has nothing to do with the rotation that was applied to the parent-branches.
+
+
+**Solution**:
+It seams that I have no choise than to realize the leaves.
+This way, all rotations are applied to the vertices, and all rotation-matrices are discarded, and the z-axis is reset to equal the global z-axis.
+
+
 
 
 # Exporting to GLTF and Threejs
