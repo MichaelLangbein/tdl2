@@ -360,7 +360,7 @@ Thats what `Scale Elements` is there to solve.
 
 ## Align Euler to vector
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/align_euler_to_vector.png" width="70%">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_align_euler_to_vector.png" width="70%">
 
 Easiest shown with this setup: 
 - create bezier curve
