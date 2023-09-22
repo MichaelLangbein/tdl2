@@ -27,6 +27,9 @@ Apply all transforms
 - moves the objects origin back into the world center
 - what this does: all transforms up to this point have been implemented through transform-matrices (translate, rotate, ...)
 - `apply` applies those matrices to all vertices in the object - so now the matrices become obsolete and are discarded, and the vertices are permanently reshaped.
+    - by the way, in the scene-explorer, 
+    - an orange triangle contains your transformation-matrices,
+    - and the green triangle within it contains the (applied) vertex positions and attributes.
 
 
 
