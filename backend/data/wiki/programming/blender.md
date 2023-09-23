@@ -181,6 +181,15 @@ Reason: the child-curve would use its *own* value for `spline-parameter.factor`,
             - backface-culling: true
 
 
+## Painterly look
+1. Bake an objects normals onto a texture
+    - engine: cycles
+    - select texture object and object
+    - bake: select normals and object
+2. Manually paint along those normals
+    - preserving the color, but adding texture with brush-strokes
+
+
 ## Transparent cartoon object
 https://www.youtube.com/watch?v=n9ZNGVvMOSQ
 
