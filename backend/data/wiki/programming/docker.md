@@ -220,45 +220,60 @@ The resulting network:
 
 
 
-## Volumes and bind-mounts
+## Volumes: volumes, bind-mounts, drivers
 
-| Docker Volumes	                                                                   | Bind Mounts                                                                                                  |
-|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| Volumes are created and managed by Docker	                                         | Bind mounts are not managed by Docker.                                                                       |
-| Volumes reside in /var/lib/docker/volumes	                                         | Bind mounts can be any location in the host machine                                                          |
-| Volume name is enough to mount it. The path is not required. 	                     | Bind mounts must provide path to host machine to be able to mount it.                                        |
-| Backup and recovery is easy	                                                       | Back up and recovery is a bit complicated. But not difficult if you know what folders to backup              |
-| Volumes can be interacted with Docker CLI and APIs. This is a clear advantage	     | Bind mounts cannot be accessed with CLI commands. You can still work with them on the host machine directly. |
-| Can be used with data created and used by container itself. 	                     | Can be used to access data from host machine                                                                 |
-| Volumes can be created while creating the container. 	                             | Bind mount folders get created when the folder does not exist in host machine                                |
-| Not recommended for huge data	                                                     | Can be used with huge data                                                                                   |
+- `--mount`
+  - `type`
+    - `type=bind`
+      - immediately reads in data from a local directory
+      - if the `dst` already contains data, it will be overwritten by the content of `src`, even if `src` doesn't exist yet
+    - `type=volume`
+      - if the `dst` already contains data, that data will be written to the `src`-volume
+      - `volume-driver=local` (default)
+        - Local driver. All options are like in linux's `mount(8)`. In particular, `type` and `bind` mean something different than the equally named docker concepts.
+        - `volume-opt=type=none`
+        - `volume-opt=o=bind`
+        - `volume-opt=device=/your/local/path`
+    - `type=tempfs`
+  - `src`
+    - `src=/some/local/path` if this is `type=bind`
+    - `src=volumeName` if this is `type=volume`
+  - `dst`
 
-### Volumes
-Persist state between container-restarts.
+Equivalent in a compose-file:
+```yml
 
-Cli:
-    - Anonymous volumes: 
-        - `docker run -v /var/lib/mysql/data` <-- docker automatically creates a volume under `var/lib/docker/volumes`
-    - Named volumes: 
-        - `docker run -v name:/var/lib/mysql/data` <-- just like anonymous, but named.
+version: '3'
+services: 
+    geoserver:
+      image: docker.osgeo.org/geoserver:2.23.1
+      ports:
+        - 8080:8080
+      environment:
+        - SKIP_DEMO_DATA=true
+      volumes:
+        - type: volume  # other options: bind, tempfs
+          source: containerData
+          target: /opt/geoserver_data/
+        - type: volume  # other options: bind, tempfs
+          source: containerConfig
+          target: /opt/apache-tomcat-9.0.74/webapps/geoserver/
 
-In docker-compose.yml:
- - In global volume-section, specify a named entry: `mysql-data:   `
- - In container-level volume-section, specify a mapping: `mysql-data:/var/lib/mysql`
+volumes:
+  containerData:
+    driver: local
+    driver_opts:  # local driver, therefore all driver_options are as in linux' `mount(8)`. Particularly, `type` and `bind` mean not the same thing as they do for docker.
+      type: none
+      o: bind
+      device: /localhome/lang_m13/Desktop/code/dlr-riesgos-frontend/cache/container/data
+  containerConfig:
+    driver: local
+    driver_opts:  # local driver, therefore all driver_options are as in linux' `mount(8)`. Particularly, `type` and `bind` mean not the same thing as they do for docker.
+      type: none
+      o: bind
+      device: /localhome/lang_m13/Desktop/code/dlr-riesgos-frontend/cache/container/config
+```
 
-
-Inspecting a volume:
-`docker container run --rm -it -v=<volume-to-inspect>:/tmp/myvolume busybox /bin/bash`
-
-
-### Bind-mounts
-Serves as a way for us to edit files while the container is running.
-
-From cli: 
-  - `docker run -v /home/michael/data:/var/lib/mysql/data` <-- explicitly naming the local source dir.
-In docker-compose.yml: 
-  - Don't specify a global volume-section entry.
-  - But do specify a container-level volume entry with a local path: `- ./dev:/var/www/html/sites`
 
 
 
