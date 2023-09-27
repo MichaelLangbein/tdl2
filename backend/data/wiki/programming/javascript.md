@@ -113,8 +113,8 @@ Used in node
 
 ## Binary data
 
-- Blob: read-only container for binary
-- Array-Buffer: editable container for binary
-- TypedArray: 
+- Blob: read-only container for binary.
+- Array-Buffer: editable container for binary. `const response = await fetch("alf.png"); const buffer = await response.arrayBuffer();`
+- TypedArray: Adds type-information to a buffer. `const arr = new Uint8Array(buffer);`
 
 
