@@ -1,5 +1,9 @@
 # geoserver
 
+- Rest-API: https://docs.geoserver.org/latest/en/api/#1.0.0/layers.yaml
+- Python client: https://github.com/gicait/geoserver-rest 
+
+
 ## wms-t
 
 Pretty flaky. *Might* work with this tutorial: 
