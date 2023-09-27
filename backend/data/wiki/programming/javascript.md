@@ -109,3 +109,12 @@ Used in webpack et.al.
 
 ### Commonjs
 Used in node
+
+
+## Binary data
+
+- Blob: read-only container for binary
+- Array-Buffer: editable container for binary
+- TypedArray: 
+
+
