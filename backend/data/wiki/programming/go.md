@@ -730,12 +730,28 @@ func insertActivity(db *sql.DB, activity *Activity) (int, error) {
 	return int(id), nil
 }
 
+func getActivity(db *sql.DB, id int) (Activity, error) {
+	row := db.QueryRow(`
+		select id, time, description from activities where id = ?
+	`, id)
+
+	activity := Activity{}
+	err := row.Scan(&activity.id, &activity.time, &activity.description)
+
+	return activity, err
+}
+
+
+// https://earthly.dev/blog/golang-sqlite/
+
 func main() {
 	file := "database.db"
 	db, _ := sql.Open("sqlite3", file)
 	initDb(db)
-	act := Activity{"Read some book", "14.10.1986"}
+	act := Activity{0, "Read some book", "14.10.1986"}
 	id, _ := insertActivity(db, &act)
-	fmt.Println(id)
+	actRetrieved, _ := getActivity(db, id)
+	fmt.Println(actRetrieved)
 }
+
 ```
