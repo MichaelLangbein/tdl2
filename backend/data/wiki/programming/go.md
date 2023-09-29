@@ -681,3 +681,61 @@ ReadAt is apparently called for the complete file (verify that), but maybe [Stre
 Indeed airbus' [osio](https://pkg.go.dev/github.com/airbusgeo/osio#section-readme) seems to be a replacement for my remote-reader.
 
 ## db's
+
+```bash
+go get github.com/mattn/go-sqlite3
+```
+
+```go
+package main
+
+import (
+	"database/sql"
+	"fmt"
+
+	_ "github.com/mattn/go-sqlite3"
+)
+
+
+type Activity struct {
+	description string
+	time        string
+}
+
+func initDb(db *sql.DB) {
+	db.Exec(`
+		create table if not exists activities (
+			id 			integer 	not null primary key,
+			time 		datetime 	not null,
+			description text
+		);
+	`)
+}
+
+func insertActivity(db *sql.DB, activity *Activity) (int, error) {
+	res, err := db.Exec(`
+		insert into activities values (NULL, ?, ?);
+	`, activity.time, activity.description)
+
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
+func main() {
+	file := "database.db"
+	db, _ := sql.Open("sqlite3", file)
+	initDb(db)
+	act := Activity{"Read some book", "14.10.1986"}
+	id, _ := insertActivity(db, &act)
+	fmt.Println(id)
+}
+```
