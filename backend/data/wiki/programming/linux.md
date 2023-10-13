@@ -154,7 +154,7 @@ PPA's worth knowing:
 - `/sbin`: system-wide executables for admin
 - `/etc`: system-wide config
 - `/var`: system-log-files
-- `/dev`: devices
+- `/dev`: device-files
 - `/proc`: process-files
 - `/lib`: kernel-modules and shared libraries
 - `/usr`

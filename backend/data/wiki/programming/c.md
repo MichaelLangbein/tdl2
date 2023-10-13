@@ -587,5 +587,5 @@ Your datastructures will usually contain elements of a type unknown to you. That
 
 **Never leave a pointer unassigned**
  You can create a pointer without having it point anywhere in particular: ` int* apt;`. 
- But what if later in your code you want to check if that pointer has been pointed to an `int` yet? `apt` is initially just going to point to some random location. This means that you cannot check `if(apt == NULL)`, because it's never going to be 0! For this reason, even if you don't want `apt` to point to anything yet, at least make sure it points to `NULL`. So always create pointers with `int* apt = NULL;`
+ But what if later in your code you want to check if that pointer has been pointed to an `int` yet? `apt` is initially just going to point to some random location. This means that you cannot check `if(apt == NULL)`, because it's never going to be 0! For this reason, even if you don't want `apt` to point to anything yet, at least make sure it points to `NULL`. So always create pointers with `int* apt = NULL;`. (`gcc -Wall` flags this as an error anyways.)
  
