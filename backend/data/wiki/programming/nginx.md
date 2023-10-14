@@ -176,9 +176,9 @@ Nginx has made some dubious decisions when it comes to naming.
 URI's are a superset of URL's, but nginx uses `$request_uri` to mean path and parameters.
 
 ## Reverse- and forward-proxy
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/../../programming/proxy_types.jpg" />
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/proxy_types.jpg" />
 
-```nginx
+```conf
 # handling http to ws connection upgrade
 # and ws connection close
 map $http_upgrade $connection_upgrade {
@@ -233,6 +233,35 @@ server {
 
 ```
 =======
+
+## Authentication
+
+1. Create password-file for user `jerry`: `htpasswd -c /etc/nginx/auth/.htpasswd jerry`
+2. Modify password-file for user `jerry`: `htpasswd    /etc/nginx/auth/.htpasswd jerry`
+3. Configure nginx 
+
+```conf
+server {
+        listen 443 ssl http2;
+        server_name localhost riesgos.dlr.de www.riesgos.dlr.de;
+
+        # Point to file where simple auth is stored
+        auth_basic_user_file /etc/nginx/auth/.htpasswd;
+
+        location /cacheServer/ {
+                # sub-route where no auth should be applied.
+                # both these lines are required.
+                auth_basic off;
+                proxy_set_header Authorization "";
+                # empty string is interpreted as non-existent.
+
+                proxy_pass  http://localhost:8080/;
+        }
+}
+```
+
+
+
 ## Variables
 https://nginx.org/en/docs/varindex.html
 

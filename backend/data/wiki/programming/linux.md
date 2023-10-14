@@ -47,13 +47,46 @@
 
 
 # Disks and mounts
-- `/etc/fstab`: config-file to mount devices
-- `mount`: cli to mount devices
-- `df -h`: show disk usage
-- `du . -h`: show file size in this folder
 - `lsblk`: lists disk devices
+  - stands for *block-devices*, which is a very general term for storage devices. Opposed to *character*-devices, which have you enter one bit and have the device receive that bit immediately, block devices receive data in chunks, called blocks.
+  - all device-names listed with `lsblk` are made available as files under `/dev/<name>`
+
 - `fdisk`: for partitioning disks
+  - `sudo fdisk -l`: shows device infos: start-bit, end-bit, size, ...
+  - Before modifying disk, unmount it! `sudo umount </dev/filename or mountpath>`
+  - `sudo fdisk /dev/<filename> ` -> interactive prompt
+    - none of your changes will be flushed to disk before you finalize at the end.
+    - `m`: help
+    - `p`: show partitions
+    - `g`: create new GPT partition table
+    - `n`: create new partition
+    - `w`: write to disk - finalizes all changes.
+  - This creates a partition-table and a partition ... but doesn't format the partition yet. For that there is `mkfs`
+
 - `mkfs`: creates a file-system on some device
+  - `sudo mkfs.ext4 /dev/sdb1 -n <some-nice-name>` : creates the linux-standard file-system, ext4, on the partition that's represented by the file `/dev/sdb1`
+  - `sudo mkfs.exfat /dev/sdb1 -n <some-nice-name>` : creates the windows-standard file-system, exfat, on the partition that's represented by the file `/dev/sdb1`
+
+- `mount`: cli to mount devices
+  - `mount`: list all mounted devices: file-location, mount-point, file-system-type, parameters.
+  - `sudo mount /dev/sdb1 /mnt/targetdir` : doesn't have to be /mount, but considered standard.
+  - `sudo mount -v -t nfs servername.de:/serverdir/home /mnt/localname -o rw,soft,retrans=8,sloppy,nfsvers=3`
+    - `-v`: verbose
+    - `-t nfs`: type nfs
+    - `-o`: nfs-specific options
+
+- `/etc/fstab`: config-file to mount devices ... just like `mount`, but run on every boot.
+  - source-device: either device-file in /dev/<name> or servername:/serverdir
+  - target-path: path where source should be mounted 
+  - file-system-type: nfs, cifs, ...
+  - file-system-specific options: as a comma-separated list without spaces
+  - dump: 0 == this file-system needs not be backed up
+  - pass: 0 == this file-system needs not be checked on reboot
+
+
+- `df -h`: show disk usage
+- `sudo ncdu`: like df, but much better
+- `du . -h`: show file size in this folder
 
 
 File-system types:
@@ -121,7 +154,7 @@ PPA's worth knowing:
 - `/sbin`: system-wide executables for admin
 - `/etc`: system-wide config
 - `/var`: system-log-files
-- `/dev`: devices
+- `/dev`: device-files
 - `/proc`: process-files
 - `/lib`: kernel-modules and shared libraries
 - `/usr`
