@@ -232,7 +232,7 @@ Java and c have some weird differences in array initialization. Consider array l
 int coeffs[5] = {1, 2, 3, 4, 5}; // c
 int[] coeffs = {1, 2, 3, 4, 5};  // java
 ```
-And also standard initialisation:
+And also standard initialization:
 ```
 int coeffs[5];   // c
 int[] coeffs = new int[5]; // java
