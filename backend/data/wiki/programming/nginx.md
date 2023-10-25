@@ -232,7 +232,20 @@ server {
 }
 
 ```
-=======
+
+### proxy pass
+
+```conf
+location /some/path/ {
+    proxy_pass http://otherserver.com/other/;
+}
+```
+A request to `yourserver.net/some/path/more` will be redirected to `http://otherserver.com/other/more`.
+`Proxy_pass` will cut of `/some/path/` and replace it with `/other/` ...
+**except** if you also have a `try_files` directive in this block.
+
+
+
 
 ## Authentication
 
