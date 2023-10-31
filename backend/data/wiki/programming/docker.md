@@ -322,10 +322,27 @@ docker container run --rm alpine:latest bin/sh -c "whoami"
 
 ## Networking
 
-### Default bridge
-Docker creates a new network interface `docker0`. This is the interface to the *default bridge*.
-New containers are by default deployed in the docker0/bridge network.
-Every new container then has its own interface (visible as `vethXXXX` in ifconfig) which are virtually plugged in to the docker0-bridge
+### Default network-driver: bridge
+- Docker creates a new network interface `docker0`. This is the interface to the *default bridge*. For more information on bridges, see `networking.md`
+- New containers are by default deployed in the docker0/bridge network.
+- Every new container then has its own interface (visible as `vethXXXX` in ifconfig) which are virtually plugged in to the docker0-bridge
+- They can communicate with each other through their `vethXXX` over the bridge with all other containers
+- They can **not**:
+    - access other containers by their name 
+        - because the containers share a DNS with the host, which is some public entity.
+        - **but**: if the containers are in a network (as is default for docker-compose), they get a dedicated dns, which *can* resolve container names
+        - they can always resolve each other via their ip-adresses, though. only that you only know those addresses after the container is started.
+    - access any container on another host
+        - but they **can** ping google.com. Because: the bridge has a default-gateway for anything it cannot resolve locally, and this default-gateway is the host. The host thus serves as a router for the containers.
+    - be accessed from the outside
+        - except if they have their ports exposed from the bridge-network with `-p hostport:containerport`
+
+
+### Only other network-driver worth knowing: host
+- all containers run in hosts network stack
+- you can't do `-p hostport:containerport`, because that is a bridge-only option
+- cannot resolve `http://containername`, can only resolve `http://hostip:targetcontainerport`
+- cannot call `localhost`, because that always gets resolved to the host
 
 
 ### Docker and UFW
