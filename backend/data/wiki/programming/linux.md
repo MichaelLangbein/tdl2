@@ -87,6 +87,7 @@
 - `df -h`: show disk usage
 - `sudo ncdu`: like df, but much better
 - `du . -h`: show file size in this folder
+    -  `du -a /<some-dir>/ | sort -n -r | head -n 20`
 
 
 File-system types:
