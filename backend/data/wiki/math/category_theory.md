@@ -16,6 +16,48 @@ And there is an identity-arrow called $id_X$, such that:
 
 
 
+Examples:
+- Functions (=morphisms) and types (=objects)
+- Directed graphs (only if all nodes have an edge to themselves)
+- Social graph
+
+
+```ts
+// Example implementation of the category of functions
+
+function identity<T>(arg: T) {
+    return arg;
+}
+
+function composition<A, B, C>(f: (a: A) => B, g: (b: B) => C) {
+    const composed = (a: A) => g(f(a));
+    return composed;
+}
+
+
+describe('category', () => {
+
+    const f =  (a: number) => `${a}`;
+    const g =  (b: string) => [b];
+
+    test('composition', () => {
+
+        const composed = composition(f, g);
+        const c = composed(3);
+        expect(c instanceof Array);
+
+    }),
+
+    test('identity and composition', () => {
+
+        const composed = composition(f, identity);
+        const c = composed(3);
+        expect(typeof c === "string");
+
+    })
+})
+
+```
 
 
 
