@@ -1,5 +1,16 @@
 # Category theory
 
+
+## Informal stuff
+- A simple program should look like this:
+    - $\partial$ surface < $\partial$ volume
+        - volume $\approx$ the knowledge required to implement a function
+        - surface $\approx$ the knowledge required to compose functions
+    - That is, when you use your api, you shouldn't have to know how each part of it is implemented.
+
+
+## Categories
+
 A category consists of:
 
 - Objects (denoted $A, B, C, ...$)
@@ -18,8 +29,10 @@ And there is an identity-arrow called $id_X$, such that:
 
 Examples:
 - Functions (=morphisms) and types (=objects)
-- Directed graphs (only if all nodes have an edge to themselves)
-- Social graph
+    - in fact, there is a category named - `Set`: objects=sets, morphisms=functions
+    - Turns out types are just sets
+- Directed graphs (only if all nodes have an edge to themselves; composition=connected)
+- Social graph (objects=people, arrows=know-each-other, composition=know-who-knows)
 
 
 ```ts
@@ -29,7 +42,7 @@ function identity<T>(arg: T) {
     return arg;
 }
 
-function composition<A, B, C>(f: (a: A) => B, g: (b: B) => C) {
+function composition<A, B, C>(g: (b: B) => C, f: (a: A) => B) {
     const composed = (a: A) => g(f(a));
     return composed;
 }
@@ -39,24 +52,33 @@ describe('category', () => {
 
     const f =  (a: number) => `${a}`;
     const g =  (b: string) => [b];
+    const h =  (c: string[]) => c.length;
 
     test('composition', () => {
-
-        const composed = composition(f, g);
+        const composed = composition(g, f);
         const c = composed(3);
         expect(c instanceof Array);
+    }),
 
+
+    test('composition is associative', () => {
+        const gf   = composition(g, f );
+        const h_gf = composition(h, gf);
+        const hg   = composition(h, g );
+        const hg_f = composition(hg, f);
+
+        const out_hg_f = h_gf(3);
+        const out_g_gf = hg_f(3);
+
+        expect(out_hg_f === out_g_gf);
     }),
 
     test('identity and composition', () => {
-
-        const composed = composition(f, identity);
+        const composed = composition(identity, f);
         const c = composed(3);
         expect(typeof c === "string");
-
     })
 })
-
 ```
 
 
