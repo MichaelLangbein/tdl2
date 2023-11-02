@@ -364,6 +364,62 @@ https://github.com/chaifeng/ufw-docker
     - 
 - `ENV` vs `ARG`
    - `ARG` will be available only at build time. Use this to update config-files on building.
-   - `ENV` will be available at run time. Use this to set environment-config in running process
+   - `ENV` will be available at build time *and* run time. Use this to set environment-config in running process
        - You can use `ENV` for updating config-files, too. For this, the `sed` code for updating that config file must be somewhere inside `CMD`.
        - But this will make `CMD` very long. Better create a `start.sh` script, which is run by `CMD`.
+
+
+## ENV variables
+
+- `ARG`: available during build time only
+  - from command-line: `--build-arg`
+  - from compose-file: `service: build: args: ...`
+- `ENV`: available during build time and during run time
+  - big caveat during build time: ENV can be set from an ARG at build time, but it cannot be set from the outside via CLI or compose.
+  - from command-line: `-e`
+  - from compose-file: `service: environment: ...`
+
+
+The fact that `ENV` is available during build- and run-time can cause confusion.
+
+1. ENV cannot be set from outside during build:
+```Dockerfile
+FROM busybox
+ENV greeting "default greeting"
+RUN echo $greeting > ./greeting.txt 
+CMD cat ./greeting.txt 
+```
+There is no command `docker image build -e greeting="yeehaw" --tag greeter .`, so we can't really set greeting from the outside.
+
+2. ENV inside a deep layer won't be over-written by `environment` at run-time, but in CMD it will:
+```Dockerfile
+FROM busybox
+ENV greeting "default hi"
+RUN echo $greeting > ./build_greeting.txt
+CMD cat ./build_greeting.txt && echo $greeting
+```
+```yml
+grtr:
+  build: ./greeter
+  ports: 
+    - 80:80
+  environment:
+    greeting: "Yeehaw, partner!"
+```
+This prints "default hi" and "Yeehaw, partner!".
+Reason: 
+- the file `build_greeting.txt` has been created during build-time, at which time the environment variable couldn't be set from the outside.
+- `CMD` was beeing called during run-time, during which `$greeting` *has* been substituted from the docker-compose file.
+
+
+
+
+Hierarchy:
+- `.env`:
+  - is substituted into `docker-compose.yml`'s `${variableName}`
+    - there it may be used in any place, not just in `environment`. It may as well be used for `args` or `ports` etc. So `.env` has nothing to do with `ENV`.
+  - it's **not** substituted into `Dockerfile`'s `ENV`
+- `docker-compose.yml`: 
+  - `environment` is substituted into `Dockerfile`'s `ENV`
+  - `args` is substituted into `Dockerfile`'s `ARG`
+- `Dockerfile`
