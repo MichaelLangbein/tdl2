@@ -244,8 +244,18 @@ A request to `yourserver.net/some/path/more` will be redirected to `http://other
 `Proxy_pass` will cut of `/some/path/` and replace it with `/other/` ...
 **except** if you also have a `try_files` directive in this block.
 
+#### To slash or not to slash?
+From https://dev.to/danielkun/nginx-everything-about-proxypass-2ona ... a *seriously* useful collection of tips. Includes good loogging.
 
+| location |         proxy_pass         |       Request       | Received by upstream |
+|:--------:|:--------------------------:|:-------------------:|:--------------------:|
+| /webapp/ | http://localhost:5000/api/ | /webapp/foo?bar=baz | /api/foo?bar=baz     |
+| /webapp/ | http://localhost:5000/api  | /webapp/foo?bar=baz | /apifoo?bar=baz      |
+| /webapp  | http://localhost:5000/api/ | /webapp/foo?bar=baz | /api//foo?bar=baz    |
+| /webapp  | http://localhost:5000/api  | /webapp/foo?bar=baz | /api/foo?bar=baz     |
+| /webapp  | http://localhost:5000/api  | /webappfoo?bar=baz  | /apifoo?bar=ba       |
 
+In other words: You usually always want a trailing slash, never want to mix with and without trailing slash, and only want without trailing slash when you want to concatenate a certain path component together (which I guess is quite rarely the case). Note how query parameters are preserved!
 
 ## Authentication
 
