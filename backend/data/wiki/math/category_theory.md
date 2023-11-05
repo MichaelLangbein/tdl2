@@ -97,6 +97,8 @@ There is a set-theoretic definition of a monoid being something more general tha
 Monoids are a special type of category, namely one with one one object.
 This doesn't make much sense for objects like the natural numbers: if we can only pick one natural number, then there also aren't many interesting morphisms on that number. But it does make sense if the one object is a type, like for example `int`.
 
+Contrary to categories, in monoids the composition between any two morphisms is always possible - that's because any morphism in a monoid is a mapping $X \to X$, and that is always composable with another $X \to X$.
+
 **Example 1:** The monoid of (`int`, `addX`, $\circ$)
 - Object: the type `int`
 - morphisms: the functions `add0`, `add1`, `add2`, ...
@@ -133,6 +135,87 @@ In general, to go from a category-theoretic monoid to a set-theoretic monoid: T 
 
 
 
+## Use of monoids as side-effects inside categories
+Consider a new category:
+- objects == Types
+- morphisms A->B == functions of `A` returning `Commented<B>`
+```ts
+// notice how `Commented.comment` is a (string, +)-monoid:
+
+interface Commented<T> {
+    thing: T
+    comment: string
+}
+
+// morphism number => boolean
+function isEven(n: number): Commented<boolean> {
+    const evn = n % 2 === 0;
+    return { thing: evn, comment: "isEven " };
+}
+
+// morphism boolean => boolean
+function negate(b: boolean): Commented<boolean> {
+    const neg = !b;
+    return { thing: neg, comment: "negate " };
+}
+
+// identity morphism
+function id<T>(v: T): Commented<T> {
+    return { thing: v, comment: "" };
+}
+
+type Morphism<A, B> = (input: A) => Commented<B>;
+
+function compose<A, B, C>(func1: Morphism<A, B>, func2: Morphism<B, C>): Morphism<A, C> {
+    function composed(inpt: A): Commented<C> {
+        const b = func1(inpt);
+        const c = func2(b.thing);
+        return { thing: c.thing, comment: b.comment + c.comment };
+    };
+    return composed;
+}
+
+describe("using monoids for side-effecs", () => {
+    test("application", () => {
+
+        const notEven = compose(isEven, negate);
+        const result = notEven(3);
+        expect(result.comment).toBe("isEven negate ");
+
+    });
+});
+```
+
+We can re-write this for any kind of monoid-like side effect like so:
+```ts
+// monoid of one element: the type E
+// monoid neutral-morphism
+type mempty<E> = () => E;
+// monoid composition
+type mappend<E> = (a: E, b: E) => E;
+
+
+interface Embellished<T, E> {
+    thing: T
+    embellishment: E
+}
+
+type Morphism<A, B, E> = (input: A) => Embellished<B, E>;
+
+function id<T, E>(v: T): Embellished<T, E> {
+    return { thing: v, embellishment: mempty<E>() };
+}
+
+function compose<A, B, C, E>(func1: Morphism<A, B, E>, func2: Morphism<B, C, E>): Morphism<A, C, E> {
+    function composed(inpt: A): Embellished<C, E> {
+        const b = func1(inpt);
+        const c = func2(b.thing);
+        return { thing: c.thing, embellishment: mappend(b.embellishment + c.embellishment) };
+    };
+    return composed;
+}
+
+```
 
 
 <br/>
