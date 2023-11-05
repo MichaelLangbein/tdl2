@@ -15,7 +15,8 @@ A category consists of:
 
 - Objects (denoted $A, B, C, ...$)
 - Arrows aka. morphisms from one object to another (denoted as arrows $f: A \to B$)
-- A composition-operation $\circ$ such that if  $f: A \to B \land g: B \to C$ then $g \circ f: A \to C$
+- A composition-operation $\circ$ that composes arrows (not objects!) such that if  $f: A \to B \land g: B \to C$ then $g \circ f: A \to C$
+    - Note that $\circ$ doesn't have to be applicable to all morphisms, just to those with a shared target/source object.
 
 Where $\circ$ is associative: 
 - assume $f: A \to B \land g: B \to C \land h: C \to D$
@@ -33,6 +34,12 @@ Examples:
     - Turns out types are just sets
 - Directed graphs (only if all nodes have an edge to themselves; composition=connected)
 - Social graph (objects=people, arrows=know-each-other, composition=know-who-knows)
+
+Counter-examples:
+- $(\mathbb{Z}, -1, \circ)$, because $1 - (1 - 1) \neq (1 - 1) - 1$
+
+### Hom sets
+Given objects $A$ and $B$ in category $C$, a Hom set $Hom_C(A,B)$ is the set of all morphisms from $A$ to $B$.
 
 
 ```ts
@@ -83,6 +90,59 @@ describe('category', () => {
 
 
 
+
+## Monoids
+There is a set-theoretic definition of a monoid being something more general than an algebra, but we'll use the category-theoretic definition instead.
+
+Monoids are a special type of category, namely one with one one object.
+This doesn't make much sense for objects like the natural numbers: if we can only pick one natural number, then there also aren't many interesting morphisms on that number. But it does make sense if the one object is a type, like for example `int`.
+
+**Example 1:** The monoid of (`int`, `addX`, $\circ$)
+- Object: the type `int`
+- morphisms: the functions `add0`, `add1`, `add2`, ...
+    - `addX` are trivially associative
+    - `add0` serves as the identity-morphism
+
+**Example 2:** The monoid of (`string`, `+`, $\circ$)
+
+**Example 3:** The monoid of (`Maybe<T>`, `map<F>`, $\circ$)
+
+### Set-theoretic definition
+A monoid is a:
+- set of objects
+- with a binary operation
+    - that is associative
+    - and has a neutral element in the set
+
+### Relating set-monoids to category-monoids
+Example with the (`Int`, +) monoid
+
+- set-theoretic:
+    - set: all the integers
+    - operation: `+`
+        - is associative
+        - $0$ is the identity element
+- category-theoretic:
+    - objects: a single one: the type `int`
+    - arrows: `is0`, `is1`, `is2`, ...
+    - composition: `is3` $\circ$ `is2` = `is5`
+        - is associative
+        - `is0` is the identity arrow
+
+In general, to go from a category-theoretic monoid to a set-theoretic monoid: T (set-theoretic) set equals the (category-theoretic) arrows.
+
+
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Preliminary implementation ... to be revised
 
