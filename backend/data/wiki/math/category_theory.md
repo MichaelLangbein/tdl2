@@ -8,6 +8,15 @@
         - surface $\approx$ the knowledge required to compose functions
     - That is, when you use your api, you shouldn't have to know how each part of it is implemented.
 
+## Monad applications
+- Logging
+- Error handling
+- Parsers
+- Promises
+- Membranes
+
+@TODO: implement those examples
+
 
 ## Categories
 
@@ -99,6 +108,8 @@ This doesn't make much sense for objects like the natural numbers: if we can onl
 
 Contrary to categories, in monoids the composition between any two morphisms is always possible - that's because any morphism in a monoid is a mapping $X \to X$, and that is always composable with another $X \to X$.
 
+> For use in programming, a monoid is a type `T` that can be combined with another `T` which yields yet another `T`.
+
 **Example 1:** The monoid of (`int`, `addX`, $\circ$)
 - Object: the type `int`
 - morphisms: the functions `add0`, `add1`, `add2`, ...
@@ -139,6 +150,8 @@ In general, to go from a category-theoretic monoid to a set-theoretic monoid: T 
 Consider a new category:
 - objects == Types
 - morphisms A->B == functions of `A` returning `Commented<B>`
+This category is important - it's known as a **Kleisli-category**.
+
 ```ts
 // notice how `Commented.comment` is a (string, +)-monoid:
 
