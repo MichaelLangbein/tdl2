@@ -8,6 +8,10 @@
         - surface $\approx$ the knowledge required to compose functions
     - That is, when you use your api, you shouldn't have to know how each part of it is implemented.
 
+## Useful links
+- https://dev.to/airtucha/functors-and-monads-in-plain-typescript-33o1
+- https://www.youtube.com/watch?v=ENo_B8CZNRQ
+
 ## Monad applications
 - Logging
 - Error handling
