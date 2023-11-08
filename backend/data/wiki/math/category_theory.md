@@ -24,7 +24,7 @@
 
 ## Categories
 
-A category consists of:
+A category $\mathscr{C}$ consists of:
 
 - Objects (denoted $A, B, C, ...$)
 - Arrows aka. morphisms from one object to another (denoted as arrows $f: A \to B$)
@@ -52,7 +52,7 @@ Counter-examples:
 - $(\mathbb{Z}, -1, \circ)$, because $1 - (1 - 1) \neq (1 - 1) - 1$
 
 ### Hom sets
-Given objects $A$ and $B$ in category $C$, a Hom set $Hom_C(A,B)$ is the set of all morphisms from $A$ to $B$.
+Given objects $A$ and $B$ in category $\mathscr{C}$, a Hom set $Hom_\mathscr{C}(A,B)$ is the set of all morphisms from $A$ to $B$.
 
 
 ```ts
@@ -110,9 +110,9 @@ There is a set-theoretic definition of a monoid being something more general tha
 Monoids are a special type of category, namely one with one one object.
 This doesn't make much sense for objects like the natural numbers: if we can only pick one natural number, then there also aren't many interesting morphisms on that number. But it does make sense if the one object is a type, like for example `int`.
 
-Contrary to categories, in monoids the composition between any two morphisms is always possible - that's because any morphism in a monoid is a mapping $X \to X$, and that is always composable with another $X \to X$.
+Contrary to general categories, in monoids the composition between any two morphisms is always possible - that's because any morphism in a monoid is a mapping $X \to X$, and that is always composable with another $X \to X$.
 
-> For use in programming, a monoid is a type `T` that can be combined with another `T` which yields yet another `T`.
+> In programming we almost always care only about the category (`Types`, `functions`). There, a monoid is a single type `T` plus the collection of functions `(in: T) => T`.
 
 **Example 1:** The monoid of (`int`, `addX`, $\circ$)
 - Object: the type `int`
@@ -154,7 +154,9 @@ In general, to go from a category-theoretic monoid to a set-theoretic monoid: T 
 Consider a new category:
 - objects == Types
 - morphisms A->B == functions of `A` returning `Commented<B>`
+
 This category is important - it's known as a **Kleisli-category**.
+(It'll later turn out that `Commented` is a monad, called the *writer*-monad)
 
 ```ts
 // notice how `Commented.comment` is a (string, +)-monoid:
@@ -233,6 +235,73 @@ function compose<A, B, C, E>(func1: Morphism<A, B, E>, func2: Morphism<B, C, E>)
 }
 
 ```
+
+
+Quite analogously there is also the `optional` monad.
+```ts
+class Optional<T> {
+    constructor(private _value?: T) {}
+    public isValid() { return !!this._value; }
+    public value(): T {
+        if (this.isValid()) return this._value as T;
+        else throw Error(`Optional: check 'isValid' before accessing this value.`);
+    }
+}
+
+function identity(a: number): Optional<number> {
+    return new Optional(a);
+}
+
+function root(a: number): Optional<number> {
+    if (a <= 0.0) return new Optional<number>();
+    else return new Optional(Math.sqrt(a));
+}
+
+function inverse(a: number): Optional<number> {
+    if (a === 0.0) return new Optional<number>();
+    else return new Optional(1.0 / a);
+}
+
+function compose(f1: (a: number) => Optional<number>, f2: (b: number) => Optional<number>) {
+    function composed(a: number) {
+        const v1 = f1(a);
+        if (!v1.isValid()) return new Optional<number>();
+        const v2 = f2(v1.value());
+        return v2;
+    }
+    return composed;
+}
+
+
+describe("optional", () => {
+    test("test validity", () => {
+        const rtInv = compose(inverse, root);
+        const val = rtInv(0.2);
+        
+        expect(val.isValid());
+        expect(val.value() === Math.sqrt(1 / 0.2));
+    })
+});
+```
+
+
+## Products and coproducts
+
+Sometimes we want to single out particular objects of a category.
+Since we only know about objects and arrows, it's a little hard to select one particular object - after all, we can't just select it by name, only by its relations.
+
+A common way to do this is as follows:
+- pick a pattern (a graph of objects and arrows)
+- look for all occurances of that pattern
+- rank those occurances by some measure
+
+
+### Example: picking an "initial object"
+- Pattern: match object $X$ if $\forall Y \in \mathscr{C}: \exists X \to Y$
+    - This pattern is neiter guaranteed to exist, nor to be unique
+    - But its the next best thing: if it does exist, its guaranteed to be unique up to isomorphism
+
+
 
 
 <br/>
