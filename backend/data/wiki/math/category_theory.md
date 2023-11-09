@@ -285,7 +285,7 @@ describe("optional", () => {
 ```
 
 
-## Products and coproducts
+## Universal construction
 
 Sometimes we want to single out particular objects of a category.
 Since we only know about objects and arrows, it's a little hard to select one particular object - after all, we can't just select it by name, only by its relations.
@@ -294,6 +294,9 @@ A common way to do this is as follows:
 - pick a pattern (a graph of objects and arrows)
 - look for all occurances of that pattern
 - rank those occurances by some measure
+    - usually, prove that they are "unique up to unique isomorphism" (see a few sections later)
+
+This process is called **universal construction**.
 
 
 ### Example: picking an "initial object"
@@ -316,9 +319,10 @@ Example: Cindy and Julia are both therminal.
              │                     Julia
    Andrew  ──┴───────────────────►
 
+(arrows to self omitted)
 ```
 
-## Isomorphism and uniqueness up to isomorphism
+## Isomorphism and "uniqueness up to unique isomorphism"
 
 Consider two morphisms $f, g \in \mathscr{C}$. 
 
