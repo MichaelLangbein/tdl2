@@ -15,7 +15,7 @@
 ## Monad applications
 - Logging
 - Error handling
-- Parsers
+- Parsers 
 - Promises
 - Membranes
 
@@ -301,8 +301,45 @@ A common way to do this is as follows:
     - This pattern is neiter guaranteed to exist, nor to be unique
     - But its the next best thing: if it does exist, its guaranteed to be unique up to isomorphism
 
+### Example: picking a "terminal object"
+$T \in \mathscr{C}$:term $\iff$ $\forall X \in \mathscr{C}: \exists ! f: X \to T$
 
+Example: Cindy and Julia are both therminal.
+```txt
+        Joey  ─┬─────────────────►
+               │                   Cindy
+             ┌─┼─────────────────►
+             │ │                    ▲ │
+             │ │                    │ │
+             │ │                    │ ▼
+             │ └─────────────────►
+             │                     Julia
+   Andrew  ──┴───────────────────►
 
+```
+
+## Isomorphism and uniqueness up to isomorphism
+
+Consider two morphisms $f, g \in \mathscr{C}$. 
+
+$(f, g):\text{iso} \iff f \circ g = id \land g \circ f = id$
+
+**Theorem**: Two terminal objects are identical up to unique isomorphism.
+> $Let A, B \in \mathscr{C}$
+> Assume $A$:term $\land B$:term.
+> Proof that $\exists! (f, g): iso_{A,B}$
+>
+>> Try $f: A \to B$ and $g: B \to A$.
+>> 
+>> $f$ must exist and be unique because $B$:term.
+>>
+>> $g$ must exist and be unique because $A$:term.
+>>
+>> Since $f: A \to B$ and $g: B \to A$, we have:
+>> - $f \circ g = id_A$ 
+>> - $g \circ f = id_B$
+
+The same holds for initial objects.
 
 <br/>
 <br/>
