@@ -7,6 +7,8 @@ import mlg, { CustomLayerInterface } from 'maplibre-gl';
 import mlc from 'maplibre-contour';
 import { Camera, DirectionalLight, Matrix4, Scene, Vector3, WebGLRenderer } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
+import { ArcLayer } from '@deck.gl/layers/typed';
+import { MapboxLayer } from '@deck.gl/mapbox/typed';
 
 
 const demSource = new mlc.DemSource({
@@ -151,7 +153,7 @@ const modelTransform = {
 }
 
 
-const customLayer: CustomLayerInterface = {
+const threejsLayer: CustomLayerInterface = {
   id: 'model',
   type: 'custom',
   renderingMode: '3d',
@@ -210,14 +212,27 @@ const customLayer: CustomLayerInterface = {
     this.renderer.render(this.scene, this.camera);
     map.triggerRepaint();
 
-
-
   }
 };
 
-map.on('style.load', () => {
-  map.addLayer(customLayer);
+const deckGlLayer = new MapboxLayer<ArcLayer>({
+  id: 'deckGlLayer',
+  data: [{
+    source: [11.3, 47.2],
+    target: [11.4, 47.3]
+  }],
+  getSourcePosition: d => d.source,
+  getTargetPosition: d => d.target,
+  getSourceColor: [255, 208, 0],
+  getTargetColor: [0, 128, 255],
+  getWidth: 8
 });
+
+map.on('style.load', () => {
+  map.addLayer(threejsLayer);
+  // map.addLayer(deckGlLayer);
+});
+
 
 ```
 
