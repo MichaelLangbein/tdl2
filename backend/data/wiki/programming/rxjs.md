@@ -425,9 +425,12 @@ var1.next(2);
 
 https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/creating.md#cold-vs-hot-observables
 
-Per default all rxjs observables are 
-- cold: produce only values when currently subscribed to (except `fromEvent(mouse)`)
-- unicast: are re-executed for every subscriber
+Per default all rxjs observables are cold:
+- produce only values when currently subscribed to 
+- are re-executed for every subscriber (aka unicast)
+Exceptions: `fromEvent(mouse)` is per default hot:
+- hot observables produce data even when not subscribed to
+- hot observables share run once and all subscribers share that one value (aka multicast)
 
 
 ```ts
@@ -439,12 +442,55 @@ var3.subscribe(val => console.log(val));
 // `called` being logged twice
 ```
 
-There are *four* (!) mechanisms to avoid this:
-- share
-- shareReplay
-- publish
-- multicast
+There are *three* (!) mechanisms to avoid this:
+- `.pipe(multicast(new Subject()))`: makes hot (+multicast)         
+    - Imagine a live performance: if you come late, you'll miss a part
+- `share`: shorthand for `.pipe(multicast(new Subject(), refCount())`, makes hot (+multicast) after first subscription and only while at least one subscribed           
+    - Imagine a live performance where the artist take a break when there's noone in the audience
+- `shareReplay`: shorthand for `.pipe(multicast(new Subject(), refCount(), cacheAll())` makes hot (+multicast) after first subscripion and only while at least one subscribed, all later subscriptions get the missed values replayed
+    - Imagine a live performance where you can watch a video of what you've missed when you come late
+- `publish` followed by `connect`: shorthand for `.pipe(multicast(new Subject()))`
 
+
+... ugh, this has now been deprecated in version 8.
+- `share`: turns hot (+multicast) after first subscription. Remains active as long as at least one subscriber.
+    example code: ```ts
+    const name = new BehaviorSubject({first: "Michael", last: "Langbein"})
+    const sharedName = name.pipe(
+        tap(v => console.log("called")),
+        share()
+    );
+    const first = sharedName.pipe(map(v => v.first)).subscribe(v => console.log("first:", v));  
+    // called first:michael 
+    const last = sharedName.pipe(map(v => v.last)).subscribe(v => console.log("last:", v));
+    // no output
+    name.next({ first: "Detelev", last: "Vetten"}); 
+    // called first:detlev last:vetten
+    ```
+- `shareReplay`: like `share`, but replays past events if a subscriber comes late.
+    example code: ```ts    
+    const name = new BehaviorSubject({first: "Michael", last: "Langbein"})
+    const sharedName = name.pipe(
+        tap(v => console.log("called")),
+        shareReplay()
+    );
+    const first = sharedName.pipe(map(v => v.first)).subscribe(v => console.log("first:", v));  
+    // called first:michael 
+    const last = sharedName.pipe(map(v => v.last)).subscribe(v => console.log("last:", v));
+    // last:langbein
+    name.next({ first: "Detelev", last: "Vetten"}); 
+    // called first:detlev last:vetten
+    ```
+- `connectable`: a cold observable for all subscriptions that subscribe before `connect()` is called, a hot one after that.
+    example code: ```ts
+    const source = new BehaviorSubject({first: "Michael", last: "Langbein"});
+    const name = source//.pipe(tap(v => console.log("called")));
+    const connable = connectable(name);
+    const first = name.pipe(map(v => v.first)).subscribe(v => console.log("first:", v));  
+    connable.connect();
+    const last = name.pipe(map(v => v.last)).subscribe(v => console.log("last:", v));
+    source.next({ first: "Detelev", last: "Vetten"}); 
+    ```
 
 ## Common rxjs operators
 <img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs1.jpg">

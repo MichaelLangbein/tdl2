@@ -1,5 +1,6 @@
 # Haskell
 
+Basic haskell syntax
 ```haskell
 -- list comprehensions are very much like math's set comprehensions
 removeNonUpperCase :: [Char] -> [Char]
@@ -11,17 +12,114 @@ removeNonUpperCase st = [c | c <- st, c `elem` ['A' .. 'Z']]
 
 -- type annotations: Upper case = concrete, lower case = template
 
+-- pattern matching
+lucky :: ( Integral a ) => a -> String
+lucky 7 = "LUCKY NUMBER SEVEN!"
+lucky x = "Sorry, you’re out of luck, pal!"
+
+-- data types
+data Point = Point Float Float
+    deriving (Show)
+-- Shape is a type, but Circle and Rectangle are value-constructors, which are just functions
+data Shape = Circle Point Float | Rectangle Point Point
+    deriving (Show)
+
+area :: Shape -> Float
+area (Circle _ r) = pi * r^2
+area (Rectangle (Point x1 y1) (Point x2 y2)) = (abs $ x2 - x1) * (abs $ y2 - y1)
+
+
+-- records: like objects in js
+data Person = Person {
+    firstName :: String,
+    lastName :: String,
+    age :: Int
+} deriving (Show)
+
+-- alias
+type Code = String
+
+
 -- type classes: like interfaces
 ghci > : t (==)
 (==) :: ( Eq a ) => a -> a -> Bool
 -- reads: a must be a member of the `Eq` type-class
 
--- pattern matching
-lucky :: ( Integral a ) => a -> String
-lucky 7 = " LUCKY NUMBER SEVEN ! "
-lucky x = " Sorry , you ’ re out of luck , pal ! "
+-- type class: an interface
+class Eq a where
+    (==) :: a -> a -> Bool
+    (/=) :: a -> a -> Bool
+    x == y = not (x /= y)
+    x /= y = not (x == y)
+
+-- data: a synonym-type
+data TrafficLight = Red | Yellow | Green
+
+-- implementing an interface. 
+-- Because class Eq defines == and /= in terms of each other, 
+-- here we need only overwrite one of them.
+instance Eq TrafficLight where
+    Red == Red = True
+    Yellow == Yellow = True
+    Green == Green = True
+    _ == _ = False
 
 ```
+
+Maybe, Either:
+```haskell
+data Maybe x = Just x | Nothing
+    deriving (Show)
+
+data Either a b = Left a | Right b
+    deriving (Show)
+```
+
+Functors:
+```haskell
+-- a functor is anything to which an fmap function can be applied
+-- that is, take a function a->b and return the wrapped equivalent fa -> fb
+-- or that takes a function a->b and a applies it to a wrapped fa, yielding the wrapped fb
+-- that means, a functor is something that can be mapped over
+class Functor f where
+    fmap :: (a -> b) -> f a -> f b
+
+-- compare with map :: (a->b) -> [a] -> [b]
+-- map is really just a special case of functors which works only with lists.
+
+-- Maybe as a functor
+instance Functor Maybe where
+    fmap f (Just x) = Just (f x)
+    fmap f Nothing = Nothing
+-- applied: fmap someFunction(a->b) Maybe(a) -> Maybe(b)
+
+fmap (*2) (Just 200) -- Just 400
+
+instance Functor Tree where
+    fmap f EmptyTree = EmptyTree
+    fmap f (Node x left right) = Node (f x) (fmap f left) (fmap f right)
+
+
+-- Either functor. Left is considered an error-placeholder and needs no mapping
+instance Functor (Either a) where
+    fmap f (Right x) = Right (f x)
+    fmap f (Left x) = Left x
+
+
+```
+
+
+Monoids:
+```haskell
+class Monoid m where
+    mempty :: m
+    mappend :: m -> m -> m
+    mconcat :: [m] -> m
+    mconcat = foldr mappend mempty
+```
+
+
+
 
 # Category theory
 
