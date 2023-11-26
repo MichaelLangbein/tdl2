@@ -388,7 +388,7 @@ Originally, there were:
 - Behaviors: continuous, time-varying values
 - Events: discrete, time-stamped values
 
-It has been argued that each one can be used to represent the other, which is why now one uses the discrete-only *observables* instead.
+It has been argued that each one can be used to represent the other, which is why now one uses the discrete-only *signals* (or *observables* in some implementations, like rxjs) instead.
 
 ### Push vs pull
 Originally, FRP was implemented as pull-only, nowadays rxjs is push-only.
@@ -401,7 +401,7 @@ From **A Survey on Reactive Programming (2012)**:
 |                                                                           | Haskell/Fran                                                                                                     | rxjs                                                                                                                                                                          |
 |---------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | allows continuous behavior                                                | yes, behaviors and events                                                                                        | no, events only                                                                                                                                                               |
-| Propagation of changes                                                    | target pulls when required  (Haskell is lazy, but can lead to long wait-times when suddenly needing to catch up) | source pushes (but only once subscribed to)  As done in all eager languages; but causes re-computation.                                                                       |
+| Propagation of changes                                                    | target pulls when required  (Haskell is lazy, but can lead to long wait-times when suddenly needing to catch up) | source pushes (but only once subscribed to)  As done in all eager languages; but causes re-computation. Rxjs has no simple way to prevent re-computation, requires `share, shareReplay, publish` or `multicast`.                                                                      |
 | Glitches                                                                  | Cannot happen in pull-systems                                                                                    | When a value is used while it hasn't yet received the latest updates from upstream. Example:  `var1 = 1; var2 = var1 * 1; var3 = var1 + var2;`  Rxjs has no solution to this. |
 | Lifting: using operators (like +, *) on Observables/Behaviors/Events      | yes                                                                                                              | No, js allows no operator overloading.                                                                                                                                        |
 | Multidirectionality: F = (C * 1.8) + 32 ... now does updating F update C? | No - currently no language known that does that. More of a constraint-solving thing.                             | Nope.                                                                                                                                                                         |
@@ -456,3 +456,22 @@ Downstream observables, never mind if they are hot or cold, pull data from upstr
     - even if those downstream subscribers are later merged together again.
 <img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/rxjs3.jpg">
 
+
+
+## Other (arguably better) approaches
+- Elm (https://elm-lang.org/assets/papers/concurrent-frp.pdf)
+    - Identifies two problems:
+        - global delays: the original FRP paper assumes that update times can approach zero, but that is an unrealistic assumption. In reality, long updates can slow down the whole program.
+        - uneccessary re-computation: the original FRP paper assumes that continuous behavoirs are always changing, thus requireing a re-computation in every moment in time. A similar issue exists in rxjs, though for a different reason: rxjs doesn't have behaviors, but is *still* unicast by default.
+    - Design:
+        - no instant update assumption
+        - only discrete signals
+            - implemented with pushing from source
+        - message-passing concurrency
+            - compiler splits work in several workers so that independent ui-components may be updated independently
+            - parts that don't need to happen in global order can be annotated with `async` and will run in a separate thread without the need for expensive synchronisation
+        - safe signals: compiler allows no signals of signals
+            - signals are functors, but not monads
+        - no duplicate computation in signals:
+            - compiler remembers old values
+    - Elm has actually abandoned signals - and with them FRP - in release 0.17, in favor of subscriptions: https://elm-lang.org/news/farewell-to-frp 

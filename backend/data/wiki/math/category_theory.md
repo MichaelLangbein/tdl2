@@ -1,3 +1,28 @@
+# Haskell
+
+```haskell
+-- list comprehensions are very much like math's set comprehensions
+removeNonUpperCase :: [Char] -> [Char]
+removeNonUpperCase st = [c | c <- st, c `elem` ['A' .. 'Z']]
+
+
+-- tuples: may be mixed type, are fixed size
+(1, "hi")
+
+-- type annotations: Upper case = concrete, lower case = template
+
+-- type classes: like interfaces
+ghci > : t (==)
+(==) :: ( Eq a ) => a -> a -> Bool
+-- reads: a must be a member of the `Eq` type-class
+
+-- pattern matching
+lucky :: ( Integral a ) => a -> String
+lucky 7 = " LUCKY NUMBER SEVEN ! "
+lucky x = " Sorry , you ’ re out of luck , pal ! "
+
+```
+
 # Category theory
 
 
