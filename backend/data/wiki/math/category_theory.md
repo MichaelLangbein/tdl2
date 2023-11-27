@@ -479,48 +479,122 @@ The same holds for initial objects.
 
 # Preliminary implementation ... to be revised
 
+
+Functor<A>:
+    - private Wrapped<A>
+    - map(f A->B): Functor<B>
+
+Monad<A> extends Functor<A>:
+    - flatmap(f A->Wrapped<B>): Monad<B>
+
+Functors and monads ...
+- manage wrapped values `Wrapped<A>`
+- such that functions `f: A->B` can be applied and chained on those wrapped values
+    - without the functions being aware that the managed values are wrapped
+
+
 ```ts
 
-interface NumberWithLogs {
-    result: any,
-    logs: string[]
-}
-
-function square(x: NumberWithLogs): NumberWithLogs {
-    return const newNumberWithLogs: NumberWithLogs = {
-        result: x.result * x.result,
-        logs: ["squared"]
+class Maybe<T> {
+    constructor(private _value?: T) {}
+    public isValid() { return !!this._value; }
+    public value(): T {
+        if (this.isValid()) return this._value as T;
+        else throw Error(`Optional: check 'isValid' before accessing this value.`);
     }
 }
 
-function addOne(x: number): NumberWithLogs {
-    return {
-        result: x + 1,
-        logs: ["added one"]
-}
+class MaybeMonad<A> {
+    constructor(private value: Maybe<A>) {}
 
+    map<B>(func: (a: A) => B): MaybeMonad<B> {
+        if (this.value.isValid()) {
+            const newVal = func(this.value.value());
+            return new MaybeMonad<B>(new Maybe(newVal));
+        } else {
+            return new MaybeMonad<B>(new Maybe<B>());
+        }
+    }
 
-function wrapWithLogs(value: any): NumberWithLogs {
-    return {
-        result: value,
-        logs: []
+    flatMap<B>(func: (a: A) => Maybe<B>): MaybeMonad<B> {
+        if (this.value.isValid()) {
+            const newVal = func(this.value.value());
+            return new MaybeMonad(newVal);
+        } else {
+            return new MaybeMonad<B>(new Maybe<B>());
+        }
+    }
+
+    get() {
+        return this.value;
     }
 }
 
-function runWithLogs(
-    input: NumberWithLogs, 
-    transform: (_: number) => NumberWithLogs
-): NumberWithLogs {
-    const newNumberWithLogs = transform(input.result);
-    return {
-        result: newNumberWithLogs.result,
-        logs: input.logs.concat(newNumberWithLogs.logs)
+
+const valueMonad = new MaybeMonad(new Maybe(3));
+const resultMonad = valueMonad
+    .map(v => v*3)
+    .flatMap(v => v === 0 ? new Maybe<number>() : new Maybe( 1/v          ))
+    .flatMap(v => v < 0 ?   new Maybe<number>() : new Maybe( Math.sqrt(v) ));
+
+console.log(resultMonad.get());
+
+
+
+
+
+
+
+class StatefulValue<V, S> {
+    constructor(readonly value: V, readonly state: S) {}
+}
+
+function rng(seed: number): StatefulValue<number, number> {
+    throw new Error(`Not yet implemented`);
+}
+
+const seed = 123;
+const data1 = rng(seed);
+const data2 = rng(data1.state);
+const data3 = rng(data2.state);
+console.log(data3.value);
+
+// We want to avoid threading the state through every line here
+// ... entering the state monad:
+
+class StateMonad<V, S> {
+    constructor(readonly state: StatefulValue<V, S>) {}
+
+    public flatmap<B>(func: (s: S) => StatefulValue<V, S>): StateMonad<V, S> {
+        const lastState = this.state.state;
+        const newStatefulValue = func(lastState);
+        return new StateMonad(newStatefulValue);
     }
 }
 
+const initial = new StateMonad(new StatefulValue(0, 123));
+const final = initial
+                .flatmap(rng)
+                .flatmap(rng)
+                .flatmap(rng);
+console.log(final.state.value);
 
-const a = wrapWithLogs(5);
-const b = runWithLogs(a, addOne);
-const c = runWithLogs(b, square);
 
+
+// Modelling a gumball machine with a state-monad:
+
+function enterMoney(newMoney: number): (s: number) => StatefulValue<string, number> {
+    return (currentMoney: number) => new StatefulValue("nothing", currentMoney+newMoney);
+}
+
+function turn(currentMoney: number): StatefulValue<string, number> {
+    if (currentMoney > 50) return new StatefulValue("gumball", currentMoney-50);
+    else return new StatefulValue("nothing", currentMoney);
+}
+
+const state = new StateMonad(new StatefulValue("nothing", 0));
+const stateAfter = state
+                        .flatmap(enterMoney(25))
+                        .flatmap(enterMoney(25))
+                        .flatmap(turn);
 ```
