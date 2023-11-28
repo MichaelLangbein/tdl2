@@ -26,9 +26,9 @@ cam.matrixWorldInverse * object.matrixWorld  -> modelViewMatrix
 
 ## Important GLSL uniforms
 
- - `position`
+- `position`
   - in modelSpace
- - `cameraPosition`
+- `cameraPosition`
   - in worldSpace
 - `uv`
   - in modelSpace?
