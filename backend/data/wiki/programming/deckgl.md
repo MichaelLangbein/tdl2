@@ -3,12 +3,18 @@
 ```ts
 import './style.css';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import mlg, { CustomLayerInterface } from 'maplibre-gl';
+import mlg, { CustomLayerInterface, LngLat } from 'maplibre-gl';
 import mlc from 'maplibre-contour';
-import { Camera, DirectionalLight, Matrix4, Scene, Vector3, WebGLRenderer } from 'three';
+import { AnimationMixer, Camera, DirectionalLight, DoubleSide, Matrix4, Mesh, MeshPhongMaterial, PlaneGeometry, Scene, Vector3, Vector4, WebGLRenderer } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { ArcLayer } from '@deck.gl/layers/typed';
+import {ScenegraphLayer, SimpleMeshLayer} from '@deck.gl/mesh-layers/typed';
 import { MapboxLayer } from '@deck.gl/mapbox/typed';
+import { GLBLoader } from '@loaders.gl/gltf';
+import {mat4} from 'gl-matrix';
+import {mercatorZfromAltitude} from 'maplibre-gl/src/geo/mercator_coordinate';
+import {clamp} from 'maplibre-gl/src/util/util';
+
 
 
 const demSource = new mlc.DemSource({
@@ -30,16 +36,25 @@ demSource.setupMaplibre(mlg as any);
 
 const map = new mlg.Map({
   container: 'app',
-  center: [11.3229, 47.2738],
-  zoom: 13,
+  center: [11.532, 47.670],
+  zoom: 16,
+  pitch: 60,
+  bearing: -90,
   style: {
     version: 8,
     glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
     layers: [{
+      id: 'baseColor',  // hides edges of terrain tiles, which have 'walls' going down to 0
+      type: 'background',
+      paint: {
+        'background-color': '#fff',
+        "background-opacity": 1.0
+      }
+    }, {
       id: 'hills',
       type: 'hillshade',
       source: 'hillshadeSource',
-      layout: {visibility: 'visible'},
+      layout: { visibility: 'visible' },
       paint: {
         'hillshade-exaggeration': 0.25,
         "hillshade-shadow-color": '#473B24'
@@ -52,15 +67,6 @@ const map = new mlg.Map({
       paint: {
         'line-opacity': 0.5,
         "line-width": ['match', ['get', 'level'], 1, 1, 0.5]
-      }
-    }, {
-      id: 'urban-areas-fill',
-      type: 'fill', 
-      source: 'urbanAreas',
-      layout: {},
-      paint: {
-        'fill-color': '#f08',
-        "fill-opacity": 0.3
       }
     }, {
       id: 'contour-text',
@@ -81,6 +87,14 @@ const map = new mlg.Map({
           '\''
         ],
         "text-font": ['Noto Sans Bold']
+      }
+    }, {
+      id: 'imission',
+      source: 'imissionSource',
+      type: 'fill',
+      paint: {
+        'fill-color': '#f38',
+        "fill-opacity": 0.3
       }
     }],
     terrain: {
@@ -113,44 +127,153 @@ const map = new mlg.Map({
           })
         ]
       },
-      urbanAreas: {
-        type: 'geojson',
-        data: 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_urban_areas.geojson'
-      },
-       terrainSource: {
+      terrainSource: {
         type: 'raster-dem',
         url: 'https://demotiles.maplibre.org/terrain-tiles/tiles.json',
         tileSize: 256
       },
-
+      imissionSource: {
+        type: 'geojson',
+        data: 'http://localhost:5173/imission_lenggries.geojson'
+      }
     }
   }
 });
 
 
-const marker = new mlg.Marker({});
-marker.setLngLat(map.getCenter()).addTo(map);
+// const marker = new mlg.Marker({});
+// marker.setLngLat(map.getCenter()).addTo(map);
 
 map.addControl(
   new mlg.TerrainControl({
-      source: 'terrainSource',
-      exaggeration: 1
+    source: 'terrainSource',
+    exaggeration: 1
   })
 );
 
+// const popup = new mlg.Popup({ closeOnClick: false })
+//   .setLngLat(map.getCenter())
+//   .setHTML('<h1>Hello World!</h1>')
+//   .addTo(map);
 
 
-const modelOrigin = map.getCenter();
-const modelOriginMercator = mlg.MercatorCoordinate.fromLngLat(modelOrigin, 40);
-const modelTransform = {
-  translateX: modelOriginMercator.x,
-  translateY: modelOriginMercator.y,
-  translateZ: modelOriginMercator.z,
-  rotateX: Math.PI / 2,
-  rotateY: 0, 
-  rotateZ: 0,
-  scale: modelOriginMercator.meterInMercatorCoordinateUnits()
+map.transform._calcMatrices = () => {
+  const _this = map.transform;
+  if (!_this.height) return;
+
+  const halfFov = _this._fov / 2;
+  const offset = _this.centerOffset;
+  const x = _this.point.x, y = _this.point.y;
+  _this.cameraToCenterDistance = 0.5 / Math.tan(halfFov) * _this.height;
+  _this._pixelPerMeter = mercatorZfromAltitude(1, _this.center.lat) * _this.worldSize;
+
+  let m = mat4.identity(new Float64Array(16) as any);
+  mat4.scale(m, m, [_this.width / 2, -_this.height / 2, 1]);
+  mat4.translate(m, m, [1, -1, 0]);
+  _this.labelPlaneMatrix = m;
+
+  m = mat4.identity(new Float64Array(16) as any);
+  mat4.scale(m, m, [1, -1, 1]);
+  mat4.translate(m, m, [-1, -1, 0]);
+  mat4.scale(m, m, [2 / _this.width, 2 / _this.height, 1]);
+  _this.glCoordMatrix = m;
+
+
+
+  // Calculate the camera to sea-level distance in pixel in respect of terrain
+  const cameraToSeaLevelDistance = _this.cameraToCenterDistance + _this._elevation * _this._pixelPerMeter / Math.cos(_this._pitch * 2 * Math.PI/ 360);
+  // In case of negative minimum elevation (e.g. the dead see, under the sea maps) use a lower plane for calculation
+  const minElevation = Math.min(_this.elevation, _this._minEleveationForCurrentTile);
+  const cameraToLowestPointDistance = cameraToSeaLevelDistance - minElevation * _this._pixelPerMeter / Math.cos(_this._pitch * 2 * Math.PI/ 360);
+  const lowestPlane = minElevation < 0 ? cameraToLowestPointDistance : cameraToSeaLevelDistance;
+
+  // Find the distance from the center point [width/2 + offset.x, height/2 + offset.y] to the
+  // center top point [width/2 + offset.x, 0] in Z units, using the law of sines.
+  // 1 Z unit is equivalent to 1 horizontal px at the center of the map
+  // (the distance between[width/2, height/2] and [width/2 + 1, height/2])
+  const groundAngle = Math.PI / 2 + _this._pitch;
+  const fovAboveCenter = _this._fov * (0.5 + offset.y / _this.height);
+  const topHalfSurfaceDistance = Math.sin(fovAboveCenter) * lowestPlane / Math.sin(clamp(Math.PI - groundAngle - fovAboveCenter, 0.01, Math.PI - 0.01));
+
+  // Find the distance from the center point to the horizon
+  const horizon = _this.getHorizon();
+  const horizonAngle = Math.atan(horizon / _this.cameraToCenterDistance);
+  const fovCenterToHorizon = 2 * horizonAngle * (0.5 + offset.y / (horizon * 2));
+  const topHalfSurfaceDistanceHorizon = Math.sin(fovCenterToHorizon) * lowestPlane / Math.sin(clamp(Math.PI - groundAngle - fovCenterToHorizon, 0.01, Math.PI - 0.01));
+
+  // Calculate z distance of the farthest fragment that should be rendered.
+  // Add a bit extra to avoid precision problems when a fragment's distance is exactly `furthestDistance`
+  const topHalfMinDistance = Math.min(topHalfSurfaceDistance, topHalfSurfaceDistanceHorizon);
+  const farZ = (Math.cos(Math.PI / 2 - _this._pitch) * topHalfMinDistance + lowestPlane) * 1.01;
+
+  // The larger the value of nearZ is
+  // - the more depth precision is available for features (good)
+  // - clipping starts appearing sooner when the camera is close to 3d features (bad)
+  //
+  // Smaller values worked well for mapbox-gl-js but deckgl was encountering precision issues
+  // when rendering it's layers using custom layers. This value was experimentally chosen and
+  // seems to solve z-fighting issues in deckgl while not clipping buildings too close to the camera.
+  const nearZ = _this.height / 50;
+
+  // matrix for conversion from location to GL coordinates (-1 .. 1)
+  m = new Float64Array(16) as any;
+  mat4.perspective(m, _this._fov, _this.width / _this.height, nearZ, farZ);
+
+  // Apply center of perspective offset
+  m[8] = -offset.x * 2 / _this.width;
+  m[9] = offset.y * 2 / _this.height;
+
+  mat4.scale(m, m, [1, -1, 1]);
+  mat4.translate(m, m, [0, 0, -_this.cameraToCenterDistance]);
+  mat4.rotateX(m, m, _this._pitch);
+  mat4.rotateZ(m, m, _this.angle);
+  mat4.translate(m, m, [-x, -y, 0]);
+
+  // The mercatorMatrix can be used to transform points from mercator coordinates
+  // ([0, 0] nw, [1, 1] se) to GL coordinates.
+  _this.mercatorMatrix = mat4.scale([] as any, m, [_this.worldSize, _this.worldSize, _this.worldSize]);
+
+  // scale vertically to meters per pixel (inverse of ground resolution):
+  mat4.scale(m, m, [1, 1, _this._pixelPerMeter]);
+
+  // matrix for conversion from location to screen coordinates in 2D
+  _this.pixelMatrix = mat4.multiply(new Float64Array(16) as any, _this.labelPlaneMatrix, m);
+
+  // matrix for conversion from location to GL coordinates (-1 .. 1)
+  mat4.translate(m, m, [0, 0, -_this.elevation]); // elevate camera over terrain
+  _this.projMatrix = m;
+  _this.invProjMatrix = mat4.invert([] as any, m);
+
+  // matrix for conversion from location to screen coordinates in 2D
+  _this.pixelMatrix3D = mat4.multiply(new Float64Array(16) as any, _this.labelPlaneMatrix, m);
+
+  // Make a second projection matrix that is aligned to a pixel grid for rendering raster tiles.
+  // We're rounding the (floating point) x/y values to achieve to avoid rendering raster images to fractional
+  // coordinates. Additionally, we adjust by half a pixel in either direction in case that viewport dimension
+  // is an odd integer to preserve rendering to the pixel grid. We're rotating this shift based on the angle
+  // of the transformation so that 0°, 90°, 180°, and 270° rasters are crisp, and adjust the shift so that
+  // it is always <= 0.5 pixels.
+  const xShift = (_this.width % 2) / 2, yShift = (_this.height % 2) / 2,
+      angleCos = Math.cos(_this.angle), angleSin = Math.sin(_this.angle),
+      dx = x - Math.round(x) + angleCos * xShift + angleSin * yShift,
+      dy = y - Math.round(y) + angleCos * yShift + angleSin * xShift;
+  const alignedM = new Float64Array(m) as any as mat4;
+  mat4.translate(alignedM, alignedM, [dx > 0.5 ? dx - 1 : dx, dy > 0.5 ? dy - 1 : dy, 0]);
+  _this.alignedProjMatrix = alignedM;
+
+  // inverse matrix for conversion from screen coordinaes to location
+  m = mat4.invert(new Float64Array(16) as any, _this.pixelMatrix);
+  if (!m) throw new Error('failed to invert matrix');
+  _this.pixelMatrixInverse = m;
+
+  _this._posMatrixCache = {};
+  _this._alignedPosMatrixCache = {};
+
+  const camPos = _this.getCameraPosition()
+  // console.log(`elev over center: ${_this._elevation}, alt. under cam: ${camPos.altitude}, lowest plane: ${lowestPlane}`);
 }
+
+
 
 
 const threejsLayer: CustomLayerInterface = {
@@ -163,6 +286,8 @@ const threejsLayer: CustomLayerInterface = {
     const camera = new Camera();
     const scene = new Scene();
 
+    const mixer = new AnimationMixer(scene);
+
     const directionalLight = new DirectionalLight(0xffffff);
     directionalLight.position.set(0, -70, 100).normalize();
     scene.add(directionalLight);
@@ -173,8 +298,24 @@ const threejsLayer: CustomLayerInterface = {
 
     const loader = new GLTFLoader();
     loader.load(
-      'https://maplibre.org/maplibre-gl-js/docs/assets/34M_17/34M_17.gltf',
-      (gltf) => { scene.add(gltf.scene); }
+      'http://localhost:5173/windturbine.glb',
+      (gltf) => {
+        scene.add(gltf.scene);
+        scene.traverse(data => {
+          if (data.isObject3D) {
+            if (data instanceof Mesh) {
+              if (data.material instanceof Array) {
+                data.material.map(m => m.side = DoubleSide);
+              } else {
+                data.material.side = DoubleSide;
+              }
+            }
+          }
+        });
+        // @ts-ignore
+        const action = mixer.clipAction(gltf.animations[0]);
+        action.play();
+      }
     );
 
     const renderer = new WebGLRenderer({
@@ -191,48 +332,157 @@ const threejsLayer: CustomLayerInterface = {
     this.renderer = renderer;
     // @ts-ignore
     this.scene = scene;
+    // @ts-ignore
+    this.mixer = mixer;
   },
   render(gl, matrix) {
+    
+    const modelOrigin = new LngLat(11.53, 47.67);
+    const modelElevation = map.terrain ? map.terrain.getElevationForLngLatZoom(modelOrigin, map.getZoom()) : 0;
+    const modelOriginMercator = mlg.MercatorCoordinate.fromLngLat(modelOrigin, 0);
+  
+    const terrainCenterElevation = map.transform.elevation;
+    const deltaMetersZ = modelElevation - terrainCenterElevation;
+    const mercatorPerMeter = modelOriginMercator.meterInMercatorCoordinateUnits();
+    const deltaMercatorZ = deltaMetersZ * mercatorPerMeter;
 
+    const modelTransform = {
+      translateX: modelOriginMercator.x,
+      translateY: modelOriginMercator.y,
+      translateZ: modelOriginMercator.z + deltaMercatorZ,
+      rotateX: Math.PI / 2,
+      rotateY: 0,
+      rotateZ: 0,
+      scale: modelOriginMercator.meterInMercatorCoordinateUnits()
+    };
+
+    // const {lngLat: cameraOrigin, altitude: cameraElevation } = map.transform.getCameraPosition();
+    // const cameraOriginMercator = mlg.MercatorCoordinate.fromLngLat(cameraOrigin, cameraElevation);
+    // const cameraTransform = {
+    //   translateX: cameraOriginMercator.x,
+    //   translateY: cameraOriginMercator.y,
+    //   translateZ: cameraOriginMercator.z,
+    //   rotateX: map.transform.pitch,
+    //   rotateY: 0,
+    //   rotateZ: map.transform.angle,
+    //   scale: 1
+    // };
+
+    // position in world space (== universal mercator, top-left = [0,0], bot-right=[1,1])
+    // model-coordinates => world-coordinates
     const rotationX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), modelTransform.rotateX);
     const rotationY = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), modelTransform.rotateY);
     const rotationZ = new Matrix4().makeRotationAxis(new Vector3(0, 0, 1), modelTransform.rotateZ);
+    // const modelMatrix = new Matrix4()
+    //   .makeTranslation(modelTransform.translateX, modelTransform.translateY, modelTransform.translateZ)
+    //   .scale(new Vector3(modelTransform.scale, modelTransform.scale, modelTransform.scale))
+    //   .multiply(rotationX).multiply(rotationY).multiply(rotationZ);
+
+    // // inverse of camera's modelMatrix
+    // // world-coordinates => world-coordinates relative to camera position
+    // const cameraRotationX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), cameraTransform.rotateX);
+    // const cameraRotationY = new Matrix4().makeRotationAxis(new Vector3(0, 1, 0), cameraTransform.rotateY);
+    // const cameraRotationZ = new Matrix4().makeRotationAxis(new Vector3(0, 0, 1), cameraTransform.rotateZ);
+    // const cameraModelMatrix = new Matrix4()
+    //   .makeTranslation(cameraTransform.translateX, cameraTransform.translateY, cameraTransform.translateZ)
+    //   // .scale(new Vector3(map.transform.worldSize, map.transform.worldSize, map.transform.worldSize))
+    //   .multiply(cameraRotationX).multiply(cameraRotationY).multiply(cameraRotationZ);
+    // const viewMatrix = cameraModelMatrix.invert();
+
+    // // world-coordinates relative to camera => clip-space [-1, 1]^3
+    // const focalLength = map.transform.cameraToCenterDistance;
+    // const zNear = 0.001;
+    // const zFar = 100;
+    // const aspectRatio = map.transform.width / map.transform.height;
+    // const projectionMatrix = 
+    // //new Matrix4().fromArray(mat4.perspective(new Float32Array(16), map.transform.fov, map.transform.width/map.transform.height, 10, 10000));
+    //  new Matrix4().fromArray([  // column-major order
+    //    focalLength/aspectRatio, 0,           0,                         0,
+    //    0,                       focalLength, 0,                         0,
+    //    0,                       0,           (zFar+zNear)/(zFar-zNear), -1, 
+    //    0,                       0,           2*zFar*zNear/(zNear-zFar), 0
+    //  ]);
+
+    // const myCameraProjectionMatrix = projectionMatrix.multiply(viewMatrix.multiply(modelMatrix)); 
+
 
     const m = new Matrix4().fromArray(matrix);
     const l = new Matrix4()
       .makeTranslation(modelTransform.translateX, modelTransform.translateY, modelTransform.translateZ)
-      .scale(new Vector3(modelTransform.scale, -modelTransform.scale, modelTransform.scale))
+      .scale(new Vector3(modelTransform.scale, modelTransform.scale, modelTransform.scale))
       .multiply(rotationX).multiply(rotationY).multiply(rotationZ);
+    const cameraProjectionMatrix = m.multiply(l);
 
     // @ts-ignore
-    this.camera.projectionMatrix = m.multiply(l);
+    this.camera.projectionMatrix = cameraProjectionMatrix;
     // @ts-ignore
     this.renderer.resetState();
     // @ts-ignore
     this.renderer.render(this.scene, this.camera);
+    // @ts-ignore
+    this.mixer.update(0.05);
     map.triggerRepaint();
+
+
 
   }
 };
 
-const deckGlLayer = new MapboxLayer<ArcLayer>({
-  id: 'deckGlLayer',
+const modelLayer = new MapboxLayer<ScenegraphLayer>({
+  id: 'modelLayer',
+  // @ts-ignore
+  type: ScenegraphLayer, // maplibre/deck-utils will instantiate on its own
+  scenegraph: 'http://localhost:5173/windturbine.glb',
+  data: [
+     {coordinates: [map.getCenter().lng, map.getCenter().lat]},
+  ],
+  getPosition: d => d.coordinates,
+  getOrientation: d => [0, 0, 0],
+  _animations: {
+    '*': {speed: 5}
+  },
+  sizeScale: 500,
+  _lighting: 'pbr'
+});
+
+const simpleModelLayer = new MapboxLayer<SimpleMeshLayer>({
+  id: 'simpleModel',
+  // @ts-ignore
+  type: SimpleMeshLayer,
   data: [{
-    source: [11.3, 47.2],
-    target: [11.4, 47.3]
+    position: [map.getCenter().lng, map.getCenter().lat]
   }],
-  getSourcePosition: d => d.source,
-  getTargetPosition: d => d.target,
-  getSourceColor: [255, 208, 0],
-  getTargetColor: [0, 128, 255],
-  getWidth: 8
+  mesh: 'http://localhost:5173/windturbine.glb',
+  loaders: [GLBLoader],
+  getPosition: d => d.position,
+  getOrientation: d => [0, 0, 0]
+});
+
+const arcLayer = new MapboxLayer<ArcLayer>({
+  id: 'arcLayer',
+  // @ts-ignore
+  type: ArcLayer,
+  getWidth: 12,
+  getSourcePosition: d => d.from.coordinates,
+  getTargetPosition: d => d.to.coordinates,
+  getSourceColor: d => [d.inbound, 140, 0],
+  getTargetColor: d => [d.outbound, 140, 0],
+  data: [
+    { 
+      from: { coordinates: [map.getCenter().lng, map.getCenter().lat] },
+      to: { coordinates: [map.getCenter().lng + 0.5, map.getCenter().lat] },
+      inbound: 100,
+      outbound: 255
+    }
+  ]
 });
 
 map.on('style.load', () => {
   map.addLayer(threejsLayer);
-  // map.addLayer(deckGlLayer);
+  // map.addLayer(arcLayer as any);
+  // map.addLayer(modelLayer as any);
+  // map.addLayer(simpleModelLayer as any);
 });
-
 
 ```
 
