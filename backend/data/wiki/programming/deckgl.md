@@ -490,6 +490,75 @@ map.on('style.load', () => {
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/maplibre.jpg" width="100%" />
 
 
+Some explanations on the matrices used here.
+Deckgl passes to `render(gl, matrix)` the `mercatorMatrix`, which is calculated like so:
+
+```ts
+// from https://github.com/maplibre/maplibre-gl-js/blob/8edbac09725f807aae91009d31c30c3d5168b066/src/geo/transform.ts#L841C9-L885C43
+// some own comments added
+
+/**
+ * `mat4.perspective` here creates what is usually called the projectionMatrix: 
+ * converting from cameraSpace (= mercator * worldSize, rel. to camera) 
+ * to clipSpace [-1,1]^4
+ */
+
+// matrix for conversion from location to GL coordinates (-1 .. 1)
+m = new Float64Array(16) as any;
+mat4.perspective(m, this._fov, this.width / this.height, nearZ, farZ);
+// ... some stuff cut ...
+mat4.scale(m, m, [1, -1, 1]);
+
+
+/**
+ * the next operations create what is often called the cameraMatrix:
+ * converts from worldSpace (= mercator)
+ * to camera space (= mercator * worldSize, rel. to camera)
+ * The cameraMatrix is the inverse of the camera's worldMatrix. 
+ * Indeed, if you execute the inverse of the below operations, you'll get the camera's position in worldSpace.
+ */
+
+mat4.translate(m, m, [0, 0, -this.cameraToCenterDistance]);
+mat4.rotateX(m, m, this._pitch);
+mat4.rotateZ(m, m, this.angle);
+mat4.translate(m, m, [-x, -y, 0]);
+
+// The mercatorMatrix can be used to transform points from mercator coordinates
+// ([0, 0] nw, [1, 1] se) to GL coordinates.
+this.mercatorMatrix = mat4.scale([] as any, m, [this.worldSize, this.worldSize, this.worldSize]);
+/**
+ * ^\__ this mercatorMatrix is what's being passed to `CustomLayer.render(gl, matrix)` 
+ */
+
+
+
+```
+
+Note how terrain doesn't play a role here - if it were only for the `mercatorMatrix`, all our models would be displayed flat at sea-level.
+
+Terrain is only being used later in the `projectionMatrix`:
+```ts
+// from https://github.com/maplibre/maplibre-gl-js/blob/8edbac09725f807aae91009d31c30c3d5168b066/src/geo/transform.ts#L859C1-L869C1
+// some own comments added
+/**
+ * Only in the next steps, in creating the `projMatrix`, does `elevation` come into play.
+ * Maplibre seems makes use of this elevation in final rendering, but it's not being passed to `CustomLayer.render`.
+ * The effect of `.translate(m, m, [0, 0, -this.evelation])` is that every object in your threejs scene is being lifted up by elevation.
+ * Elevation equals the height of the specail point called *center*, which is the point of the terrain that is exactly in the viewports center.
+ * This happens *even if your object is actually at a point on the terrain that's higher or lower than center*.
+ */
+
+// scale vertically to meters per pixel (inverse of ground resolution):
+mat4.scale(m, m, [1, 1, this._pixelPerMeter]);
+
+// ... some stuff cut ...
+
+// matrix for conversion from location to GL coordinates (-1 .. 1)
+mat4.translate(m, m, [0, 0, -this.elevation]); // elevate camera over terrain
+this.projMatrix = m;
+```
+
+I've documented these points in a simple github-issue: https://github.com/maplibre/maplibre-gl-js/issues/3427
 
 # Deckgl
 
