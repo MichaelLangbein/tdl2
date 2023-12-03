@@ -158,6 +158,14 @@ Example: rotor-blades
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_select_up_only.png">
 
 
+## Cutting a path through a forrest
+- Geometry nodes:
+    - geometry proximity from wood to path: won't work, because distance is calculated from forrest's center to path's center - not on a per-vertex basis.
+    - sample nearest: might work
+- modifiers: 
+    - boolean modifier: works, but very slow and leaves insides of path's outline
+    - keep path under forrest, apply shrinkwrap to forrest, with option `projection (z)` onto the path: works
+
 ## Creating a fern: self-similar structures with *Capture attribute*:
 
 - create a bezier curve and add a geom-node modifier
