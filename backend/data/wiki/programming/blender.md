@@ -151,6 +151,13 @@ Example: rotor-blades
 - connect `<object-info>.Random` to `<Color-ramp>(interpolation:linear)`
 - feed `Color-ramp` into texture-mix
 
+
+
+## Only selecting those vertices that point up
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/blender_select_up_only.png">
+
+
 ## Creating a fern: self-similar structures with *Capture attribute*:
 
 - create a bezier curve and add a geom-node modifier
