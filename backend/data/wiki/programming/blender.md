@@ -203,6 +203,9 @@ Reason: the child-curve would use its *own* value for `spline-parameter.factor`,
         - settings:
             - backface-culling: true
 
+**NOTE**: this outline is calculated real time. It won't survive an export.
+However, threejs has its own cell shader.
+
 
 ## Painterly look
 1. Bake an objects normals onto a texture
