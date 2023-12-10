@@ -45,64 +45,135 @@ Set up a shop plugin of sorts, and use the virtual downloadable product type. Th
 
 ## Development environment
 docker-compose.yml
-```
-version: '3.1'
-
+```yml
+version: "3.6"
 services:
-
-  wordpress:
-    depends_on:
-      - db
-    image: wordpress
-    ports:
-      - 8080:80
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: WpDb
-      WORDPRESS_DB_USER: WpUser
-      WORDPRESS_DB_PASSWORD: WpUserPw
-    volumes:
-      - ./wp:/var/www/html
-
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: WpDb
-      MYSQL_USER: WpUser
-      MYSQL_PASSWORD: WpUserPw
-      MYSQL_ROOT_PASSWORD: please
-    volumes:
-      - ./db:/var/lib/mysql
-
+ wordpress:
+   image: wordpress:latest
+   container_name: wordpress
+   volumes:
+     - ./wordpress:/var/www/html
+   environment:
+     - WORDPRESS_DB_NAME=wordpress
+     - WORDPRESS_TABLE_PREFIX=wp_
+     - WORDPRESS_DB_HOST=db
+     - WORDPRESS_DB_USER=root
+     - WORDPRESS_DB_PASSWORD=password
+     - WORDPRESS_DEBUG=1 # any non-empty value will do
+   depends_on:
+     - db
+     - phpmyadmin
+   restart: always
+   ports:
+     - 8080:80
+ 
+ db:
+   image: mariadb:latest
+   container_name: db
+   volumes:
+     - db_data:/var/lib/mysql
+   environment:
+     - MYSQL_ROOT_PASSWORD=password
+     - MYSQL_USER=root
+     - MYSQL_PASSWORD=password
+     - MYSQL_DATABASE=wordpress
+   restart: always
+ 
+ phpmyadmin:
+   depends_on:
+     - db
+   image: phpmyadmin/phpmyadmin:latest
+   container_name: phpmyadmin
+   restart: always
+   ports:
+     - 8180:80
+   environment:
+     PMA_HOST: db
+     MYSQL_ROOT_PASSWORD: password
+ 
+volumes:
+ db_data:
 ```
 
 `docker compose up`
 
 
 
-## PHP
-https://www.youtube.com/watch?v=hbJiwm5YL5Q
-
-### actions
-
-### filters
-
-### admin settings
-
-### pages
-
-### menus
-
-
 ## JS
 
-### Gutenberg block types
+### Part 1: compiling TS
 
-### React bindings
+`@wordpress/scripts` builds code usable in wordpress from typescript.
+```bash
+npm init -y
+npm install --save-dev @wordpress/scripts
+touch src/index.ts
+# do some code
+npx wp-scripts start
+```
+This will:
+- compile ts to js
+- compile sass to css
+- create an index.asset.php, which lists all dependencies.
 
+Webpack already knows that wordpress has its own version of react. If it seas react in your code, it will also add it automatically to `index.asset.php`.
+Wordpress includes `react` and `react-DOM` by default. Any JS app can use them. Just `wp_enqueue_script('handle', plugins_url('assets/public/scripts.js', __FILE__), array('react', 'react-DOM'), 'some-version-hash');`
+
+
+### Part 2: using compiled TS in a custom (static) block
+
+1. Add a `block.json` in your plugin-directory.
+```json
+{
+    "apiVersion": 3,
+    "title": "My static block",
+    "name": "statblock/firstblock",
+    "category": "widgets",
+    "icon": "smiley",
+    "editorScript": "file:./build/index.js"
+}
+```
+
+2. Tell wp where to find the that there is a block.json and where to find it. For that, create an `index.php`
+```php
+<?php
+/**
+ * Plugin Name: statblock
+ */
+
+// Function called when wp parses the module.
+// When module is initialized, we register the block type with php,
+// by giving php the path to the block.json
+add_action('init', function () {
+    register_block_type( __DIR__ );
+});
+```
+
+3. Write tsx to tell wordpress what to execute when block is seen.
+```tsx
+// import react from "react";
+import { registerBlockType } from '@wordpress/blocks';
+
+// Wp already knows about this block through php.
+// Here we tell it what to do when that block is to be shown.
+registerBlockType('statblock/firstblock', {
+    // return component shown in editor-view
+    edit: function () {
+        return <p> Hello world (from the editor)</p>;
+    },
+    // return component shown in client-view
+    save: function () {
+        return <p> Hola mundo (from the frontend) </p>;
+    },
+} );
+```
+
+
+### Part 3: attributes - maintaining state accross page-reloads
+
+### Part 4: WP API
+
+1. Activate the json-api: go to `http://localhost:8080/wp-admin/options-permalink.php` and chose any permalink-type other than `plain`.
+2. You can access the api at `http://localhost:8080/wp-json`
 
 ## Database
-
-### Custom post types
-
-### Own database table
