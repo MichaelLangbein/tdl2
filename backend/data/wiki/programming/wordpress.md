@@ -99,81 +99,158 @@ volumes:
 
 
 
-## JS
+# JS
 
-### Part 1: compiling TS
+### Part 0: custom block basic concepts
 
-`@wordpress/scripts` builds code usable in wordpress from typescript.
+- static block
+  - admin-view (`js.registerBlockType.edit`): react ------------------> admin
+  - user-view (`js.registerBlockType.save`):  react -----> db --------> user
+- dynamic block
+  - admin-view (`js.registerBlockType.edit`): react ------------------> admin
+  - user-view (`php.register_block_type.`):  php --------------------> user
+
+- Static blocks create content once through react, and it is then served as static html directly from the database.
+- Dynamic blocks create content anew on every pageload through php.
+- The output of `registerBlockType.save` for static blocks is actually [very, very limited](https://github.com/WordPress/gutenberg/issues/36265). You mustn't use any react-hooks, for example, in that output.
+  - `.edit`'s output, o.t.o.h., is allowed to use any react hook.
+- ... but: we can add additional js/ts(x) logic with a `viewScript` ... which the next steps will explain.
+
+
+### Part 1: create a module
+
+Create the directory:
+
 ```bash
-npm init -y
-npm install --save-dev @wordpress/scripts
-touch src/index.ts
-# do some code
-npx wp-scripts start
-```
-This will:
-- compile ts to js
-- compile sass to css
-- create an index.asset.php, which lists all dependencies.
-
-Webpack already knows that wordpress has its own version of react. If it seas react in your code, it will also add it automatically to `index.asset.php`.
-Wordpress includes `react` and `react-DOM` by default. Any JS app can use them. Just `wp_enqueue_script('handle', plugins_url('assets/public/scripts.js', __FILE__), array('react', 'react-DOM'), 'some-version-hash');`
-
-
-### Part 2: using compiled TS in a custom (static) block
-
-1. Add a `block.json` in your plugin-directory.
-```json
-{
-    "apiVersion": 3,
-    "title": "My static block",
-    "name": "statblock/firstblock",
-    "category": "widgets",
-    "icon": "smiley",
-    "editorScript": "file:./build/index.js"
-}
+cd wordpress/wp-content/plugins
+mkdir counter
+cd conter
 ```
 
-2. Tell wp where to find the that there is a block.json and where to find it. For that, create an `index.php`
+Create a php file with same name as module (counter.php):
 ```php
 <?php
 /**
- * Plugin Name: statblock
+ * Plugin Name: counter
  */
 
-// Function called when wp parses the module.
-// When module is initialized, we register the block type with php,
-// by giving php the path to the block.json
 add_action('init', function () {
-    register_block_type( __DIR__ );
+    register_block_type( __DIR__ . "/build/");
 });
 ```
 
-3. Write tsx to tell wordpress what to execute when block is seen.
+### Part 2: create buildable ts(x) code
+
+```bash
+npm init
+npm install --save-dev @wordpress/scripts
+```
+
+package.json:
+```json
+"scripts": {
+  "start": "wp-scripts start",
+  "build": "wp-scripts build"
+},
+```
+
+src/block.json
+```json
+{
+    "apiVersion": 3,
+    "title": "Counter",
+    "name": "test/counter",
+    "category": "widgets",
+    "icon": "smiley",
+    "editorScript": "file:./index.tsx",
+    "viewScript": "file:./view.tsx"
+}
+```
+
+### Part 3: define admin-view of block:
+
+src/index.tsx:
 ```tsx
-// import react from "react";
 import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
 
 // Wp already knows about this block through php.
 // Here we tell it what to do when that block is to be shown.
-registerBlockType('statblock/firstblock', {
+registerBlockType('test/counter', {
     // return component shown in editor-view
     edit: function () {
-        return <p> Hello world (from the editor)</p>;
+        return <p {... useBlockProps()}> Counter, editor-view</p>;
     },
-    // return component shown in client-view
-    save: function () {
-        return <p> Hola mundo (from the frontend) </p>;
-    },
+    // return component root html shown in customer-view
+    save: function() {
+        return <div id="mycounter">Hi! I will be replaced with a react component.</div>;
+    }
 } );
 ```
 
 
+### Part 4: define user-view of block:
+
+src/view.tsx:
+```tsx
+import { createRoot } from 'react-dom/client';
+import { useState } from 'react';
+
+const root = createRoot(
+    document.getElementById("mycounter")
+);
+
+const Counter = () => {
+    const [count, setCount] = useState(0);
+    return (
+      <div>
+        <p>You clicked {count} times</p>
+        <button onClick={() => setCount(count + 1)}>
+          Click me
+        </button>
+      </div>
+    );}
+
+const App = () => {
+    return <div>
+        Rendered react component
+        <Counter></Counter>
+    </div>
+}
+
+root.render(<App></App>);
+```
+
+
+### Part 4: build
+
+```bash
+npm run start
+```
+This will:
+- compile ts(x) to js
+- compile sass to css
+- create an `index.asset.php`, which lists all dependencies.
+  - Webpack already knows that wordpress has its own version of react. If it sees react in your code, it will also add it automatically to `index.asset.php`.
+- create a `view.assets.php`
+- create a compiled `block.json` in build, ... which is where we pointed to with our plugin-file `counter.php`.
+
+
+
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+
 ### Part 3: attributes - maintaining state accross page-reloads
+
 
 ### Part 4: WP API
 
 1. Activate the json-api: go to `http://localhost:8080/wp-admin/options-permalink.php` and chose any permalink-type other than `plain`.
 2. You can access the api at `http://localhost:8080/wp-json`
+
+
+### Part 5: Fast development
+- Preventing validation errors: https://wordpress.stackexchange.com/questions/364959/how-to-develop-custom-blocks-without-triggering-validation-errors 
 
 ## Database
