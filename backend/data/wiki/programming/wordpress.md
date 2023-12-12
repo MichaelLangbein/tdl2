@@ -238,6 +238,80 @@ This will:
 
 
 
+
+## Angular as a shortcode
+
+- create plugin dir `angularMap`
+- in plugin dir, `ng new angularMap` and `npm run build`
+- add plugin definition `angularMap.php`:
+
+```php
+<?php
+/**
+ * Plugin Name:         Angular Map
+ * Version:             1.0.0
+ * 
+ */
+
+/**
+ * Simple debug trace to wp-content/debug.log
+ * @usage _log( $var );
+ */
+function _log($log) {
+    if (true !== WP_DEBUG) {
+        return;
+    }
+    if (is_array($log) || is_object($log)) {
+        error_log(print_r($log, true));
+    } else {
+        error_log($log);
+    }
+}
+
+add_action('wp_enqueue_scripts', function () {
+    $buildDir = __DIR__ . '/angularMap/dist/angular-map/';
+    $buildDirUrl = plugin_dir_url(__FILE__) . 'angularMap/dist/angular-map/';
+    $files = scandir($buildDir);
+
+    $styleFile = false;
+    $mainFile = false;
+    $polyfillFile = false;
+    $runtimeFile = false;
+    foreach ($files as $file) {
+        if (str_contains($file, "styles") && str_contains($file, ".css"))
+            $styleFile = $file;
+        if (str_contains($file, "main") && str_contains($file, ".js"))
+            $mainFile = $file;
+        if (str_contains($file, "polyfills") && str_contains($file, ".js"))
+            $polyfillFile = $file;
+        if (str_contains($file, "runtime") && str_contains($file, ".js"))
+            $runtimeFile = $file;
+    }
+
+    if (!$styleFile || !$mainFile || !$polyfillFile || !$runtimeFile) {
+        _log("Couldn't find compiled angular-files.");
+        return;
+    }
+
+    wp_enqueue_style('ng_styles', $buildDirUrl . $styleFile);
+    wp_register_script('ng_main', $buildDirUrl . $mainFile, [], false, true);
+    wp_register_script('ng_polyfills', $buildDirUrl . $polyfillFile, [], false, true);
+    wp_register_script('ng_runtime', $buildDirUrl . $runtimeFile, [], false, true);
+});
+
+add_shortcode('ng_wp', function () {
+    wp_enqueue_script('ng_main');
+    wp_enqueue_script('ng_polyfills');
+    wp_enqueue_script('ng_runtime');
+
+    return "<app-root></app-root>";
+});
+
+// Add the shortcode [ng_wp] to any page or post.
+// The shorcode can be whatever. [ng_wp] is just an example.
+```
+
+
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 
