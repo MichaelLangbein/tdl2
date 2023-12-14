@@ -280,43 +280,78 @@ volumes:
 ## Layers and continuing failed builds
 
 Each directive in a dockerfile creates a new *layer* (aka. *intermediate image*), which is cached in the engine to speed up the build of other dockerfiles. 
-If your build breaks at a certain point in the execution, like this: 
+If your build breaks at a certain point in the execution.
 
-```
-    Step 16/25 : RUN cd geoserver.src/src
-     ---> Running in dff9e492bfc7
-    Removing intermediate container dff9e492bfc7
-     ---> 16c2728b1c46
-    Step 17/25 : RUN mvn clean install -Pwps,wps-remote,importer -DskipTests
-    ---> Running in f102f7633b49
-   [INFO] Scanning for projects...
-   [INFO] BUILD FAILURE
-   [WARNING] The requested profile "wps" could not be activated because it does not exist.
-   [WARNING] The requested profile "wps-remote" could not be activated because it does not exist.
-   [WARNING] The requested profile "importer" could not be activated because it does not exist.
-   [ERROR] The goal you specified requires a project to execute but there is no POM in this directory (/). Please verify you invoked Maven from the correct directory. -> [Help 1]
+For this, however, we must know the hash of the last, failed layer. The reason we cannot see them anymore, is because nowadays docker uses a new build-engine which doesn't log that information. But we can instruct docker to use the old engine:
+
+```bash
+  sudo DOCKER_BUILDKIT=0 docker image build --tag deleteme .
 ```
 
-You can start the container at the last successful intermediate image like this: 
+This prints out:
 
-```
-docker image ls 
-    REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-    <none>              <none>              16c2728b1c46        About an hour ago   1.1GB
-docker history 16c2728b1c46
-    IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
-    16c2728b1c46        About an hour ago   /bin/sh -c cd geoserver.src/src                 0B
-    63bb6b9446f9        About an hour ago   /bin/sh -c source /etc/profile.d/maven.sh       0B
-    e236f5e2c9bc        About an hour ago   /bin/sh -c ln -s /opt/apache-maven-3.6.1/ /o... 24B
-docker container run --rm -it 16c2728b1c46 (bash)
-```
-
-Note the `--rm` argument. This removes a container again once it has stopt running. You can start a very small container for a single instruction and immediately remove it again like this: 
-
-```
-docker container run --rm alpine:latest bin/sh -c "whoami"
+```bash
+...
+...
+Successfully installed Fiona-1.8.20 Shapely-1.8.0 attrs-21.4.0 certifi-2021.10.8 cftime-1.5.1.1 click-8.0.3 click-plugins-1.1.1 cligj-0.7.2 geopandas-0.10.2 h5py-2.10.0 munch-2.5.0 netCDF4-1.5.8 numpy-1.22.0 pandas-1.3.5 python-dateutil-2.8.2 pytz-2021.3 scipy-1.7.3 six-1.16.0
+Removing intermediate container 8bcabbe6bca3
+ ---> 045e231b5aec
+Step 7/9 : COPY . .
+ ---> d726aa79c351
+Step 8/9 : RUN exit 1
+ ---> Running in ba7d11fb0c97
+The command '/bin/sh -c exit 1' returned a non-zero code: 1
 ```
 
+So the build fails in layer "ba7d11fb0c97", thus the last working layer was "d726aa79c351".
+So we can use the last working layer interactively:
+
+```bash
+docker container run --rm -it d726aa79c351
+```
+
+The new engine, `buildkit`, has [another way of achieving the same thing](https://stackoverflow.com/questions/66186620/get-container-id-from-docker-buildkit-for-interactive-debugging): 
+
+Take this example. Here I have 4 stages out of which 2 are parallel stages:
+```Dockerfile
+FROM debian:9.11 AS stage-01
+RUN apt update && apt upgrade -y
+
+FROM stage-01 as stage-02
+RUN apt install -y build-essential
+
+FROM stage-02 as stage-02a
+RUN echo "Build 0.1" > /version.txt
+
+FROM stage-02 as stage-03
+RUN apt install -y cmake gcc g++
+```
+
+Now you can use the --target option to tell Docker that you want to stop at the stage-02 as follows:
+
+```bash
+$ docker build -f test-docker.Dockerfile -t test . --target stage-02                                                                                                                                   
+[+] Building 67.5s (7/7) FINISHED
+ => [internal] load build definition from test-docker.Dockerfile                                 0.0s
+ => => transferring dockerfile: 348B                                                             0.0s
+ => [internal] load .dockerignore                                                                0.0s
+ => => transferring context: 2B                                                                  0.0s
+ => [internal] load metadata for docker.io/library/debian:9.11                                   0.0s
+ => [stage-01 1/2] FROM docker.io/library/debian:9.11                                            0.0s
+ => CACHED [stage-01 2/2] RUN apt update &&     apt upgrade -y                                   0.0s
+ => [stage-02 1/1] RUN apt install -y build-essential                                           64.7s
+ => exporting to image                                                                           2.6s
+ => => exporting layers                                                                          2.5s
+ => => writing image sha256:ac36b95184b79b6cabeda3e4d7913768f6ed73527b76f025262d6e3b68c2a357     0.0s
+ => => naming to docker.io/library/test                                                          0.0s
+```
+
+Now you have the image with the name test and you can spawn a container to troubleshoot.
+
+```bash
+docker run -ti --rm --name troubleshoot test /bin/bash
+root@bbdb0d2188c0:/# ls
+```
 
 
 

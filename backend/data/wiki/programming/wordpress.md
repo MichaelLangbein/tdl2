@@ -17,7 +17,7 @@ Lots of people sell GPL licensed plugins, so you can make money this way. But th
   - Lots of people have businesses selling or supporting GPL licensed plugins
 
 
-### How do plugins like Gravityforms protect their plugin from being redistributed to the wild ?
+### How do plugins like Gravityforms protect their plugin from being redistributed to the wild?
 
 They can't.
 
@@ -25,7 +25,7 @@ Since WordPress is GPL code, all code publicly distributed must also be licensed
 
 The GPL states you cannot charge for code, but you can charge for distribution. So when you buy gravity forms, you're not paying for the plugin, you're paying for the downloading and acquisition of the plugin.
 
-Once you have the plugin it is perfectly legal to burn it to a CD and mail it to 20,000 people free of charge. You won't get the support or updates ( unless you pay them again, or you have a support contract ), and it would be a pretty nasty thing to do ( they have a business! ), but it's perfectly legal.
+Once you have the plugin it is perfectly legal to burn it to a CD and mail it to 20,000 people free of charge. You won't get the support or updates (unless you pay them again, or you have a support contract), and it would be a pretty nasty thing to do (they have a business!), but it's perfectly legal.
 
 No matter what you do, someone will figure out how to redistribute it for free, so stop worrying about it, those people were never going to pay anyway and won't get the support for updates.
 
@@ -63,7 +63,6 @@ services:
    depends_on:
      - db
      - phpmyadmin
-   restart: always
    ports:
      - 8080:80
  
@@ -77,14 +76,12 @@ services:
      - MYSQL_USER=root
      - MYSQL_PASSWORD=password
      - MYSQL_DATABASE=wordpress
-   restart: always
  
  phpmyadmin:
    depends_on:
      - db
    image: phpmyadmin/phpmyadmin:latest
    container_name: phpmyadmin
-   restart: always
    ports:
      - 8180:80
    environment:
@@ -99,7 +96,7 @@ volumes:
 
 
 
-# JS
+## JS
 
 ### Part 0: custom block basic concepts
 
@@ -312,19 +309,16 @@ add_shortcode('ng_wp', function () {
 ```
 
 
-<br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 
-### Part 3: attributes - maintaining state accross page-reloads
 
-
-### Part 4: WP API
+## REST API
 
 1. Activate the json-api: go to `http://localhost:8080/wp-admin/options-permalink.php` and chose any permalink-type other than `plain`.
 2. You can access the api at `http://localhost:8080/wp-json`
 
 
-### Part 5: Fast development
-- Preventing validation errors: https://wordpress.stackexchange.com/questions/364959/how-to-develop-custom-blocks-without-triggering-validation-errors 
 
 ## Database
+
+Creating a custom content type: https://gist.github.com/kosso/47004c9fa71920b441f3cd0c35894409

@@ -2,6 +2,9 @@
 
 Basic haskell syntax
 ```haskell
+-- lists
+[1, 3, 2]
+
 -- list comprehensions are very much like math's set comprehensions
 removeNonUpperCase :: [Char] -> [Char]
 removeNonUpperCase st = [c | c <- st, c `elem` ['A' .. 'Z']]
