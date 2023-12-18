@@ -504,6 +504,91 @@ Downstream observables, never mind if they are hot or cold, pull data from upstr
 
 
 
+
+## Design patterns
+
+
+### Remember value further down the chain
+https://medium.com/@snorredanielsen/rxjs-accessing-a-previous-value-further-down-the-pipe-chain-b881026701c1
+
+
+### Mouse pos while dragging
+```ts
+const mousePos$ = fromEvent<MouseEvent>(container, "mousemove").pipe(
+  map(e => {
+      const x = e.clientX - e.target.offsetLeft;
+      const y = e.clientY - e.target.offsetTop;
+      return {x, y};
+  })
+);
+
+const mouseDown$ = fromEvent<MouseEvent>(container, "mousedown").pipe(map(e => true));
+
+const mouseUp$ = fromEvent<MouseEvent>(container, "mouseup").pipe(map(e => true));
+
+const mousePosUntilUp$ = mousePos$.pipe(
+  takeUntil(mouseUp$)
+);
+
+const mousePosAfterDown$ = mouseDown$.pipe(
+  switchMap(down => mousePosUntilUp$)
+);
+```
+
+### Drag-connect two divs
+```ts
+import { combineLatest, filter, fromEvent, switchMap, takeUntil } from "rxjs";
+import "./style.css";
+
+
+const container = document.getElementById("app") as HTMLDivElement;
+
+const mouseMove$ = fromEvent<MouseEvent>(container, "mousemove");
+const mouseDown$ = fromEvent<MouseEvent>(container, "mousedown");
+const mouseUp$ = fromEvent<MouseEvent>(container, "mouseup");
+
+
+const mouseDownOnDragger$ = mouseDown$.pipe(
+  filter(e => e.target ? (e.target as HTMLDivElement).classList.contains("drag-handle") : false)
+);
+
+const mouseDownOnConnector$ = mouseDown$.pipe(
+  filter(e => e.target ? (e.target as HTMLDivElement).classList.contains("connect-handle") : false)
+);
+
+const mouseMoveUntilUp$ = mouseMove$.pipe(
+  takeUntil(mouseUp$)
+);
+
+const nodeDrag$ = mouseDownOnDragger$.pipe(
+  switchMap(_ => mouseMoveUntilUp$)
+);
+
+const nodeConnectDragged$ = mouseDownOnConnector$.pipe(
+  switchMap(_ => mouseMoveUntilUp$)
+);
+
+const nodeConnectDraggedWithSource$ = combineLatest([mouseDownOnConnector$, nodeConnectDragged$]);
+
+const nodesConnected$ = nodeConnectDraggedWithSource$.pipe(
+  filter(([sourceEvent, targetEvent]) => targetEvent.target ? (targetEvent.target as HTMLDivElement).classList.contains("connect-handle") : false)
+);
+
+nodesConnected$.subscribe(d => console.log("connected"))
+
+nodeDrag$.subscribe(e => {
+  if (e.target && e.target.parentNode && e.target.parentNode.parentNode.classList.contains("node")) {
+    // @TODO: better: make the drag-handle the parent element, so that you don't have to refer to the parent node
+    // nor do that silly ${e.clientX - 50} to account for the drag-handles offset relative to the parent.
+
+    e.target.parentNode.style.left = `${e.clientX - 50}px`;
+    e.target.parentNode.style.top = `${e.clientY - 50}px`;
+  }
+});
+```
+
+
+
 ## Other (arguably better) approaches
 - Elm (https://elm-lang.org/assets/papers/concurrent-frp.pdf)
     - Identifies two problems:
