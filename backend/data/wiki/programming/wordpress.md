@@ -1,5 +1,126 @@
 # Wordpress
 
+## Concepts
+
+- Page
+- Post
+- Page/Post editor: Content editing through UI. Uses blocks for content.
+  - Page editor allows you to add any blocks you like. They will be placed in the `content-block`, which is a special block that you can place in the site-editor.
+- Site editor: `Appearance/Editor`: Theme editing through UI. Uses blocks for structure.
+  - Has a special block `content`. This block cannot be edited on a template-level, but will be filled by the authors for each page/post/etc. individually.
+- Theme
+  - Templates: layouts of blocks that can be applied to content types
+    - Example: in the "twenty-twenty-three" theme, a "page" content type can use one of many templates: "page", "page-without-title", "page-with-wide-image", ...
+    - Templates are applied in Content editor/settings (on the right)/template
+    - Templates are edited in the Site editor
+    - They are further subdivided into template-parts
+  - patterns: sets of blocks that can be placed together
+
+#### Example: custom parallax header
+
+1. create new page
+2. in settings (on right) chose template: "page with wide title"
+3. Edit template:
+   3.1. remove header (without editing the actual header sub-template, since it's being used in other templates, too)
+   3.2. replace featured image with custom html block
+   3.3. select custom html block's parent, display it as full-width
+
+... wait, actually, that's silly. This way the same hero will be displayed for all pages with template "wide title". Better:
+
+1. create new page
+2. in settings (on right) chose template: create new template
+   2.1. remove all blocks
+   2.2. add a footer at the end
+   2.3. add `content` block at top - as top level, no columns or further styling.
+3. Then do the actual content creating in page-editor, not site-editor
+   3.1. top: custom html block (with below code)
+   3.2. under that: columns (25/50/25)
+   3.3. in middle: any paragraph text you like.
+
+In general, I think that sometimes the predefined templates can be a bit restrictive, having a fully custom template type is useful under any circumstances.
+
+Here's the custom html:
+
+```html
+<div style="width: 100%;">
+  <svg
+    id="graphic"
+    width="100%"
+    viewBox="0 0 100 35"
+    id="outer"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <mask id="outlineMask">
+      <rect width="100" height="35"></rect>
+      <path
+        d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z"
+        fill="white"
+      ></path>
+    </mask>
+
+    <defs>
+      <linearGradient id="skyGrad" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#00e1ff" />
+        <stop offset="100%" stop-color="#fcfcfc" />
+      </linearGradient>
+    </defs>
+
+    <svg id="contents" mask="url(#outlineMask)">
+      <rect id="background" width="100" height="35" fill="url(#skyGrad)"></rect>
+
+      <svg
+        id="fullBuilding"
+        x="5"
+        y="5"
+        width="20"
+        height="40"
+        viewBox="0 0 100 200"
+      >
+        <rect x="47.5" y="46" width="5" height="100" fill="white"></rect>
+        <rect x="45" y="46" width="10" height="8" fill="white"></rect>
+
+        <svg
+          id="fullRotor"
+          x="0"
+          y="0"
+          width="100"
+          height="100"
+          viewBox="0 0 100 100"
+        >
+          <defs>
+            <path id="blade" d="M 0,50 C 9,40, 0,30, 0,0 Z" fill="white"></path>
+          </defs>
+          <g id="rotorRotatableGroup" transform="rotate(10 50 50)">
+            <svg x="45" y="45" width="10" height="10" viewBox="0 0 100 100">
+              <g transform="rotate(15 50 50)">
+                <path d="M 50 0 L 93.3 75 L 6.7 75 Z" fill="white"></path>
+              </g>
+            </svg>
+            <use href="#blade" x="50" y="0" transform="" />
+            <use href="#blade" x="50" y="0" transform="rotate(120 50 50)" />
+            <use href="#blade" x="50" y="0" transform="rotate(240 50 50)" />
+            <circle cx="50" cy="50" r="2.5" fill="white"></circle>
+          </g>
+        </svg>
+      </svg>
+    </svg>
+  </svg>
+
+  <script>
+    const svg = document.getElementById("graphic");
+    const bg = svg.querySelector("#background");
+    const wka = svg.querySelector("#fullBuilding");
+    const rotor = wka.querySelector("#rotorRotatableGroup");
+
+    window.addEventListener("scroll", (e) => {
+      bg.setAttribute("transform", `translate(0 ${-0.02 * window.scrollY})`);
+      wka.setAttribute("transform", `translate(0 ${-0.03 * window.scrollY})`);
+      rotor.setAttribute("transform", `rotate(${0.2 * window.scrollY} 50 50)`);
+    });
+  </script>
+</div>
+```
+
 ## Paid plugins
 
 Wordpress uses a GPL license.
