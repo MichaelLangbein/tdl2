@@ -4,17 +4,36 @@
 
 - Page
 - Post
-- Page/Post editor: Content editing through UI. Uses blocks for content.
+- **Page/Post editor**: Content editing through UI. Uses blocks for content.
   - Page editor allows you to add any blocks you like. They will be placed in the `content-block`, which is a special block that you can place in the site-editor.
-- Site editor: `Appearance/Editor`: Theme editing through UI. Uses blocks for structure.
+- **Site editor**: `Appearance/Editor`: Theme editing through UI. Uses blocks for structure.
   - Has a special block `content`. This block cannot be edited on a template-level, but will be filled by the authors for each page/post/etc. individually.
-- Theme
-  - Templates: layouts of blocks that can be applied to content types
+- **Theme**
+  - **Templates**: layouts of blocks that can be applied to content types
     - Example: in the "twenty-twenty-three" theme, a "page" content type can use one of many templates: "page", "page-without-title", "page-with-wide-image", ...
     - Templates are applied in Content editor/settings (on the right)/template
     - Templates are edited in the Site editor
     - They are further subdivided into template-parts
-  - patterns: sets of blocks that can be placed together
+  - **Patterns**: sets of blocks that can be placed together
+
+### Exporting templates
+
+Go to appearance / Editor, then on the right "..." menu, click on "export".
+
+### Exporting patterns
+
+Go to manage patterns, click "export as json".
+
+Example:
+
+```json
+{
+  "__file": "wp_block",
+  "title": "Compare left right",
+  "content": "<!-- wp:columns {\"style\":{\"spacing\":{\"padding\":{\"right\":\"var:preset|spacing|20\",\"left\":\"var:preset|spacing|20\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"},\"blockGap\":{\"left\":\"var:preset|spacing|40\"}},\"border\":{\"width\":\"0px\",\"style\":\"none\",\"radius\":\"26px\"}},\"backgroundColor\":\"accent\",\"fontSize\":\"small\"} -->\n<div class=\"wp-block-columns has-accent-background-color has-background has-small-font-size\" style=\"border-style:none;border-width:0px;border-radius:26px;margin-top:0;margin-bottom:0;padding-right:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20)\"><!-- wp:column {\"className\":\"infoBox infoBoxRight\"} -->\n<div class=\"wp-block-column infoBox infoBoxRight\"><!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Wind power</h2>\n<!-- /wp:heading -->\n\n<!-- wp:image {\"align\":\"left\",\"id\":43,\"width\":\"200px\",\"sizeSlug\":\"large\",\"linkDestination\":\"none\",\"className\":\"is-style-default\"} -->\n<figure class=\"wp-block-image alignleft size-large is-resized is-style-default\"><img src=\"http://localhost:8080/wp-content/uploads/2023/12/svg2roughjs_windpower.svg\" alt=\"\" class=\"wp-image-43\" style=\"width:200px\"/></figure>\n<!-- /wp:image -->\n\n<!-- wp:paragraph -->\n<p>Lorem ipsum dolor sit amet, consetetur  et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column -->\n\n<!-- wp:column {\"style\":{\"spacing\":{\"padding\":{\"right\":\"0\",\"left\":\"0\"}}},\"className\":\"infoBox infoBoxRight\"} -->\n<div class=\"wp-block-column infoBox infoBoxRight\" style=\"padding-right:0;padding-left:0\"><!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Solar power</h2>\n<!-- /wp:heading -->\n\n<!-- wp:image {\"align\":\"right\",\"id\":45,\"width\":\"200px\",\"sizeSlug\":\"large\",\"linkDestination\":\"none\"} -->\n<figure class=\"wp-block-image alignright size-large is-resized\"><img src=\"http://localhost:8080/wp-content/uploads/2023/12/svg2roughjs_solar.svg\" alt=\"\" class=\"wp-image-45\" style=\"width:200px\"/></figure>\n<!-- /wp:image -->\n\n<!-- wp:paragraph -->\n<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column --></div>\n<!-- /wp:columns -->",
+  "syncStatus": ""
+}
+```
 
 #### Example: custom parallax header
 
@@ -43,19 +62,10 @@ Here's the custom html:
 
 ```html
 <div style="width: 100%;">
-  <svg
-    id="graphic"
-    width="100%"
-    viewBox="0 0 100 35"
-    id="outer"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg id="graphic" width="100%" viewBox="0 0 100 35" id="outer" xmlns="http://www.w3.org/2000/svg">
     <mask id="outlineMask">
       <rect width="100" height="35"></rect>
-      <path
-        d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z"
-        fill="white"
-      ></path>
+      <path d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z" fill="white"></path>
     </mask>
 
     <defs>
@@ -68,25 +78,11 @@ Here's the custom html:
     <svg id="contents" mask="url(#outlineMask)">
       <rect id="background" width="100" height="35" fill="url(#skyGrad)"></rect>
 
-      <svg
-        id="fullBuilding"
-        x="5"
-        y="5"
-        width="20"
-        height="40"
-        viewBox="0 0 100 200"
-      >
+      <svg id="fullBuilding" x="5" y="5" width="20" height="40" viewBox="0 0 100 200">
         <rect x="47.5" y="46" width="5" height="100" fill="white"></rect>
         <rect x="45" y="46" width="10" height="8" fill="white"></rect>
 
-        <svg
-          id="fullRotor"
-          x="0"
-          y="0"
-          width="100"
-          height="100"
-          viewBox="0 0 100 100"
-        >
+        <svg id="fullRotor" x="0" y="0" width="100" height="100" viewBox="0 0 100 100">
           <defs>
             <path id="blade" d="M 0,50 C 9,40, 0,30, 0,0 Z" fill="white"></path>
           </defs>
@@ -303,9 +299,7 @@ registerBlockType("test/counter", {
   },
   // return component root html shown in customer-view
   save: function () {
-    return (
-      <div id="mycounter">Hi! I will be replaced with a react component.</div>
-    );
+    return <div id="mycounter">Hi! I will be replaced with a react component.</div>;
   },
 });
 ```
@@ -356,6 +350,121 @@ This will:
   - Webpack already knows that wordpress has its own version of react. If it sees react in your code, it will also add it automatically to `index.asset.php`.
 - create a `view.assets.php`
 - create a compiled `block.json` in build, ... which is where we pointed to with our plugin-file `counter.php`.
+
+## React as a shortcode
+
+```php
+<?php
+
+/**
+ * Plugin Name: Related values
+ * Version: 0.1
+ * Description: Creates a hover text for `[relate value="120" name="kWh" to="'cycling','driving'"]`
+ */
+
+$units = [
+    [
+        "name"     => "power",
+        "unit"     => "kWh",
+        "compares" => [
+            ["name" => "cycling", "factor" => 1.2],
+            ["name" => "driving", "factor" => 0.1]
+        ]
+    ], [
+        "name"     => "love",
+        "unit"     => "hearts",
+        "compares" => []
+    ]
+];
+
+function related_values_shortcode($attrs, $content, $shortcode_tag)
+{
+    global $units;
+
+    $id           = uniqid();
+    $value        = $attrs["value"];
+    $name         = $attrs["name"];
+    $to           = array_map(
+        function ($val) {
+            return trim($val);
+        },
+        explode(",", $attrs["to"])
+    );
+    $unitsEncoded = json_encode($units);
+
+
+    $output = <<<HTML
+        <a
+            id="$id"
+            style="color: blue;"
+            onmouseover='window.doTheLog("$id", $unitsEncoded)'
+            onmouseout='window.removeTheLog("$id")'
+            >
+            $value $name
+        </a>
+    HTML;
+
+    return $output;
+}
+
+
+add_action("wp_enqueue_scripts", function () {
+    $url = plugin_dir_url(__FILE__) . "/build/index.js";
+    // NOTE: don't forget to add the react-dependencies.
+    wp_register_script("related_values_script", $url, ["react", "react-dom"], false, true);
+});
+
+add_action("init", function () {
+    wp_enqueue_script("related_values_script");
+    add_shortcode("relate", "related_values_shortcode");
+});
+```
+
+```tsx
+import { createRoot } from "react-dom/client";
+
+function doTheLog(id: string, data: any) {
+  const el = document.getElementById(id) as HTMLLinkElement;
+
+  const y = el.offsetTop;
+  const x = el.offsetLeft;
+
+  const body = document.body;
+  const rt = document.createElement("div");
+  rt.id = popupId(id);
+  rt.style.position = "absolute";
+  rt.style.top = "0";
+  rt.style.left = "0";
+  body.appendChild(rt);
+  const root = createRoot(rt);
+
+  function Base(props: { x: number; y: number }) {
+    console.log(props);
+    return (
+      <div style={{ position: "absolute", top: `${props.x} px`, left: `${props.y} px` }}>
+        <p>Here I am.</p>;
+      </div>
+    );
+  }
+
+  root.render(<Base x={x} y={y}></Base>);
+}
+
+function removeTheLog(id: string) {
+  const popup = document.getElementById(popupId(id));
+  popup?.remove();
+}
+
+function popupId(id: string) {
+  return `popup-${id}`;
+}
+
+// NOTE: saving functions to window, so they survive minification.
+// @ts-ignore
+window.doTheLog = doTheLog;
+// @ts-ignore
+window.removeTheLog = removeTheLog;
+```
 
 ## Angular as a shortcode
 
@@ -426,7 +535,7 @@ add_shortcode('ng_wp', function () {
 });
 
 // Add the shortcode [ng_wp] to any page or post.
-// The shorcode can be whatever. [ng_wp] is just an example.
+// The shortcode can be whatever. [ng_wp] is just an example.
 ```
 
 ## REST API
@@ -438,11 +547,17 @@ add_shortcode('ng_wp', function () {
 
 Creating a custom content type: https://gist.github.com/kosso/47004c9fa71920b441f3cd0c35894409
 
-## Sortcodes
-
-https://kinsta.com/blog/wordpress-shortcodes/
-
 ## Static site
 
 Only partial static site:
 https://wordpress.org/support/topic/do-you-have-to-convert-your-whole-site-to-static-or-partial-conversion-supported/
+
+## Deployment
+
+| Content type    | Deployment                 |     |     |     |
+| --------------- | -------------------------- | --- | --- | --- |
+| Page, Post      | Stored in DB               |     |     |     |
+| Block           | Defined in code            |     |     |     |
+| Shortcode       | Defined in code            |     |     |     |
+| Template(-part) | Per UI, exportable to code |     |     |     |
+| Pattern         | Per UI, exportable to code |     |     |     |
