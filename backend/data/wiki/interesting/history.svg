@@ -3,8 +3,8 @@
 
 <svg
    width="6182.8379"
-   height="10716.497"
-   viewBox="0 0 6182.8379 10716.497"
+   height="22758.42"
+   viewBox="0 0 6182.8379 22758.42"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.24579697"
-     inkscape:cx="4847.4966"
-     inkscape:cy="1995.5494"
+     inkscape:zoom="0.27494448"
+     inkscape:cx="4464.5376"
+     inkscape:cy="1249.3431"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
@@ -36,29 +36,77 @@
      showguides="true"
      inkscape:guide-bbox="true">
     <sodipodi:guide
-       position="6434.8188,6836.7426"
+       position="6434.8188,9913.8251"
        orientation="0,-1"
        id="guide97433" />
     <sodipodi:guide
-       position="6387.6693,4124.9404"
+       position="6387.6693,7202.0229"
        orientation="0,-1"
        id="guide70807" />
     <sodipodi:guide
-       position="4806.6926,5505.3351"
+       position="4806.6926,8582.4176"
        orientation="0,-1"
        id="guide277079" />
     <sodipodi:guide
-       position="5855.1745,1796.6037"
+       position="5855.1745,4873.6862"
        orientation="0,-1"
        id="guide313502" />
     <sodipodi:guide
-       position="292.87397,8225.2392"
+       position="292.87396,11302.322"
        orientation="0,-1"
        id="guide44825" />
     <sodipodi:guide
-       position="2385.859,9503.7082"
+       position="2381.6759,12360.892"
        orientation="0,-1"
        id="guide75621" />
+    <sodipodi:guide
+       position="4657.6865,13866.908"
+       orientation="0,-1"
+       id="guide55242" />
+    <sodipodi:guide
+       position="820.50452,14983.312"
+       orientation="0,-1"
+       id="guide55244" />
+    <sodipodi:guide
+       position="813.66698,15920.054"
+       orientation="0,-1"
+       id="guide55246" />
+    <sodipodi:guide
+       position="670.07869,16679.021"
+       orientation="0,-1"
+       id="guide55248" />
+    <sodipodi:guide
+       position="1107.6811,17458.5"
+       orientation="0,-1"
+       id="guide55250" />
+    <sodipodi:guide
+       position="1032.4682,18237.98"
+       orientation="0,-1"
+       id="guide55252" />
+    <sodipodi:guide
+       position="1073.4934,18990.109"
+       orientation="0,-1"
+       id="guide55254" />
+    <sodipodi:guide
+       position="923.06759,19967.877"
+       orientation="0,-1"
+       id="guide55256" />
+    <sodipodi:guide
+       position="885.50932,20831.558"
+       orientation="0,-1"
+       id="guide108386" />
+    <sodipodi:guide
+       position="3299.0238,21733.816"
+       orientation="0,-1"
+       id="guide108388" />
+    <sodipodi:guide
+       position="3066.9632,22749.865"
+       orientation="0,-1"
+       id="guide108390" />
+    <sodipodi:guide
+       position="3469.7009,13199.105"
+       orientation="0,-1"
+       id="guide265852" />
   </sodipodi:namedview>
   <defs
      id="defs2">
@@ -103,20 +151,31 @@
        x2="2506.5654"
        y2="1014.181"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.5169632,0,0,4.1267789,-1293.4022,-2979.185)" />
+       gradientTransform="matrix(1.5169632,0,0,8.7639611,-1293.4022,-10678.326)" />
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(3030.7444,4131.7485)">
+     transform="translate(3030.7444,13096.589)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-2849.8796"
+       y="-646.6897"
+       id="text334750"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan334748"
+         x="-2849.8796"
+         y="-646.6897">Simon Bolivar</tspan></text>
     <rect
        id="rect89427"
        width="4176.6079"
-       height="10716.497"
+       height="22758.42"
        x="-1674.6857"
-       y="-4117.8984"
-       style="opacity:0.503452;fill:url(#linearGradient90272);fill-opacity:1;stroke-width:2.50206" />
+       y="-13096.589"
+       style="opacity:0.503452;fill:url(#linearGradient90272);fill-opacity:1;stroke-width:3.64621" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2.10345px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 57.614918,3488.5792 37.625374,3.2346 0.942194,741.4871 v 0 H 55.186477"
@@ -158,6 +217,26 @@
        id="path102-5-3"
        sodipodi:nodetypes="ccccc" />
     <path
+       style="fill:none;stroke:#000000;stroke-width:1.11838px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -271.70881,5253.2389 37.71306,0.9123 0.94439,209.1274 v 0 h -41.09155"
+       id="path102-5-3-3"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.11838px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -281.62266,5848.6449 37.71306,0.9123 0.94439,209.1274 v 0 h -41.09155"
+       id="path102-5-3-3-1"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.11838px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -1310.061,6564.0409 37.713,0.9123 0.9444,209.1274 v 0 h -41.0915"
+       id="path102-5-3-3-8"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.11838px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -1314.4749,6316.8625 37.713,0.9123 0.9444,209.1274 v 0 h -41.0915"
+       id="path102-5-3-3-5"
+       sodipodi:nodetypes="ccccc" />
+    <path
        style="fill:none;stroke:#000000;stroke-width:0.79064px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m -937.03141,3343.5751 37.71306,0.456 0.94439,104.5176 v 0 h -41.09155"
        id="path102-5-3-4"
@@ -176,6 +255,11 @@
        style="fill:none;stroke:#000000;stroke-width:1.55965px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 116.22434,2385.0123 37.42454,1.7879 0.93717,409.8474 v 0 h -40.77719"
        id="path102-36"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.35388px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -671.91764,2068.024 37.00608,4.1185 0.92669,944.0992 v 0 h -40.32124"
+       id="path102-36-8"
        sodipodi:nodetypes="ccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.921528px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -298,9 +382,39 @@
        id="path102-3-6-1-3"
        sodipodi:nodetypes="ccccc" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:3.0114px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 337.96603,-3708.5856 37.713,-3.4427 0.9444,1516.2245 v 0 h -41.0915"
+       style="fill:none;stroke:#000000;stroke-width:2.54271px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 337.96603,-3274.3341 37.713,-2.4545 0.9444,1080.9848 v 0 h -41.0915"
        id="path102-3-6-1-8"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.12011px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 2235.286,-10631.682 37.713,-1.706 0.9444,751.5228 v 0 h -41.0915"
+       id="path102-3-6-1-8-9"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.12011px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 2526.1704,-9819.7384 37.713,-1.706 0.9444,751.5228 v 0 h -41.0915"
+       id="path102-3-6-1-8-9-3"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.87896px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1734.7199,-8241.2775 37.713,-1.34 0.9444,590.2811 v 0 h -41.0915"
+       id="path102-3-6-1-8-9-3-3"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.67158px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -348.98436,-5809.3692 38.01091,-1.0522 0.95186,463.5158 v 0 h -41.4161"
+       id="path102-3-6-1-8-9-3-8"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.44883px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 2641.7815,-10728.186 37.713,-2.276 0.9444,1002.6383 v 0 h -41.0915"
+       id="path102-3-6-1-8-9-5"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.37656px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 2729.4128,-4969.8119 37.713,-2.1441 0.9444,944.3367 v 0 h -41.0915"
+       id="path102-3-6-1-8-7"
        sodipodi:nodetypes="ccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2.27999px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1061,12 +1175,12 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="-840.88965"
+       x="-974.88965"
        y="2247.4065"
        id="text319228"><tspan
          sodipodi:role="line"
          id="tspan319226"
-         x="-840.88965"
+         x="-974.88965"
          y="2247.4065">Haiti Revolution</tspan></text>
     <text
        xml:space="preserve"
@@ -1299,7 +1413,11 @@
          sodipodi:role="line"
          id="tspan71775"
          x="2162.9368"
-         y="-2218.2397">1453 Fall of Constantinople</tspan></text>
+         y="-2218.2397">1453 Fall of Constantinople</tspan><tspan
+         sodipodi:role="line"
+         x="2162.9368"
+         y="-2168.2397"
+         id="tspan250634">to the Ottomans</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
@@ -1363,13 +1481,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="187.60277"
-       y="-3694.4802"
+       x="240.35216"
+       y="-3250.2585"
        id="text105851"><tspan
          sodipodi:role="line"
          id="tspan105849"
-         x="187.60277"
-         y="-3694.4802">1337</tspan></text>
+         x="240.35216"
+         y="-3250.2585">1337</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
@@ -1549,12 +1667,796 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="2556.7268"
-       y="-2398.4216"
+       x="2901.6006"
+       y="-2344.4055"
        id="text38155"><tspan
          sodipodi:role="line"
          id="tspan38153"
-         x="2556.7268"
-         y="-2398.4216">Decline of golden horde</tspan></text>
+         x="2901.6006"
+         y="-2344.4055">Decline of golden horde</tspan><tspan
+         sodipodi:role="line"
+         x="2901.6006"
+         y="-2294.4055"
+         id="tspan346857">Decline of Timurid empire</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-477.16431"
+       y="5275.3677"
+       id="text4147"><tspan
+         sodipodi:role="line"
+         id="tspan4145"
+         x="-477.16431"
+         y="5275.3677">1914</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-453.08911"
+       y="5470.3423"
+       id="text6659"><tspan
+         sodipodi:role="line"
+         id="tspan6657"
+         x="-453.08911"
+         y="5470.3423">1918</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-394.63403"
+       y="5338.2134"
+       id="text8367"><tspan
+         sodipodi:role="line"
+         id="tspan8365"
+         x="-394.63403"
+         y="5338.2134">WWI</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-423.24463"
+       y="5804.9341"
+       id="text14839"><tspan
+         sodipodi:role="line"
+         id="tspan14837"
+         x="-423.24463"
+         y="5804.9341">1939</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-417.20703"
+       y="6082.9351"
+       id="text17483"><tspan
+         sodipodi:role="line"
+         id="tspan17481"
+         x="-417.20703"
+         y="6082.9351">1945</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-329.42993"
+       y="5920.0845"
+       id="text19005"><tspan
+         sodipodi:role="line"
+         id="tspan19003"
+         x="-329.42993"
+         y="5920.0845">WWII</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1522.1169"
+       y="5618.2319"
+       id="text27049"><tspan
+         sodipodi:role="line"
+         id="tspan27047"
+         x="1522.1169"
+         y="5618.2319">1933: Machtergreifung</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1466.1001"
+       y="6388.8911"
+       id="text35699"><tspan
+         sodipodi:role="line"
+         id="tspan35697"
+         x="-1466.1001"
+         y="6388.8911">1950</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1447.1199"
+       y="6501.7798"
+       id="text37749"><tspan
+         sodipodi:role="line"
+         id="tspan37747"
+         x="-1447.1199"
+         y="6501.7798">1953</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1403.4153"
+       y="6449.5991"
+       id="text39709"><tspan
+         sodipodi:role="line"
+         id="tspan39707"
+         x="-1403.4153"
+         y="6449.5991">Korean war</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1446.8789"
+       y="6549.4116"
+       id="text44041"><tspan
+         sodipodi:role="line"
+         id="tspan44039"
+         x="-1446.8789"
+         y="6549.4116">1955</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1459.0698"
+       y="6833.7466"
+       id="text46025"><tspan
+         sodipodi:role="line"
+         id="tspan46023"
+         x="-1459.0698"
+         y="6833.7466">1975</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1388.4182"
+       y="6715.4448"
+       id="text47271"><tspan
+         sodipodi:role="line"
+         id="tspan47269"
+         x="-1388.4182"
+         y="6715.4448">Vietnam war</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="363.62988"
+       y="-5555.5972"
+       id="text61200"><tspan
+         sodipodi:role="line"
+         id="tspan61198"
+         x="363.62988"
+         y="-5555.5972">1066 Willy Conq</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2158.2292"
+       y="-9876.2451"
+       id="text84150"><tspan
+         sodipodi:role="line"
+         id="tspan84148"
+         x="2158.2292"
+         y="-9876.2451">565</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2158.2292"
+       y="-10618.721"
+       id="text85122"><tspan
+         sodipodi:role="line"
+         id="tspan85120"
+         x="2158.2292"
+         y="-10618.721">482</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2274.0745"
+       y="-10169.438"
+       id="text89020"><tspan
+         sodipodi:role="line"
+         id="tspan89018"
+         x="2274.0745"
+         y="-10169.438">Justinian</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2591.1482"
+       y="-4970.5288"
+       id="text92720"><tspan
+         sodipodi:role="line"
+         id="tspan92718"
+         x="2591.1482"
+         y="-4970.5288">1155</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2608.2854"
+       y="-4003.1682"
+       id="text94506"><tspan
+         sodipodi:role="line"
+         id="tspan94504"
+         x="2608.2854"
+         y="-4003.1682">1227</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2608.2405"
+       y="-4372.2866"
+       id="text96094"><tspan
+         sodipodi:role="line"
+         id="tspan96092"
+         x="2608.2405"
+         y="-4372.2866">Djingis Khan</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2254.0437"
+       y="-12321.021"
+       id="text111650"><tspan
+         sodipodi:role="line"
+         id="tspan111648"
+         x="2254.0437"
+         y="-12321.021">286 Division of Rome, general decentralization</tspan><tspan
+         sodipodi:role="line"
+         x="2254.0437"
+         y="-12271.021"
+         id="tspan421771">(Diocletian ruling east as superior)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2570.8289"
+       y="-9725.2764"
+       id="text118428"><tspan
+         sodipodi:role="line"
+         id="tspan118426"
+         x="2570.8289"
+         y="-9725.2764">579</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2650.5715"
+       y="-9997.918"
+       id="text120184"><tspan
+         sodipodi:role="line"
+         id="tspan120182"
+         x="2650.5715"
+         y="-9997.918">Chosrau I of Persia</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2595.5251"
+       y="-10713.301"
+       id="text122486"><tspan
+         sodipodi:role="line"
+         id="tspan122484"
+         x="2595.5251"
+         y="-10713.301">???</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2448.842"
+       y="-9814.5176"
+       id="text125919"><tspan
+         sodipodi:role="line"
+         id="tspan125917"
+         x="2448.842"
+         y="-9814.5176">570</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2436.2043"
+       y="-9051.4033"
+       id="text128101"><tspan
+         sodipodi:role="line"
+         id="tspan128099"
+         x="2436.2043"
+         y="-9051.4033">632</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2454.3445"
+       y="-9411.5205"
+       id="text129491"><tspan
+         sodipodi:role="line"
+         id="tspan129489"
+         x="2454.3445"
+         y="-9411.5205">Mohammed</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="8357.9453"
+       y="3133.126"
+       id="text133585"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan133583"
+         x="8357.9453"
+         y="3133.126">Umayyad caliphate </tspan><tspan
+         sodipodi:role="line"
+         x="8357.9453"
+         y="3183.126"
+         id="tspan218398">(mostly Sunni)</tspan><tspan
+         sodipodi:role="line"
+         x="8357.9453"
+         y="3233.126"
+         id="tspan218400" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-408.63351"
+       y="-8451.7832"
+       id="text138449"><tspan
+         sodipodi:role="line"
+         id="tspan138447"
+         x="-408.63351"
+         y="-8451.7832">711 Umayyad conquest of Spain</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-463.40479"
+       y="-5802.4829"
+       id="text146175"><tspan
+         sodipodi:role="line"
+         id="tspan146173"
+         x="-463.40479"
+         y="-5802.4829">1043</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-446.44751"
+       y="-5321.481"
+       id="text147763"><tspan
+         sodipodi:role="line"
+         id="tspan147761"
+         x="-446.44751"
+         y="-5321.481">1099</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-422.73535"
+       y="-5556.6421"
+       id="text149879"><tspan
+         sodipodi:role="line"
+         id="tspan149877"
+         x="-422.73535"
+         y="-5556.6421">El Cid</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2564.8279"
+       y="-9069.9219"
+       id="text156326"><tspan
+         sodipodi:role="line"
+         id="tspan156324"
+         x="2564.8279"
+         y="-9069.9219">Shia (basically all of Persia/Iran + parts of Afghanistan)</tspan><tspan
+         sodipodi:role="line"
+         x="2564.8279"
+         y="-9019.9219"
+         id="tspan162664">/Suni divide</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2518.2014"
+       y="-5366.4795"
+       id="text180788"><tspan
+         sodipodi:role="line"
+         id="tspan180786"
+         x="2518.2014"
+         y="-5366.4795">1095 First crusade</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2179.0574"
+       y="-4140.4961"
+       id="text189012"><tspan
+         sodipodi:role="line"
+         id="tspan189010"
+         x="2179.0574"
+         y="-4140.4961">1202: 4th crusade,</tspan><tspan
+         sodipodi:role="line"
+         x="2179.0574"
+         y="-4090.4961"
+         id="tspan189014">Plundering of Constantinople</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2158.2722"
+       y="-4336.6465"
+       id="text195828"><tspan
+         sodipodi:role="line"
+         id="tspan195826"
+         x="2158.2722"
+         y="-4336.6465">1189: 3rd crusade, </tspan><tspan
+         sodipodi:role="line"
+         x="2158.2722"
+         y="-4286.6465"
+         id="tspan195830">Richard III vs Saladin,</tspan><tspan
+         sodipodi:role="line"
+         x="2158.2722"
+         y="-4236.6465"
+         id="tspan196558">Death of Barbarossa</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1584.7654"
+       y="-5125.1982"
+       id="text201236"><tspan
+         sodipodi:role="line"
+         id="tspan201234"
+         x="1584.7654"
+         y="-5125.1982">1122</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1591.2078"
+       y="-4255.3086"
+       id="text203330"><tspan
+         sodipodi:role="line"
+         id="tspan203328"
+         x="1591.2078"
+         y="-4255.3086">1190</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1616.4583"
+       y="-4626.3789"
+       id="text204720"><tspan
+         sodipodi:role="line"
+         id="tspan204718"
+         x="1616.4583"
+         y="-4626.3789">Barbarossa</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1612.2659"
+       y="-8228.0908"
+       id="text210004"><tspan
+         sodipodi:role="line"
+         id="tspan210002"
+         x="1612.2659"
+         y="-8228.0908">748</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1617.6267"
+       y="-7633.5342"
+       id="text211460"><tspan
+         sodipodi:role="line"
+         id="tspan211458"
+         x="1617.6267"
+         y="-7633.5342">814</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1566.4495"
+       y="-7951.6885"
+       id="text213744"><tspan
+         sodipodi:role="line"
+         id="tspan213742"
+         x="1566.4495"
+         y="-7951.6885">Charlemagne</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.27706px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1730.2933,-5137.6971 37.713,-1.9679 0.9444,866.9131 v 0 h -41.0915"
+       id="path102-3-6-1-8-9-3-1"
+       sodipodi:nodetypes="ccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2584.2493"
+       y="-8148.3447"
+       id="text238702"><tspan
+         sodipodi:role="line"
+         id="tspan238700"
+         x="2584.2493"
+         y="-8148.3447">750: Abbasid revolution</tspan><tspan
+         sodipodi:role="line"
+         x="2584.2493"
+         y="-8098.3447"
+         id="tspan251442">Spain remains Umayyad</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2891.1372"
+       y="-3817.9177"
+       id="text244062"><tspan
+         sodipodi:role="line"
+         id="tspan244060"
+         x="2891.1372"
+         y="-3817.9177">1258 Mongols sack Baghdad</tspan><tspan
+         sodipodi:role="line"
+         x="2891.1372"
+         y="-3767.9177"
+         id="tspan280190">End of Abbasyd califate</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-588.98657"
+       y="-5886.6655"
+       id="text261124"><tspan
+         sodipodi:role="line"
+         id="tspan261122"
+         x="-588.98657"
+         y="-5886.6655">1031 Umayyad Spain </tspan><tspan
+         sodipodi:role="line"
+         x="-588.98657"
+         y="-5836.6655"
+         id="tspan261126">disintegrates into city-states</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2559.0842"
+       y="-3560.6531"
+       id="text268254"><tspan
+         sodipodi:role="line"
+         id="tspan268252"
+         x="2559.0842"
+         y="-3560.6531">1299: Rise of Ottomans</tspan><tspan
+         sodipodi:role="line"
+         x="2559.0842"
+         y="-3510.6531"
+         id="tspan271954">against Byzantine</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2386.7971"
+       y="-2775.2571"
+       id="text290312"><tspan
+         sodipodi:role="line"
+         id="tspan290310"
+         x="2386.7971"
+         y="-2775.2571">1396: Failed crusade against rising Ottomans</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2562.6716"
+       y="-2616.1086"
+       id="text294594"><tspan
+         sodipodi:role="line"
+         id="tspan294592"
+         x="2562.6716"
+         y="-2616.1086">Ottoman war against </tspan><tspan
+         sodipodi:role="line"
+         x="2562.6716"
+         y="-2566.1086"
+         id="tspan297866">Mongols and civil wars</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2292.4319"
+       y="-2335.6584"
+       id="text300414"><tspan
+         sodipodi:role="line"
+         id="tspan300412"
+         x="2292.4319"
+         y="-2335.6584">Vlad Dracul</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2320.009"
+       y="-742.95813"
+       id="text308110"><tspan
+         sodipodi:role="line"
+         id="tspan308108"
+         x="2320.009"
+         y="-742.95813">1565: failed siege</tspan><tspan
+         sodipodi:role="line"
+         x="2320.009"
+         y="-692.95813"
+         id="tspan308112">of Malta by the Ottomans</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-1296.3522"
+       y="-1070.1583"
+       id="text310792"><tspan
+         sodipodi:role="line"
+         id="tspan310790"
+         x="-1296.3522"
+         y="-1070.1583">1541: Pedro de Valdivia</tspan><tspan
+         sodipodi:role="line"
+         x="-1296.3522"
+         y="-1020.1583"
+         id="tspan310794">in Chile</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-626.2356"
+       y="4047.6941"
+       id="text322526"><tspan
+         sodipodi:role="line"
+         id="tspan322524"
+         x="-626.2356"
+         y="4047.6941">1864 War of</tspan><tspan
+         sodipodi:role="line"
+         x="-626.2356"
+         y="4097.6943"
+         id="tspan322528">triple alliance</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-787.5083"
+       y="2093.0359"
+       id="text329330"><tspan
+         sodipodi:role="line"
+         id="tspan329328"
+         x="-787.5083"
+         y="2093.0359">1783</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-815.8125"
+       y="3036.2205"
+       id="text333624"><tspan
+         sodipodi:role="line"
+         id="tspan333622"
+         x="-815.8125"
+         y="3036.2205">1830</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2999.8484"
+       y="-2934.1086"
+       id="text339619"><tspan
+         sodipodi:role="line"
+         id="tspan339617"
+         x="2999.8484"
+         y="-2934.1086">Decline of Ilkhanate horde,</tspan><tspan
+         sodipodi:role="line"
+         x="2999.8484"
+         y="-2884.1086"
+         id="tspan340875">succeded by Timurid (turko-mongolian)</tspan></text>
+    <circle
+       id="path344003"
+       style="fill:#666666;stroke:#000000"
+       cx="3291.2375"
+       cy="-2354.1555"
+       r="2.3682592" />
+    <circle
+       id="path344005"
+       style="fill:#666666;stroke:#000000"
+       cx="3291.2375"
+       cy="-2354.1555"
+       r="2.3682592" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="6139.3511"
+       y="-386.2915"
+       id="text354061"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan354059"
+         x="6139.3511"
+         y="-386.2915">Reconquista</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-843.05615"
+       y="-1811.382"
+       id="text361103"><tspan
+         sodipodi:role="line"
+         id="tspan361101"
+         x="-843.05615"
+         y="-1811.382">Last muslim footholds</tspan><tspan
+         sodipodi:role="line"
+         x="-843.05615"
+         y="-1761.382"
+         id="tspan361105">conquered</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="608.51062"
+       y="-564.71771"
+       id="text363233"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan363231"
+         x="608.51062"
+         y="-564.71771">Spanish inquisition</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="878.45959"
+       y="-519.80096"
+       id="text366956"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan366954"
+         x="878.45959"
+         y="-519.80096">Expulion of muslims and jews</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2176.7439"
+       y="-12965.528"
+       id="text372221"><tspan
+         sodipodi:role="line"
+         id="tspan372219"
+         x="2176.7439"
+         y="-12965.528">214</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2169.2561"
+       y="-12493.19"
+       id="text376173"><tspan
+         sodipodi:role="line"
+         id="tspan376171"
+         x="2169.2561"
+         y="-12493.19">275</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="12645.98"
+       y="2239.2996"
+       id="text378277"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan378275"
+         x="12645.98"
+         y="2239.2996">Aurelian</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="12164.744"
+       y="2234.1213"
+       id="text382377"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan382375"
+         x="12164.744"
+         y="2234.1213">Diocletian</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2319.5637"
+       y="-12897.118"
+       id="text394491"><tspan
+         sodipodi:role="line"
+         id="tspan394489"
+         x="2319.5637"
+         y="-12897.118">Military anarchy,</tspan><tspan
+         sodipodi:role="line"
+         x="2319.5637"
+         y="-12847.118"
+         id="tspan397169">inflation, smallpox/flu</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.6268px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.990671"
+       x="2761.6707"
+       y="-12813.412"
+       id="text402957"><tspan
+         sodipodi:role="line"
+         id="tspan402955"
+         x="2761.6707"
+         y="-12813.412"
+         style="stroke-width:0.990671">Odenathus, pro Rome</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2769.1528"
+       y="-12754.321"
+       id="text408031"><tspan
+         sodipodi:role="line"
+         id="tspan408029"
+         x="2769.1528"
+         y="-12754.321">Zenobia separates</tspan><tspan
+         sodipodi:role="line"
+         x="2769.1528"
+         y="-12704.321"
+         id="tspan408033">from Rome as Palmyria</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2455.5706"
+       y="-12031.985"
+       id="text429143"><tspan
+         sodipodi:role="line"
+         id="tspan429141"
+         x="2455.5706"
+         y="-12031.985">Official persecution of christianity</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="2113.7078"
+       y="-11884.228"
+       id="text432965"><tspan
+         sodipodi:role="line"
+         id="tspan432963"
+         x="2113.7078"
+         y="-11884.228">Constantine the Great</tspan></text>
   </g>
 </svg>
