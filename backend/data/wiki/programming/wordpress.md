@@ -211,7 +211,21 @@ volumes:
 
 `docker compose up`
 
-## JS
+## Theme development
+
+A recipe website
+
+- Categories: breakfast, lunch, dinner, appetizers, sups, salads, sides, desserts
+- Tags: Chocolate, chicken, ginger
+- Both categories and tags are examples of `taxonomies`. Instances within a taxonomy (such as sides, desserts for the taxonomy "categories") are called `terms`.
+
+Tables:
+
+- **wp_terms**: stores all terms
+- **wp_term_taxonomy**: relates terms to taxonomies
+- **wp_term_relationships**: relates taxonomies to objects (example: "tags" to "posts")
+
+## JS for custom blocks
 
 ### Part 0: custom block basic concepts
 
@@ -557,7 +571,10 @@ https://wordpress.org/support/topic/do-you-have-to-convert-your-whole-site-to-st
 | Content type    | Deployment                 |     |     |     |
 | --------------- | -------------------------- | --- | --- | --- |
 | Page, Post      | Stored in DB               |     |     |     |
+| Media           |                            |     |     |     |
 | Block           | Defined in code            |     |     |     |
 | Shortcode       | Defined in code            |     |     |     |
 | Template(-part) | Per UI, exportable to code |     |     |     |
 | Pattern         | Per UI, exportable to code |     |     |     |
+
+https://github.com/marketplace/actions/deploy-wordpress
