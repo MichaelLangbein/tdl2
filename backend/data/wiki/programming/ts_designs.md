@@ -195,3 +195,144 @@ const scr = new Scrollyteller({
   ],
 });
 ```
+
+## Streetview like threejs scene
+
+```ts
+import {
+  AnimationMixer,
+  AxesHelper,
+  DirectionalLight,
+  DoubleSide,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Scene,
+  SphereGeometry,
+  Texture,
+  TextureLoader,
+  Vector3,
+  WebGLRenderer,
+} from "three";
+import { FirstPersonControls, GLTF, GLTFLoader } from "three/examples/jsm/Addons.js";
+import "./style.css";
+
+/** ----------------------- helpers ----------------------- */
+function unique<T>(data: T[]): T[] {
+  const unq: T[] = [];
+  for (const datum of data) {
+    if (!unq.includes(datum)) unq.push(datum);
+  }
+  return unq;
+}
+
+async function loadGLTFs(urls: string[]): Promise<{ [key: string]: GLTF }> {
+  const loader = new GLTFLoader();
+  const results: { [key: string]: GLTF } = {};
+  const all$ = urls.map(async (url) => {
+    const result = await loader.loadAsync(url);
+    results[url] = result;
+    return true;
+  });
+  const success = await Promise.all(all$);
+  return results;
+}
+
+async function loadTextures(urls: string[]): Promise<{ [key: string]: Texture }> {
+  const loader = new TextureLoader();
+  const results: { [key: string]: Texture } = {};
+  const all$ = urls.map(async (url) => {
+    const result = await loader.loadAsync(url);
+    results[url] = result;
+  });
+  const success = await Promise.all(all$);
+  return results;
+}
+
+/** ----------------------- settings ----------------------- */
+interface SphereSettings {
+  distanceMeter: number;
+  textureEquirect: string;
+}
+
+interface ObjectSettings {
+  position: XYZ;
+  modelGlb: string;
+}
+
+interface XYZ {
+  x: number;
+  y: number;
+  z: number;
+}
+
+interface Settings {
+  centerCoords: XYZ;
+  spheres: SphereSettings[];
+  objects: ObjectSettings[];
+}
+
+const response = await fetch("./settings.json");
+const settings: Settings = await response.json();
+
+const modelUrls = unique(settings.objects.map((o) => o.modelGlb));
+const textureUrls = unique(settings.spheres.map((s) => s.textureEquirect));
+
+/**------------------------------- code ----------------------- */
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
+
+const renderer = new WebGLRenderer({
+  alpha: true,
+  antialias: true,
+  canvas: canvas,
+});
+
+const scene = new Scene();
+
+const camera = new PerspectiveCamera(60, canvas.width / canvas.height);
+scene.add(camera);
+
+const controls = new FirstPersonControls(camera, canvas);
+controls.autoForward = false;
+
+const helper = new AxesHelper(10);
+scene.add(helper);
+
+const sun = new DirectionalLight("white", 3);
+sun.position.set(0, 10, 0);
+sun.lookAt(new Vector3(0, 0, 0));
+scene.add(sun);
+
+const mixer = new AnimationMixer(scene);
+
+const modelDict = await loadGLTFs(modelUrls);
+for (const [url, modelScene] of Object.entries(modelDict)) {
+  const s = settings.objects.find((s) => s.modelGlb === url);
+  if (s) {
+    modelScene.scene.position.set(s.position.x, s.position.y, s.position.z);
+    scene.add(modelScene.scene);
+    modelScene.animations.map((a) => mixer.clipAction(a).play());
+  }
+}
+
+const textureDict = await loadTextures(textureUrls);
+for (const [url, texture] of Object.entries(textureDict)) {
+  const s = settings.spheres.find((s) => s.textureEquirect === url);
+  if (s) {
+    const geometry = new SphereGeometry(s.distanceMeter);
+    const material = new MeshBasicMaterial({ map: texture, side: DoubleSide });
+    const object = new Mesh(geometry, material);
+    scene.add(object);
+  }
+}
+
+function render() {
+  renderer.render(scene, camera);
+  controls.update(1.0);
+  mixer.update(0.06);
+  setTimeout(render, 60);
+}
+render();
+```
