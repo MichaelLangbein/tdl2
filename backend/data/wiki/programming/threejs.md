@@ -1,6 +1,7 @@
 # Threejs
 
 ## General concepts
+
 - `Renderer` an abstraction around your WebGL-context.
   - Data can only be shared within one renderer.
 - `Scene`: a tree of objects
@@ -12,17 +13,16 @@
 
 ObjectSpace --[ modelMatrix ]--> WorldSpace --[ viewMatrix ]--> CameraObjectSpace --[ projectionMatrix ]--> ScreenSpace
 
- - ObjectSpace = Could be anything. Often just as exported from blender.
- - WorldSpace  = right-handed.
- - ScreenSpace = [-1, 1]^3  aka ClippingSpace.
+- ObjectSpace = Could be anything. Often just as exported from blender.
+- WorldSpace = right-handed.
+- ScreenSpace = [-1, 1]^3 aka ClippingSpace.
 
-JS                                           -> GLSL
+JS -> GLSL
 --------------------------------------------+-----------------------
-obj.matrixWorld                              -> modelMatrix
-cam.matrixWorldInverse                       -> viewMatrix
-cam.projectionMatrix                         -> projectionMatrix
-cam.matrixWorldInverse * object.matrixWorld  -> modelViewMatrix
-
+obj.matrixWorld -> modelMatrix
+cam.matrixWorldInverse -> viewMatrix
+cam.projectionMatrix -> projectionMatrix
+cam.matrixWorldInverse \* object.matrixWorld -> modelViewMatrix
 
 ## Important GLSL uniforms
 
@@ -35,43 +35,57 @@ cam.matrixWorldInverse * object.matrixWorld  -> modelViewMatrix
 
 ## Important JS variables
 
- - `object.matrix` is the matrix transform of the object.
- - `object.matrixWorld` is the matrix transform of the object, taking into consideration the matrix transform of the object's parent. (The object's parent may also have a parent, so the calculation of object.matrixWorld is recursive.). `matrix` and `matrixWorld` will be identical if the object has no parent.
-
+- `object.matrix` is the matrix transform of the object.
+- `object.matrixWorld` is the matrix transform of the object, taking into consideration the matrix transform of the object's parent. (The object's parent may also have a parent, so the calculation of object.matrixWorld is recursive.). `matrix` and `matrixWorld` will be identical if the object has no parent.
 
 ## Text
+
 https://r105.threejsfundamentals.org/threejs/lessons/threejs-align-html-elements-to-3d.html
 
-
 ## 3dTiles
+
 https://github.com/nytimes/three-loader-3dtiles
 https://github.com/NASA-AMMOS/3DTilesRendererJS
 
-
 ## Swapping render-buffers between processing-passes
 
-Lessons learned: 
- - Even if you have many scenes, you only use one renderer. Otherwise they cannot share buffers.
+Lessons learned:
 
+- Even if you have many scenes, you only use one renderer. Otherwise they cannot share buffers.
 
 ```ts
-import { AmbientLight, BoxGeometry, DepthFormat, DepthTexture, Mesh, MeshLambertMaterial, MeshPhongMaterial, OrthographicCamera, PerspectiveCamera, PlaneGeometry, Scene, ShaderMaterial, SphereGeometry, UnsignedShortType, Vector3, WebGLRenderer, WebGLRenderTarget } from 'three';
+import {
+  AmbientLight,
+  BoxGeometry,
+  DepthFormat,
+  DepthTexture,
+  Mesh,
+  MeshLambertMaterial,
+  MeshPhongMaterial,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+  ShaderMaterial,
+  SphereGeometry,
+  UnsignedShortType,
+  Vector3,
+  WebGLRenderer,
+  WebGLRenderTarget,
+} from "three";
 
-
-const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
-
-
 const renderer = new WebGLRenderer({
-    alpha: true,
-    antialias: true,
-    depth: true,
-    canvas: canvas
+  alpha: true,
+  antialias: true,
+  depth: true,
+  canvas: canvas,
 });
-if ( renderer.capabilities.isWebGL2 === false && renderer.extensions.has( 'WEBGL_depth_texture' ) === false ) {
-    console.error(`D'oh!`);
+if (renderer.capabilities.isWebGL2 === false && renderer.extensions.has("WEBGL_depth_texture") === false) {
+  console.error(`D'oh!`);
 }
 /************************************************************************
  *              Render pass                                             *
@@ -97,8 +111,6 @@ renderScene.add(light);
 const box = new Mesh(new BoxGeometry(2, 2, 2), new MeshPhongMaterial({ color: `rgb(125, 50, 50)` }));
 renderScene.add(box);
 
-
-
 /************************************************************************
  *              Postprocessing                                          *
  ************************************************************************/
@@ -114,20 +126,20 @@ const postLight = new AmbientLight();
 postScene.add(postLight);
 
 const screenMaterial = new ShaderMaterial({
-    uniforms: {
-        cameraNear: { value: renderCamera.near },
-        cameraFar: { value: renderCamera.far },
-        tDiffuse: { value: null },
-        tDepth: { value: null }
-    },
-    vertexShader: `
+  uniforms: {
+    cameraNear: { value: renderCamera.near },
+    cameraFar: { value: renderCamera.far },
+    tDiffuse: { value: null },
+    tDepth: { value: null },
+  },
+  vertexShader: `
         varying vec2 vUv;
         void main() {
             vUv = uv;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
     `,
-    fragmentShader: `
+  fragmentShader: `
         #include <packing>
 
         varying vec2 vUv;
@@ -149,46 +161,43 @@ const screenMaterial = new ShaderMaterial({
             gl_FragColor.rgb = 1.0 - vec3( depth );
             gl_FragColor.a = 1.0;
         }
-    `
+    `,
 });
 const decoyMaterial = new MeshLambertMaterial({ color: `rgb(14, 50, 14)` });
 const screen = new Mesh(new PlaneGeometry(2, 2, 1, 1), screenMaterial);
 postScene.add(screen);
 screen.lookAt(postCamera.position);
 
-
-const sphere = new Mesh(new SphereGeometry(0.125), new MeshLambertMaterial({color: `rgb(14, 15, 125)`}));
+const sphere = new Mesh(new SphereGeometry(0.125), new MeshLambertMaterial({ color: `rgb(14, 15, 125)` }));
 sphere.position.set(0.5, 0.5, 0);
 postScene.add(sphere);
-
-
 
 /************************************************************************
  *              Looping                                                 *
  ************************************************************************/
 
 function loop(inMs: number) {
-    setTimeout(() => {
-        const start = new Date().getTime();
+  setTimeout(() => {
+    const start = new Date().getTime();
 
-        // animation
-        box.rotateY(0.01);
+    // animation
+    box.rotateY(0.01);
 
-        // render to buffer
-        renderer.setRenderTarget(renderPassTarget);
-        renderer.render(renderScene, renderCamera);
+    // render to buffer
+    renderer.setRenderTarget(renderPassTarget);
+    renderer.render(renderScene, renderCamera);
 
-        // renter to canvas
-        renderer.setRenderTarget(null);
-        screen.material.uniforms.tDiffuse.value = renderPassTarget.texture;
-        screen.material.uniforms.tDepth.value = renderPassTarget.depthTexture;
-        renderer.render(postScene, postCamera);
+    // render to canvas
+    renderer.setRenderTarget(null);
+    screen.material.uniforms.tDiffuse.value = renderPassTarget.texture;
+    screen.material.uniforms.tDepth.value = renderPassTarget.depthTexture;
+    renderer.render(postScene, postCamera);
 
-        const end = new Date().getTime();
-        const delta = end - start;
-        const msLeft = (1000 / 30) - delta;
-        loop(msLeft);
-    }, inMs);
+    const end = new Date().getTime();
+    const delta = end - start;
+    const msLeft = 1000 / 30 - delta;
+    loop(msLeft);
+  }, inMs);
 }
 
 loop(0);
