@@ -1,5 +1,7 @@
 # Purescript
 
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/haskell_classes.png">
+
 ## Setup
 
 ```bash
