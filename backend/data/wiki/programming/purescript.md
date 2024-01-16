@@ -49,3 +49,12 @@ showPersonV2 :: { first :: String, last :: String } -> String
 showPersonV2 { first, last } = last <> ", " <> first
 
 ```
+
+- `type`: creates a type form an object
+  - does not allow for constructors
+- `data`: creates an algebraic data type - the only thing algebraic about an ADT is that it is constructed of
+  - either _sums_ of types (A | B)
+  - or _products_ of types (A && B)
+- `newtype`: just an alias (eg: `newtype Volt = Volt Number; battery = Volt 1.5;`)
+  - like `data`, but must only have one constructor and must only take exactly one argument
+- `class`: more like an interface
