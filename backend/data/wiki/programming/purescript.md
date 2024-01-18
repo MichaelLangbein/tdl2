@@ -235,7 +235,7 @@ compare Infinite (Finite 5)
 ```
 
 
-### Important type classes
+## Semigroup, Functor and Foldable
 
 ```haskell
 data NonEmpty a = NonEmpty a (Array a)
@@ -281,3 +281,87 @@ foldr (\x acc -> acc * 10 + x) 0 (NonEmpty 1 [ 2, 3 ])
 foldMap (\x -> show x) (NonEmpty 1 [ 2, 3 ])
 -- yields "123"
 ```
+
+
+## Functor, Apply, Applicative and Traversable
+```haskell
+-- The next functions are used to lift *simple* function into *decorated* ones.
+-- Consider the simple function `makeAddress`:
+
+newtype Street = Street String
+newtype City = City String
+newtype State = State String
+
+instance Show Street where 
+  show (Street s) = s
+instance Show City where 
+  show (City c) = c
+instance Show State where 
+  show (State s) = s
+
+type Address = {street :: Street, city :: City, state :: State}
+
+makeAddress :: Street -> City -> State -> Address
+makeAddress street city state = {street, city, state}
+
+-- makeAddress (Street "Spooner Str") (City "Quahog") (State "Rhode Island")
+-- yields the obvious.
+
+-- This simple function shall now be lifted such that it can also accept `Maybe`s
+import Data.Maybe (Maybe(..))
+
+-- functor: apply a function to a wrapped type, aka. <$>
+-- map :: (a -> b) -> wrp a -> wrp b
+-- or, in pseudocode: function of f(a to b), Wrapped<a>, yielding Wrapped<b>
+instance Functor Maybe where
+  map f (Just a) = Just (f a)
+  map f Nothing  = Nothing
+
+
+-- Apply: apply a wrapped function to a wrapped type <*>
+-- apply :: wrp (a->b) -> wrp a -> wrp b
+-- or, in pseudocode: function of Wrapped<f(a to b)>, Wrapped<a>, yielding Wrapped<b>
+instance Apply Maybe where
+  apply (Just f) (Just x) = Just (f x)
+  apply _        _        = Nothing
+
+
+-- Applicative: turns a value into a wrapped value
+instance Applicative Maybe where
+  pure x = Just x
+
+
+-- We'll show how <$> and <*> can lift a simple function into a decorated one
+f1 = map makeAddress (Just (Street "Evergreen Terrace")) -- Maybe (City -> State -> Address)
+f2 = apply f1 (Just (City "Springfield")) -- Maybe (State -> Address)
+f3 = apply f2 (Nothing) -- Maybe Address
+-- yields `Nothing`
+
+-- In infix notation:
+liftedMakeAddress :: Maybe Street -> Maybe City -> Maybe State -> Maybe Address
+liftedMakeAddress mStreet mCity mState = makeAddress <$> mStreet <*> mCity <*> mState
+
+
+-- there is even a special notation for this:
+result = ado         -- read: applicative do
+  a <- mStreet       -- read: unwrap maybe to concrete val
+  b <- mCity         -- read: unwrap maybe to concrete val
+  c <- mState        -- read: unwrap maybe to concrete val
+  in makeAddress a b c
+```
+
+
+## Common infix operators
+
+- Prelude: 
+  - `func $ expression` = `func (expression)`
+  - `(f <<< g) x` = `f (g x)`
+  - `(f >>> g) x` = `g (f x)`
+- Semigroup: 
+  - **append** aka `<>`: `"a" <> "bc"` = `append "a" "bc"`
+- Functor: 
+  - **map** aka `<$>`: `func(a to b) <$> wrapped<a> = wrapped<b>`
+- Apply: 
+  - **apply** aka `<*>`: `wrapped<func(a to b)> <$> wrapped<a> = wrapped<b>`
+- Bind: 
+  - `>>=`
