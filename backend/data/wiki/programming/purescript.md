@@ -348,6 +348,55 @@ result = ado         -- read: applicative do
   b <- mCity         -- read: unwrap maybe to concrete val
   c <- mState        -- read: unwrap maybe to concrete val
   in makeAddress a b c
+
+
+-- In summary, an applicative has all the functions required to
+-- - apply functions to decorated values
+-- - apply decorated functions to decorated values
+-- - convert values into decorated values
+```
+
+### More on ado notation
+
+```haskell
+import Prelude
+import Data.Maybe
+import Data.Either
+
+fullName first middle last = last <> ", " <> first <> " " <> middle
+
+withError :: forall a b. Maybe a -> b -> Either b a
+withError Nothing err = Left err
+withError (Just a) _ = Right a
+
+fullNameSafe first middle last = ado
+  f <- first `withError` "First name missing"
+  m <- middle `withError` "Middle name missing"
+  l <- last `withError` "Last name missing"
+  in fullName f m l
+
+fullNameSafe (Just "Michael") Nothing (Just "Langbein")
+```
+
+
+### fdafdsafdsa
+
+```haskell
+-- applying an applicative to a list of arguments
+
+import Data.List
+import Data.Maybe
+
+combineList :: forall f a. Applicative f => List (f a) -> f (List a)
+combineList Nil = pure Nil
+combineList (Cons x xs) = Cons <$> x <*> combineList xs
+
+
+combineList (fromFoldable [Just 1, Just 2, Just 3])
+-- yields (Just (Cons 1 (Cons 2 (Cons 3 Nil))))
+
+combineList (fromFoldable [Just 1, Nothing, Just 2])
+-- yields Nothing
 ```
 
 
