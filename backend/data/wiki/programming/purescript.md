@@ -72,6 +72,23 @@ showPersonV2 :: { first :: String, last :: String } -> String
 showPersonV2 { first, last } = last <> ", " <> first
 
 
+-- pattern matching on lists
+sum (Cons head tail) = head + sum tail
+sum (head) = head
+sum () = 0
+
+
+-- pattern matching on arrays
+firstTwo [first second _] = first + second
+-- arrays cant match tail with Cons, I think.
+
+-- case on arrays
+sum :: Array Number -> Int -> Number
+sum arr startAt = 
+  case arr !! startAt of
+    Just x -> x + sum arr (startAt + 1)
+    Nothing -> 0
+
 -- pattern matching on ADTs
 data NonEmpty a = NonEmpty a (Array a)
 
@@ -232,6 +249,19 @@ instance (Ord a) => Ord (Extended a) where
 
 compare Infinite (Finite 5)
 -- yields GT
+
+
+-- Example of lots of automatic deriving for Trees
+data Tree a = Leaf | Branch (Tree a) a (Tree a)
+
+derive instance (Eq a) => Eq (Tree a)
+derive instance Functor Tree
+derive instance Foldable Tree
+derive instance Traversable Tree
+
+instance (Show a) => Show (Tree a) where
+  show Leaf = "Leaf"
+  show (Branch left val right) = "(Branch " <> show left <> " " <> show val <> " " <> show right <> ")"
 ```
 
 
@@ -343,20 +373,20 @@ liftedMakeAddress mStreet mCity mState = makeAddress <$> mStreet <*> mCity <*> m
 
 
 -- there is even a special notation for this:
-result = ado         -- read: applicative do
+result = ado         -- read: applicative do: creates a context where maybes are abstracted away
   a <- mStreet       -- read: unwrap maybe to concrete val
   b <- mCity         -- read: unwrap maybe to concrete val
   c <- mState        -- read: unwrap maybe to concrete val
   in makeAddress a b c
 
 
--- In summary, an applicative has all the functions required to
+-- In summary, an applicative is a decorated type (not a function) which can be an in/output to the following functions:
 -- - apply functions to decorated values
 -- - apply decorated functions to decorated values
 -- - convert values into decorated values
 ```
 
-### More on ado notation
+#### More on ado notation
 
 ```haskell
 import Prelude
@@ -369,7 +399,7 @@ withError :: forall a b. Maybe a -> b -> Either b a
 withError Nothing err = Left err
 withError (Just a) _ = Right a
 
-fullNameSafe first middle last = ado
+fullNameSafe first middle last = ado  -- creates a context for maybes
   f <- first `withError` "First name missing"
   m <- middle `withError` "Middle name missing"
   l <- last `withError` "Last name missing"
@@ -379,11 +409,10 @@ fullNameSafe (Just "Michael") Nothing (Just "Langbein")
 ```
 
 
-### fdafdsafdsa
+#### Some interesting examples
 
+Turning a list of applicatives into an applicative of a list:
 ```haskell
--- applying an applicative to a list of arguments
-
 import Data.List
 import Data.Maybe
 
@@ -399,6 +428,42 @@ combineList (fromFoldable [Just 1, Nothing, Just 2])
 -- yields Nothing
 ```
 
+Verifying a record through applicatives:
+```haskell
+import Data.Maybe
+import Data.Either
+
+type Person = { name:: String, address:: String, notes:: Array String}
+
+createPerson :: String -> String -> Array String -> Person
+createPerson name address notes = {name, address, notes}
+
+notEmpty ∷ ∀ a. String → a → Either a String
+notEmpty "" errorMessage = Left errorMessage
+notEmpty val _ = Right val
+
+-- verify by creating a new person
+-- from Eithers of the original
+verifyPerson ∷ Person → Either String Person
+verifyPerson person = ado
+  name    <- notEmpty person.name "Name error"
+  address <- notEmpty person.address "Address error"
+  notes   <- pure person.notes
+  in createPerson name address notes
+
+verifyPerson {name: "Michael", address: "", notes: []}
+-- yields (Right "Address error")
+```
+
+
+```haskell
+matches :: String -> Regex -> String -> V Errors String
+matches _     regex value | test regex value
+                          = pure value         
+matches field _     _     = invalid [ "Field '" <> field <> "' did not match the required format" ]
+-- how does pure know that it should return a V? the compiler tells it, based on the type hint for `matches`
+
+```
 
 ## Common infix operators
 

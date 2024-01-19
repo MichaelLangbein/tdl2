@@ -39,13 +39,13 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="1.4297316"
-     inkscape:cx="873.24082"
-     inkscape:cy="443.43987"
+     inkscape:cx="523.52484"
+     inkscape:cy="513.38307"
      inkscape:window-width="1792"
      inkscape:window-height="1010"
      inkscape:window-x="0"
      inkscape:window-y="25"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg1644"
      showguides="false"
      inkscape:showpageshadow="0"
@@ -6277,25 +6277,59 @@
        style="font-size:8px">additive inverse</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:8px;line-height:1.25;font-family:sans-serif;fill:#ff0000;fill-opacity:1;stroke:none"
-     x="431.12189"
-     y="329.76617"
+     style="font-style:normal;font-weight:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;fill:#ff0000;fill-opacity:1;stroke:none"
+     x="473.12189"
+     y="305.76617"
      id="text79233"><tspan
        sodipodi:role="line"
        id="tspan79231"
-       x="431.12189"
-       y="329.76617"
-       style="font-size:8px;text-align:end;text-anchor:end;fill:#ff0000">foldr</tspan><tspan
+       x="473.12189"
+       y="305.76617"
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#000000">Usually a List or Array, but also</tspan><tspan
        sodipodi:role="line"
-       x="431.12189"
-       y="339.76617"
+       x="473.12189"
+       y="314.09952"
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#000000"
+       id="tspan2575">Maybe, Either, Tuple, HashTable, Object ...</tspan><tspan
+       sodipodi:role="line"
+       x="473.12189"
+       y="322.43286"
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#ff0000"
+       id="tspan2573">foldr</tspan><tspan
+       sodipodi:role="line"
+       x="473.12189"
+       y="330.76617"
        id="tspan79235"
-       style="font-size:8px;text-align:end;text-anchor:end;fill:#ff0000">foldl</tspan><tspan
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#ff0000">foldl</tspan><tspan
        sodipodi:role="line"
-       x="431.12189"
-       y="349.76617"
+       x="473.12189"
+       y="339.09952"
        id="tspan79237"
-       style="font-size:8px;text-align:end;text-anchor:end;fill:#ff0000">foldMap</tspan></text>
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#ff0000">foldMap</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;fill:#ff0000;fill-opacity:1;stroke:none"
+     x="424.33786"
+     y="509.83539"
+     id="text79233-7"><tspan
+       sodipodi:role="line"
+       x="424.33786"
+       y="509.83539"
+       id="tspan79237-5"
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#ff0000"><tspan
+         style="fill:#000000"
+         id="tspan1663">traverse:</tspan><tspan
+         style="fill:#008000"
+         id="tspan1667"> f(a-&gt;Wrapped&lt;b&gt;), Fold&lt;a&gt; yields Wrapped&lt;Fold&lt;b&gt;&gt;</tspan></tspan><tspan
+       sodipodi:role="line"
+       x="424.33786"
+       y="518.1687"
+       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#ff0000"
+       id="tspan1661"><tspan
+         style="fill:#000000"
+         id="tspan1665">sequence:</tspan><tspan
+         style="fill:#008000"
+         id="tspan1669"> Fold&lt;Wrapped&lt;a&gt;&gt; yields Wrapped&lt;Fold&lt;a&gt;&gt;</tspan></tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
@@ -6355,7 +6389,9 @@
        x="878.56781"
        y="507.74249"
        id="tspan128275"
-       style="font-size:6.66667px;fill:#ff0000">pure</tspan><tspan
+       style="font-size:6.66667px;fill:#ff0000">pure: <tspan
+   style="fill:#008000"
+   id="tspan3477">a -&gt; Wrapped&lt;a&gt;</tspan></tspan><tspan
        sodipodi:role="line"
        x="878.56781"
        y="513.80914"
@@ -6441,27 +6477,30 @@
        style="font-size:6.66667px;line-height:0.66" /></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-     x="735.91394"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none"
+     x="736.63214"
      y="477.64252"
      id="text209991"><tspan
        sodipodi:role="line"
-       id="tspan209989"
-       x="735.91394"
-       y="477.64252"
-       style="font-size:6.66667px;text-align:end;text-anchor:end;fill:#ff0000">&gt;&gt;=</tspan><tspan
-       sodipodi:role="line"
-       x="735.91394"
-       y="485.97586"
-       id="tspan209995"
-       style="font-size:6.66667px;text-align:end;text-anchor:end">Associativity: <tspan
+       id="tspan1348"
+       x="736.63214"
+       y="477.64252">bind aka. <tspan
    style="fill:#ff0000"
-   id="tspan222189">(x &gt;&gt;= f) &gt;&gt;= g = x &gt;&gt;= (\k -&gt; f k &gt;&gt;= g)</tspan></tspan><tspan
+   id="tspan1356">&gt;&gt;=</tspan></tspan><tspan
        sodipodi:role="line"
-       x="735.91394"
-       y="494.3092"
-       id="tspan209999"
-       style="font-size:6.66667px;text-align:end;text-anchor:end">Apply Superclass: <tspan
+       id="tspan1350"
+       x="736.63214"
+       y="485.97586">where <tspan
+   style="fill:#008000"
+   id="tspan1462">bind(Wrapped&lt;a&gt;, f(a-&gt;Wapped&lt;b&gt;)) yields Wrapped&lt;b&gt;</tspan></tspan><tspan
+       sodipodi:role="line"
+       id="tspan1352"
+       x="736.63214"
+       y="494.3092">Associativity: <tspan
    style="fill:#ff0000"
-   id="tspan223475">apply f x = f &gt;&gt;= \f’ -&gt; map f’ x</tspan></tspan></text>
+   id="tspan1460">(x &gt;&gt;= f) &gt;&gt;= g = x &gt;&gt;= (\k -&gt; f k &gt;&gt;= g)</tspan></tspan><tspan
+       sodipodi:role="line"
+       id="tspan1354"
+       x="736.63214"
+       y="502.64252">Apply Superclass: apply f x = f &gt;&gt;= \f’ -&gt; map f’ x</tspan></text>
 </svg>
