@@ -27,11 +27,12 @@ Repl commands:
 
 Spago commands:
 
-- repl
-- test
-- run
-- build: creates es-modules
-- bundle-app: creates one index.js with dead-code-elimination.
+- `repl`
+- `test`
+- `run`
+  - doesn't always have to be `src/Main.purs`: you can `spago run --main Test.Random` ... just make sure that this module contains a `main` function.
+- `build`: creates es-modules
+- `bundle-app`: creates one index.js with dead-code-elimination.
 
 ## Scopes
 
@@ -125,6 +126,11 @@ type AddressBook = List Entry
 - `data`: creates an algebraic data type - the only thing algebraic about an ADT is that it is constructed of
   - either _sums_ of types (A | B)
   - or _products_ of types (A && B)
+
+```haskell
+data Light = Red | Yellow | Green
+```
+
 
 ## Newtype
 
@@ -386,7 +392,7 @@ result = ado         -- read: applicative do: creates a context where maybes are
 -- - convert values into decorated values
 ```
 
-#### More on ado notation
+#### More on ado and do notation
 
 ```haskell
 import Prelude
@@ -409,7 +415,175 @@ fullNameSafe (Just "Michael") Nothing (Just "Langbein")
 ```
 
 
-#### Some interesting examples
+### Compilation of `ado` and `do`
+
+The compiler converts `ado` like so:
+```haskell
+ado 
+  a <- computation1
+  b <- computation2
+  in computation3 a b
+  -- unlike `do`, `ado` must always end with an `in` expression
+```
+into
+```haskell
+computation3 <$> computation1
+             <*> computation2
+```
+
+
+The compiler converts (see [here](https://book.purescript.org/chapter8.html)) `do` like so:
+```haskell
+do 
+  a <- computation1
+  b <- computation2
+  computation3
+```
+into 
+```haskell
+computation1 >>= 
+  \a -> computation2 >>=
+    \b -> computation3
+```
+
+
+## Monads
+
+Monads extend `Apply` and `Bind` implementing `bind`, aka `flatMap`, aka. `>>=`.
+- **map**: `(a -> b), W<a>` yielding `W<b>`
+- **apply**: `W<a -> b>, W<a>` yielding `W<b>`
+- **flatMap**: `W<a>, (a -> W<b>)` yielding `W<b>`
+
+Monad laws: 
+- **Right identity**: 
+  - `op >>= (a -> pure a)` equals `op`
+  - in code: 
+    ```haskell
+      do
+         a <- op
+         pure a
+      -- can be rewritten as
+      do
+        op
+    ```
+- **Left identity**:
+  - `(pure x) >>= (a -> op(a))` equals `op(a)`
+  - in code: 
+    ```haskell
+      do
+         a <- pure x
+         op a
+      -- can be rewritten as
+      do
+        op x
+    ```
+- **Associativity**:
+  - `[op1 >>= (a -> op2(a))] >>= (b -> op3(b))` equals `op1 >>= [(a -> op2(a)) >>= (b -> op3(b))]`
+  - in code:
+    ```haskell
+      do
+        b = do
+          a <- op1
+          op2 a
+        op3 b
+      -- can be rewritten as 
+      do 
+        a <- op1
+        b <- op2 a
+        op3 b
+    ```
+
+### Monads' `do` vs Applicatives' `ado`
+```haskell
+import Data.Maybe
+import Data.Number
+
+safeDiv :: Number -> Number -> Maybe Number
+safeDiv _ 0.0 = Nothing
+safeDiv a b = Just (a / b)
+
+safeLog :: Number -> Maybe Number
+safeLog a | a <= 0.0 = Nothing
+safeLog a = Just (log a)
+
+-- monadic `do`:
+-- - can use intermediate results (here: a)
+-- - but because of that same reason, cannot be trivially parallelized
+result :: Maybe Number
+result = do
+  a <- safeDiv 4.0 2.0
+  b <- safeLog a
+  a + b
+
+resultEquivalent = (safeDiv 4.0 2.0) >>= 
+                    (\a -> safeLog a) >>=
+                    (\b -> a + b)
+
+-- applicative `ado`
+-- - must always end in a `in` phrase
+-- - cannot use intermediate results (here: a)
+-- - can be parallelized
+result2 ∷ Maybe Number
+result2 = ado
+  a <- safeDiv 4.0 2.0
+  b <- safeLog a      -- error: unknown `a`
+  in a + b
+  -- unlike `do`, `ado` must always end with an `in` expression
+
+result2Equivalent = (+) <$> safeDiv 4.0 2.0
+                        <*> safeLog a    -- error: unknown `a`
+```
+
+
+
+## Common infix operators
+
+- Prelude: 
+  - `func $ expression` = `func (expression)`
+  - `(f <<< g) x` = `f (g x)`
+  - `(f >>> g) x` = `g (f x)`
+- Semigroup: 
+  - **append** aka `<>`: `"a" <> "bc"` = `append "a" "bc"`
+- Functor: 
+  - **map** aka `<$>`: `func(a to b) <$> wrapped<a> = wrapped<b>`
+- Apply: 
+  - **apply** aka `<*>`: `wrapped<func(a to b)> <$> wrapped<a> = wrapped<b>`
+- Bind: 
+  - **bind** aka **flatMap** aka `>>=`: `wrapped<a> >>= func(a to wrapped<b>) = wrapped<b>`
+
+
+
+
+## Effects
+
+### Exceptions
+```haskell
+exceptionDivide :: Int -> Int -> Effect Int
+exceptionDivide _ 0 = throwException $ error "div zero"
+exceptionDivide a b = pure (a / b)
+```
+
+### State
+
+```haskell
+-- for when creating a new immutable data-structure with every iteration
+-- is too slow
+
+estimatePi :: Int -> Number
+estimatePi n = run do   -- notice the `run` before `do`
+  sumRef <- new 0.0
+  for 1 (n+1) \i ->
+    modify (\sum -> sum + (gregoryElement i)) sumRef
+  sumVal <- read sumRef
+  pure (sumVal * 4.0)
+  where 
+    gregoryElement :: Int -> Number
+    gregoryElement i = toNumber (pow (-1) (i+1)) / toNumber (2*i - 1)
+```
+
+
+
+# Some interesting examples
 
 Turning a list of applicatives into an applicative of a list:
 ```haskell
@@ -464,18 +638,3 @@ matches field _     _     = invalid [ "Field '" <> field <> "' did not match the
 -- how does pure know that it should return a V? the compiler tells it, based on the type hint for `matches`
 
 ```
-
-## Common infix operators
-
-- Prelude: 
-  - `func $ expression` = `func (expression)`
-  - `(f <<< g) x` = `f (g x)`
-  - `(f >>> g) x` = `g (f x)`
-- Semigroup: 
-  - **append** aka `<>`: `"a" <> "bc"` = `append "a" "bc"`
-- Functor: 
-  - **map** aka `<$>`: `func(a to b) <$> wrapped<a> = wrapped<b>`
-- Apply: 
-  - **apply** aka `<*>`: `wrapped<func(a to b)> <$> wrapped<a> = wrapped<b>`
-- Bind: 
-  - `>>=`
