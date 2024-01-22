@@ -7,7 +7,7 @@
    viewBox="0 0 6182.8379 22758.42"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="history.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,13 +24,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.27494448"
-     inkscape:cx="4464.5376"
-     inkscape:cy="1249.3431"
+     inkscape:zoom="0.19441511"
+     inkscape:cx="2741.5565"
+     inkscape:cy="18036.15"
      inkscape:window-width="1920"
-     inkscape:window-height="1016"
+     inkscape:window-height="1021"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      showguides="true"
@@ -107,6 +107,10 @@
        position="3469.7009,13199.105"
        orientation="0,-1"
        id="guide265852" />
+    <sodipodi:guide
+       position="1425.7424,2063.3327"
+       orientation="0,-1"
+       id="guide65312" />
   </sodipodi:namedview>
   <defs
      id="defs2">
@@ -169,6 +173,30 @@
          id="tspan334748"
          x="-2849.8796"
          y="-646.6897">Simon Bolivar</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:212.381px;line-height:1.25;font-family:sans-serif;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:5.30955"
+       x="-130.7159"
+       y="-4265.1069"
+       id="text16001-4"
+       transform="scale(1.4232793,0.70260276)"><tspan
+         sodipodi:role="line"
+         id="tspan15999-7"
+         x="-130.7159"
+         y="-4265.1069"
+         style="stroke-width:5.30955;fill:#4d4d4d">Black death</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:79.4994px;line-height:1.25;font-family:sans-serif;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1.98749"
+       x="3040.9138"
+       y="-2110.9272"
+       id="text62650"
+       transform="scale(0.66772384,1.4976251)"><tspan
+         sodipodi:role="line"
+         id="tspan62648"
+         x="3040.9138"
+         y="-2110.9272"
+         style="stroke-width:1.98749;fill:#666666">First banking in Florence/Venice/Genoa</tspan></text>
     <rect
        id="rect89427"
        width="4176.6079"
@@ -252,8 +280,8 @@
        id="path102-5-3-2"
        sodipodi:nodetypes="ccccc" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.55965px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 116.22434,2385.0123 37.42454,1.7879 0.93717,409.8474 v 0 h -40.77719"
+       style="fill:none;stroke:#000000;stroke-width:1.34024px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 116.15391,2384.8724 37.56817,1.3152 0.94076,301.4886 v 0 h -40.93367"
        id="path102-36"
        sodipodi:nodetypes="ccccc" />
     <path
@@ -263,7 +291,7 @@
        sodipodi:nodetypes="ccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.921528px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 119.06157,2833.6324 37.46334,0.6235 0.93814,142.9344 v 0 h -40.81946"
+       d="m 119.06157,2711.6324 37.46334,0.6235 0.93814,142.9344 v 0 h -40.81946"
        id="path102-36-7"
        sodipodi:nodetypes="ccccc" />
     <text
@@ -579,42 +607,42 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
        x="5.3731503"
-       y="2810.5166"
+       y="2700.5166"
        id="text29985"><tspan
          sodipodi:role="line"
          id="tspan29983"
          x="5.3731503"
-         y="2810.5166">1814</tspan></text>
+         y="2700.5166">1814</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="-8.6515474"
-       y="2843.0637"
+       x="3.3484526"
+       y="2737.0637"
        id="text38236"><tspan
          sodipodi:role="line"
          id="tspan38234"
-         x="-8.6515474"
-         y="2843.0637">1815</tspan></text>
+         x="3.3484526"
+         y="2737.0637">1815</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
        x="2.3938663"
-       y="2996.2815"
+       y="2874.2815"
        id="text42728"><tspan
          sodipodi:role="line"
          id="tspan42726"
          x="2.3938663"
-         y="2996.2815">1821</tspan></text>
+         y="2874.2815">1821</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
        x="-38.308132"
-       y="2916.5786"
+       y="2794.5786"
        id="text49464"><tspan
          sodipodi:role="line"
          id="tspan49462"
          x="-38.308132"
-         y="2916.5786">Napoleon</tspan></text>
+         y="2794.5786">Napoleon</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
@@ -1731,13 +1759,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="-329.42993"
-       y="5920.0845"
+       x="-363.42993"
+       y="5928.0845"
        id="text19005"><tspan
          sodipodi:role="line"
          id="tspan19003"
-         x="-329.42993"
-         y="5920.0845">WWII</tspan></text>
+         x="-363.42993"
+         y="5928.0845">WWII</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
@@ -2458,5 +2486,179 @@
          id="tspan432963"
          x="2113.7078"
          y="-11884.228">Constantine the Great</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:440.867px;line-height:1.25;font-family:sans-serif;fill:#666666;fill-opacity:1;stroke:none;stroke-width:11.0216;letter-spacing:0px"
+       x="-653.97974"
+       y="-6928.4639"
+       id="text3645"
+       transform="matrix(0,1.9309524,-0.51787915,0,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan3643"
+         x="-653.97974"
+         y="-6928.4639"
+         style="fill:#666666;stroke-width:11.0216">Little ice age</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:77.1447px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.92862"
+       x="-48.791176"
+       y="-6579.8809"
+       id="text16001"
+       transform="scale(1.9286182,0.51850595)"><tspan
+         sodipodi:role="line"
+         id="tspan15999"
+         x="-48.791176"
+         y="-6579.8809"
+         style="stroke-width:1.92862">Great famine 1315-1317</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="3399.7234"
+       y="-8941.5391"
+       id="text27682"><tspan
+         sodipodi:role="line"
+         id="tspan27680"
+         x="3399.7234"
+         y="-8941.5391">Paper money in China</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="3176.0271"
+       y="4287.7607"
+       id="text84384"><tspan
+         sodipodi:role="line"
+         id="tspan84382"
+         x="3176.0271"
+         y="4287.7607">1871: Failed Egyptian invasion of Ethiopia</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="3180.2009"
+       y="4645.7646"
+       id="text107220"><tspan
+         sodipodi:role="line"
+         id="tspan107218"
+         x="3180.2009"
+         y="4645.7646">1896: Failed Italian Invasion of Ethiopia</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="3327.6199"
+       y="-11602.784"
+       id="text130186"><tspan
+         sodipodi:role="line"
+         id="tspan130184"
+         x="3327.6199"
+         y="-11602.784">Ethiopia adopts Christiandom</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="3205.1433"
+       y="5703.3662"
+       id="text144422"><tspan
+         sodipodi:role="line"
+         id="tspan144420"
+         x="3205.1433"
+         y="5703.3662">1936: Successful Mussulini Invasion of Ethiopia</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="3218.5808"
+       y="5832.6162"
+       id="text155832"><tspan
+         sodipodi:role="line"
+         id="tspan155830"
+         x="3218.5808"
+         y="5832.6162">1944: British restore Ethiopian Emperor</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="3234.4236"
+       y="6643.7783"
+       id="text186754"><tspan
+         sodipodi:role="line"
+         id="tspan186752"
+         x="3234.4236"
+         y="6643.7783">1972: Communist putsch in Ethiopia</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="3411.0178"
+       y="6779.2939"
+       id="text195908"><tspan
+         sodipodi:role="line"
+         x="3411.0178"
+         y="6779.2939"
+         id="tspan209746">1976: Somalia invades Ethiopia, Russia switches sides supporting Ethiopia</tspan><tspan
+         sodipodi:role="line"
+         x="3411.0178"
+         y="6829.2939"
+         id="tspan209750">Failed invasion causes still ongoing Somalian civil war</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="3299.5647"
+       y="6948.0537"
+       id="text225468"><tspan
+         sodipodi:role="line"
+         id="tspan225466"
+         x="3299.5647"
+         y="6948.0537">1983-5: Famine in North-Ethiopia/Eritrea</tspan><tspan
+         sodipodi:role="line"
+         x="3299.5647"
+         y="6998.0537"
+         id="tspan231134">Erithrea going independent in 1989</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="-1115.5551"
+       y="2946.9119"
+       id="text286775"><tspan
+         sodipodi:role="line"
+         id="tspan286773"
+         x="-1115.5551"
+         y="2946.9119">1825: French impose</tspan><tspan
+         sodipodi:role="line"
+         x="-1115.5551"
+         y="2996.9119"
+         id="tspan286777">double dept on Haiti</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="-1300.5862"
+       y="4869.583"
+       id="text305501"><tspan
+         sodipodi:role="line"
+         id="tspan305499"
+         x="-1300.5862"
+         y="4869.583">City bank buys Haitis debt</tspan><tspan
+         sodipodi:role="line"
+         x="-1300.5862"
+         y="4919.583"
+         id="tspan305503">from France</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="-1310.3691"
+       y="6194.9189"
+       id="text310085"><tspan
+         sodipodi:role="line"
+         id="tspan310083"
+         x="-1310.3691"
+         y="6194.9189">1947: Haiti paid off </tspan><tspan
+         sodipodi:role="line"
+         x="-1310.3691"
+         y="6244.9189"
+         id="tspan310087">double debt after 122 years</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="-1172.6091"
+       y="2840.6912"
+       id="text331025"><tspan
+         sodipodi:role="line"
+         x="-1172.6091"
+         y="2840.6912"
+         id="tspan331027">1822: Haiti invades DR</tspan></text>
   </g>
 </svg>
