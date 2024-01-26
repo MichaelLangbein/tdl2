@@ -470,6 +470,7 @@ The second one shows the effect of the subsidies.
 
 
 
+
 # Preliminaries: utility functions
 
 
@@ -501,6 +502,9 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 
 
 
+
+
+# Macroeconomics
 
 
 

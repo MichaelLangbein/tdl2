@@ -62,10 +62,19 @@ Here's the custom html:
 
 ```html
 <div style="width: 100%;">
-  <svg id="graphic" width="100%" viewBox="0 0 100 35" id="outer" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    id="graphic"
+    width="100%"
+    viewBox="0 0 100 35"
+    id="outer"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <mask id="outlineMask">
       <rect width="100" height="35"></rect>
-      <path d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z" fill="white"></path>
+      <path
+        d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z"
+        fill="white"
+      ></path>
     </mask>
 
     <defs>
@@ -76,25 +85,73 @@ Here's the custom html:
     </defs>
 
     <svg id="contents" mask="url(#outlineMask)">
-      <rect id="background" width="100" height="35" fill="url(#skyGrad)"></rect>
+      <rect
+        id="background"
+        width="100"
+        height="35"
+        fill="url(#skyGrad)"
+      ></rect>
 
-      <svg id="fullBuilding" x="5" y="5" width="20" height="40" viewBox="0 0 100 200">
-        <rect x="47.5" y="46" width="5" height="100" fill="white"></rect>
+      <svg
+        id="fullBuilding"
+        x="5"
+        y="5"
+        width="20"
+        height="40"
+        viewBox="0 0 100 200"
+      >
+        <rect
+          x="47.5"
+          y="46"
+          width="5"
+          height="100"
+          fill="white"
+        ></rect>
         <rect x="45" y="46" width="10" height="8" fill="white"></rect>
 
-        <svg id="fullRotor" x="0" y="0" width="100" height="100" viewBox="0 0 100 100">
+        <svg
+          id="fullRotor"
+          x="0"
+          y="0"
+          width="100"
+          height="100"
+          viewBox="0 0 100 100"
+        >
           <defs>
-            <path id="blade" d="M 0,50 C 9,40, 0,30, 0,0 Z" fill="white"></path>
+            <path
+              id="blade"
+              d="M 0,50 C 9,40, 0,30, 0,0 Z"
+              fill="white"
+            ></path>
           </defs>
           <g id="rotorRotatableGroup" transform="rotate(10 50 50)">
-            <svg x="45" y="45" width="10" height="10" viewBox="0 0 100 100">
+            <svg
+              x="45"
+              y="45"
+              width="10"
+              height="10"
+              viewBox="0 0 100 100"
+            >
               <g transform="rotate(15 50 50)">
-                <path d="M 50 0 L 93.3 75 L 6.7 75 Z" fill="white"></path>
+                <path
+                  d="M 50 0 L 93.3 75 L 6.7 75 Z"
+                  fill="white"
+                ></path>
               </g>
             </svg>
             <use href="#blade" x="50" y="0" transform="" />
-            <use href="#blade" x="50" y="0" transform="rotate(120 50 50)" />
-            <use href="#blade" x="50" y="0" transform="rotate(240 50 50)" />
+            <use
+              href="#blade"
+              x="50"
+              y="0"
+              transform="rotate(120 50 50)"
+            />
+            <use
+              href="#blade"
+              x="50"
+              y="0"
+              transform="rotate(240 50 50)"
+            />
             <circle cx="50" cy="50" r="2.5" fill="white"></circle>
           </g>
         </svg>
@@ -103,15 +160,24 @@ Here's the custom html:
   </svg>
 
   <script>
-    const svg = document.getElementById("graphic");
-    const bg = svg.querySelector("#background");
-    const wka = svg.querySelector("#fullBuilding");
-    const rotor = wka.querySelector("#rotorRotatableGroup");
+    const svg = document.getElementById('graphic');
+    const bg = svg.querySelector('#background');
+    const wka = svg.querySelector('#fullBuilding');
+    const rotor = wka.querySelector('#rotorRotatableGroup');
 
-    window.addEventListener("scroll", (e) => {
-      bg.setAttribute("transform", `translate(0 ${-0.02 * window.scrollY})`);
-      wka.setAttribute("transform", `translate(0 ${-0.03 * window.scrollY})`);
-      rotor.setAttribute("transform", `rotate(${0.2 * window.scrollY} 50 50)`);
+    window.addEventListener('scroll', (e) => {
+      bg.setAttribute(
+        'transform',
+        `translate(0 ${-0.02 * window.scrollY})`
+      );
+      wka.setAttribute(
+        'transform',
+        `translate(0 ${-0.03 * window.scrollY})`
+      );
+      rotor.setAttribute(
+        'transform',
+        `rotate(${0.2 * window.scrollY} 50 50)`
+      );
     });
   </script>
 </div>
@@ -163,7 +229,7 @@ Set up a shop plugin of sorts, and use the virtual downloadable product type. Th
 docker-compose.yml
 
 ```yml
-version: "3.6"
+version: '3.6'
 services:
   wordpress:
     image: wordpress:latest
@@ -177,6 +243,10 @@ services:
       - WORDPRESS_DB_USER=root
       - WORDPRESS_DB_PASSWORD=password
       - WORDPRESS_DEBUG=1 # any non-empty value will do
+      - SCRIPT_DEBUG=true # only in dev builds!
+      # to wp-config.php add:
+      # define( 'SCRIPT_DEBUG', !!getenv_docker('SCRIPT_DEBUG', '')    );
+
     depends_on:
       - db
       - phpmyadmin
@@ -213,25 +283,33 @@ volumes:
 
 ## Theme development
 
-A recipe website
+**Required files**:
 
-- Categories: breakfast, lunch, dinner, appetizers, sups, salads, sides, desserts
-- Tags: Chocolate, chicken, ginger
-- Both categories and tags are examples of `taxonomies`. Instances within a taxonomy (such as sides, desserts for the taxonomy "categories") are called `terms`.
+- index.php : fallback if no other file matches content type
+- style.css - has a header with metadata:
+  `css
+  Theme Name: ...
+  Version: ...
+  Description: ...
+  Tags: ...
+`
+  **Other files**:
+- functions.php : for hooking into wp life-cycle
+- content-type specific files:
+  - home.php, 404.php, ...
+- templates/\*.html
 
-Tables:
-
-- **wp_terms**: stores all terms
-- **wp_term_taxonomy**: relates terms to taxonomies
-- **wp_term_relationships**: relates taxonomies to objects (example: "tags" to "posts")
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/wp_template_hierarchy.png" />
 
 ## JS for custom blocks
 
 ### Part 0: custom block basic concepts
 
 - static block
+
   - admin-view (`js.registerBlockType.edit`): react ------------------> admin
   - user-view (`js.registerBlockType.save`): react -----> db --------> user
+
 - dynamic block
 
   - admin-view (`js.registerBlockType.edit`): react ------------------> admin
@@ -250,7 +328,7 @@ Create the directory:
 ```bash
 cd wordpress/wp-content/plugins
 mkdir counter
-cd conter
+cd counter
 ```
 
 Create a php file with same name as module (counter.php):
@@ -301,19 +379,24 @@ src/block.json
 src/index.tsx:
 
 ```tsx
-import { registerBlockType } from "@wordpress/blocks";
-import { useBlockProps } from "@wordpress/block-editor";
+import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+import metadata from './block.json';
 
 // Wp already knows about this block through php.
 // Here we tell it what to do when that block is to be shown.
-registerBlockType("test/counter", {
+registerBlockType(metadata.name, {
   // return component shown in editor-view
   edit: function () {
     return <p {...useBlockProps()}> Counter, editor-view</p>;
   },
   // return component root html shown in customer-view
   save: function () {
-    return <div id="mycounter">Hi! I will be replaced with a react component.</div>;
+    return (
+      <div id="mycounter">
+        Hi! I will be replaced with a react component.
+      </div>
+    );
   },
 });
 ```
@@ -323,10 +406,10 @@ registerBlockType("test/counter", {
 src/view.tsx:
 
 ```tsx
-import { createRoot } from "react-dom/client";
-import { useState } from "react";
+import { createRoot } from 'react-dom/client';
+import { useState } from 'react';
 
-const root = createRoot(document.getElementById("mycounter"));
+const root = createRoot(document.getElementById('mycounter'));
 
 const Counter = () => {
   const [count, setCount] = useState(0);
@@ -364,6 +447,181 @@ This will:
   - Webpack already knows that wordpress has its own version of react. If it sees react in your code, it will also add it automatically to `index.asset.php`.
 - create a `view.assets.php`
 - create a compiled `block.json` in build, ... which is where we pointed to with our plugin-file `counter.php`.
+
+## Storing attributes in custom blocks
+
+https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/
+
+```tsx
+import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+import { TextControl, NumberControl } from '@wordpress/components';
+import metadata from './block.json';
+
+registerBlockType(metadata.name, {
+  attributes: {
+    layers: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-layers',
+    },
+    lon: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-lon',
+    },
+    lat: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-lat',
+    },
+    zoom: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-zoom',
+    },
+    width: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-width',
+    },
+    height: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-height',
+    },
+  },
+
+  edit: function ({ attributes, setAttributes }) {
+    return (
+      <div {...useBlockProps()}>
+        <p>
+          Scrollymap/anchor, editor-view: layers, lon/lat/zoom, angle
+        </p>
+
+        <TextControl
+          label="layers (comma separated)"
+          value={attributes.layers}
+          onChange={(newVal) => setAttributes({ layers: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="lon"
+          value={attributes.lon}
+          onChange={(newVal) => setAttributes({ lon: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="lat"
+          value={attributes.lat}
+          onChange={(newVal) => setAttributes({ lat: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="zoom"
+          value={attributes.zoom}
+          onChange={(newVal) => setAttributes({ zoom: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="width"
+          value={attributes.width}
+          onChange={(newVal) => setAttributes({ width: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="height"
+          value={attributes.height}
+          onChange={(newVal) => setAttributes({ height: newVal })}
+        ></TextControl>
+      </div>
+    );
+  },
+  save: function ({ attributes }) {
+    return (
+      <div
+        className="anchorContainer"
+        data-layers={attributes.layers}
+        data-lon={attributes.lon}
+        data-lat={attributes.lat}
+        data-zoom={attributes.zoom}
+        data-width={attributes.width}
+        data-height={attributes.height}
+      ></div>
+    );
+  },
+});
+```
+
+## Custom blocks that allow inner blocks
+
+Use case: Create a scrolly-telling-map.
+
+- Create a map-wrapper
+- Users can define blocks of text and map-anchors inside the wrapper
+- The anchors don't display anything, but store metadata on what the map should look like when the anchor comes into view.
+- The wrapper maintains a map-div, that it places in such a way that it lies always atop of the most central map-anchor
+
+Remarkably, creating such a wrapper is not that hard!
+https://gutenberg.10up.com/training/inner-blocks/
+
+```tsx
+import { registerBlockType } from '@wordpress/blocks';
+import {
+  InnerBlocks,
+  useBlockProps,
+  useInnerBlocksProps,
+} from '@wordpress/block-editor';
+
+registerBlockType('scrollymap/container', {
+  edit: function () {
+    const blockProps = useBlockProps();
+    const innerBlocksProps = useInnerBlocksProps();
+
+    return (
+      <div {...blockProps}>
+        <span>This is the scrollymap container admin view</span>
+        <div {...innerBlocksProps}></div>
+      </div>
+    );
+  },
+  save: function () {
+    return <InnerBlocks.Content />;
+  },
+});
+```
+
+## Multiple blocks in one plugin
+
+Directory structure:
+
+- scrollymap
+  - src
+    - anchor
+      - admin.tsx
+      - block.json
+    - container
+      - admin.tsx
+      - view.tsx
+      - block.json
+  - package.json
+  - scrollymap.php
+    - ```php
+        <?php
+          /**
+          * Plugin Name: Scrolly Map
+          */
+          add_action('init', function () {
+              register_block_type( __DIR__ . "/build/anchor/");
+              register_block_type( __DIR__ . "/build/container/");
+          });
+      ```
 
 ## React as a shortcode
 
@@ -435,7 +693,7 @@ add_action("init", function () {
 ```
 
 ```tsx
-import { createRoot } from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 
 function doTheLog(id: string, data: any) {
   const el = document.getElementById(id) as HTMLLinkElement;
@@ -444,18 +702,24 @@ function doTheLog(id: string, data: any) {
   const x = el.offsetLeft;
 
   const body = document.body;
-  const rt = document.createElement("div");
+  const rt = document.createElement('div');
   rt.id = popupId(id);
-  rt.style.position = "absolute";
-  rt.style.top = "0";
-  rt.style.left = "0";
+  rt.style.position = 'absolute';
+  rt.style.top = '0';
+  rt.style.left = '0';
   body.appendChild(rt);
   const root = createRoot(rt);
 
   function Base(props: { x: number; y: number }) {
     console.log(props);
     return (
-      <div style={{ position: "absolute", top: `${props.x} px`, left: `${props.y} px` }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: `${props.x} px`,
+          left: `${props.y} px`,
+        }}
+      >
         <p>Here I am.</p>;
       </div>
     );

@@ -15,7 +15,7 @@
     - page.tsx
     - loading.tsx
     - not-found.tsx
-    - [id].tsx
+    - [id].tsx   (doesn't have to say `id`, could be anything, like `slug`)
   - layout.tsx
 
 Route using the `Link` component
@@ -31,3 +31,10 @@ Route using the `Link` component
 
 - `form.action={onSubmit}` instead of `form.onSubmit(e => e.preventDefault; ...)`
 - `onSubmit = async (formData) => { "use server"; await someServerAction(); revalidatePath("/posts"); }`
+
+
+
+## Magic methods
+- `generateStaticParams`: if you have a `src/[slug]/page.tsx` or a `src/[id].tsx` or such, those are pages that are created dynamically.
+  - That means that they cannot be SSG'ed into static html at build-time.
+  - To prevent that, return in this method a list of the possible values for `slug` (respectively `id`)
