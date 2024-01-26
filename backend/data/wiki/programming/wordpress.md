@@ -827,6 +827,12 @@ Creating a custom content type: https://gist.github.com/kosso/47004c9fa71920b441
 
 ## Static site
 
+Things that don't work with static sites:
+
+- search
+- forms
+- comments
+
 Only partial static site:
 https://wordpress.org/support/topic/do-you-have-to-convert-your-whole-site-to-static-or-partial-conversion-supported/
 
