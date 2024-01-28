@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1920"
+   height="1080"
+   viewBox="0 0 1920 1080"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="0.696875"
+     inkscape:cx="131.30045"
+     inkscape:cy="705.29148"
+     inkscape:window-width="1868"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 403.09224,856.97029 H 1389.388"
+       id="path42" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 660.41235,788.3352 292.15386,-182.24408 63.87119,46.4772 211.4255,-170.67528 54.8277,67.69794 40.0501,-29.54351 85.7858,83.52491"
+       id="path44" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 828.44214,856.33172 V 686.70561 L 484.7164,277.1198 l 0,573.53025"
+       id="path46" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1270.0826"
+       y="509.95331"
+       id="text3966"><tspan
+         sodipodi:role="line"
+         id="tspan3964"
+         x="1270.0826"
+         y="509.95331">terrain</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1213.2623"
+       y="897.59912"
+       id="text8128"><tspan
+         sodipodi:role="line"
+         id="tspan8126"
+         x="1213.2623"
+         y="897.59912">sea level</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-977.60968"
+       y="808.50159"
+       id="text10514"
+       transform="rotate(-90.594906)"><tspan
+         sodipodi:role="line"
+         id="tspan10512"
+         x="-977.60968"
+         y="808.50159">elevation [m]</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="-734.68207"
+       y="458.82031"
+       id="text12762"
+       transform="rotate(-90.399485)"><tspan
+         sodipodi:role="line"
+         id="tspan12760"
+         x="-734.68207"
+         y="458.82031">altitude [m]</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="394.44525"
+       y="246.97112"
+       id="text16264"><tspan
+         sodipodi:role="line"
+         id="tspan16262"
+         x="394.44525"
+         y="246.97112">camera</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="828.44214"
+       y="686.70563"
+       id="text24254"><tspan
+         sodipodi:role="line"
+         id="tspan24252"
+         x="828.44214"
+         y="686.70563">center [Lng, Lat]</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 742.51209,578.78223 c 0,0 29.07598,-25.73842 64.50567,-24.85146 35.42969,0.88697 19.65422,1.96119 19.65422,1.96119"
+       id="path30398" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="774.43732"
+       y="538.2243"
+       id="text31876"><tspan
+         sodipodi:role="line"
+         id="tspan31874"
+         x="774.43732"
+         y="538.2243">pitch</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:26.6667px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="588.87726"
+       y="-183.73605"
+       id="text1500"
+       transform="rotate(51.292915)"><tspan
+         sodipodi:role="line"
+         x="588.87726"
+         y="-183.73605"
+         id="tspan1502"
+         style="font-size:26.6667px">cameraToCenterDistance [px]</tspan></text>
+  </g>
+</svg>

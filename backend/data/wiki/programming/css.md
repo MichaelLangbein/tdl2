@@ -4,8 +4,11 @@
 - _relative_: Default + allows top, bottom, left and right
   - useful as parent for absolute div's
 - _absolute_: Relative to nearest positioned parent (positioned: anything but static)
-- _fixed_: Similar to absolute, but positioned relative to the browser window. Scrolling will not move this element.
-- _sticky_: Element is positioned relative until a specified offset position is met by scrolling, then the element is positioned ‘fixed’ in that position on the scrolling element.
+  - **note**: the parents of absolutely positioned elements won't automatically grow to encompass their child anymore.
+- _fixed_: Similar to absolute, but positioned relative to the browser viewport. Scrolling will not move this element.
+- _sticky_:
+  - element is confined to its parent
+  - but within those confines, it slides along with the viewport like fixed.
 
 # Display
 
@@ -98,7 +101,10 @@ Grid elements may overlap each other:
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>Document</title>
 
     <style>
@@ -149,8 +155,12 @@ Grid elements may overlap each other:
     <div class="container">
       <div id="c1" class="tableEntry">I'm a normal entry</div>
       <div id="c2" class="tableEntry">I'm a normal entry</div>
-      <div id="c3" class="tableEntry">I am pretty small and lie over c4</div>
-      <div id="c4" class="tableEntry">I'm the background for the whole second row</div>
+      <div id="c3" class="tableEntry">
+        I am pretty small and lie over c4
+      </div>
+      <div id="c4" class="tableEntry">
+        I'm the background for the whole second row
+      </div>
     </div>
   </body>
 </html>

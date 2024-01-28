@@ -413,3 +413,140 @@ export function useRedux<T>(selector: (state: State) => T): T {
   return state;
 }
 ```
+
+## Map following along screen behind scrolly-telling text
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <style>
+      * {
+        min-width: 0;
+        box-sizing: border-box;
+        margin: 0;
+      }
+      .all {
+        position: relative;
+        width: 100%;
+        background-color: antiquewhite;
+      }
+      .spacer {
+        width: 80%;
+        margin: auto;
+        height: 400px;
+        background-color: blueviolet;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        background-color: aqua;
+        position: relative;
+
+        .slider {
+          /*imagine this is the map*/
+          width: 100%;
+          height: 300px;
+          background-color: rgba(102, 51, 153, 0.567);
+          position: sticky;
+          top: 30vh;
+        }
+
+        .userContent {
+          /*this is the info-text scrolling along */
+          margin-top: -300px; /* cancelling out that the map needs space */
+          position: relative; /* required so that over map */
+
+          .textbox {
+            font-size: medium;
+            padding: 1rem;
+            line-height: 1.5rem;
+            word-wrap: break-word;
+            background-color: white;
+            border-radius: 1rem;
+            margin: 0.5rem;
+          }
+          .left {
+            width: 50%;
+          }
+          .broad {
+            width: 100%;
+          }
+          .right {
+            width: 50%;
+            margin-left: 50%;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="all">
+      <div class="spacer"></div>
+      <div class="container">
+        <div class="slider"></div>
+
+        <div class="userContent">
+          <div class="textbox left">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Temporibus laborum perspiciatis modi itaque repellat
+            eveniet vero maiores! Repellendus mollitia ex minus
+            aliquid deserunt a repellat. Perferendis quod quisquam
+            voluptatum distinctio qui voluptates commodi. Voluptatum,
+            veritatis. Ratione non maxime officia maiores sequi iure.
+            Eligendi illum ab tenetur blanditiis eos nam quasi!
+          </div>
+          <div class="textbox broad">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            Debitis voluptatem quibusdam totam voluptate delectus esse
+            repudiandae quo. Voluptas facere earum numquam ipsa
+            facilis rem aspernatur amet, architecto, autem ab placeat
+            ut dolores minus totam! Quibusdam ut repellat soluta
+            culpa, earum eveniet, iste iusto nam sapiente iure,
+            similique aut labore unde fugiat perferendis! Corrupti
+            pariatur consectetur dolore, quibusdam iusto sit suscipit,
+            accusamus voluptate ex quasi quos illum in dicta quis amet
+            iure sunt necessitatibus impedit repudiandae. Sapiente
+            deleniti, sunt vitae quibusdam rerum tenetur deserunt
+            voluptates quam ut, consectetur alias eaque id? Asperiores
+            reiciendis necessitatibus quibusdam est, officiis libero
+            perspiciatis ad nihil.
+          </div>
+          <div class="textbox right">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Aperiam, omnis nulla ipsam veniam dolore, tenetur aliquam
+            corrupti nobis quibusdam sint quas temporibus explicabo,
+            repellendus sit laboriosam? Blanditiis temporibus velit
+            nam ea distinctio obcaecati doloribus recusandae at est
+            totam, ut voluptate, quas labore doloremque pariatur, eius
+            nostrum ad veniam eaque magni.
+          </div>
+          <div class="textbox broad">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Eum maxime illum, repellendus, voluptatum doloribus error
+            architecto repudiandae quasi distinctio quae at explicabo
+            soluta! Dolores maxime ipsam sequi praesentium harum iure
+            veniam ratione temporibus vitae nobis fugit, earum
+            similique dolore. Nesciunt accusantium nobis dolores
+            doloribus at repudiandae ullam, repellat aliquam hic
+            veritatis excepturi quod minus. Ipsum dolore laudantium
+            delectus ipsam asperiores consequuntur rem magnam, nulla
+            in libero est ea praesentium dolor necessitatibus iusto
+            voluptate doloribus minima soluta magni qui sint quasi
+            eveniet, laborum debitis. Delectus, a! Expedita doloremque
+            illum deserunt et reprehenderit error quis, quaerat
+            similique delectus at architecto, eligendi modi!
+          </div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+  </body>
+</html>
+```
