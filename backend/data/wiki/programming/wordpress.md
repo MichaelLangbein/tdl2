@@ -62,19 +62,10 @@ Here's the custom html:
 
 ```html
 <div style="width: 100%;">
-  <svg
-    id="graphic"
-    width="100%"
-    viewBox="0 0 100 35"
-    id="outer"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg id="graphic" width="100%" viewBox="0 0 100 35" id="outer" xmlns="http://www.w3.org/2000/svg">
     <mask id="outlineMask">
       <rect width="100" height="35"></rect>
-      <path
-        d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z"
-        fill="white"
-      ></path>
+      <path d="M 0,0 L 100,0 L 100,30 C 80,25, 59,30, 40,30 S 10,20, 0, 25 Z" fill="white"></path>
     </mask>
 
     <defs>
@@ -85,73 +76,25 @@ Here's the custom html:
     </defs>
 
     <svg id="contents" mask="url(#outlineMask)">
-      <rect
-        id="background"
-        width="100"
-        height="35"
-        fill="url(#skyGrad)"
-      ></rect>
+      <rect id="background" width="100" height="35" fill="url(#skyGrad)"></rect>
 
-      <svg
-        id="fullBuilding"
-        x="5"
-        y="5"
-        width="20"
-        height="40"
-        viewBox="0 0 100 200"
-      >
-        <rect
-          x="47.5"
-          y="46"
-          width="5"
-          height="100"
-          fill="white"
-        ></rect>
+      <svg id="fullBuilding" x="5" y="5" width="20" height="40" viewBox="0 0 100 200">
+        <rect x="47.5" y="46" width="5" height="100" fill="white"></rect>
         <rect x="45" y="46" width="10" height="8" fill="white"></rect>
 
-        <svg
-          id="fullRotor"
-          x="0"
-          y="0"
-          width="100"
-          height="100"
-          viewBox="0 0 100 100"
-        >
+        <svg id="fullRotor" x="0" y="0" width="100" height="100" viewBox="0 0 100 100">
           <defs>
-            <path
-              id="blade"
-              d="M 0,50 C 9,40, 0,30, 0,0 Z"
-              fill="white"
-            ></path>
+            <path id="blade" d="M 0,50 C 9,40, 0,30, 0,0 Z" fill="white"></path>
           </defs>
           <g id="rotorRotatableGroup" transform="rotate(10 50 50)">
-            <svg
-              x="45"
-              y="45"
-              width="10"
-              height="10"
-              viewBox="0 0 100 100"
-            >
+            <svg x="45" y="45" width="10" height="10" viewBox="0 0 100 100">
               <g transform="rotate(15 50 50)">
-                <path
-                  d="M 50 0 L 93.3 75 L 6.7 75 Z"
-                  fill="white"
-                ></path>
+                <path d="M 50 0 L 93.3 75 L 6.7 75 Z" fill="white"></path>
               </g>
             </svg>
             <use href="#blade" x="50" y="0" transform="" />
-            <use
-              href="#blade"
-              x="50"
-              y="0"
-              transform="rotate(120 50 50)"
-            />
-            <use
-              href="#blade"
-              x="50"
-              y="0"
-              transform="rotate(240 50 50)"
-            />
+            <use href="#blade" x="50" y="0" transform="rotate(120 50 50)" />
+            <use href="#blade" x="50" y="0" transform="rotate(240 50 50)" />
             <circle cx="50" cy="50" r="2.5" fill="white"></circle>
           </g>
         </svg>
@@ -166,18 +109,9 @@ Here's the custom html:
     const rotor = wka.querySelector('#rotorRotatableGroup');
 
     window.addEventListener('scroll', (e) => {
-      bg.setAttribute(
-        'transform',
-        `translate(0 ${-0.02 * window.scrollY})`
-      );
-      wka.setAttribute(
-        'transform',
-        `translate(0 ${-0.03 * window.scrollY})`
-      );
-      rotor.setAttribute(
-        'transform',
-        `rotate(${0.2 * window.scrollY} 50 50)`
-      );
+      bg.setAttribute('transform', `translate(0 ${-0.02 * window.scrollY})`);
+      wka.setAttribute('transform', `translate(0 ${-0.03 * window.scrollY})`);
+      rotor.setAttribute('transform', `rotate(${0.2 * window.scrollY} 50 50)`);
     });
   </script>
 </div>
@@ -392,11 +326,7 @@ registerBlockType(metadata.name, {
   },
   // return component root html shown in customer-view
   save: function () {
-    return (
-      <div id="mycounter">
-        Hi! I will be replaced with a react component.
-      </div>
-    );
+    return <div id="mycounter">Hi! I will be replaced with a react component.</div>;
   },
 });
 ```
@@ -501,9 +431,7 @@ registerBlockType(metadata.name, {
   edit: function ({ attributes, setAttributes }) {
     return (
       <div {...useBlockProps()}>
-        <p>
-          Scrollymap/anchor, editor-view: layers, lon/lat/zoom, angle
-        </p>
+        <p>Scrollymap/anchor, editor-view: layers, lon/lat/zoom, angle</p>
 
         <TextControl
           label="layers (comma separated)"
@@ -573,11 +501,7 @@ https://gutenberg.10up.com/training/inner-blocks/
 
 ```tsx
 import { registerBlockType } from '@wordpress/blocks';
-import {
-  InnerBlocks,
-  useBlockProps,
-  useInnerBlocksProps,
-} from '@wordpress/block-editor';
+import { InnerBlocks, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 
 registerBlockType('scrollymap/container', {
   edit: function () {
@@ -622,6 +546,15 @@ Directory structure:
               register_block_type( __DIR__ . "/build/container/");
           });
       ```
+
+## CSS for custom blocks
+
+- `MyComponent.tsx`
+  - `import some.scss` -----> built into `mycomponent.css`
+  - `import other.scss` ----> built into `mycomponent.css`
+  - `import style.scss` ----> turns into `style-mycomponent.css`
+- You'll need to name both `style-mycomponent` and `mycomponent` in your block.json:
+  - `"style": ["file:./components/style-mycomponent.css", "file:./components/mycomponent.css"]`
 
 ## React as a shortcode
 
