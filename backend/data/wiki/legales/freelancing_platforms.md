@@ -1,7 +1,15 @@
+# Empfehungen
+
+Empfohlen in coworking-space:
+
+- https://www.freelancermap.de
+- https://www.freelance.de
+- https://www.gulp.de
+
 # Upwork
 
+## Connects
 
-## Connects 
 https://www.homeworkingclub.com/upwork-fees-for-freelancers/
 
 In order to apply for jobs on Upwork, you use a system of “Upwork Connects.” Between two and six Connects are required to apply for each gig.
@@ -14,9 +22,9 @@ Freelance Plus subscribers on Upwork saw their fees jump from $10 to $14.99 per 
 
 The price of each Upwork Connect is 15 cents (US$0.15) and you can purchase bundles of 10, 20, 40, 60, and 80 Connects.
 
-
 ## Kommission
-https://support.upwork.com/hc/en-us/articles/211062538-Freelancer-Service-Fees 
+
+https://support.upwork.com/hc/en-us/articles/211062538-Freelancer-Service-Fees
 
 As a freelancer, you’re charged a sliding fee based on your lifetime billings with each non-Enterprise client. This includes all contracts you’ve ever had with that client. Service fees are the same whether the contracts are hourly, fixed-price, or projects on Project Catalog.
 
@@ -29,42 +37,38 @@ Example: On a $600 project with a new client, a freelancer’s service fee would
 These sliding fees don’t apply to contracts with Enterprise clients. This is because Upwork negotiates individual contracts with those companies on a case by case basis. In general, Enterprise contracts have a flat 10% service fee. Enterprise clients are designated by a badge on their client profiles.
 
 ## Klienten von Upwork zu Offline bringen
+
 https://support.upwork.com/hc/en-us/articles/360043210654-Move-Outside-of-Upwork
 Kann man machen, kostet aber eine "conversion fee".
 Beträgt 12% des höchsten Stundensatzes mal 1 Jahr (https://support.upwork.com/hc/en-us/articles/360043723533 )
+
 ```
     Conversion Fee = 12% of hourly rate x 2,080 hours (52 wks x 40 hrs)
 ```
+
 Für 30€/h sind das 62.400€.
 
-
-
-
-
 # Fiverr
+
 Very much like upwork, but freelancers are passive (though there are so called "buyer requests"). Only clients make contact.
+
 - 20% commission on everything - whereas at upwork it's only 20% for the first 500$.
-- https://www.thewaystowealth.com/make-money/fiverr/ 
+- https://www.thewaystowealth.com/make-money/fiverr/
 - Fiverr does not allow taking clients offline: https://www.reddit.com/r/Fiverr/comments/7be50s/advice_how_do_i_get_clients_off_fiverr_platform/
 
-
-
-
-
 # Toptal
+
 Only top 3% of developers are allowed in.
 Clients pay a hefty fine.
 Toptal matches freelancers to clients.
 
 # Others
+
 https://www.homeworkingclub.com/sites-like-upwork/
 
-
 # DLR
-Mein Vertrag:
-    1. TVöD vom 13.09.2005 (Teil Bund)
-    2. Tarifvertrag für das DLR vom 06.05.1980
-    3. Mein Arbeitsvertrag = Zusatzvereinbarungen (mein Ordner)
+
+Mein Vertrag: 1. TVöD vom 13.09.2005 (Teil Bund) 2. Tarifvertrag für das DLR vom 06.05.1980 3. Mein Arbeitsvertrag = Zusatzvereinbarungen (mein Ordner)
 
 Wichtige Punkte:
 

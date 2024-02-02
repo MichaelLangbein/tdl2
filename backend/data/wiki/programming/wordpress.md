@@ -237,6 +237,21 @@ volumes:
 
 ## JS for custom blocks
 
+### Part -1: default template and Gutenberg ecosystem
+
+`npx @wordpress/create-block@latest todo-list`
+
+- `@wordpress/scripts`
+- `@wordpress/element`: react utilities
+- `@wordpress/block-editor`:
+  - MediaUpload, MediaUploadCheck
+- `@wordpress/editor`:
+- `@wordpress/data`: redux state management, connects with wp-api
+  - `withSelect`
+    - wraps a component
+    - adds the result of _x_ to the component-props
+    - _x_ is a redux query using `select`
+
 ### Part 0: custom block basic concepts
 
 - static block
@@ -546,6 +561,10 @@ Directory structure:
               register_block_type( __DIR__ . "/build/container/");
           });
       ```
+
+## Multiple instances of same block on one page
+
+If you have multiple instances of the same block on one page, wordpress is still only going to load _one_ copy of the view-script.
 
 ## CSS for custom blocks
 

@@ -7,10 +7,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
     <style>
@@ -59,30 +56,24 @@
       <div id="container" class="container">
         <div id="text1" class="tableEntry">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Commodi tempore pariatur quaerat quo nobis ea nisi itaque
-            nihil iusto eos, quis, ipsum nam necessitatibus
-            consequuntur nemo libero hic labore id.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempore pariatur quaerat quo nobis ea nisi
+            itaque nihil iusto eos, quis, ipsum nam necessitatibus consequuntur nemo libero hic labore id.
           </p>
         </div>
         <div id="blank1" class="tableEntry blank"></div>
 
         <div id="text2" class="tableEntry">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Commodi tempore pariatur quaerat quo nobis ea nisi itaque
-            nihil iusto eos, quis, ipsum nam necessitatibus
-            consequuntur nemo libero hic labore id.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempore pariatur quaerat quo nobis ea nisi
+            itaque nihil iusto eos, quis, ipsum nam necessitatibus consequuntur nemo libero hic labore id.
           </p>
         </div>
         <div id="map1" class="tableEntry map"></div>
 
         <div id="text3" class="tableEntry">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Commodi tempore pariatur quaerat quo nobis ea nisi itaque
-            nihil iusto eos, quis, ipsum nam necessitatibus
-            consequuntur nemo libero hic labore id.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempore pariatur quaerat quo nobis ea nisi
+            itaque nihil iusto eos, quis, ipsum nam necessitatibus consequuntur nemo libero hic labore id.
           </p>
         </div>
         <div id="map2" class="tableEntry map"></div>
@@ -92,10 +83,8 @@
         <div id="map4" class="tableEntry map"></div>
         <div id="text4" class="tableEntry">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Commodi tempore pariatur quaerat quo nobis ea nisi itaque
-            nihil iusto eos, quis, ipsum nam necessitatibus
-            consequuntur nemo libero hic labore id.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempore pariatur quaerat quo nobis ea nisi
+            itaque nihil iusto eos, quis, ipsum nam necessitatibus consequuntur nemo libero hic labore id.
           </p>
         </div>
       </div>
@@ -111,9 +100,7 @@ interface Settings {
   animatedElements: [
     {
       placeholders: string[];
-      onScrolled: (degrees: {
-        [placeholder: string]: number;
-      }) => void;
+      onScrolled: (degrees: { [placeholder: string]: number }) => void;
     }
   ];
 }
@@ -137,17 +124,11 @@ interface Settings {
  */
 class Scrollyteller {
   constructor(private settings: Settings) {
-    const container = settings.parent
-      ? document.querySelector(settings.parent)
-      : document;
+    const container = settings.parent ? document.querySelector(settings.parent) : document;
     if (!container) return;
 
-    function interpolate(
-      data: { weight: number; value: number }[]
-    ): number {
-      const sumOfWeights = data
-        .map((d) => d.weight)
-        .reduce((prev, curr) => prev + curr, 0);
+    function interpolate(data: { weight: number; value: number }[]): number {
+      const sumOfWeights = data.map((d) => d.weight).reduce((prev, curr) => prev + curr, 0);
       let mean = 0;
       for (const datum of data) {
         mean += (datum.value * datum.weight) / sumOfWeights;
@@ -159,13 +140,9 @@ class Scrollyteller {
       const animatedElement = document.createElement('div');
       animatedElement.style.position = 'fixed';
       animatedElement.style.setProperty('border', '1px solid red');
-      settings.parent
-        ? container.appendChild(animatedElement)
-        : document.body.appendChild(animatedElement);
+      settings.parent ? container.appendChild(animatedElement) : document.body.appendChild(animatedElement);
 
-      const placeholders = animatedElementSettings.placeholders.map(
-        (ph) => container.querySelector(ph)
-      );
+      const placeholders = animatedElementSettings.placeholders.map((ph) => container.querySelector(ph));
 
       function onScroll(scrollEvent: Event | null) {
         const viewPortHeight = window.innerHeight;
@@ -178,13 +155,8 @@ class Scrollyteller {
 
         for (const placeholder of placeholders) {
           if (placeholder) {
-            const viewPortOffset =
-              placeholder.getBoundingClientRect();
-            const distToCenter = Math.abs(
-              viewPortOffset.top +
-                viewPortOffset.height / 2 -
-                viewPortHeight / 2
-            );
+            const viewPortOffset = placeholder.getBoundingClientRect();
+            const distToCenter = Math.abs(viewPortOffset.top + viewPortOffset.height / 2 - viewPortHeight / 2);
             if (distToCenter < viewPortHeight / 2) {
               tops.push({
                 weight: 1 / distToCenter,
@@ -220,9 +192,7 @@ class Scrollyteller {
         animatedElementSettings.onScrolled(degrees);
       }
 
-      container.addEventListener('scroll', (scrollEvent) =>
-        onScroll(scrollEvent)
-      );
+      container.addEventListener('scroll', (scrollEvent) => onScroll(scrollEvent));
       onScroll(null);
     }
   }
@@ -241,7 +211,10 @@ const scr = new Scrollyteller({
 ## Streetview like threejs scene
 
 ```ts
+import './style.css';
+
 import {
+  AmbientLight,
   AnimationMixer,
   AxesHelper,
   DirectionalLight,
@@ -251,152 +224,141 @@ import {
   PerspectiveCamera,
   Scene,
   SphereGeometry,
-  Texture,
   TextureLoader,
   Vector3,
   WebGLRenderer,
 } from 'three';
-import {
-  FirstPersonControls,
-  GLTF,
-  GLTFLoader,
-} from 'three/examples/jsm/Addons.js';
-import './style.css';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
-/** ----------------------- helpers ----------------------- */
-function unique<T>(data: T[]): T[] {
-  const unq: T[] = [];
-  for (const datum of data) {
-    if (!unq.includes(datum)) unq.push(datum);
-  }
-  return unq;
-}
-
-async function loadGLTFs(
-  urls: string[]
-): Promise<{ [key: string]: GLTF }> {
-  const loader = new GLTFLoader();
-  const results: { [key: string]: GLTF } = {};
-  const all$ = urls.map(async (url) => {
-    const result = await loader.loadAsync(url);
-    results[url] = result;
-    return true;
-  });
-  const success = await Promise.all(all$);
-  return results;
-}
-
-async function loadTextures(
-  urls: string[]
-): Promise<{ [key: string]: Texture }> {
-  const loader = new TextureLoader();
-  const results: { [key: string]: Texture } = {};
-  const all$ = urls.map(async (url) => {
-    const result = await loader.loadAsync(url);
-    results[url] = result;
-  });
-  const success = await Promise.all(all$);
-  return results;
-}
-
-/** ----------------------- settings ----------------------- */
-interface SphereSettings {
-  distanceMeter: number;
-  textureEquirect: string;
-}
-
-interface ObjectSettings {
-  position: XYZ;
-  modelGlb: string;
-}
-
-interface XYZ {
-  x: number;
-  y: number;
-  z: number;
-}
-
-interface Settings {
-  centerCoords: XYZ;
-  spheres: SphereSettings[];
-  objects: ObjectSettings[];
-}
-
-const response = await fetch('./settings.json');
-const settings: Settings = await response.json();
-
-const modelUrls = unique(settings.objects.map((o) => o.modelGlb));
-const textureUrls = unique(
-  settings.spheres.map((s) => s.textureEquirect)
-);
-
-/**------------------------------- code ----------------------- */
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
+async function addSphere(radius: number, imageUrl: string, scene: Scene) {
+  const texture = await new TextureLoader().loadAsync(imageUrl);
+  const sphere = new Mesh(
+    new SphereGeometry(radius),
+    new MeshBasicMaterial({
+      side: DoubleSide,
+      map: texture,
+      transparent: true,
+    })
+  );
+  scene.add(sphere);
+}
+
+async function addModel(pos: { x: number; y: number; z: number }, modelUrl: string, scene: Scene) {
+  const gltf = await new GLTFLoader().loadAsync(modelUrl);
+  const modelScene = gltf.scene;
+  modelScene.position.set(pos.x, pos.y, pos.z);
+  gltf.animations.map((a) => {
+    const animationAction = mixer.clipAction(a, modelScene);
+    animationAction.play();
+  });
+  scene.add(modelScene);
+}
+
 const renderer = new WebGLRenderer({
-  alpha: true,
   antialias: true,
   canvas: canvas,
 });
 
+const camera = new PerspectiveCamera(60, canvas.width / canvas.height, 1, 100000);
+
 const scene = new Scene();
-
-const camera = new PerspectiveCamera(
-  60,
-  canvas.width / canvas.height
-);
-scene.add(camera);
-
-const controls = new FirstPersonControls(camera, canvas);
-controls.autoForward = false;
-
-const helper = new AxesHelper(10);
-scene.add(helper);
-
-const sun = new DirectionalLight('white', 3);
-sun.position.set(0, 10, 0);
-sun.lookAt(new Vector3(0, 0, 0));
-scene.add(sun);
 
 const mixer = new AnimationMixer(scene);
 
-const modelDict = await loadGLTFs(modelUrls);
-for (const [url, modelScene] of Object.entries(modelDict)) {
-  const s = settings.objects.find((s) => s.modelGlb === url);
-  if (s) {
-    modelScene.scene.position.set(
-      s.position.x,
-      s.position.y,
-      s.position.z
-    );
-    scene.add(modelScene.scene);
-    modelScene.animations.map((a) => mixer.clipAction(a).play());
-  }
-}
+const light = new DirectionalLight();
+light.position.set(0, 10, 0);
+scene.add(light);
 
-const textureDict = await loadTextures(textureUrls);
-for (const [url, texture] of Object.entries(textureDict)) {
-  const s = settings.spheres.find((s) => s.textureEquirect === url);
-  if (s) {
-    const geometry = new SphereGeometry(s.distanceMeter);
-    const material = new MeshBasicMaterial({
-      map: texture,
-      side: DoubleSide,
-    });
-    const object = new Mesh(geometry, material);
-    scene.add(object);
-  }
-}
+const light2 = new AmbientLight();
+scene.add(light2);
 
-function render() {
+const ah = new AxesHelper(100);
+ah.position.set(0, -0.2, 0);
+scene.add(ah);
+
+const loopTimeMS = 30;
+function loop() {
+  const startTimeMS = new Date().getTime();
   renderer.render(scene, camera);
-  controls.update(1.0);
-  mixer.update(0.06);
-  setTimeout(render, 60);
+  mixer.update(loopTimeMS / 1000);
+  const endTimeMS = new Date().getTime();
+  const timePassedMS = endTimeMS - startTimeMS;
+
+  setTimeout(loop, loopTimeMS - timePassedMS);
 }
-render();
+loop();
+
+const sensitity = 4.0;
+const viewWidthRadians = (2 * Math.PI * camera.fov) / 360;
+const viewHeightRadians = (viewWidthRadians * canvas.clientHeight) / canvas.clientWidth;
+const worldYAxis = new Vector3(0, 1, 0);
+const dragState = {
+  dragging: false,
+  lastPos: { x: 0, y: 0 },
+};
+function dragStart(evt: MouseEvent) {
+  evt.preventDefault();
+  dragState.dragging = true;
+  dragState.lastPos.x = evt.clientX;
+  dragState.lastPos.y = evt.clientY;
+}
+function drag(evt: MouseEvent) {
+  evt.preventDefault();
+  if (dragState.dragging) {
+    const deltaX = evt.clientX - dragState.lastPos.x;
+    const deltaY = evt.clientY - dragState.lastPos.y;
+    dragState.lastPos.x += deltaX;
+    dragState.lastPos.y += deltaY;
+
+    const radiansHorizontal = (deltaX / canvas.clientWidth) * viewWidthRadians * sensitity;
+    camera.rotateOnWorldAxis(worldYAxis, radiansHorizontal);
+    const radiansVertical = (deltaY / canvas.clientHeight) * viewHeightRadians * sensitity;
+    camera.rotateX(radiansVertical);
+  }
+}
+function dragEnd(evt: MouseEvent) {
+  evt.preventDefault();
+  dragState.dragging = false;
+  dragState.lastPos.x = 0;
+  dragState.lastPos.y = 0;
+}
+canvas.addEventListener('mousedown', dragStart);
+canvas.addEventListener('mousemove', drag);
+canvas.addEventListener('mouseup', dragEnd);
+canvas.addEventListener('mouseout', dragEnd);
+
+export interface Sphere {
+  radius: number;
+  url: string;
+}
+export interface Model {
+  pos: { x: number; y: number; z: number };
+  modelUrl: string;
+}
+export interface SceneConfig {
+  spheres: Sphere[];
+  models: Model[];
+}
+
+const spheres: Sphere[] = [
+  { radius: 10, url: 'middleground_alpha.png' },
+  { radius: 10000, url: 'background.jpeg' },
+];
+const spherePromises = spheres.map((s) => addSphere(s.radius, s.url, scene));
+
+const models: Model[] = [
+  {
+    pos: { x: 100, y: -40, z: -550 },
+    modelUrl: 'animated_wind_turbine_scaled.glb',
+  },
+];
+const modelPromises = models.map((m) => addModel(m.pos, m.modelUrl, scene));
+
+await Promise.all([...spherePromises, ...modelPromises]);
 ```
 
 ## UseRedux hook
@@ -421,10 +383,7 @@ export function useRedux<T>(selector: (state: State) => T): T {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
       * {
@@ -494,53 +453,35 @@ export function useRedux<T>(selector: (state: State) => T): T {
 
         <div class="userContent">
           <div class="textbox left">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Temporibus laborum perspiciatis modi itaque repellat
-            eveniet vero maiores! Repellendus mollitia ex minus
-            aliquid deserunt a repellat. Perferendis quod quisquam
-            voluptatum distinctio qui voluptates commodi. Voluptatum,
-            veritatis. Ratione non maxime officia maiores sequi iure.
-            Eligendi illum ab tenetur blanditiis eos nam quasi!
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus laborum perspiciatis modi itaque
+            repellat eveniet vero maiores! Repellendus mollitia ex minus aliquid deserunt a repellat. Perferendis quod
+            quisquam voluptatum distinctio qui voluptates commodi. Voluptatum, veritatis. Ratione non maxime officia
+            maiores sequi iure. Eligendi illum ab tenetur blanditiis eos nam quasi!
           </div>
           <div class="textbox broad">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Debitis voluptatem quibusdam totam voluptate delectus esse
-            repudiandae quo. Voluptas facere earum numquam ipsa
-            facilis rem aspernatur amet, architecto, autem ab placeat
-            ut dolores minus totam! Quibusdam ut repellat soluta
-            culpa, earum eveniet, iste iusto nam sapiente iure,
-            similique aut labore unde fugiat perferendis! Corrupti
-            pariatur consectetur dolore, quibusdam iusto sit suscipit,
-            accusamus voluptate ex quasi quos illum in dicta quis amet
-            iure sunt necessitatibus impedit repudiandae. Sapiente
-            deleniti, sunt vitae quibusdam rerum tenetur deserunt
-            voluptates quam ut, consectetur alias eaque id? Asperiores
-            reiciendis necessitatibus quibusdam est, officiis libero
-            perspiciatis ad nihil.
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis voluptatem quibusdam totam voluptate
+            delectus esse repudiandae quo. Voluptas facere earum numquam ipsa facilis rem aspernatur amet, architecto,
+            autem ab placeat ut dolores minus totam! Quibusdam ut repellat soluta culpa, earum eveniet, iste iusto nam
+            sapiente iure, similique aut labore unde fugiat perferendis! Corrupti pariatur consectetur dolore, quibusdam
+            iusto sit suscipit, accusamus voluptate ex quasi quos illum in dicta quis amet iure sunt necessitatibus
+            impedit repudiandae. Sapiente deleniti, sunt vitae quibusdam rerum tenetur deserunt voluptates quam ut,
+            consectetur alias eaque id? Asperiores reiciendis necessitatibus quibusdam est, officiis libero perspiciatis
+            ad nihil.
           </div>
           <div class="textbox right">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Aperiam, omnis nulla ipsam veniam dolore, tenetur aliquam
-            corrupti nobis quibusdam sint quas temporibus explicabo,
-            repellendus sit laboriosam? Blanditiis temporibus velit
-            nam ea distinctio obcaecati doloribus recusandae at est
-            totam, ut voluptate, quas labore doloremque pariatur, eius
-            nostrum ad veniam eaque magni.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, omnis nulla ipsam veniam dolore, tenetur
+            aliquam corrupti nobis quibusdam sint quas temporibus explicabo, repellendus sit laboriosam? Blanditiis
+            temporibus velit nam ea distinctio obcaecati doloribus recusandae at est totam, ut voluptate, quas labore
+            doloremque pariatur, eius nostrum ad veniam eaque magni.
           </div>
           <div class="textbox broad">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Eum maxime illum, repellendus, voluptatum doloribus error
-            architecto repudiandae quasi distinctio quae at explicabo
-            soluta! Dolores maxime ipsam sequi praesentium harum iure
-            veniam ratione temporibus vitae nobis fugit, earum
-            similique dolore. Nesciunt accusantium nobis dolores
-            doloribus at repudiandae ullam, repellat aliquam hic
-            veritatis excepturi quod minus. Ipsum dolore laudantium
-            delectus ipsam asperiores consequuntur rem magnam, nulla
-            in libero est ea praesentium dolor necessitatibus iusto
-            voluptate doloribus minima soluta magni qui sint quasi
-            eveniet, laborum debitis. Delectus, a! Expedita doloremque
-            illum deserunt et reprehenderit error quis, quaerat
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum maxime illum, repellendus, voluptatum doloribus
+            error architecto repudiandae quasi distinctio quae at explicabo soluta! Dolores maxime ipsam sequi
+            praesentium harum iure veniam ratione temporibus vitae nobis fugit, earum similique dolore. Nesciunt
+            accusantium nobis dolores doloribus at repudiandae ullam, repellat aliquam hic veritatis excepturi quod
+            minus. Ipsum dolore laudantium delectus ipsam asperiores consequuntur rem magnam, nulla in libero est ea
+            praesentium dolor necessitatibus iusto voluptate doloribus minima soluta magni qui sint quasi eveniet,
+            laborum debitis. Delectus, a! Expedita doloremque illum deserunt et reprehenderit error quis, quaerat
             similique delectus at architecto, eligendi modi!
           </div>
         </div>
