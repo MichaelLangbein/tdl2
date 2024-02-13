@@ -15,6 +15,8 @@
     - Templates are edited in the Site editor
     - They are further subdivided into template-parts
   - **Patterns**: sets of blocks that can be placed together
+- Filter: register a filter to modify a content-type before its being displayed
+- Shortcode: a user can enter a short code snippet which will be replaced by something more complex.
 
 ### Exporting templates
 
@@ -217,6 +219,14 @@ volumes:
 
 ## Theme development
 
+Both classic themes and block themes adhere to the template hierarchy:
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/wp_template_hierarchy.png" />
+
+Making sure that styles, blocks etc. are not cached:
+`wp-config.php / define('WP_DEVELOPMENT_MODE', 'theme');`
+
+### Classic themes
+
 **Required files**:
 
 - index.php : fallback if no other file matches content type
@@ -233,7 +243,74 @@ volumes:
   - home.php, 404.php, ...
 - templates/\*.html
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/wp_template_hierarchy.png" />
+### Block themes
+
+Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that allows you to pick a highly restrictive selection of fonts, colors, layout, spacing, etc., which will be made available to the admin through the UI.
+
+#### Manually
+
+- **parts**: small, reusable elements made of html, to be used in templates.
+  - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
+  - header.html
+  - footer.html
+- **patterns**: Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
+  - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
+  - should be php
+  - requires meta-data comment at top
+- **templates**: functional (sub-)pages built out of blocks, parts and patterns. There're being looked up as required by the template hierarchy.
+  - You can add your own template ....
+  - They are referred to in other templates or patterns with `<!-- wp:template-part {} /-->`
+  - Files:
+    - index.html
+    - potentially any template from the template hierarchy
+    - potentially any custom templates spliced into the lookup by you
+- **style.css**
+  - Theme name and other meta-data - barely any actual CSS, because that's mostly inside theme.json
+- **theme.json**
+  - $schema: https://schemas.wp.org/trunk/theme.json
+  - settings
+  - styles
+- empty index.php (so that dir can't be inspected from outside)
+
+All the above are used to layout widgets and the sites "frame" - i.e. everything that is not an actual blog-posts content. Content itself is made of blocks and may use patterns.
+
+Users can overwrite your settings:
+
+- Style hierarchy: code < user defined global < user defined per block
+- User defined changes are stored in db, not code.
+
+You'll often edit some pattern in the UI and later export it from the database to paste it back into your code. Don't forget to "clear customizations" so that your code, instead of the db, is what's being shown.
+
+#### Create block theme plugin
+
+Creates theme code in themes folder.
+Changes your code files even after you've made your own adjustments.
+Lots of nice configs, like picking and downloading google fonts.
+
+#### Editing UI
+
+- Site editor
+  - **Dashboard/Appearence/Editor**: comprehensive full site, all templates.
+  - **Current page/Edit Site**: For editing templates based on hierarchy. Shows currently visible template.
+- Page editor
+  - **Current page/Edit page**: Edit blocks in content-part of the current page
+
+## Custom content types
+
+Based on https://code.tutsplus.com/a-guide-to-wordpress-custom-post-types-creation-display-and-meta-boxes--wp-27645t.
+Just uses three hooks:
+
+1. `add_action('init',       register_post_type(slug, supports, template)  )`
+2. `add_action('admin_init', add_meta_box(label, display_func)             )`
+3. `add_action('save_post',  update_post_meta(label, $_POST)               )`
+
+In order, this does the following:
+
+1. Declares a new content type.
+2. Adds new meta-data fields (plus html-forms to edit them).
+3. Hooks into save-process to also save the new meta-data.
+
+Theoretically, there is a fourth step: `add_filter( 'template_include', insertYourTemplateFunc, 1 )`. But: this doesn't really seem to work with modern block-themes.
 
 ## JS for custom blocks
 
@@ -244,13 +321,21 @@ volumes:
 - `@wordpress/scripts`
 - `@wordpress/element`: react utilities
 - `@wordpress/block-editor`:
-  - MediaUpload, MediaUploadCheck
+  - MediaUploadCheck, RichText
+  - useBlockProps
+  - MediaUpload: actually not implemented in this module:
+    - module only contains placeholder...
+    - ... actual value is set with a filter: `window.wp.hooks.addFilter('editor.MediaUpload')` ...
+    - ... and as such made available in `window.wp.mediaUtils.MediaUpload`
 - `@wordpress/editor`:
 - `@wordpress/data`: redux state management, connects with wp-api
   - `withSelect`
     - wraps a component
     - adds the result of _x_ to the component-props
     - _x_ is a redux query using `select`
+- `window.wp`
+  - Wordpress creates some components only at runtime. For this reason, they cannot simply be imported with `import {x} from "y"`, but are taken directly from `window.wp`
+  - `mediaUtils`: Contains MediaUpload
 
 ### Part 0: custom block basic concepts
 
@@ -396,6 +481,47 @@ This will:
 ## Storing attributes in custom blocks
 
 https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/
+
+Attributes:
+
+- type:
+  - `string` | `number`
+  - `array`
+    - requires `selector`, `source=query`
+- `selector`: a css selector. Example: `element[attrname=attrval]`
+- `source`:
+  - source: undefined
+    - data stored in comments surrounding actual markup
+  - source: text
+    - data stored in child element position of markup
+    - requires `selector`
+  - source: html
+    - like text, but allows markup
+  - source: attribute
+    - stored in attribute
+    - requires `selector`, requires `attribute`
+  - source: query
+    - requires `query`
+    - example: this returns an array of type `{link: string, link-content: string}[]`:
+      ```json
+      "embedded-links": {
+      "type": "array",
+      "source": "query",
+      "selector": "a",
+      "query": {
+      "link": {
+      "type": "string",
+      "source": "attribute",
+      "attribute": "href"
+      },
+      "link-content": {
+      "type": "string",
+      "source": "text"
+      }
+      }
+      ```
+
+Example application:
 
 ```tsx
 import { registerBlockType } from '@wordpress/blocks';
@@ -616,7 +742,6 @@ function related_values_shortcode($attrs, $content, $shortcode_tag)
     );
     $unitsEncoded = json_encode($units);
 
-
     $output = <<<HTML
         <a
             id="$id"
@@ -630,7 +755,6 @@ function related_values_shortcode($attrs, $content, $shortcode_tag)
 
     return $output;
 }
-
 
 add_action("wp_enqueue_scripts", function () {
     $url = plugin_dir_url(__FILE__) . "/build/index.js";

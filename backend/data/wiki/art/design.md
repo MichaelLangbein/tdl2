@@ -35,9 +35,10 @@
 
 ## Resources
 
-### General
+### Inspiration
 
 - https://dribbble.com/tags/ui
+- https://www.behance.net
 
 ### Assets
 
@@ -120,6 +121,10 @@ Google fonts most similar to the above:
 
 Text sizing:
 
+- guide values:
+  - title: 32px, bold
+  - body: 18px, regular/bold
+  - small: 14px, regular
 - headings:
   - smaller line-spacing (1.3rem), smaller letter spacing (-5%)
   - not marked through size, but through color and
@@ -127,3 +132,61 @@ Text sizing:
   - max-width: 700px
 - relation between the two:
   - don't mix center-aligned with side-aligned
+
+# Process, practical
+
+1. Define user flow:
+
+- example: entry -> view products -> add to cart -> purchase -> done
+
+2. Wireframing
+
+- balsamic, figma
+
+3. Pick basic design parameters
+
+- Consistent colors, fonts, buttons, icons, forms, boxes
+- Colors:
+  - Reflect industry, values, brand, logo
+- Fonts
+- Icons
+  - Flat, scleomorphic, glyph, duotone, 3d, outlined
+
+4. Designing
+
+- Visual hierarchy:
+  - Make order of importance of elements clear
+- Contrast
+  - Distingish a few, make all readable
+- Balance
+  - Good spacing, alignment
+- Consistency
+- Simplicity
+  - Dont make me think
+- Feedback
+  - Mark every action clearly as successful
+
+5. Illustrations and visuals
+
+# Good defaults
+
+These will make your stuff look boring, but boring is good at first
+
+- Colors:
+  - Backgroud white or black
+  - Heading: #2e2e2e, body: #4e4e4e, label: #6e6e6e
+  - Accent: Saturation: 90, Lightness: 50
+    - Only use accents for 10% of elements on the screen, i.e. main action, maybe a few more.
+    - No two buttons both in accent color.
+- Fonts
+  - Plus Jakarta Sans, Inter , Satoshi, Poppins, Ubuntu, Fira Sans, Figtree, Lato, Muli, Open Sans, PT Sans, Source Sans 3
+  - Pick one per project
+  - Only three font sizes: 24, 16, 12px (plus 32 only on the landing page)
+- Icons
+  - Only one set per project
+- Spacing
+  - 8 point grid: allows spacing units 4, 8, 12, 16, 20, 24, 32, 40
+  - Pick five out of these: best 8 12 16 24 32
+  - within a group, a distance should be 12 or 16
+  - between groups, a distance should be 24 9r 32 (also applies to outside margins)
+  - body: max-width 700px
