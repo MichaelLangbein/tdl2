@@ -1,5 +1,27 @@
 # Wordpress
 
+## Justification
+
+It's incredible, but using this old PHP cornerstone really needs a justification. I've compared different frameworks for creating web content:
+
+| framework | UI-builder | CRUD-scaffold | Types | JS/TS   | File-MGMT | templates/themes | forms |
+| --------- | ---------- | ------------- | ----- | ------- | --------- | ---------------- | ----- |
+| wordpress | +++        | -             | -     | -       | ++        | +++              | +     |
+| next.js   | commercial | +             | +++   | +++     |           |                  | +++   |
+| rails     | commercial | +++           | -     | -       | +         |                  | ++    |
+| django    | +          | +++           | -     | +       | +         |                  | ++    |
+| .net      |            | +++           | +++   | blazor? |           |                  | ++    |
+
+Wordpress is still the best in offering a user-friendly UI builder.
+
+What about comparing other page builders?
+
+| builder     | notes                      |
+| ----------- | -------------------------- |
+| openElement | PHP, jQuery, ancient       |
+| GrapesJS    | YCombinator, but not a CMS |
+| Silex       | Looks like paint           |
+
 ## Concepts
 
 - Page
@@ -217,6 +239,10 @@ volumes:
 
 `docker compose up`
 
+## WP CLI
+
+https://developer.wordpress.org/cli/commands/scaffold/post-type/
+
 ## Theme development
 
 Both classic themes and block themes adhere to the template hierarchy:
@@ -295,23 +321,6 @@ Lots of nice configs, like picking and downloading google fonts.
 - Page editor
   - **Current page/Edit page**: Edit blocks in content-part of the current page
 
-## Custom content types
-
-Based on https://code.tutsplus.com/a-guide-to-wordpress-custom-post-types-creation-display-and-meta-boxes--wp-27645t.
-Just uses three hooks:
-
-1. `add_action('init',       register_post_type(slug, supports, template)  )`
-2. `add_action('admin_init', add_meta_box(label, display_func)             )`
-3. `add_action('save_post',  update_post_meta(label, $_POST)               )`
-
-In order, this does the following:
-
-1. Declares a new content type.
-2. Adds new meta-data fields (plus html-forms to edit them).
-3. Hooks into save-process to also save the new meta-data.
-
-Theoretically, there is a fourth step: `add_filter( 'template_include', insertYourTemplateFunc, 1 )`. But: this doesn't really seem to work with modern block-themes.
-
 ## JS for custom blocks
 
 ### Part -1: default template and Gutenberg ecosystem
@@ -330,9 +339,13 @@ Theoretically, there is a fourth step: `add_filter( 'template_include', insertYo
 - `@wordpress/editor`:
 - `@wordpress/data`: redux state management, connects with wp-api
   - `withSelect`
+    - nowadays replaced with a simple hook named `useSelect`
     - wraps a component
     - adds the result of _x_ to the component-props
     - _x_ is a redux query using `select`
+  - `withDispatch`
+    - replaced by `useDispatch`
+    - used to update DB data
 - `window.wp`
   - Wordpress creates some components only at runtime. For this reason, they cannot simply be imported with `import {x} from "y"`, but are taken directly from `window.wp`
   - `mediaUtils`: Contains MediaUpload
@@ -701,6 +714,10 @@ If you have multiple instances of the same block on one page, wordpress is still
 - You'll need to name both `style-mycomponent` and `mycomponent` in your block.json:
   - `"style": ["file:./components/style-mycomponent.css", "file:./components/mycomponent.css"]`
 
+## Inline blocks
+
+As far as I can tell, blocks cannot be placed inside paragraphs. However, we can add functionality to the Gutenberg rich text editor: https://developer.wordpress.org/block-editor/how-to-guides/format-api/.
+
 ## React as a shortcode
 
 ```php
@@ -892,6 +909,50 @@ add_shortcode('ng_wp', function () {
 // The shortcode can be whatever. [ng_wp] is just an example.
 ```
 
+## Query loop
+
+A very interesting, prebuilt block. Allows you to list any content type in another page.
+
+## Custom content types
+
+This is currently far from elegant, since we need to support both classic themes and block themes... the config of which is interspersed in between several hooks and a custom block.
+There is code duplicated between `add_meta_box` and `register_meta` as well as between `add_meta_box.render_callback` and `metadata_block.edit.tsx`.
+
+Based on https://kinsta.com/blog/wordpress-add-meta-box-to-post/.
+
+PHP:
+
+1. `add_action( 'init', 			    'related_values_unit_cpt' );` -> calls `register_post_type`
+   1. `supports => array("title")` so that no user-defined blocks can be added
+   2. `'template' => array(	array("related-values/unit-meta-data"	), 'template_lock' => 'all')` so that in block-themes, the metadata-block is used for editing
+2. `add_action( 'add_meta_boxes', 'related_values_unit_cpt_fields_classic' );` -> calls `add_meta_box` for compatibility with classic themes
+3. `add_action( 'save_post', 		  'related_values_unit_cpt_fields_classic_save' );` -> hooks into save to update metadata from classic meta-box
+4. `add_action( 'init', 			    'related_values_unit_cpt_fields' );` -> calls `register_post_meta` for use in metadata-block
+5. `add_action( 'init', 			    'related_values_unit_metadata_block' );` -> calls `register_block_type` to adit and display metadata
+
+Custom block to allow editing and displaying meta-data:
+
+1. edit.tsx:
+   1. `const postType = useSelect( select => select( 'core/editor' ).getCurrentPostType())`;
+   2. `const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );`
+2. render.php
+   1. `$unitName = get_post_meta( get_the_ID(), '_meta_fields_unit_name', true );`
+   2. `$unitRelations = get_post_meta( get_the_ID(), '_meta_fields_unit_relations', true );`
+
+### Using ACF
+
+ACF makes it easier to:
+
+- add fields that relate to other content types
+- create content types
+- export all that as php code
+
+But it has some drawbacks:
+
+- relatively restrictive license
+- requires ACF as a dependency (generated php code is not standalone)
+- doesn't create a block to display ACF's in block-themes (at least not in free version)
+
 ## REST API
 
 1. Activate the json-api: go to `http://localhost:8080/wp-admin/options-permalink.php` and chose any permalink-type other than `plain`.
@@ -899,7 +960,412 @@ add_shortcode('ng_wp', function () {
 
 ## Database
 
-Creating a custom content type: https://gist.github.com/kosso/47004c9fa71920b441f3cd0c35894409
+```php
+<?php
+
+
+/**
+ * Based on https://accreditly.io/articles/how-to-create-a-crud-in-wordpress-without-using-plugins#content-section-2-creating-a-custom-admin-menu-item
+ */
+
+
+ class TableConnection {
+
+    readonly string $tableName;
+    readonly array $fields;
+    readonly string $keys;
+
+    public function __construct(
+        private $wpdb,
+        string $tableName,
+        array $fields,  // array("id" => "mediumint(9) NOT NULL AUTO_INCREMENT", "name" => "tinytext NOT NULL", ...)
+        string $keys    // "PRIMARY KEY (id), INDEX name (name), INDEX address (address)"
+    ) {
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+        $slug = strtolower($tableName);
+        $tableName = $this->wpdb->prefix . $slug;
+
+        $this->wpdb = $wpdb;
+        $this->tableName = $tableName;
+        $this->fields = $fields;
+        $this->keys = $keys;
+    }
+
+    public function createTable() {
+        $charset_collate = $this->wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (";
+        foreach ($this->fields as $name => $description) {
+            $sql .= "$name $description ,";
+        }
+        $sql .= $this->keys;
+        $sql .= ") $charset_collate;";
+
+        dbDelta($sql);
+    }
+
+    public function deleteTable() {
+        $this->wpdb->query( "DROP TABLE IF EXISTS $this->tableName" );
+    }
+
+    public function getAll() {
+        $results = $this->wpdb->get_results("SELECT * FROM $this->tableName");
+        return $results;
+    }
+
+    public function getById($id) {
+        $row = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $this->tableName WHERE id = %d", $id));
+        return $row;
+    }
+
+    public function insert($data) {
+        $data = $this->sanitize($data);
+        if (!$data) {
+            echo "Error: sanitation failed.";
+            return;
+        }
+        $this->wpdb->insert($this->tableName, $data);
+    }
+
+    public function update($idField, $id, $data) {
+        $data = $this->sanitize($data);
+        if (!$data) {
+            echo "Error: sanitation failed.";
+            return;
+        }
+        $this->wpdb->update( $this->tableName, $data, array($idField => $id) );
+    }
+
+    public function delete($id) {
+        $this->wpdb->query( "DELETE FROM `$this->tableName` WHERE id = $id" );
+    }
+
+
+    /** add_action('rest_api_init', dbc->registerRest) */
+    public function registerRest() {
+        register_rest_route(
+            "/$this->tableName/v1",
+            "/all",
+            array(
+                "methods" => "GET",
+                "callback" => function () {
+                    return $this->getAll();
+                },
+                "permission_callback" => function () {
+                    return current_user_can("edit_others_posts");
+                }
+            )
+        );
+    }
+
+    private function sanitize($data) {
+        $out = array();
+        foreach ($this->fields as $key => $val) {
+            if ($key == "id") continue;
+            if (array_key_exists($key, $data)) {
+                $out[$key] = $data[$key];
+            } else {
+                return false;
+            }
+        }
+        return $out;
+    }
+
+ }
+
+
+class TableUI {
+
+    protected string $nonceName;
+    protected string $slug;
+
+    public function __construct(
+        protected TableConnection $tableConnection
+    ) {
+
+        $slug = strtolower($tableConnection->tableName);
+        $nonceName = strtolower($slug) . "_nonce";
+
+        $this->slug = $slug;
+        $this->nonceName = $nonceName;
+    }
+
+    public function createTable() {
+        $this->tableConnection->createTable();
+    }
+
+    public function deleteTable() {
+        $this->tableConnection->deleteTable();
+    }
+
+    /** add_action('admin_menu', $dbc->createAdminMenu); */
+    public function createAdminMenu() {
+            $page_title = $this->slug;
+            $menu_title = $this->slug;
+            $capability = 'manage_options';
+            $menu_slug = $this->slug;
+            $function = function () {echo $this->tableMarkup(); };
+            $icon_url = 'dashicons-admin-generic';
+            $position = 25;
+
+            add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position);
+
+            // Submenu pages
+            add_submenu_page($menu_slug, 'Add New', 'Add New', $capability, $this->slug . '-add', function () { echo $this->addEntryMarkup(); });
+            add_submenu_page($menu_slug, 'Edit', 'Edit', $capability, $this->slug . '-edit', function () {echo $this->editEntryMarkup(); });
+            add_submenu_page($menu_slug, 'Delete', 'Delete', $capability, $this->slug . '-delete', function () {echo $this->deleteEntryMarkup(); });
+    }
+
+    public function tableMarkup() {
+        $results = $this->tableConnection->getAll();
+
+        $markup = '<div class="wrap">';
+        $markup .= "<h1 class='wp-heading-inline'>" . $this->tableConnection->tableName . "</h1>";
+        $markup .= '<a href="' . admin_url("admin.php?page=" . $this->slug . "-add") . '" class="page-title-action">Add New</a>';
+        $markup .= '<hr class="wp-header-end">';
+
+        $markup .= '<table class="wp-list-table widefat fixed striped">';
+        $markup .= '<thead><tr>';
+        foreach ($this->tableConnection->fields as $key => $description) {
+            $markup .= "<th>$key</th>";
+        }
+        $markup .= "<th></th>";
+        $markup .= '</tr></thead>';
+        $markup .= '<tbody>';
+
+        foreach ($results as $row) {
+            $markup .= '<tr>';
+            foreach ($row as $key => $val) {
+                $markup .= '<td>' . esc_html($val) . '</td>';
+            }
+            $markup .= '<td>';
+            $markup .= '<a href="' . admin_url('admin.php?page=' . $this->slug . '-edit&id=' . $row->id) . '" >Edit</a>';
+            $markup .= " | ";
+            $markup .= '<a href="' . admin_url('admin.php?page=' . $this->slug . '-delete&id=' . $row->id) . '" class="delete-link"   >Delete</a>';
+            $markup .= '</td>';
+            $markup .= '</tr>';
+        }
+        $markup .= '</tbody>';
+        $markup .= '</table>';
+        $markup .= '</div>';
+
+        return $markup;
+    }
+
+    public function addEntryMarkup() {
+        $markup = "";
+
+        $nonceAction = $this->slug . "_add";
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->nonceName]) && wp_verify_nonce($_POST[$this->nonceName], $nonceAction)) {
+            $this->tableConnection->insert($_POST);
+            $markup .= '<div class="notice notice-success is-dismissible"><p>Datum added successfully!</p></div>';
+            $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
+        }
+
+        $markup .= '<div class="wrap">';
+        $markup .= '<h1 class="wp-heading-inline">Add new datum</h1>';
+        $markup .= '<hr class="wp-header-end">';
+
+        $markup .= '<form method="post">';
+        $markup .= '<table class="form-table">';
+        foreach ($this->tableConnection->fields as $key => $val) {
+            if ($key == "id") continue;
+            $markup .= "<tr>";
+            $markup .= "<th scope='row'><label for='$key'>$key</label></th>";
+            $markup .= "<td><input type='text' name='$key' id='$key' class='regular-text' required></td>";
+            $markup .= "</tr>";
+        }
+        $markup .= '</table>';
+
+        $markup .= '<input type="hidden" name="' . $this->nonceName . '" value="' . wp_create_nonce($nonceAction) . '">';
+        $markup .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Add New"></p>';
+        $markup .= '</form>';
+        $markup .= '</div>';
+
+        return $markup;
+    }
+
+    public function editEntryMarkup() {
+        $markup = "";
+
+        $nonceAction = $this->slug . "_edit";
+
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $row = $this->tableConnection->getById($id);
+
+        if (!$row) {
+            $markup .= '<div class="notice notice-error is-dismissible"><p>Invalid ID!</p></div>';
+            return $markup;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->nonceName]) && wp_verify_nonce($_POST[$this->nonceName], $nonceAction)) {
+            $this->tableConnection->update("id", $id, $_POST);
+            $markup .= '<div class="notice notice-success is-dismissible"><p>Datum updated successfully!</p></div>';
+            $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
+        }
+
+        $markup .= '<div class="wrap">';
+        $markup .= '<h1 class="wp-heading-inline">Edit datum</h1>';
+        $markup .= '<hr class="wp-header-end">';
+
+        $markup .= '<form method="post">';
+        $markup .= '<table class="form-table">';
+        foreach ($row as $key => $val) {
+            if ($key == "id") continue;
+            $markup .= "<tr>";
+            $markup .= "<th scope='row'><label for='$key'>$key</label></th>";
+            $markup .= "<td><input type='text' name='$key' id='$key' class='regular-text' required value='$val'></td>";
+            $markup .= "</tr>";
+        }
+        $markup .= '</table>';
+
+        $markup .= '<input type="hidden" name="' . $this->nonceName . '" value="' . wp_create_nonce($nonceAction) . '">';
+        $markup .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Update"></p>';
+        $markup .= '</form>';
+        $markup .= '</div>';
+
+        return $markup;
+    }
+
+    public function deleteEntryMarkup() {
+        $markup = "";
+
+        $nonceAction = $this->slug . "_delete";
+
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $row = $this->tableConnection->getById($id);
+
+        if (!$row) {
+            $markup .= '<div class="notice notice-error is-dismissible"><p>Invalid ID!</p></div>';
+            return $markup;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->nonceName]) && wp_verify_nonce($_POST[$this->nonceName], $nonceAction)) {
+            $this->tableConnection->delete($id);
+            $markup .= '<div class="notice notice-success is-dismissible"><p>Datum removed successfully!</p></div>';
+            $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
+        }
+        else {
+            $markup .= '<div class="wrap">';
+            $markup .= '<h1 class="wp-heading-inline">Remove datum '. $row->id .'</h1>';
+            $markup .= '<hr class="wp-header-end">';
+
+            $markup .= '<form method="post">';
+            $markup .= '<input type="hidden" name="' . $this->nonceName . '" value="' . wp_create_nonce($nonceAction) . '">';
+            $markup .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Delete"></p>';
+            $markup .= '</form>';
+            $markup .= '<button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Cancel</button>';
+            $markup .= '</div>';
+        }
+
+        return $markup;
+    }
+
+}
+
+
+
+function createUnitTableCon($wpdb) {
+    return new TableConnection(
+        $wpdb,
+        "units",
+        array(
+            "id" => "mediumint(9) NOT NULL AUTO_INCREMENT",
+            "name" => "tinytext NOT NULL",
+        ),
+        "PRIMARY KEY (id)"
+    );
+}
+
+function createUnitRelTableCon($wpdb) {
+    return new TableConnection(
+        $wpdb,
+        "unit_relations",
+        array(
+            "id" => "mediumint(9) NOT NULL AUTO_INCREMENT",
+            "unit1" => "mediumint(9) NOT NULL",
+            "unit2" => "mediumint(9) NOT NULL",
+            "factor" => "float NOT NULL"
+        ),
+        "PRIMARY KEY (id), KEY (unit1), KEY (unit2)"
+    );
+}
+
+function createValueTableCon($wpdb) {
+    return new TableConnection(
+        $wpdb,
+        "values",
+        array(
+            "id" => "mediumint(9) NOT NULL AUTO_INCREMENT",
+            "slug" => "tinytext NOT NULL",
+            "text" => "tinytext NOT NULL",
+            "value" => "float NOT NULL",
+            "unit" => "mediumint(9) NOT NULL"
+        ),
+        "PRIMARY KEY (id), KEY (unit)"
+    );
+}
+
+
+class UnitController extends TableUI {
+    public function __construct($wpdb) {
+        $unitTable = createUnitTableCon($wpdb);
+        parent::__construct(
+            $unitTable
+        );
+    }
+}
+```
+
+Used in plugin like so:
+
+```php
+
+require_once(realpath( dirname( __FILE__ ) ) . '/db-controller.php');
+
+function getUnitController() {
+    global $wpdb;
+    return new UnitController($wpdb);
+}
+
+function getUnitRelController() {
+    global $wpdb;
+    return new UnitRelController($wpdb);
+}
+
+
+function getValueController() {
+    global $wpdb;
+    return new ValueController($wpdb);
+}
+
+register_activation_hook( __FILE__, function () {
+    $uc = getUnitController();
+    $uc->createTable();
+    $urc = getUnitRelController();
+    $urc->createTable();
+    $vc = getValueController();
+    $vc->createTable();
+});
+register_deactivation_hook( __FILE__, function () {
+    $uc = getUnitController();
+    $uc->deleteTable();
+    $urc = getUnitRelController();
+    $urc->deleteTable();
+    $vc = getValueController();
+    $vc->deleteTable();
+});
+add_action('admin_menu', function () {
+    $uc = getUnitController();
+    $uc->createAdminMenu();
+    $urc = getUnitRelController();
+    $urc->createAdminMenu();
+    $vc = getValueController();
+    $vc->createAdminMenu();
+});
+```
 
 ## Static site
 
