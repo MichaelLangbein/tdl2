@@ -139,11 +139,16 @@ Text sizing:
 
 - example: entry -> view products -> add to cart -> purchase -> done
 
-2. Wireframing
+2. Get content from your client
+
+- Always get content first, then do design.
+- Usually in form of a bunch of word-files and images. Often one doc per page (home, about, products, ...)
+
+3. Wireframing
 
 - balsamic, figma
 
-3. Pick basic design parameters
+4. Pick basic design parameters
 
 - Consistent colors, fonts, buttons, icons, forms, boxes
 - Colors:
@@ -152,7 +157,7 @@ Text sizing:
 - Icons
   - Flat, scleomorphic, glyph, duotone, 3d, outlined
 
-4. Designing
+5. Designing
 
 - Visual hierarchy:
   - Make order of importance of elements clear
@@ -166,7 +171,7 @@ Text sizing:
 - Feedback
   - Mark every action clearly as successful
 
-5. Illustrations and visuals
+6. Illustrations and visuals
 
 # Good defaults
 
@@ -190,3 +195,28 @@ These will make your stuff look boring, but boring is good at first
   - within a group, a distance should be 12 or 16
   - between groups, a distance should be 24 9r 32 (also applies to outside margins)
   - body: max-width 700px
+
+# Layout
+
+- Always content first, then layout
+- Content as rows:
+  - Every page made of rows, each row one idea. (hero-row, about-row, stats-row, ...)
+  - Each row different background (or otherwise visually distinct)
+  - Always the same vertical padding between rows
+  - common row templates:
+    - hero
+    - image left, text right
+    - two/three colum text with header
+    - caroussel
+    - map
+    - contact form
+    - comment
+    - call to action
+- Frame around content
+  - header
+  - footer
+  - menu-bar
+- Grid within each row:
+  - helps to make explicit: alignment, white-space, scale, proximity
+  - commonly 12-column grid or 8 column grid
+- Avoid walls of text, sprinkle white space, images, animations

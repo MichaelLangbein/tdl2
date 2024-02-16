@@ -714,6 +714,15 @@ If you have multiple instances of the same block on one page, wordpress is still
 - You'll need to name both `style-mycomponent` and `mycomponent` in your block.json:
   - `"style": ["file:./components/style-mycomponent.css", "file:./components/mycomponent.css"]`
 
+## Block configuration:
+
+- Sidebar:
+  - for things that get edited rarely
+  - `import { InspectorControls } from '@wordpress/block-editor';`
+- Inline bar:
+  - for things that get edited often, but don't require a big menu
+  - `import { BlockControls } from '@wordpress/block-editor';`
+
 ## Inline blocks
 
 As far as I can tell, blocks cannot be placed inside paragraphs. However, we can add functionality to the Gutenberg rich text editor: https://developer.wordpress.org/block-editor/how-to-guides/format-api/.
