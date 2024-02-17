@@ -83,3 +83,15 @@ Fetches should be made server-side when possible:
   - components that are discovered as not being SSG'able:
     - any client side component
     - any component that has `fetch("url", {cache: "no-store"})`
+
+## CSS Modules
+
+Next supports css _modules_: any css file ending in `.module.css` is going to be applied **only** to the component where its imported.
+
+## Search
+
+## Auth
+
+## Security
+
+## CRUD scaffolding

@@ -150,6 +150,7 @@ Text sizing:
 
 4. Pick basic design parameters
 
+- if the content is bland, your surrounding page can be shiny. Otherwise if the content can shine, make it sparkle, and dim down the surrounding frame.
 - Consistent colors, fonts, buttons, icons, forms, boxes
 - Colors:
   - Reflect industry, values, brand, logo
@@ -220,3 +221,8 @@ These will make your stuff look boring, but boring is good at first
   - helps to make explicit: alignment, white-space, scale, proximity
   - commonly 12-column grid or 8 column grid
 - Avoid walls of text, sprinkle white space, images, animations
+- Within every grid, consider the following:
+  - Focal point
+  - rule of thirds
+  - white space
+  - hierarchy
