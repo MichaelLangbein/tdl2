@@ -498,7 +498,12 @@ https://developer.wordpress.org/block-editor/reference-guides/block-api/block-at
 Attributes:
 
 - type:
-  - `string` | `number`
+  - `string` | `number` | `boolean`
+    - actually: you can't save numbers or booleans as attributes. Gutenberg will always read them as strings. Then, when you change the value and save it to html, Gutenberg doesn't recognize your changed, saved value when it tries to fetch data from an attribute - because it thinks your data is a string, it wants a boolean, therefore this can't match. So Gutenberg will instead use its default value. In other words: currently you can only use `string` and `array` attributes.
+    - https://github.com/WordPress/gutenberg/issues/13949 : I think the current behavior for booleans is:
+      - true if the attribute is present at all, never mind its value,
+      - false only if it cannot be found.
+    - There seems to be another issue explaining the same problem with int's: https://github.com/WordPress/gutenberg/issues/18406
   - `array`
     - requires `selector`, `source=query`
 - `selector`: a css selector. Example: `element[attrname=attrval]`
@@ -513,6 +518,7 @@ Attributes:
   - source: attribute
     - stored in attribute
     - requires `selector`, requires `attribute`
+    - cannot store booleans or numbers, so convert to strings
   - source: query
     - requires `query`
     - example: this returns an array of type `{link: string, link-content: string}[]`:
@@ -714,7 +720,34 @@ If you have multiple instances of the same block on one page, wordpress is still
 - You'll need to name both `style-mycomponent` and `mycomponent` in your block.json:
   - `"style": ["file:./components/style-mycomponent.css", "file:./components/mycomponent.css"]`
 
-## Block configuration:
+## Passing data from PHP to custom block
+
+https://stackoverflow.com/questions/73220504/passing-data-from-php-to-javascript-for-gutenberg-block-with-editor-script-regis
+
+```php
+function slidymap_slidymap_block_init() {
+	register_block_type( __DIR__ . "/build/anchor/");
+    register_block_type( __DIR__ . "/build/container/");
+
+	add_action('admin_enqueue_scripts', 'slidymap_transfer_data');
+    add_action('wp_enqueue_scripts', 'slidymap_transfer_data');
+}
+add_action( 'init', 'slidymap_slidymap_block_init' );
+
+
+
+function slidymap_transfer_data() {
+    $pluginPath = plugin_dir_url(__FILE__);
+	$assetsPath = $pluginPath . "assets/";
+	// name from block.json with a '-' instead of '/' plus '-editor-script'
+    $handle = 'slidymap-container-view-script';
+    $data = "window.slidymapAssetsPath ='$assetsPath';";
+    $position = 'before';
+    wp_add_inline_script($handle, $data, $position);
+}
+```
+
+## Block configuration UI
 
 - Sidebar:
   - for things that get edited rarely

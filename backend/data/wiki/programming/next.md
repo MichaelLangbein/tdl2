@@ -88,9 +88,115 @@ Fetches should be made server-side when possible:
 
 Next supports css _modules_: any css file ending in `.module.css` is going to be applied **only** to the component where its imported.
 
+## Assets
+
+## Markdown
+
+## Strapi
+
 ## Search
 
 ## Auth
+
+Add authentication with six simple steps :S
+
+1. `npm add next-auth`
+2. create `.env` with secrets from your provider(s)
+3. register provider with your app and create an endpoint for the provider to talk to your app:
+
+   ```ts
+   // src/app/api/auth/[...nextauth]/route.ts
+   import NextAuth from 'next-auth';
+   import GitHubProvider from 'next-auth/providers/github';
+   export const authOptions = {
+     providers: [
+       GitHubProvider({
+         clientId: process.env.GITHUB_ID ?? '',
+         clientSecret: process.env.GITHUB_SECRET ?? '',
+       }),
+     ],
+   };
+
+   export const handler = NextAuth(authOptions);
+
+   // to make this an api endpoint:
+   export { handler as GET, handler as POST };
+   ```
+
+   This already creates a sign-in page at `myurl.com/api/auth/signin`.
+
+4. use a session so that your app remembers that the user is authorized:
+   ```ts
+   // src/app/components/SessionProvider.tsx
+   'use client'; // must be client-side because it uses context
+   import { SessionProvider } from 'next-auth/react';
+   export default SessionProvider;
+   ```
+5. Define the area of your app that is uses a session:
+
+   ```ts
+   // src/app/layout.tsx
+   import { getServerSession } from 'next-auth';
+   import SessionProvider from './components/SessionProvider';
+
+   export default async function RootLayout({ children }) {
+     const session = await getServerSession();
+     return (
+       <html>
+         <body>
+           // session is provided as a context here
+           <SessionProvider session={session}> children </SessionProvider>
+         </body>
+       </html>
+     );
+   }
+   ```
+
+6. Make use of that session:
+
+   ```ts
+   // src/app/components/MyComponent.tsx
+   'use client';
+
+   import { signIn, signOut, useSession } from 'next-auth/react';
+
+   export default function MyComponent(args) {
+     // useSession: only works on client
+     const { data: session } = useSession();
+
+     if (session) {
+       {
+         session?.user?.name;
+       }
+       <button onClick={() => signOut()}>Sign out</button>;
+     } else {
+       return (
+         <>
+           Not signed in. <button onClick={() => signIn()}>Sign in</button>
+         </>
+       );
+     }
+   }
+   ```
+
+More on `useSession` vs `getServerSession` vs `getSession` [here](https://stackoverflow.com/questions/77093615/difference-between-usesession-getsession-and-getserversession-in-next-auth/77094871#77094871).
+
+### Protected routes
+
+```ts
+// src/app/protected/page.tsx
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
+
+export default async function ProtectedRoute() {
+  // getServerSession: only works on server, I think?
+  const session = await getServerSession();
+  if (!session || !session.user) {
+    redirect('/api/auth/signin');
+  }
+  ...
+}
+```
 
 ## Security
 
