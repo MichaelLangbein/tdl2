@@ -22,6 +22,19 @@ What about comparing other page builders?
 | GrapesJS    | YCombinator, but not a CMS |
 | Silex       | Looks like paint           |
 
+Really, the decision for the framework comes down to choosing one of the two most common use-cases in web-development:
+
+| Website      | Webapp                     |
+| ------------ | -------------------------- |
+| pages        | db-model                   |
+| comments     | external api's             |
+| forum        | auth, roles, views         |
+| contact      | dashboards                 |
+| (products)   | products, orders, follow   |
+|              | shipping                   |
+| ------------ | -------------------------- |
+| Wordpress    | nextjs                     |
+
 ## Concepts
 
 - Page
@@ -31,12 +44,12 @@ What about comparing other page builders?
 - **Site editor**: `Appearance/Editor`: Theme editing through UI. Uses blocks for structure.
   - Has a special block `content`. This block cannot be edited on a template-level, but will be filled by the authors for each page/post/etc. individually.
 - **Theme**
-  - **Templates**: layouts of blocks that can be applied to content types
+  - **Patterns**: sets of blocks that can be placed together
+  - **Templates**: layouts of blocks and patterns that can be applied to content types
     - Example: in the "twenty-twenty-three" theme, a "page" content type can use one of many templates: "page", "page-without-title", "page-with-wide-image", ...
     - Templates are applied in Content editor/settings (on the right)/template
     - Templates are edited in the Site editor
     - They are further subdivided into template-parts
-  - **Patterns**: sets of blocks that can be placed together
 - Filter: register a filter to modify a content-type before its being displayed
 - Shortcode: a user can enter a short code snippet which will be replaced by something more complex.
 
@@ -271,20 +284,25 @@ Making sure that styles, blocks etc. are not cached:
 
 ### Block themes
 
+- https://www.youtube.com/watch?v=C088o0O7Snc&t=575s
+
 Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that allows you to pick a highly restrictive selection of fonts, colors, layout, spacing, etc., which will be made available to the admin through the UI.
 
 #### Manually
 
-- **parts**: small, reusable elements made of html, to be used in templates.
+- **parts** (optional): small, reusable elements made of html, to be used in templates.
   - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
+  - Users can edit those parts in the UI
   - header.html
   - footer.html
-- **patterns**: Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
+- **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
   - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
   - should be php
   - requires meta-data comment at top
 - **templates**: functional (sub-)pages built out of blocks, parts and patterns. There're being looked up as required by the template hierarchy.
-  - You can add your own template ....
+  - html files with block-placeholders (instead of php files in classic themes). But they may contain php, css, svg's etc ... though only in a custom-html-block.
+    - If you add root-level html/css/svg/js outside of a block-comment, the editor-ui will complain
+  - You can add your own template with the php-call ...
   - They are referred to in other templates or patterns with `<!-- wp:template-part {} /-->`
   - Files:
     - index.html
@@ -296,7 +314,7 @@ Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that
   - $schema: https://schemas.wp.org/trunk/theme.json
   - settings
   - styles
-- empty index.php (so that dir can't be inspected from outside)
+- (optional) empty index.php (so that dir can't be inspected from outside)
 
 All the above are used to layout widgets and the sites "frame" - i.e. everything that is not an actual blog-posts content. Content itself is made of blocks and may use patterns.
 
@@ -316,7 +334,7 @@ Lots of nice configs, like picking and downloading google fonts.
 #### Editing UI
 
 - Site editor
-  - **Dashboard/Appearence/Editor**: comprehensive full site, all templates.
+  - **Dashboard/Appearance/Editor**: comprehensive full site, all templates.
   - **Current page/Edit Site**: For editing templates based on hierarchy. Shows currently visible template.
 - Page editor
   - **Current page/Edit page**: Edit blocks in content-part of the current page
