@@ -167,3 +167,25 @@ import Data.Show.Generic (genericShow)
 instance Show MyADT where
   show = genericShow
 ```
+
+### Instancing and deriving for type constructors
+
+```hs
+-- defining a nonempty array
+data NonEmpty a = NonEmpty a (Array a)
+
+
+-- option 1: instance manually
+instance Eq a => Eq (NonEmpty a) where
+  eq (NonEmpty e1 a1) (NonEmpty e2 a2) = e1 == e2 && a1 == a2
+
+instance Show a => Show (NonEmpty a) where
+  show (NonEmpty e1 a1) = show e1 <> " " <> show a1
+
+-- option 2: derive automatically
+derive instance Eq a => Eq (NonEmpty a)
+
+-- deriving a generic as function of a type-parameter
+-- derive instance Generic a rep => Generic (NonEmpty a) _
+
+```
