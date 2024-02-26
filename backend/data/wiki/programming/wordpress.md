@@ -1,5 +1,40 @@
 # Wordpress
 
+## Justification
+
+It's incredible, but using this old PHP cornerstone really needs a justification. I've compared different frameworks for creating web content:
+
+| framework | UI-builder | CRUD-scaffold | Types | JS/TS   | File-MGMT | templates/themes | forms |
+| --------- | ---------- | ------------- | ----- | ------- | --------- | ---------------- | ----- |
+| wordpress | +++        | -             | -     | -       | ++        | +++              | +     |
+| next.js   | commercial | +             | +++   | +++     |           |                  | +++   |
+| rails     | commercial | +++           | -     | -       | +         |                  | ++    |
+| django    | +          | +++           | -     | +       | +         |                  | ++    |
+| .net      |            | +++           | +++   | blazor? |           |                  | ++    |
+
+Wordpress is still the best in offering a user-friendly UI builder.
+
+What about comparing other page builders?
+
+| builder     | notes                      |
+| ----------- | -------------------------- |
+| openElement | PHP, jQuery, ancient       |
+| GrapesJS    | YCombinator, but not a CMS |
+| Silex       | Looks like paint           |
+
+Really, the decision for the framework comes down to choosing one of the two most common use-cases in web-development:
+
+| Website      | Webapp                     |
+| ------------ | -------------------------- |
+| pages        | db-model                   |
+| comments     | external api's             |
+| forum        | auth, roles, views         |
+| contact      | dashboards                 |
+| (products)   | products, orders, follow   |
+|              | shipping                   |
+| ------------ | -------------------------- |
+| Wordpress    | nextjs                     |
+
 ## Concepts
 
 - Page
@@ -9,12 +44,14 @@
 - **Site editor**: `Appearance/Editor`: Theme editing through UI. Uses blocks for structure.
   - Has a special block `content`. This block cannot be edited on a template-level, but will be filled by the authors for each page/post/etc. individually.
 - **Theme**
-  - **Templates**: layouts of blocks that can be applied to content types
+  - **Patterns**: sets of blocks that can be placed together
+  - **Templates**: layouts of blocks and patterns that can be applied to content types
     - Example: in the "twenty-twenty-three" theme, a "page" content type can use one of many templates: "page", "page-without-title", "page-with-wide-image", ...
     - Templates are applied in Content editor/settings (on the right)/template
     - Templates are edited in the Site editor
     - They are further subdivided into template-parts
-  - **Patterns**: sets of blocks that can be placed together
+- Filter: register a filter to modify a content-type before its being displayed
+- Shortcode: a user can enter a short code snippet which will be replaced by something more complex.
 
 ### Exporting templates
 
@@ -103,15 +140,15 @@ Here's the custom html:
   </svg>
 
   <script>
-    const svg = document.getElementById("graphic");
-    const bg = svg.querySelector("#background");
-    const wka = svg.querySelector("#fullBuilding");
-    const rotor = wka.querySelector("#rotorRotatableGroup");
+    const svg = document.getElementById('graphic');
+    const bg = svg.querySelector('#background');
+    const wka = svg.querySelector('#fullBuilding');
+    const rotor = wka.querySelector('#rotorRotatableGroup');
 
-    window.addEventListener("scroll", (e) => {
-      bg.setAttribute("transform", `translate(0 ${-0.02 * window.scrollY})`);
-      wka.setAttribute("transform", `translate(0 ${-0.03 * window.scrollY})`);
-      rotor.setAttribute("transform", `rotate(${0.2 * window.scrollY} 50 50)`);
+    window.addEventListener('scroll', (e) => {
+      bg.setAttribute('transform', `translate(0 ${-0.02 * window.scrollY})`);
+      wka.setAttribute('transform', `translate(0 ${-0.03 * window.scrollY})`);
+      rotor.setAttribute('transform', `rotate(${0.2 * window.scrollY} 50 50)`);
     });
   </script>
 </div>
@@ -163,7 +200,7 @@ Set up a shop plugin of sorts, and use the virtual downloadable product type. Th
 docker-compose.yml
 
 ```yml
-version: "3.6"
+version: '3.6'
 services:
   wordpress:
     image: wordpress:latest
@@ -177,6 +214,10 @@ services:
       - WORDPRESS_DB_USER=root
       - WORDPRESS_DB_PASSWORD=password
       - WORDPRESS_DEBUG=1 # any non-empty value will do
+      - SCRIPT_DEBUG=true # only in dev builds!
+      # to wp-config.php add:
+      # define( 'SCRIPT_DEBUG', !!getenv_docker('SCRIPT_DEBUG', '')    );
+
     depends_on:
       - db
       - phpmyadmin
@@ -211,27 +252,129 @@ volumes:
 
 `docker compose up`
 
+## WP CLI
+
+https://developer.wordpress.org/cli/commands/scaffold/post-type/
+
 ## Theme development
 
-A recipe website
+Both classic themes and block themes adhere to the template hierarchy:
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/wp_template_hierarchy.png" />
 
-- Categories: breakfast, lunch, dinner, appetizers, sups, salads, sides, desserts
-- Tags: Chocolate, chicken, ginger
-- Both categories and tags are examples of `taxonomies`. Instances within a taxonomy (such as sides, desserts for the taxonomy "categories") are called `terms`.
+Making sure that styles, blocks etc. are not cached:
+`wp-config.php / define('WP_DEVELOPMENT_MODE', 'theme');`
 
-Tables:
+### Classic themes
 
-- **wp_terms**: stores all terms
-- **wp_term_taxonomy**: relates terms to taxonomies
-- **wp_term_relationships**: relates taxonomies to objects (example: "tags" to "posts")
+**Required files**:
+
+- index.php : fallback if no other file matches content type
+- style.css - has a header with metadata:
+  `css
+  Theme Name: ...
+  Version: ...
+  Description: ...
+  Tags: ...
+`
+  **Other files**:
+- functions.php : for hooking into wp life-cycle
+- content-type specific files:
+  - home.php, 404.php, ...
+- templates/\*.html
+
+### Block themes
+
+- https://www.youtube.com/watch?v=C088o0O7Snc&t=575s
+
+Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that allows you to pick a highly restrictive selection of fonts, colors, layout, spacing, etc., which will be made available to the admin through the UI.
+
+#### Manually
+
+- **parts** (optional): small, reusable elements made of html, to be used in templates.
+  - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
+  - Users can edit those parts in the UI
+  - header.html
+  - footer.html
+- **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
+  - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
+  - should be php
+  - requires meta-data comment at top
+- **templates**: functional (sub-)pages built out of blocks, parts and patterns. There're being looked up as required by the template hierarchy.
+  - html files with block-placeholders (instead of php files in classic themes). But they may contain php, css, svg's etc ... though only in a custom-html-block.
+    - If you add root-level html/css/svg/js outside of a block-comment, the editor-ui will complain
+  - You can add your own template with the php-call ...
+  - They are referred to in other templates or patterns with `<!-- wp:template-part {} /-->`
+  - Files:
+    - index.html
+    - potentially any template from the template hierarchy
+    - potentially any custom templates spliced into the lookup by you
+- **style.css**
+  - Theme name and other meta-data - barely any actual CSS, because that's mostly inside theme.json
+- **theme.json**
+  - $schema: https://schemas.wp.org/trunk/theme.json
+  - settings
+  - styles
+- (optional) empty index.php (so that dir can't be inspected from outside)
+
+All the above are used to layout widgets and the sites "frame" - i.e. everything that is not an actual blog-posts content. Content itself is made of blocks and may use patterns.
+
+Users can overwrite your settings:
+
+- Style hierarchy: code < user defined global < user defined per block
+- User defined changes are stored in db, not code.
+
+You'll often edit some pattern in the UI and later export it from the database to paste it back into your code. Don't forget to "clear customizations" so that your code, instead of the db, is what's being shown.
+
+#### Create block theme plugin
+
+Creates theme code in themes folder.
+Changes your code files even after you've made your own adjustments.
+Lots of nice configs, like picking and downloading google fonts.
+
+#### Editing UI
+
+- Site editor
+  - **Dashboard/Appearance/Editor**: comprehensive full site, all templates.
+  - **Current page/Edit Site**: For editing templates based on hierarchy. Shows currently visible template.
+- Page editor
+  - **Current page/Edit page**: Edit blocks in content-part of the current page
 
 ## JS for custom blocks
+
+### Part -1: default template and Gutenberg ecosystem
+
+`npx @wordpress/create-block@latest todo-list`
+
+- `@wordpress/scripts`
+- `@wordpress/element`: react utilities
+- `@wordpress/block-editor`:
+  - MediaUploadCheck, RichText
+  - useBlockProps
+  - MediaUpload: actually not implemented in this module:
+    - module only contains placeholder...
+    - ... actual value is set with a filter: `window.wp.hooks.addFilter('editor.MediaUpload')` ...
+    - ... and as such made available in `window.wp.mediaUtils.MediaUpload`
+- `@wordpress/editor`:
+- `@wordpress/data`: redux state management, connects with wp-api
+  - `withSelect`
+    - nowadays replaced with a simple hook named `useSelect`
+    - wraps a component
+    - adds the result of _x_ to the component-props
+    - _x_ is a redux query using `select`
+  - `withDispatch`
+    - replaced by `useDispatch`
+    - used to update DB data
+- `window.wp`
+  - Wordpress creates some components only at runtime. For this reason, they cannot simply be imported with `import {x} from "y"`, but are taken directly from `window.wp`
+  - `mediaUtils`: Contains MediaUpload
 
 ### Part 0: custom block basic concepts
 
 - static block
+
   - admin-view (`js.registerBlockType.edit`): react ------------------> admin
   - user-view (`js.registerBlockType.save`): react -----> db --------> user
+
 - dynamic block
 
   - admin-view (`js.registerBlockType.edit`): react ------------------> admin
@@ -250,7 +393,7 @@ Create the directory:
 ```bash
 cd wordpress/wp-content/plugins
 mkdir counter
-cd conter
+cd counter
 ```
 
 Create a php file with same name as module (counter.php):
@@ -301,12 +444,13 @@ src/block.json
 src/index.tsx:
 
 ```tsx
-import { registerBlockType } from "@wordpress/blocks";
-import { useBlockProps } from "@wordpress/block-editor";
+import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+import metadata from './block.json';
 
 // Wp already knows about this block through php.
 // Here we tell it what to do when that block is to be shown.
-registerBlockType("test/counter", {
+registerBlockType(metadata.name, {
   // return component shown in editor-view
   edit: function () {
     return <p {...useBlockProps()}> Counter, editor-view</p>;
@@ -323,10 +467,10 @@ registerBlockType("test/counter", {
 src/view.tsx:
 
 ```tsx
-import { createRoot } from "react-dom/client";
-import { useState } from "react";
+import { createRoot } from 'react-dom/client';
+import { useState } from 'react';
 
-const root = createRoot(document.getElementById("mycounter"));
+const root = createRoot(document.getElementById('mycounter'));
 
 const Counter = () => {
   const [count, setCount] = useState(0);
@@ -364,6 +508,275 @@ This will:
   - Webpack already knows that wordpress has its own version of react. If it sees react in your code, it will also add it automatically to `index.asset.php`.
 - create a `view.assets.php`
 - create a compiled `block.json` in build, ... which is where we pointed to with our plugin-file `counter.php`.
+
+## Storing attributes in custom blocks
+
+https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/
+
+Attributes:
+
+- type:
+  - `string` | `number` | `boolean`
+    - actually: you can't save numbers or booleans as attributes. Gutenberg will always read them as strings. Then, when you change the value and save it to html, Gutenberg doesn't recognize your changed, saved value when it tries to fetch data from an attribute - because it thinks your data is a string, it wants a boolean, therefore this can't match. So Gutenberg will instead use its default value. In other words: currently you can only use `string` and `array` attributes.
+    - https://github.com/WordPress/gutenberg/issues/13949 : I think the current behavior for booleans is:
+      - true if the attribute is present at all, never mind its value,
+      - false only if it cannot be found.
+    - There seems to be another issue explaining the same problem with int's: https://github.com/WordPress/gutenberg/issues/18406
+  - `array`
+    - requires `selector`, `source=query`
+- `selector`: a css selector. Example: `element[attrname=attrval]`
+- `source`:
+  - source: undefined
+    - data stored in comments surrounding actual markup
+  - source: text
+    - data stored in child element position of markup
+    - requires `selector`
+  - source: html
+    - like text, but allows markup
+  - source: attribute
+    - stored in attribute
+    - requires `selector`, requires `attribute`
+    - cannot store booleans or numbers, so convert to strings
+  - source: query
+    - requires `query`
+    - example: this returns an array of type `{link: string, link-content: string}[]`:
+      ```json
+      "embedded-links": {
+      "type": "array",
+      "source": "query",
+      "selector": "a",
+      "query": {
+      "link": {
+      "type": "string",
+      "source": "attribute",
+      "attribute": "href"
+      },
+      "link-content": {
+      "type": "string",
+      "source": "text"
+      }
+      }
+      ```
+
+Example application:
+
+```tsx
+import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+import { TextControl, NumberControl } from '@wordpress/components';
+import metadata from './block.json';
+
+registerBlockType(metadata.name, {
+  attributes: {
+    layers: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-layers',
+    },
+    lon: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-lon',
+    },
+    lat: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-lat',
+    },
+    zoom: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-zoom',
+    },
+    width: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-width',
+    },
+    height: {
+      type: 'string',
+      source: 'attribute',
+      selector: 'div.anchorContainer',
+      attribute: 'data-height',
+    },
+  },
+
+  edit: function ({ attributes, setAttributes }) {
+    return (
+      <div {...useBlockProps()}>
+        <p>Scrollymap/anchor, editor-view: layers, lon/lat/zoom, angle</p>
+
+        <TextControl
+          label="layers (comma separated)"
+          value={attributes.layers}
+          onChange={(newVal) => setAttributes({ layers: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="lon"
+          value={attributes.lon}
+          onChange={(newVal) => setAttributes({ lon: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="lat"
+          value={attributes.lat}
+          onChange={(newVal) => setAttributes({ lat: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="zoom"
+          value={attributes.zoom}
+          onChange={(newVal) => setAttributes({ zoom: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="width"
+          value={attributes.width}
+          onChange={(newVal) => setAttributes({ width: newVal })}
+        ></TextControl>
+
+        <TextControl
+          label="height"
+          value={attributes.height}
+          onChange={(newVal) => setAttributes({ height: newVal })}
+        ></TextControl>
+      </div>
+    );
+  },
+  save: function ({ attributes }) {
+    return (
+      <div
+        className="anchorContainer"
+        data-layers={attributes.layers}
+        data-lon={attributes.lon}
+        data-lat={attributes.lat}
+        data-zoom={attributes.zoom}
+        data-width={attributes.width}
+        data-height={attributes.height}
+      ></div>
+    );
+  },
+});
+```
+
+## Custom blocks that allow inner blocks
+
+Use case: Create a scrolly-telling-map.
+
+- Create a map-wrapper
+- Users can define blocks of text and map-anchors inside the wrapper
+- The anchors don't display anything, but store metadata on what the map should look like when the anchor comes into view.
+- The wrapper maintains a map-div, that it places in such a way that it lies always atop of the most central map-anchor
+
+Remarkably, creating such a wrapper is not that hard!
+https://gutenberg.10up.com/training/inner-blocks/
+
+```tsx
+import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+
+registerBlockType('scrollymap/container', {
+  edit: function () {
+    const blockProps = useBlockProps();
+    const innerBlocksProps = useInnerBlocksProps();
+
+    return (
+      <div {...blockProps}>
+        <span>This is the scrollymap container admin view</span>
+        <div {...innerBlocksProps}></div>
+      </div>
+    );
+  },
+  save: function () {
+    return <InnerBlocks.Content />;
+  },
+});
+```
+
+## Multiple blocks in one plugin
+
+Directory structure:
+
+- scrollymap
+  - src
+    - anchor
+      - admin.tsx
+      - block.json
+    - container
+      - admin.tsx
+      - view.tsx
+      - block.json
+  - package.json
+  - scrollymap.php
+    - ```php
+        <?php
+          /**
+          * Plugin Name: Scrolly Map
+          */
+          add_action('init', function () {
+              register_block_type( __DIR__ . "/build/anchor/");
+              register_block_type( __DIR__ . "/build/container/");
+          });
+      ```
+
+## Multiple instances of same block on one page
+
+If you have multiple instances of the same block on one page, wordpress is still only going to load _one_ copy of the view-script.
+
+## CSS for custom blocks
+
+- `MyComponent.tsx`
+  - `import some.scss` -----> built into `mycomponent.css`
+  - `import other.scss` ----> built into `mycomponent.css`
+  - `import style.scss` ----> turns into `style-mycomponent.css`
+- You'll need to name both `style-mycomponent` and `mycomponent` in your block.json:
+  - `"style": ["file:./components/style-mycomponent.css", "file:./components/mycomponent.css"]`
+
+## Passing data from PHP to custom block
+
+https://stackoverflow.com/questions/73220504/passing-data-from-php-to-javascript-for-gutenberg-block-with-editor-script-regis
+
+```php
+function slidymap_slidymap_block_init() {
+	register_block_type( __DIR__ . "/build/anchor/");
+    register_block_type( __DIR__ . "/build/container/");
+
+	add_action('admin_enqueue_scripts', 'slidymap_transfer_data');
+    add_action('wp_enqueue_scripts', 'slidymap_transfer_data');
+}
+add_action( 'init', 'slidymap_slidymap_block_init' );
+
+
+
+function slidymap_transfer_data() {
+    $pluginPath = plugin_dir_url(__FILE__);
+	$assetsPath = $pluginPath . "assets/";
+	// name from block.json with a '-' instead of '/' plus '-editor-script'
+    $handle = 'slidymap-container-view-script';
+    $data = "window.slidymapAssetsPath ='$assetsPath';";
+    $position = 'before';
+    wp_add_inline_script($handle, $data, $position);
+}
+```
+
+## Block configuration UI
+
+- Sidebar:
+  - for things that get edited rarely
+  - `import { InspectorControls } from '@wordpress/block-editor';`
+- Inline bar:
+  - for things that get edited often, but don't require a big menu
+  - `import { BlockControls } from '@wordpress/block-editor';`
+
+## Inline blocks
+
+As far as I can tell, blocks cannot be placed inside paragraphs. However, we can add functionality to the Gutenberg rich text editor: https://developer.wordpress.org/block-editor/how-to-guides/format-api/.
 
 ## React as a shortcode
 
@@ -406,7 +819,6 @@ function related_values_shortcode($attrs, $content, $shortcode_tag)
     );
     $unitsEncoded = json_encode($units);
 
-
     $output = <<<HTML
         <a
             id="$id"
@@ -421,7 +833,6 @@ function related_values_shortcode($attrs, $content, $shortcode_tag)
     return $output;
 }
 
-
 add_action("wp_enqueue_scripts", function () {
     $url = plugin_dir_url(__FILE__) . "/build/index.js";
     // NOTE: don't forget to add the react-dependencies.
@@ -435,7 +846,7 @@ add_action("init", function () {
 ```
 
 ```tsx
-import { createRoot } from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 
 function doTheLog(id: string, data: any) {
   const el = document.getElementById(id) as HTMLLinkElement;
@@ -444,18 +855,24 @@ function doTheLog(id: string, data: any) {
   const x = el.offsetLeft;
 
   const body = document.body;
-  const rt = document.createElement("div");
+  const rt = document.createElement('div');
   rt.id = popupId(id);
-  rt.style.position = "absolute";
-  rt.style.top = "0";
-  rt.style.left = "0";
+  rt.style.position = 'absolute';
+  rt.style.top = '0';
+  rt.style.left = '0';
   body.appendChild(rt);
   const root = createRoot(rt);
 
   function Base(props: { x: number; y: number }) {
     console.log(props);
     return (
-      <div style={{ position: "absolute", top: `${props.x} px`, left: `${props.y} px` }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: `${props.x} px`,
+          left: `${props.y} px`,
+        }}
+      >
         <p>Here I am.</p>;
       </div>
     );
@@ -552,6 +969,50 @@ add_shortcode('ng_wp', function () {
 // The shortcode can be whatever. [ng_wp] is just an example.
 ```
 
+## Query loop
+
+A very interesting, prebuilt block. Allows you to list any content type in another page.
+
+## Custom content types
+
+This is currently far from elegant, since we need to support both classic themes and block themes... the config of which is interspersed in between several hooks and a custom block.
+There is code duplicated between `add_meta_box` and `register_meta` as well as between `add_meta_box.render_callback` and `metadata_block.edit.tsx`.
+
+Based on https://kinsta.com/blog/wordpress-add-meta-box-to-post/.
+
+PHP:
+
+1. `add_action( 'init', 			    'related_values_unit_cpt' );` -> calls `register_post_type`
+   1. `supports => array("title")` so that no user-defined blocks can be added
+   2. `'template' => array(	array("related-values/unit-meta-data"	), 'template_lock' => 'all')` so that in block-themes, the metadata-block is used for editing
+2. `add_action( 'add_meta_boxes', 'related_values_unit_cpt_fields_classic' );` -> calls `add_meta_box` for compatibility with classic themes
+3. `add_action( 'save_post', 		  'related_values_unit_cpt_fields_classic_save' );` -> hooks into save to update metadata from classic meta-box
+4. `add_action( 'init', 			    'related_values_unit_cpt_fields' );` -> calls `register_post_meta` for use in metadata-block
+5. `add_action( 'init', 			    'related_values_unit_metadata_block' );` -> calls `register_block_type` to adit and display metadata
+
+Custom block to allow editing and displaying meta-data:
+
+1. edit.tsx:
+   1. `const postType = useSelect( select => select( 'core/editor' ).getCurrentPostType())`;
+   2. `const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );`
+2. render.php
+   1. `$unitName = get_post_meta( get_the_ID(), '_meta_fields_unit_name', true );`
+   2. `$unitRelations = get_post_meta( get_the_ID(), '_meta_fields_unit_relations', true );`
+
+### Using ACF
+
+ACF makes it easier to:
+
+- add fields that relate to other content types
+- create content types
+- export all that as php code
+
+But it has some drawbacks:
+
+- relatively restrictive license
+- requires ACF as a dependency (generated php code is not standalone)
+- doesn't create a block to display ACF's in block-themes (at least not in free version)
+
 ## REST API
 
 1. Activate the json-api: go to `http://localhost:8080/wp-admin/options-permalink.php` and chose any permalink-type other than `plain`.
@@ -559,9 +1020,420 @@ add_shortcode('ng_wp', function () {
 
 ## Database
 
-Creating a custom content type: https://gist.github.com/kosso/47004c9fa71920b441f3cd0c35894409
+```php
+<?php
+
+
+/**
+ * Based on https://accreditly.io/articles/how-to-create-a-crud-in-wordpress-without-using-plugins#content-section-2-creating-a-custom-admin-menu-item
+ */
+
+
+ class TableConnection {
+
+    readonly string $tableName;
+    readonly array $fields;
+    readonly string $keys;
+
+    public function __construct(
+        private $wpdb,
+        string $tableName,
+        array $fields,  // array("id" => "mediumint(9) NOT NULL AUTO_INCREMENT", "name" => "tinytext NOT NULL", ...)
+        string $keys    // "PRIMARY KEY (id), INDEX name (name), INDEX address (address)"
+    ) {
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+        $slug = strtolower($tableName);
+        $tableName = $this->wpdb->prefix . $slug;
+
+        $this->wpdb = $wpdb;
+        $this->tableName = $tableName;
+        $this->fields = $fields;
+        $this->keys = $keys;
+    }
+
+    public function createTable() {
+        $charset_collate = $this->wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (";
+        foreach ($this->fields as $name => $description) {
+            $sql .= "$name $description ,";
+        }
+        $sql .= $this->keys;
+        $sql .= ") $charset_collate;";
+
+        dbDelta($sql);
+    }
+
+    public function deleteTable() {
+        $this->wpdb->query( "DROP TABLE IF EXISTS $this->tableName" );
+    }
+
+    public function getAll() {
+        $results = $this->wpdb->get_results("SELECT * FROM $this->tableName");
+        return $results;
+    }
+
+    public function getById($id) {
+        $row = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $this->tableName WHERE id = %d", $id));
+        return $row;
+    }
+
+    public function insert($data) {
+        $data = $this->sanitize($data);
+        if (!$data) {
+            echo "Error: sanitation failed.";
+            return;
+        }
+        $this->wpdb->insert($this->tableName, $data);
+    }
+
+    public function update($idField, $id, $data) {
+        $data = $this->sanitize($data);
+        if (!$data) {
+            echo "Error: sanitation failed.";
+            return;
+        }
+        $this->wpdb->update( $this->tableName, $data, array($idField => $id) );
+    }
+
+    public function delete($id) {
+        $this->wpdb->query( "DELETE FROM `$this->tableName` WHERE id = $id" );
+    }
+
+
+    /** add_action('rest_api_init', dbc->registerRest) */
+    public function registerRest() {
+        register_rest_route(
+            "/$this->tableName/v1",
+            "/all",
+            array(
+                "methods" => "GET",
+                "callback" => function () {
+                    return $this->getAll();
+                },
+                "permission_callback" => function () {
+                    return current_user_can("edit_others_posts");
+                }
+            )
+        );
+    }
+
+    private function sanitize($data) {
+        $out = array();
+        foreach ($this->fields as $key => $val) {
+            if ($key == "id") continue;
+            if (array_key_exists($key, $data)) {
+                $out[$key] = $data[$key];
+            } else {
+                return false;
+            }
+        }
+        return $out;
+    }
+
+ }
+
+
+class TableUI {
+
+    protected string $nonceName;
+    protected string $slug;
+
+    public function __construct(
+        protected TableConnection $tableConnection
+    ) {
+
+        $slug = strtolower($tableConnection->tableName);
+        $nonceName = strtolower($slug) . "_nonce";
+
+        $this->slug = $slug;
+        $this->nonceName = $nonceName;
+    }
+
+    public function createTable() {
+        $this->tableConnection->createTable();
+    }
+
+    public function deleteTable() {
+        $this->tableConnection->deleteTable();
+    }
+
+    /** add_action('admin_menu', $dbc->createAdminMenu); */
+    public function createAdminMenu() {
+            $page_title = $this->slug;
+            $menu_title = $this->slug;
+            $capability = 'manage_options';
+            $menu_slug = $this->slug;
+            $function = function () {echo $this->tableMarkup(); };
+            $icon_url = 'dashicons-admin-generic';
+            $position = 25;
+
+            add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position);
+
+            // Submenu pages
+            add_submenu_page($menu_slug, 'Add New', 'Add New', $capability, $this->slug . '-add', function () { echo $this->addEntryMarkup(); });
+            add_submenu_page($menu_slug, 'Edit', 'Edit', $capability, $this->slug . '-edit', function () {echo $this->editEntryMarkup(); });
+            add_submenu_page($menu_slug, 'Delete', 'Delete', $capability, $this->slug . '-delete', function () {echo $this->deleteEntryMarkup(); });
+    }
+
+    public function tableMarkup() {
+        $results = $this->tableConnection->getAll();
+
+        $markup = '<div class="wrap">';
+        $markup .= "<h1 class='wp-heading-inline'>" . $this->tableConnection->tableName . "</h1>";
+        $markup .= '<a href="' . admin_url("admin.php?page=" . $this->slug . "-add") . '" class="page-title-action">Add New</a>';
+        $markup .= '<hr class="wp-header-end">';
+
+        $markup .= '<table class="wp-list-table widefat fixed striped">';
+        $markup .= '<thead><tr>';
+        foreach ($this->tableConnection->fields as $key => $description) {
+            $markup .= "<th>$key</th>";
+        }
+        $markup .= "<th></th>";
+        $markup .= '</tr></thead>';
+        $markup .= '<tbody>';
+
+        foreach ($results as $row) {
+            $markup .= '<tr>';
+            foreach ($row as $key => $val) {
+                $markup .= '<td>' . esc_html($val) . '</td>';
+            }
+            $markup .= '<td>';
+            $markup .= '<a href="' . admin_url('admin.php?page=' . $this->slug . '-edit&id=' . $row->id) . '" >Edit</a>';
+            $markup .= " | ";
+            $markup .= '<a href="' . admin_url('admin.php?page=' . $this->slug . '-delete&id=' . $row->id) . '" class="delete-link"   >Delete</a>';
+            $markup .= '</td>';
+            $markup .= '</tr>';
+        }
+        $markup .= '</tbody>';
+        $markup .= '</table>';
+        $markup .= '</div>';
+
+        return $markup;
+    }
+
+    public function addEntryMarkup() {
+        $markup = "";
+
+        $nonceAction = $this->slug . "_add";
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->nonceName]) && wp_verify_nonce($_POST[$this->nonceName], $nonceAction)) {
+            $this->tableConnection->insert($_POST);
+            $markup .= '<div class="notice notice-success is-dismissible"><p>Datum added successfully!</p></div>';
+            $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
+        }
+
+        $markup .= '<div class="wrap">';
+        $markup .= '<h1 class="wp-heading-inline">Add new datum</h1>';
+        $markup .= '<hr class="wp-header-end">';
+
+        $markup .= '<form method="post">';
+        $markup .= '<table class="form-table">';
+        foreach ($this->tableConnection->fields as $key => $val) {
+            if ($key == "id") continue;
+            $markup .= "<tr>";
+            $markup .= "<th scope='row'><label for='$key'>$key</label></th>";
+            $markup .= "<td><input type='text' name='$key' id='$key' class='regular-text' required></td>";
+            $markup .= "</tr>";
+        }
+        $markup .= '</table>';
+
+        $markup .= '<input type="hidden" name="' . $this->nonceName . '" value="' . wp_create_nonce($nonceAction) . '">';
+        $markup .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Add New"></p>';
+        $markup .= '</form>';
+        $markup .= '</div>';
+
+        return $markup;
+    }
+
+    public function editEntryMarkup() {
+        $markup = "";
+
+        $nonceAction = $this->slug . "_edit";
+
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $row = $this->tableConnection->getById($id);
+
+        if (!$row) {
+            $markup .= '<div class="notice notice-error is-dismissible"><p>Invalid ID!</p></div>';
+            return $markup;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->nonceName]) && wp_verify_nonce($_POST[$this->nonceName], $nonceAction)) {
+            $this->tableConnection->update("id", $id, $_POST);
+            $markup .= '<div class="notice notice-success is-dismissible"><p>Datum updated successfully!</p></div>';
+            $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
+        }
+
+        $markup .= '<div class="wrap">';
+        $markup .= '<h1 class="wp-heading-inline">Edit datum</h1>';
+        $markup .= '<hr class="wp-header-end">';
+
+        $markup .= '<form method="post">';
+        $markup .= '<table class="form-table">';
+        foreach ($row as $key => $val) {
+            if ($key == "id") continue;
+            $markup .= "<tr>";
+            $markup .= "<th scope='row'><label for='$key'>$key</label></th>";
+            $markup .= "<td><input type='text' name='$key' id='$key' class='regular-text' required value='$val'></td>";
+            $markup .= "</tr>";
+        }
+        $markup .= '</table>';
+
+        $markup .= '<input type="hidden" name="' . $this->nonceName . '" value="' . wp_create_nonce($nonceAction) . '">';
+        $markup .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Update"></p>';
+        $markup .= '</form>';
+        $markup .= '</div>';
+
+        return $markup;
+    }
+
+    public function deleteEntryMarkup() {
+        $markup = "";
+
+        $nonceAction = $this->slug . "_delete";
+
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $row = $this->tableConnection->getById($id);
+
+        if (!$row) {
+            $markup .= '<div class="notice notice-error is-dismissible"><p>Invalid ID!</p></div>';
+            return $markup;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->nonceName]) && wp_verify_nonce($_POST[$this->nonceName], $nonceAction)) {
+            $this->tableConnection->delete($id);
+            $markup .= '<div class="notice notice-success is-dismissible"><p>Datum removed successfully!</p></div>';
+            $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
+        }
+        else {
+            $markup .= '<div class="wrap">';
+            $markup .= '<h1 class="wp-heading-inline">Remove datum '. $row->id .'</h1>';
+            $markup .= '<hr class="wp-header-end">';
+
+            $markup .= '<form method="post">';
+            $markup .= '<input type="hidden" name="' . $this->nonceName . '" value="' . wp_create_nonce($nonceAction) . '">';
+            $markup .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Delete"></p>';
+            $markup .= '</form>';
+            $markup .= '<button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Cancel</button>';
+            $markup .= '</div>';
+        }
+
+        return $markup;
+    }
+
+}
+
+
+
+function createUnitTableCon($wpdb) {
+    return new TableConnection(
+        $wpdb,
+        "units",
+        array(
+            "id" => "mediumint(9) NOT NULL AUTO_INCREMENT",
+            "name" => "tinytext NOT NULL",
+        ),
+        "PRIMARY KEY (id)"
+    );
+}
+
+function createUnitRelTableCon($wpdb) {
+    return new TableConnection(
+        $wpdb,
+        "unit_relations",
+        array(
+            "id" => "mediumint(9) NOT NULL AUTO_INCREMENT",
+            "unit1" => "mediumint(9) NOT NULL",
+            "unit2" => "mediumint(9) NOT NULL",
+            "factor" => "float NOT NULL"
+        ),
+        "PRIMARY KEY (id), KEY (unit1), KEY (unit2)"
+    );
+}
+
+function createValueTableCon($wpdb) {
+    return new TableConnection(
+        $wpdb,
+        "values",
+        array(
+            "id" => "mediumint(9) NOT NULL AUTO_INCREMENT",
+            "slug" => "tinytext NOT NULL",
+            "text" => "tinytext NOT NULL",
+            "value" => "float NOT NULL",
+            "unit" => "mediumint(9) NOT NULL"
+        ),
+        "PRIMARY KEY (id), KEY (unit)"
+    );
+}
+
+
+class UnitController extends TableUI {
+    public function __construct($wpdb) {
+        $unitTable = createUnitTableCon($wpdb);
+        parent::__construct(
+            $unitTable
+        );
+    }
+}
+```
+
+Used in plugin like so:
+
+```php
+
+require_once(realpath( dirname( __FILE__ ) ) . '/db-controller.php');
+
+function getUnitController() {
+    global $wpdb;
+    return new UnitController($wpdb);
+}
+
+function getUnitRelController() {
+    global $wpdb;
+    return new UnitRelController($wpdb);
+}
+
+
+function getValueController() {
+    global $wpdb;
+    return new ValueController($wpdb);
+}
+
+register_activation_hook( __FILE__, function () {
+    $uc = getUnitController();
+    $uc->createTable();
+    $urc = getUnitRelController();
+    $urc->createTable();
+    $vc = getValueController();
+    $vc->createTable();
+});
+register_deactivation_hook( __FILE__, function () {
+    $uc = getUnitController();
+    $uc->deleteTable();
+    $urc = getUnitRelController();
+    $urc->deleteTable();
+    $vc = getValueController();
+    $vc->deleteTable();
+});
+add_action('admin_menu', function () {
+    $uc = getUnitController();
+    $uc->createAdminMenu();
+    $urc = getUnitRelController();
+    $urc->createAdminMenu();
+    $vc = getValueController();
+    $vc->createAdminMenu();
+});
+```
 
 ## Static site
+
+Things that don't work with static sites:
+
+- search
+- forms
+- comments
 
 Only partial static site:
 https://wordpress.org/support/topic/do-you-have-to-convert-your-whole-site-to-static-or-partial-conversion-supported/

@@ -41,50 +41,115 @@ Hooks must not be called inside conditionals. That's because they need to be gua
 
 ### State-handling hooks
 
-- `const [name, updateName] = useState('Enter your name here')`: For within-component-state
+- useState
+- useRef
+- useEffect
+- useContext
+- useReducer
 
-  - Important note: `useState` is a hook and as such must only be called inside a react-component-function.
-  - _But_: `updateName` is _not_ a hook, and may be called from anywhere, including asynchronously.
+### useState
 
-- `useEffect((newName) => {api.call(newName)}, [name])`: for side-effects.
+`const [name, updateName] = useState('Enter your name here')`: For within-component-state
 
-  - Only called when one of the variables in the second argument (`[name]`) changes.
-  - If the second argument is `[]`, then the effect is only called upon construction.
+- Important note: `useState` is a hook and as such must only be called inside a react-component-function.
+- _But_: `updateName` is _not_ a hook, and may be called from anywhere, including asynchronously.
+- Causes a re-draw of the component.
 
-- `const user = useContext(globalUserContext)`: for global context (read-only)
+### useEffect
 
-  - Intended to have one controller-component, that changes the value using `useState`
-    and having all other components get the state as read-only
-  - Context must have been created before: ```jsx
-    export const numberContext = createContext()
-    export function NumberProvider ({ children }) {
-    const [currentNumber, setCurrentNumber] = useState(1)
-    return (
-    <numberContext.Provider value={currentNumber}>
-    { children }
-    <button onClick={() => setCurrentNumber(currentNumber + 1)}>Global increment</button>
-    </numberContext.Provider>
-    )
+`useEffect((newName) => {api.call(newName)}, [name])`: for side-effects.
+
+- Only called when one of the variables in the second argument (`[name]`) changes.
+- If the second argument is `[]`, then the effect is only called upon construction.
+- effect can return a `cleanup` function that gets called when component is unmounted or when a second effect is fired before the first one is complete.
+
+Example:
+
+```ts
+export function useDebounce<T>(val: T, bufferTimeMS: number) {
+  const [debouncedVal, setDebouncedVal] = useState(val);
+
+  useEffect(() => {
+    const handle$ = setTimeout(() => setDebouncedVal(val), bufferTimeMS);
+    const cleanup = () => {
+      clearTimeout(handle$);
+    };
+    return cleanup;
+  }, [val]);
+
+  return debouncedVal;
+}
+```
+
+### useContext
+
+`const user = useContext(globalUserContext)`: for global context (read-only)
+
+Intended to have one controller-component, that changes the value using `useState`
+and having all other components get the state as read-only
+
+    ```ts
+    import { createContext, useContext } from 'react';
+
+    const ThemeContext = createContext(null);
+
+    export default function MyApp() {
+      return (
+        <ThemeContext.Provider value="dark">
+          <Form />
+        </ThemeContext.Provider>
+      )
+    }
+
+    function Form() {
+      return (
+        <Panel title="Welcome">
+          <Button>Sign up</Button>
+          <Button>Log in</Button>
+        </Panel>
+      );
+    }
+
+    function Panel({ title, children }) {
+      const theme = useContext(ThemeContext);
+      const className = 'panel-' + theme;
+      return (
+        <section className={className}>
+          <h1>{title}</h1>
+          {children}
+        </section>
+      )
+    }
+
+    function Button({ children }) {
+      const theme = useContext(ThemeContext);
+      const className = 'button-' + theme;
+      return (
+        <button className={className}>
+          {children}
+        </button>
+      );
     }
     ```
 
-    ```
-  - You can work with `createContext(initialValue)` and `useContext` only. But to cause a react-re-render, the `Provider` is required. Also, most commonly `createContext` gets no initial value, but receives it through `<Provider value={val}>`.
-  - https://www.youtube.com/watch?v=5LrDIWkK_Bc
+- You can work with `createContext(initialValue)` and `useContext` only. But to cause a react-re-render, the `Provider` is required. Also, most commonly `createContext` gets no initial value, but receives it through `<Provider value={val}>`.
+- https://www.youtube.com/watch?v=5LrDIWkK_Bc
 
-- `useReducer`: for global context (read/write)
+### useReducer
 
-  - Remarkably, contrary to `useState`, `useReducer` doesn't require you to build a provider-component.
+`useReducer`: for global context (read/write)
 
-  ```jsx
-  import { userReducer } from "user.logic";
-  // (state, action): newState
+- Remarkably, contrary to `useState`, `useReducer` doesn't require you to build a provider-component.
 
-  const [state, dispatchChangeMessage] = useReducer(userReducer, initialState);
+```jsx
+import { userReducer } from 'user.logic';
+// (state, action): newState
 
-  const action = { type: "rename", newName: "Johny" };
-  dispatchChangeMessage(action);
-  ```
+const [state, dispatchChangeMessage] = useReducer(userReducer, initialState);
+
+const action = { type: 'rename', newName: 'Johny' };
+dispatchChangeMessage(action);
+```
 
 ### UI-handling hooks
 
@@ -147,19 +212,18 @@ const React = (function () {
 
 function Component() {
   const [count, setCount] = React.useState(1);
-  const [text, setText] = React.useState("apple");
+  const [text, setText] = React.useState('apple');
   const ref1 = React.useRef(2);
   const ref2 = React.useRef(1);
 
   React.useEffect(() => {
-    console.log("jsconfffff");
+    console.log('jsconfffff');
   }, [count, text]);
 
   return {
-    render: () =>
-      console.log({ count, text, ref1: ref1.current, ref2: ref2.current }),
+    render: () => console.log({ count, text, ref1: ref1.current, ref2: ref2.current }),
     click: () => setCount(count + 1),
-    type: () => setText("appear"),
+    type: () => setText('appear'),
   };
 }
 
@@ -174,6 +238,41 @@ var App = React.render(Component);
 ```
 
 # Common design patterns
+
+## Using a global state manager
+
+```ts
+export function useRedux<T>(getVal: (state: State) => T) {
+  const currentVal = getVal(stateMgmt.getState());
+
+  const [val, setVal] = useState(currentVal);
+
+  stateMgmt.watch((state) => {
+    const newVal = getVal(state);
+    setVal(newVal);
+  });
+
+  return val;
+}
+```
+
+## Debounce
+
+```ts
+export function useDebounce<T>(val: T, bufferTimeMS: number) {
+  const [debouncedVal, setDebouncedVal] = useState(val);
+
+  useEffect(() => {
+    const handle$ = setTimeout(() => setDebouncedVal(val), bufferTimeMS);
+    const cleanup = () => {
+      clearTimeout(handle$);
+    };
+    return cleanup;
+  }, [val]);
+
+  return debouncedVal;
+}
+```
 
 ## Handling re-renders
 
@@ -190,17 +289,10 @@ https://www.debugbear.com/blog/react-rerenders
 ## Draggable component
 
 ```tsx
-import {
-  MouseEvent as RMouseEvent,
-  useState,
-  PropsWithChildren,
-  useRef,
-  useEffect,
-  RefObject,
-} from "react";
-import { State, stateMgmt } from "../services/state";
-import ContextMenu from "./ContextMenu";
-import ProcessNode from "./ProcessNode";
+import { MouseEvent as RMouseEvent, useState, PropsWithChildren, useRef, useEffect, RefObject } from 'react';
+import { State, stateMgmt } from '../services/state';
+import ContextMenu from './ContextMenu';
+import ProcessNode from './ProcessNode';
 
 interface CHNProps {
   x: number;
@@ -239,17 +331,17 @@ function CanvasHtmlNode(props: PropsWithChildren<CHNProps>) {
     if (!nodeRef.current || !props.containerRef.current) return;
 
     // adding event listeners
-    nodeRef.current.addEventListener("mousedown", mouseDown);
-    props.containerRef.current.addEventListener("mouseup", mouseUp);
-    props.containerRef.current.addEventListener("mousemove", mouseMove);
-    props.containerRef.current.addEventListener("mouseleave", mouseUp);
+    nodeRef.current.addEventListener('mousedown', mouseDown);
+    props.containerRef.current.addEventListener('mouseup', mouseUp);
+    props.containerRef.current.addEventListener('mousemove', mouseMove);
+    props.containerRef.current.addEventListener('mouseleave', mouseUp);
 
     // cleanup function
     return () => {
-      nodeRef.current?.removeEventListener("mousedown", mouseDown);
-      nodeRef.current?.removeEventListener("mouseup", mouseUp);
-      props.containerRef.current?.removeEventListener("mousemove", mouseMove);
-      props.containerRef.current?.removeEventListener("mouseleave", mouseUp);
+      nodeRef.current?.removeEventListener('mousedown', mouseDown);
+      nodeRef.current?.removeEventListener('mouseup', mouseUp);
+      props.containerRef.current?.removeEventListener('mousemove', mouseMove);
+      props.containerRef.current?.removeEventListener('mouseleave', mouseUp);
     };
   }, []);
 
@@ -257,11 +349,11 @@ function CanvasHtmlNode(props: PropsWithChildren<CHNProps>) {
     <div
       ref={nodeRef}
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: `${props.y}px`,
         left: `${props.x}px`,
         zIndex: props.z,
-        userSelect: "none",
+        userSelect: 'none',
       }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -271,33 +363,27 @@ function CanvasHtmlNode(props: PropsWithChildren<CHNProps>) {
 }
 
 function DrawingBoard() {
-  const [contextMenu, setContextMenu] = useState(
-    stateMgmt.getState().contextMenu
-  );
+  const [contextMenu, setContextMenu] = useState(stateMgmt.getState().contextMenu);
   stateMgmt.watchState((s) => setContextMenu(s.contextMenu));
 
-  function handleContextMenu(
-    event: RMouseEvent<HTMLDivElement, MouseEvent>
-  ): boolean {
+  function handleContextMenu(event: RMouseEvent<HTMLDivElement, MouseEvent>): boolean {
     event.preventDefault();
-    stateMgmt.handleAction({ type: "canvas clicked", payload: event });
+    stateMgmt.handleAction({ type: 'canvas clicked', payload: event });
     return false;
   }
 
-  const [processNodes, setProcessNodes] = useState<
-    State["canvasData"]["processes"]
-  >([]);
+  const [processNodes, setProcessNodes] = useState<State['canvasData']['processes']>([]);
   stateMgmt.watchState((s) => setProcessNodes(s.canvasData.processes));
 
   const htmlContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div style={{ width: `100%`, height: `100vh`, position: "relative" }}>
+    <div style={{ width: `100%`, height: `100vh`, position: 'relative' }}>
       {/* svg layer for graphics */}
       <svg
         width="100%"
         height="100%"
-        style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}
+        style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }}
         // viewBox="0,0,100,100" <-- actually no viewBox - don't want re-scaling, since html won't move either.
       ></svg>
 
@@ -307,7 +393,7 @@ function DrawingBoard() {
         style={{
           width: `100%`,
           height: `100%`,
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           left: 0,
           zIndex: 1,
@@ -315,13 +401,7 @@ function DrawingBoard() {
         onContextMenu={handleContextMenu}
       >
         {contextMenu.show && (
-          <CanvasHtmlNode
-            x={contextMenu.x}
-            y={contextMenu.y}
-            z={2}
-            key="contextMenu"
-            containerRef={htmlContainerRef}
-          >
+          <CanvasHtmlNode x={contextMenu.x} y={contextMenu.y} z={2} key="contextMenu" containerRef={htmlContainerRef}>
             <ContextMenu></ContextMenu>
           </CanvasHtmlNode>
         )}
@@ -335,7 +415,7 @@ function DrawingBoard() {
             containerRef={htmlContainerRef}
             onMoveDone={() =>
               stateMgmt.handleAction({
-                type: "process-node updated",
+                type: 'process-node updated',
                 payload: { ...n, x: 1, y: 1 },
               })
             }
@@ -358,14 +438,14 @@ export default DrawingBoard;
 ## Redux
 
 ```tsx
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { BackendClient, Task, Tree } from "../svc/backendClient";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { BackendClient, Task, Tree } from '../svc/backendClient';
 
-const dbClient = new BackendClient("http://localhost:3001");
+const dbClient = new BackendClient('http://localhost:3001');
 
 const rootTask: Task = {
-  title: "",
-  description: "",
+  title: '',
+  description: '',
 };
 
 const tree: Tree<Task> = {
@@ -379,15 +459,12 @@ const initialState = {
   activeTask: rootTask,
 };
 
-export const loadData = createAsyncThunk(
-  "TaskTree/loadData",
-  async (args, api) => {
-    return await dbClient.getTree();
-  }
-);
+export const loadData = createAsyncThunk('TaskTree/loadData', async (args, api) => {
+  return await dbClient.getTree();
+});
 
 const slice = createSlice({
-  name: "TaskTree",
+  name: 'TaskTree',
   initialState: initialState,
   reducers: {},
   extraReducers: {
@@ -396,7 +473,7 @@ const slice = createSlice({
         ...state,
         activeTask: {
           ...state.activeTask,
-          title: "...",
+          title: '...',
         },
       };
     },
@@ -414,9 +491,9 @@ export const taskTreeReducer = slice.reducer;
 ```
 
 ```tsx
-import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { taskTreeReducer } from "./TaskTree";
+import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { taskTreeReducer } from './TaskTree';
 
 export const store = configureStore({
   reducer: {

@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1678.4337"
+   height="964.46545"
+   viewBox="0 0 1678.4337 964.46545"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="maplibre_render_paths.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="0.48945048"
+     inkscape:cx="1160.4851"
+     inkscape:cy="499.53982"
+     inkscape:window-width="1920"
+     inkscape:window-height="1021"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g281099" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-219.88805,-89.783813)">
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="256.81824"
+       y="120.17444"
+       id="text4346"><tspan
+         sodipodi:role="line"
+         id="tspan4344"
+         x="256.81824"
+         y="120.17444">3D engine path</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="840.10248"
+       y="120.17444"
+       id="text7980"><tspan
+         sodipodi:role="line"
+         id="tspan7978"
+         x="840.10248"
+         y="120.17444">Maplibre path</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+       x="1345.7988"
+       y="120.17444"
+       id="text12184"><tspan
+         sodipodi:role="line"
+         id="tspan12182"
+         x="1345.7988"
+         y="120.17444">3js in maplibre path</tspan></text>
+    <g
+       id="g102820">
+      <text
+         xml:space="preserve"
+         style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="253.73633"
+         y="212.03123"
+         id="text38556"><tspan
+           sodipodi:role="line"
+           id="tspan38554"
+           x="253.73633"
+           y="212.03123">Object space</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="254.6543"
+         y="387.75879"
+         id="text42190"><tspan
+           sodipodi:role="line"
+           id="tspan42188"
+           x="254.6543"
+           y="387.75879">World space</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="253.73633"
+         y="562.7832"
+         id="text44546"><tspan
+           sodipodi:role="line"
+           id="tspan44544"
+           x="253.73633"
+           y="562.7832">Camera space</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="253.73633"
+         y="739.21393"
+         id="text46706"><tspan
+           sodipodi:role="line"
+           id="tspan46704"
+           x="253.73633"
+           y="739.21393">Clip space</tspan></text>
+      <g
+         id="g57661">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+           id="path55735"
+           sodipodi:nodetypes="ccc" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 234.13596,350.57316 -13.34037,-13.0072"
+           id="path56577"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <g
+         id="g57661-5"
+         transform="translate(1.7829533,173.58188)">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+           id="path55735-9"
+           sodipodi:nodetypes="ccc" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 234.13596,350.57316 -13.34037,-13.0072"
+           id="path56577-6"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <g
+         id="g57661-2"
+         transform="translate(3.9553838,347.16377)">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+           id="path55735-1"
+           sodipodi:nodetypes="ccc" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 234.13596,350.57316 -13.34037,-13.0072"
+           id="path56577-7"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+         x="229.05267"
+         y="295.45712"
+         id="text61047"><tspan
+           sodipodi:role="line"
+           id="tspan61045"
+           x="229.05267"
+           y="295.45712">model matrix</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+         x="230.27338"
+         y="458.70068"
+         id="text62917"><tspan
+           sodipodi:role="line"
+           id="tspan62915"
+           x="230.27338"
+           y="458.70068">view matrix </tspan><tspan
+           sodipodi:role="line"
+           x="230.27338"
+           y="483.70068"
+           id="tspan62919">(=camera model matrix^-1)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+         x="229.05267"
+         y="647.35931"
+         id="text63967"><tspan
+           sodipodi:role="line"
+           id="tspan63965"
+           x="229.05267"
+           y="647.35931">projection matrix (fov, ar, z min/max)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+         x="326.10641"
+         y="581.70282"
+         id="text86639"><tspan
+           sodipodi:role="line"
+           id="tspan86637"
+           x="326.10641"
+           y="581.70282">worldspace with camera at center</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+         x="325.22751"
+         y="761.16846"
+         id="text88971"><tspan
+           sodipodi:role="line"
+           id="tspan88969"
+           x="325.22751"
+           y="761.16846">[-1, 1]^3</tspan></text>
+    </g>
+    <g
+       id="g102790"
+       transform="translate(0,-5.7971728)">
+      <g
+         id="g191158"
+         transform="translate(-9.1584473,-1.0253897)">
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="831.51166"
+           y="217.82838"
+           id="text38556-5"><tspan
+             sodipodi:role="line"
+             id="tspan38554-7"
+             x="831.51166"
+             y="217.82838">Mercator space</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="832.42963"
+           y="393.55594"
+           id="text42190-4"><tspan
+             sodipodi:role="line"
+             id="tspan42188-1"
+             x="832.42963"
+             y="393.55594">Pixel space</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="831.51166"
+           y="568.58032"
+           id="text44546-8"><tspan
+             sodipodi:role="line"
+             id="tspan44544-5"
+             x="831.51166"
+             y="568.58032">Camera space</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="831.51166"
+           y="745.01105"
+           id="text46706-9"><tspan
+             sodipodi:role="line"
+             id="tspan46704-7"
+             x="831.51166"
+             y="745.01105">Clip space</tspan></text>
+        <g
+           id="g57661-53"
+           transform="translate(577.77533,5.797145)">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+             id="path55735-8"
+             sodipodi:nodetypes="ccc" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 234.13596,350.57316 -13.34037,-13.0072"
+             id="path56577-8"
+             sodipodi:nodetypes="cc" />
+        </g>
+        <g
+           id="g57661-5-3"
+           transform="translate(579.55828,179.37903)">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+             id="path55735-9-1"
+             sodipodi:nodetypes="ccc" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 234.13596,350.57316 -13.34037,-13.0072"
+             id="path56577-6-8"
+             sodipodi:nodetypes="cc" />
+        </g>
+        <g
+           id="g57661-2-9"
+           transform="translate(581.73071,352.96091)">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+             id="path55735-1-6"
+             sodipodi:nodetypes="ccc" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 234.13596,350.57316 -13.34037,-13.0072"
+             id="path56577-7-4"
+             sodipodi:nodetypes="cc" />
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+           x="806.828"
+           y="301.25427"
+           id="text61047-3"><tspan
+             sodipodi:role="line"
+             id="tspan61045-3"
+             x="806.828"
+             y="301.25427">scale by worldSize: </tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+           x="808.04871"
+           y="464.49783"
+           id="text62917-3"><tspan
+             sodipodi:role="line"
+             id="tspan62915-8"
+             x="808.04871"
+             y="464.49783">view matrix </tspan><tspan
+             sodipodi:role="line"
+             x="808.04871"
+             y="489.49783"
+             id="tspan62919-6">(=camera in pixel space^-1)</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+           x="806.828"
+           y="653.15643"
+           id="text63967-0"><tspan
+             sodipodi:role="line"
+             id="tspan63965-4"
+             x="806.828"
+             y="653.15643">projection matrix (fov, ar, z min/max)</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+           x="902.90521"
+           y="587.49994"
+           id="text86639-8"><tspan
+             sodipodi:role="line"
+             id="tspan86637-8"
+             x="902.90521"
+             y="587.49994">pixelpace with camera at center</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+           x="903.00287"
+           y="242.22902"
+           id="text86639-8-6"><tspan
+             sodipodi:role="line"
+             id="tspan86637-8-4"
+             x="903.00287"
+             y="242.22902">[0,0=nw, 1,1=se]</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+           x="903.00287"
+           y="412.74109"
+           id="text86639-8-6-3"><tspan
+             sodipodi:role="line"
+             id="tspan86637-8-4-0"
+             x="903.00287"
+             y="412.74109">[0,1]^3 * pixels</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+           x="903.00287"
+           y="766.96558"
+           id="text88971-8"><tspan
+             sodipodi:role="line"
+             id="tspan88969-9"
+             x="903.00287"
+             y="766.96558">[-1, 1]^3</tspan></text>
+      </g>
+      <g
+         id="g191124"
+         transform="translate(0,-3.4739686)">
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="1429.4921"
+           y="221.30235"
+           id="text38556-5-0"><tspan
+             sodipodi:role="line"
+             id="tspan38554-7-9"
+             x="1429.4921"
+             y="221.30235">3js scene space</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="1430.41"
+           y="397.02991"
+           id="text42190-4-2"><tspan
+             sodipodi:role="line"
+             id="tspan42188-1-5"
+             x="1430.41"
+             y="397.02991">Mercator space</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:33.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="1429.4921"
+           y="620.48505"
+           id="text46706-9-5"><tspan
+             sodipodi:role="line"
+             id="tspan46704-7-9"
+             x="1429.4921"
+             y="620.48505">Clip space</tspan></text>
+        <g
+           id="g57661-53-4"
+           transform="translate(1175.7558,9.27112)">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+             id="path55735-8-6"
+             sodipodi:nodetypes="ccc" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 234.13596,350.57316 -13.34037,-13.0072"
+             id="path56577-8-9"
+             sodipodi:nodetypes="cc" />
+        </g>
+        <g
+           id="g57661-5-3-2"
+           transform="matrix(0.95665412,0,0,1.6379636,1187.4687,33.500825)">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 237.17384,234.06347 c 0,0 -30.4009,38.57373 -3.03788,114.50969 l 2.92147,-16.53749"
+             id="path55735-9-1-2"
+             sodipodi:nodetypes="ccc" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 234.13596,350.57316 -13.34037,-13.0072"
+             id="path56577-6-8-4"
+             sodipodi:nodetypes="cc" />
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+           x="1404.8085"
+           y="304.72824"
+           id="text61047-3-4"><tspan
+             sodipodi:role="line"
+             id="tspan61045-3-8"
+             x="1404.8085"
+             y="304.72824">scene center in mercator coords</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#333333"
+           x="1408.0292"
+           y="467.9718"
+           id="text62917-3-1"><tspan
+             sodipodi:role="line"
+             id="tspan62915-8-2"
+             x="1408.0292"
+             y="467.9718">mercatorMatrix</tspan><tspan
+             sodipodi:role="line"
+             x="1408.0292"
+             y="492.9718"
+             id="tspan62919-6-8">= projection matrix </tspan><tspan
+             sodipodi:role="line"
+             x="1408.0292"
+             y="517.9718"
+             id="tspan188743">@ view matrix</tspan><tspan
+             sodipodi:role="line"
+             x="1408.0292"
+             y="542.9718"
+             id="tspan188745">@ scale matrix</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+           x="1500.9833"
+           y="417.703"
+           id="text86639-8-6-2"><tspan
+             sodipodi:role="line"
+             id="tspan86637-8-4-1"
+             x="1500.9833"
+             y="417.703">[0,0=nw, 1,1=se]</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:20px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#666666"
+           x="1500.9833"
+           y="642.43958"
+           id="text88971-8-1"><tspan
+             sodipodi:role="line"
+             id="tspan88969-9-1"
+             x="1500.9833"
+             y="642.43958">[-1, 1]^3</tspan></text>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:13.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="802.1015"
+         y="878.39923"
+         id="text194022"><tspan
+           sodipodi:role="line"
+           id="tspan194020"
+           x="802.1015"
+           y="878.39923"
+           style="font-size:13.3333px">Scaling:</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="895.06586"
+           id="tspan194024"
+           style="font-size:13.3333px">- <tspan
+   style="fill:#000080"
+   id="tspan297025">cameraToCenterDistance</tspan> [px] stays the same</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="911.73248"
+           id="tspan194026"
+           style="font-size:13.3333px">- <tspan
+   style="fill:#000080"
+   id="tspan299619">pixelPerMeter</tspan> changes with zoom (used in clipspace to screen transform)</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="928.39911"
+           id="tspan194028"
+           style="font-size:13.3333px">- <tspan
+   style="fill:#000080"
+   id="tspan302015">worldSize</tspan> = changes with zoom (used in scaling by worldSize)</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="945.06573"
+           id="tspan194030"
+           style="font-size:13.3333px" /><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="961.73236"
+           id="tspan194032"
+           style="font-size:13.3333px">Particularly:</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="978.39899"
+           id="tspan198104"
+           style="font-size:13.3333px">- <tspan
+   style="fill:#000080"
+   id="tspan305485">scale</tspan> = 2^zoom</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="995.06561"
+           id="tspan194036"
+           style="font-size:13.3333px">- <tspan
+   style="fill:#000080"
+   id="tspan307413">worldSize</tspan> = 512 * scale</tspan><tspan
+           sodipodi:role="line"
+           x="802.1015"
+           y="1011.7322"
+           id="tspan194038"
+           style="font-size:13.3333px">- <tspan
+   style="fill:#000080"
+   id="tspan309869">pixelPerMeter</tspan> = worldSize / circumferenceAt(latitude)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#808080"
+         x="1014.9546"
+         y="277.53571"
+         id="text214524"><tspan
+           sodipodi:role="line"
+           id="tspan214522"
+           x="1014.9546"
+           y="277.53571">                          | 1 0 0 0 |</tspan><tspan
+           sodipodi:role="line"
+           x="1014.9546"
+           y="290.86908"
+           id="tspan214526">512 * 2^zoom * | 0 1 0 0 |</tspan><tspan
+           sodipodi:role="line"
+           x="1014.9546"
+           y="304.20245"
+           id="tspan214528">                          | 0 0 1 0 |</tspan><tspan
+           sodipodi:role="line"
+           x="1014.9546"
+           y="317.53583"
+           id="tspan214530">                          | 0 0 0 <tspan
+   style="font-size:2.66667px;fill:#808080"
+   id="tspan214532">1/512*2^zoom</tspan> |</tspan></text>
+      <g
+         id="g293467"
+         transform="translate(88,76)">
+        <circle
+           style="fill:#ffffff;stroke:#5b595a;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none"
+           id="path281123"
+           cx="1633.4851"
+           cy="846.04889"
+           r="113.14563" />
+        <g
+           id="g281092"
+           transform="translate(2.7513492,5.7127579)">
+          <rect
+             style="fill:#f2f2f2;stroke:#5b595a;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none"
+             id="rect280798-8"
+             width="102.85309"
+             height="65.97876"
+             x="1469.6097"
+             y="775.74908" />
+          <text
+             xml:space="preserve"
+             style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+             x="1488.0206"
+             y="798.34778"
+             id="text266908"><tspan
+               sodipodi:role="line"
+               id="tspan266906"
+               x="1488.0206"
+               y="798.34778">location</tspan><tspan
+               sodipodi:role="line"
+               x="1488.0206"
+               y="811.68115"
+               id="tspan266910">  lon/lat</tspan><tspan
+               sodipodi:role="line"
+               x="1488.0206"
+               y="825.01453"
+               id="tspan266912">  geographic</tspan></text>
+        </g>
+        <g
+           id="g281099"
+           transform="translate(-19.365628,13.236242)">
+          <rect
+             style="fill:#f2f2f2;stroke:#5b595a;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none"
+             id="rect280798"
+             width="102.85309"
+             height="65.97876"
+             x="1595.4139"
+             y="903.53143" />
+          <text
+             xml:space="preserve"
+             style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+             x="1618.679"
+             y="927.164"
+             id="text270942"><tspan
+               sodipodi:role="line"
+               id="tspan270940"
+               x="1618.679"
+               y="927.164">coordinate</tspan><tspan
+               sodipodi:role="line"
+               x="1618.679"
+               y="940.49738"
+               id="tspan270944">  x/y/z</tspan><tspan
+               sodipodi:role="line"
+               x="1618.679"
+               y="953.83075"
+               id="tspan270946">  mercator</tspan></text>
+        </g>
+        <g
+           id="g281085"
+           transform="translate(-4.2766343,0.84385433)">
+          <rect
+             style="fill:#f2f2f2;stroke:#5b595a;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none"
+             id="rect280798-0"
+             width="102.85309"
+             height="65.97876"
+             x="1700.5914"
+             y="782.37262" />
+          <text
+             xml:space="preserve"
+             style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+             x="1731.3512"
+             y="806.00519"
+             id="text276098"><tspan
+               sodipodi:role="line"
+               id="tspan276096"
+               x="1731.3512"
+               y="806.00519">point</tspan><tspan
+               sodipodi:role="line"
+               x="1731.3512"
+               y="819.33856"
+               id="tspan276100">  x/y</tspan><tspan
+               sodipodi:role="line"
+               x="1731.3512"
+               y="832.67194"
+               id="tspan276168">  screen</tspan></text>
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="1727.2017"
+           y="927.68768"
+           id="text284901"><tspan
+             sodipodi:role="line"
+             id="tspan284899"
+             x="1727.2017"
+             y="927.68768">coordinatePoint</tspan><tspan
+             sodipodi:role="line"
+             x="1727.2017"
+             y="941.02106"
+             id="tspan284903">(=render path)</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="1595.3456"
+           y="721.69568"
+           id="text288063"><tspan
+             sodipodi:role="line"
+             id="tspan288061"
+             x="1595.3456"
+             y="721.69568">pointLocatoin</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+           x="1428.9637"
+           y="910.0177"
+           id="text291895"><tspan
+             sodipodi:role="line"
+             id="tspan291893"
+             x="1428.9637"
+             y="910.0177">locationCoordinate</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

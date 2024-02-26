@@ -4,8 +4,11 @@
 - _relative_: Default + allows top, bottom, left and right
   - useful as parent for absolute div's
 - _absolute_: Relative to nearest positioned parent (positioned: anything but static)
-- _fixed_: Similar to absolute, but positioned relative to the browser window. Scrolling will not move this element.
-- _sticky_: Element is positioned relative until a specified offset position is met by scrolling, then the element is positioned ‘fixed’ in that position on the scrolling element.
+  - **note**: the parents of absolutely positioned elements won't automatically grow to encompass their child anymore.
+- _fixed_: Similar to absolute, but positioned relative to the browser viewport. Scrolling will not move this element.
+- _sticky_:
+  - element is confined to its parent
+  - but within those confines, it slides along with the viewport like fixed.
 
 # Display
 
@@ -180,6 +183,102 @@ Grid elements may overlap each other:
     ````
 
 - performance:
+
+# Clip paths
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            :root {
+                --color1: rgb(200, 249, 233);
+                --color2: rgb(129, 253, 253);
+                --curveHeight: 4rem;
+            }
+            .body {
+                width: 100%;
+            }
+            .row {
+                /* Moving up, under the next higher row */
+                margin-top: calc(-1 * var(--curveHeight));
+                /* Making sure that after sliding under next higher row the text is still visible*/
+                padding-top: calc(var(--curveHeight) + 1rem);
+                padding-bottom: 1rem;
+            }
+            .row1 {
+                background-color: var(--color1);
+            }
+            .row2 {
+                background-color: var(--color2);
+            }
+            .curveShadow1 {
+                /* Shadows don't work on elements with clip path, because the
+                path clips the shadows off. So place on this helper-parent instead. */
+                filter: drop-shadow(0px .5rem .5rem var(--color1));
+            }
+            .curveShadow2 {
+                filter: drop-shadow(0px .5rem .5rem var(--color2));
+            }
+            .curve {
+                width: 100%;
+                height: var(--curveHeight);
+            }
+            .curve1 {
+                background-color: var(--color1);
+                /* Stencilling out the shape */
+                clip-path: url(#clipPath1);
+            }
+            .curve2 {
+                background-color:  var(--color2);
+                clip-path: url(#clipPath2);
+            }
+            p {
+                width: max(60%, 500px);
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <svg width="0" height="0">
+            <defs>
+                <clipPath id="clipPath1" clipPathUnits="objectBoundingBox">
+                    <path d="M 0,0    L 1,0   L 1,0.8   C 0.8,0.7 0.75,0.5 0.5,0.8  S 0.1,0.8, 0,0.8   Z"></path>
+                </clipPath>
+                <clipPath id="clipPath2" clipPathUnits="objectBoundingBox">
+                    <path d="M 0,0    L 1,0   L 1,0.8   C 0.9,0.5 0.75,1.1 0.5,0.8  S 0.1,0.9, 0,0.8   Z"></path>
+                </clipPath>
+            </defs>
+        </svg>
+
+        <div class="body">
+
+                <div class="row row1"><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe deleniti rerum at labore doloremque sequi repellendus numquam nobis expedita. Doloribus vitae natus placeat iste molestias consectetur unde eos beatae nobis!</p></div>
+                <div class="curveShadow1"><div class="curve curve1"></div></div>
+
+
+                <div class="row row2"><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe deleniti rerum at labore doloremque sequi repellendus numquam nobis expedita. Doloribus vitae natus placeat iste molestias consectetur unde eos beatae nobis!</p></div>
+                <div class="curveShadow2"><div class="curve curve2"></div></div>
+
+
+                <div class="row row1"><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe deleniti rerum at labore doloremque sequi repellendus numquam nobis expedita. Doloribus vitae natus placeat iste molestias consectetur unde eos beatae nobis!</p></div>
+                <div class="curveShadow1"><div class="curve curve1"></div></div>
+
+
+                <div class="row row2"><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe deleniti rerum at labore doloremque sequi repellendus numquam nobis expedita. Doloribus vitae natus placeat iste molestias consectetur unde eos beatae nobis!</p></div>
+                <div class="curveShadow2"><div class="curve curve2"></div></div>
+
+
+    </body>
+</html>
+```
 
 # Critical rendering path
 
