@@ -190,6 +190,22 @@ Upper case: absolute, lower case: relative
 
 https://fskpf.github.io
 
+```svg
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="800">
+    <defs>
+        <filter id="pencilTextureFilter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+            <feTurbulence type="fractalNoise" baseFrequency="2" numOctaves="5" stitchTiles="stitch" result="f1" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 -1.5 1.5" result="f2" />
+            <feComposite operator="in" in="SourceGraphic" in2="f2" result="f3" />
+        </filter>
+    </defs>
+    <rect width="800" height="800" fill="white" />
+    <g filter="url(#pencilTextureFilter)">
+        <path> ....
+
+```
+
 ## Grainy texture
 
 ```html
