@@ -2,27 +2,24 @@
 
 ## Response codes
 
-- `304`: **Not modified**
-
-  - request has arrived at server
-  - server has determined that the response has not changed since this particular client last requested it
-    - to determine this the server _might_ have re-executed the business-logic for that request
-  - server responds with 302 and empty body
-  - might not have saved server-computation-time, but does save on payload, which makes transfer faster.
-
 - `200 from cache`:
 
-  -
+  - browser has determined that resource is still fresh in cache
+
+- `304`: **Not modified**
+
+  - browser has determined that resouce is no longer fresh in cache, or has obtained a `Cache-Control: (no-store|no-cache)`
+  - request has arrived at server
+  - server has determined (based on `ETag` or `Last-Modified`) that the response has not changed since this particular client last requested it
+    - to determine this, the server _might_ have re-executed the business-logic for that request
+  - server responds with 304 and empty body
+  - might not have saved server-computation-time, but does save on payload, which makes transfer faster.
 
 - `502 vs 404`:
   - `404`: server answered, but hasn't found the requested file
   - `502`: server hasn't answered at all
 
 ## Browser caching headers
-
-Data from here: https://web.dev/http-cache/
-
-<img src="https://web.dev/static/articles/http-cache/image/flowchart-8943547beafd6_856.png ">
 
 - Browser cache:
 
@@ -32,25 +29,31 @@ Data from here: https://web.dev/http-cache/
       - browser will try to contact the server again
       - but if the server is not available, browsers will serve from stale cache
 
-- Server-Headers:
-  - `expires`: old
-  - `pragma: no-cache`: old
-  - `Cache-Control`:
-    - `max-age`
-    - `public/private`: if public, may also be cached on CDNs and intermediate proxies
-    - `no-store`: ignore browser-cache, always fetch from server
-    - `no-cache`: always ask server if file has changed. Serve cached if server returns 304.
-    - `must-revalidate`: once local copy has gone stale, ask server if file has changed. Serve cached if server returns 304.
-
 Default cache-validation:
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/cache-validation.svg">
 
 This same process also works with `Last-Modified` instead of `ETag` and `If-Modified-Since` instead of `If-None-Match`.
 
-- Default cache validation process can be skipped to different degrees with the `Cache-Control` arguments `no-store`, `no-cache` and `must-revalidate`.
 - If server sets both `ETag` and `Last-Modified`, then the first to go stale causes a refresh.
 - If server sends neither `ETag` nor `Last-Modified`, then no cache-validation takes place (except as long as the resource is younger than `max-age`) ... I think.
+- If the server is not available upon checking if Etag has changed, even a stale cache can be served as a last resort.
+
+The default cache validation process can be skipped to different degrees with the `Cache-Control` arguments `no-store`, `no-cache` and `must-revalidate`.
+
+- Server-Headers:
+  - `expires`: old
+  - `pragma: no-cache`: old
+  - `Cache-Control`:
+    - `max-age`: defines, where the fresh/stale border lies
+    - `public/private`: if public, may also be cached on CDNs and intermediate proxies
+    - `no-store`: ignore browser-cache, always fetch from server
+    - `no-cache`: always ask server if file has changed. Serve cached if server returns 304.
+    - `must-revalidate`: once local copy has gone stale, ask server if file has changed. Serve cached if server returns 304. This is actually the default cache validation process ... except that, contrary to the default, `must-revalidate` won't return a stale cache if the server is not reachable.
+
+Header decision diagram:
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/cache_control_decision_chart.png">
+Image from here: https://web.dev/http-cache/
 
 ## Encoding of data
 
