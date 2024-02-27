@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="2074.0645"
+   height="1864.9324"
+   viewBox="0 0 2074.0645 1864.9324"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="cache-validation.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="0.33287037"
+     inkscape:cx="869.70793"
+     inkscape:cy="892.23922"
+     inkscape:window-width="1920"
+     inkscape:window-height="1163"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(59.193611,-28.110748)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="1677.996"
+       y="63.338085"
+       id="text1442"><tspan
+         sodipodi:role="line"
+         id="tspan1440"
+         x="1677.996"
+         y="63.338085">Server</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="946.61438"
+       y="205.40176"
+       id="text3360"><tspan
+         sodipodi:role="line"
+         id="tspan3358"
+         x="946.61438"
+         y="205.40176">Etag = hash of returned content</tspan><tspan
+         sodipodi:role="line"
+         x="946.61438"
+         y="255.40176"
+         id="tspan3362">Cache-Control: max-age=3600</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#0000ff;fill-opacity:1;stroke:none"
+       x="5.0552363"
+       y="58.501373"
+       id="text6900"><tspan
+         sodipodi:role="line"
+         id="tspan6898"
+         x="5.0552363"
+         y="58.501373">Client</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.17953px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1627.1989,159.20375 H 292.35156 v -26.65918 l -58.43168,24.18044 58.55276,25.77933 0.0636,-23.39986"
+       id="path9193"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.17953px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1682.4855,1143.1046 H 347.63805 v -26.6592 l -58.43168,24.1804 58.55276,25.7793 0.0636,-23.3998"
+       id="path9193-9"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.36142px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1875.9956,909.81232 -184.2834,242.51898 -9.2267,-9.2267 0.4433,16.2943 16.864,0.9803 -8.09,-8.1072"
+       id="path9193-9-7"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.446505px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1875.9956,909.81232 -196.1978,723.75408 -14.0824,-9.2267 0.6766,16.2943 25.7389,0.9803 -12.3475,-8.1072"
+       id="path9193-9-7-3"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.17953px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1665.7154,1624.3397 H 330.86786 v -26.6592 l -58.4317,24.1804 58.5528,25.7793 0.064,-23.3998"
+       id="path9193-9-5"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.17953px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 153.40137,855.14453 H 1488.2487 v 26.65918 l 58.4317,-24.18044 -58.5528,-25.77933 -0.064,23.39986"
+       id="path9193-5"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.08638px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 133.1672,161.47497 V 1782.1186 h -18.62671 l 16.89482,70.942 18.01195,-71.0891 -16.34942,-0.078"
+       id="path9193-8"
+       sodipodi:nodetypes="cccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="59.776871"
+       y="1892.4767"
+       id="text11655"><tspan
+         sodipodi:role="line"
+         id="tspan11653"
+         x="59.776871"
+         y="1892.4767">time</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#0000ff;fill-opacity:1;stroke:none"
+       x="31.759514"
+       y="619.10162"
+       id="text14617"><tspan
+         sodipodi:role="line"
+         id="tspan14615"
+         x="31.759514"
+         y="619.10162">3600 sec</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#0000ff;fill-opacity:1;stroke:none"
+       x="145.81311"
+       y="462.0162"
+       id="text19355"><tspan
+         sodipodi:role="line"
+         id="tspan19353"
+         x="145.81311"
+         y="462.0162">use local cache</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#0000ff;fill-opacity:1;stroke:none"
+       x="200.94585"
+       y="780.76471"
+       id="text25098"><tspan
+         sodipodi:role="line"
+         id="tspan25096"
+         x="200.94585"
+         y="780.76471">has ETag changed?</tspan><tspan
+         sodipodi:role="line"
+         x="200.94585"
+         y="830.76471"
+         id="tspan25100">If-None-Match: &lt;ETag&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="1636.1989"
+       y="847.80811"
+       id="text29448"><tspan
+         sodipodi:role="line"
+         id="tspan29446"
+         x="1636.1989"
+         y="847.80811">ETag still matches?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="356.47623"
+       y="2009.4019"
+       id="text44796"
+       transform="rotate(-48.631384)"><tspan
+         sodipodi:role="line"
+         id="tspan44794"
+         x="356.47623"
+         y="2009.4019">yes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="-638.24017"
+       y="2075.2241"
+       id="text47044"
+       transform="rotate(-71.762127)"><tspan
+         sodipodi:role="line"
+         id="tspan47042"
+         x="-638.24017"
+         y="2075.2241">no</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="1191.1991"
+       y="1176.6381"
+       id="text55993"><tspan
+         sodipodi:role="line"
+         id="tspan55991"
+         x="1191.1991"
+         y="1176.6381">304, body empty</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none"
+       x="1127.2402"
+       y="1669.5619"
+       id="text60617"><tspan
+         sodipodi:role="line"
+         id="tspan60615"
+         x="1127.2402"
+         y="1669.5619">new Etag, body: new image,</tspan><tspan
+         sodipodi:role="line"
+         x="1127.2402"
+         y="1719.5619"
+         id="tspan60619">Cache-Control: max-age=3600</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#0000ff;fill-opacity:1;stroke:none"
+       x="161.52892"
+       y="1210.9858"
+       id="text66015"><tspan
+         sodipodi:role="line"
+         id="tspan66013"
+         x="161.52892"
+         y="1210.9858">renew cache </tspan><tspan
+         sodipodi:role="line"
+         x="161.52892"
+         y="1260.9858"
+         id="tspan66017">for another 3600s</tspan></text>
+  </g>
+</svg>
