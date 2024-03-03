@@ -252,6 +252,28 @@ volumes:
 
 `docker compose up`
 
+```php
+// wp-config.php
+
+/**
+ * For developers: WordPress debugging mode.
+ *
+ * Change this to true to enable the display of notices during development.
+ * It is strongly recommended that plugin and theme developers use WP_DEBUG
+ * in their development environments.
+ *
+ * For information on other constants that can be used for debugging,
+ * visit the documentation.
+ *
+ * @link https://wordpress.org/documentation/article/debugging-in-wordpress/
+ */
+define('WP_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', ''));
+define('WP_DEBUG_DISPLAY', !!getenv_docker('WORDPRESS_DEBUG', ''));
+define('WP_DEBUG_LOG', !!getenv_docker('WORDPRESS_DEBUG', ''));
+define('SCRIPT_DEBUG', !!getenv_docker('SCRIPT_DEBUG', ''));
+define('WP_DEVELOPMENT_MODE', 'theme');
+```
+
 ## WP CLI
 
 https://developer.wordpress.org/cli/commands/scaffold/post-type/
