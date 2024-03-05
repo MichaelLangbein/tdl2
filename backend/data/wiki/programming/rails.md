@@ -101,7 +101,11 @@ Important functions:
 - `article_path <model-object>`: converts `Article` instance into `articles/id`
 - `asset_path`
 - `link_to <link-text> <destination | model-object>`
-  - `destination`: `root_path` or `<your-model-name>_path` or `model-object`
+  - `destination`:
+    - `root_path`
+    - or `<your-model-name>_path`
+    - or `model-object`
+    - or `<controllername>_<methodname>_path`
 - `button_to <label-text>, <model-object>, method: :delete`
 - `render`:
   - `render :<view-name> <params>`: evaluate a view

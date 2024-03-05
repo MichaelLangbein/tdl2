@@ -272,6 +272,7 @@ define('WP_DEBUG_DISPLAY', !!getenv_docker('WORDPRESS_DEBUG', ''));
 define('WP_DEBUG_LOG', !!getenv_docker('WORDPRESS_DEBUG', ''));
 define('SCRIPT_DEBUG', !!getenv_docker('SCRIPT_DEBUG', ''));
 define('WP_DEVELOPMENT_MODE', 'theme');
+// you can now write to `debug.log` using `error_log`
 ```
 
 ## WP CLI
@@ -1045,20 +1046,19 @@ But it has some drawbacks:
 ```php
 <?php
 
-
-/**
- * Based on https://accreditly.io/articles/how-to-create-a-crud-in-wordpress-without-using-plugins#content-section-2-creating-a-custom-admin-menu-item
- */
+namespace Michaellangbein\Citations;
 
 
- class TableConnection {
+
+class TableConnection
+{
 
     readonly string $tableName;
     readonly array $fields;
     readonly string $keys;
 
     public function __construct(
-        private $wpdb,
+        protected $wpdb,
         string $tableName,
         array $fields,  // array("id" => "mediumint(9) NOT NULL AUTO_INCREMENT", "name" => "tinytext NOT NULL", ...)
         string $keys    // "PRIMARY KEY (id), INDEX name (name), INDEX address (address)"
@@ -1074,7 +1074,8 @@ But it has some drawbacks:
         $this->keys = $keys;
     }
 
-    public function createTable() {
+    public function createTable()
+    {
         $charset_collate = $this->wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (";
@@ -1087,21 +1088,27 @@ But it has some drawbacks:
         dbDelta($sql);
     }
 
-    public function deleteTable() {
-        $this->wpdb->query( "DROP TABLE IF EXISTS $this->tableName" );
+    public function deleteTable()
+    {
+        $this->wpdb->query("DROP TABLE IF EXISTS $this->tableName");
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         $results = $this->wpdb->get_results("SELECT * FROM $this->tableName");
         return $results;
     }
 
-    public function getById($id) {
-        $row = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $this->tableName WHERE id = %d", $id));
+    public function getById($id)
+    {
+        $row = $this->wpdb->get_row(
+            $this->wpdb->prepare("SELECT * FROM $this->tableName WHERE id = %d", $id)
+        );
         return $row;
     }
 
-    public function insert($data) {
+    public function insert($data)
+    {
         $data = $this->sanitize($data);
         if (!$data) {
             echo "Error: sanitation failed.";
@@ -1110,24 +1117,59 @@ But it has some drawbacks:
         $this->wpdb->insert($this->tableName, $data);
     }
 
-    public function update($idField, $id, $data) {
+    public function update($idField, $id, $data)
+    {
         $data = $this->sanitize($data);
         if (!$data) {
             echo "Error: sanitation failed.";
             return;
         }
-        $this->wpdb->update( $this->tableName, $data, array($idField => $id) );
+        $this->wpdb->update($this->tableName, $data, array($idField => $id));
     }
 
-    public function delete($id) {
-        $this->wpdb->query( "DELETE FROM `$this->tableName` WHERE id = $id" );
+    public function delete($id)
+    {
+        $this->wpdb->query(
+            $this->wpdb->prepare("DELETE FROM `$this->tableName` WHERE  id = %d", $id)
+        );
     }
 
+    protected function sanitize($data)
+    {
+        $out = array();
+        foreach ($this->fields as $key => $description) {
+            if ($key == "id")
+                continue;
+            if (array_key_exists($key, $data)) {
+                $datum = $data[$key];
+                $sanitized = $datum;
+                $type = strtolower(explode("(", explode(" ", $description)[0])[0]);
+                switch ($type) {
+                    case "varchar":
+                    case "text":
+                        // I think wpdb already does this, though!
+                        $sanitized = $this->wpdb->_real_escape($datum);
+                        break;
+                    default:
+                        break;
+                }
+                $out[$key] = $sanitized;
+            } else {
+                return false;
+            }
+        }
+        return $out;
+    }
 
-    /** add_action('rest_api_init', dbc->registerRest) */
-    public function registerRest() {
+    /**
+     * add_action('rest_api_init', dbc->registerRest)
+     * Then available at http://localhost:8080/wp-json/wp_units/v1/all
+     * Requires auth: https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
+     * */
+    public function registerRest()
+    {
         register_rest_route(
-            "/$this->tableName/v1",
+            "$this->tableName/v1",
             "/all",
             array(
                 "methods" => "GET",
@@ -1141,29 +1183,99 @@ But it has some drawbacks:
         );
     }
 
-    private function sanitize($data) {
-        $out = array();
-        foreach ($this->fields as $key => $val) {
-            if ($key == "id") continue;
-            if (array_key_exists($key, $data)) {
-                $out[$key] = $data[$key];
-            } else {
-                return false;
-            }
-        }
-        return $out;
+}
+
+class HtmlTable
+{
+
+    private $rows = [];
+    public function __construct(private array $headers, private string $tableClasses)
+    {
     }
 
- }
+    public function addRow(array $row)
+    {
+        foreach ($this->headers as $key) {
+            if (!array_key_exists($key, $row)) {
+                throw new \Exception("New row doesn't contain an entry for $key.");
+            }
+        }
+        $this->rows[] = $row;
+    }
+
+    public function render($headerPlacement = "top"): string
+    {
+        switch ($headerPlacement) {
+            case "top":
+                return $this->renderHeaderTop();
+            case "left":
+                return $this->renderHeaderLeft();
+            default:
+                throw new \Exception("Unknown header-placement: $headerPlacement");
+        }
+    }
+
+    private function renderHeaderTop()
+    {
+        $html = "<table class='$this->tableClasses'>";
+
+        $html .= "<thead><tr>";
+        foreach ($this->headers as $header) {
+            $html .= "<th>$header</th>";
+        }
+        $html .= "</tr></thead>";
+
+        $html .= "<tbody>";
+        foreach ($this->rows as $row) {
+            $html .= "<tr>";
+            foreach ($this->headers as $key) {
+                $html .= "<td>" . $row[$key] . "</td>";
+            }
+            $html .= "</tr>";
+        }
+        $html .= "</tbody>";
+
+        $html .= "</table>";
+        return $html;
+    }
 
 
-class TableUI {
+    private function renderHeaderLeft()
+    {
+        $html = "<table class='$this->tableClasses'>";
+
+        $data = [];
+        foreach ($this->headers as $header) {
+            $data[$header] = [];
+        }
+        foreach ($this->rows as $row) {
+            foreach ($this->headers as $header) {
+                $data[$header][] = $row[$header];
+            }
+        }
+
+        foreach ($data as $header => $values) {
+            $html .= "<tr><th>$header</th>";
+            foreach ($values as $value) {
+                $html .= "<td>$value</td>";
+            }
+            $html .= "</tr>";
+        }
+
+        $html .= "</table>";
+        return $html;
+    }
+}
+
+
+class TableUI
+{
 
     protected string $nonceName;
     protected string $slug;
 
     public function __construct(
-        protected TableConnection $tableConnection
+        readonly TableConnection $tableConnection
     ) {
 
         $slug = strtolower($tableConnection->tableName);
@@ -1173,39 +1285,61 @@ class TableUI {
         $this->nonceName = $nonceName;
     }
 
-    public function createTable() {
+    public function createTable()
+    {
         $this->tableConnection->createTable();
     }
 
-    public function deleteTable() {
+    public function deleteTable()
+    {
         $this->tableConnection->deleteTable();
     }
 
-    /** add_action('admin_menu', $dbc->createAdminMenu); */
-    public function createAdminMenu() {
-            $page_title = $this->slug;
-            $menu_title = $this->slug;
-            $capability = 'manage_options';
-            $menu_slug = $this->slug;
-            $function = function () {echo $this->tableMarkup(); };
-            $icon_url = 'dashicons-admin-generic';
-            $position = 25;
-
-            add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position);
-
-            // Submenu pages
-            add_submenu_page($menu_slug, 'Add New', 'Add New', $capability, $this->slug . '-add', function () { echo $this->addEntryMarkup(); });
-            add_submenu_page($menu_slug, 'Edit', 'Edit', $capability, $this->slug . '-edit', function () {echo $this->editEntryMarkup(); });
-            add_submenu_page($menu_slug, 'Delete', 'Delete', $capability, $this->slug . '-delete', function () {echo $this->deleteEntryMarkup(); });
+    public function registerRest()
+    {
+        $this->tableConnection->registerRest();
     }
 
-    public function tableMarkup() {
+    /** add_action('admin_menu', $dbc->createAdminMenu); */
+    public function createAdminMenu($parent_slug)
+    {
+        $capability = 'manage_options';
+
+        // Submenu pages
+        add_submenu_page($parent_slug, $this->slug, $this->slug, $capability, $this->slug, function () {
+            echo $this->tableMarkup();
+        });
+        add_submenu_page($this->slug, $this->slug . ': Add New', $this->slug . ': Add New', $capability, $this->slug . '-add', function () {
+            echo $this->addEntryMarkup();
+        });
+        add_submenu_page($this->slug, $this->slug . ': Edit', $this->slug . ': Edit', $capability, $this->slug . '-edit', function () {
+            echo $this->editEntryMarkup();
+        });
+        add_submenu_page($this->slug, $this->slug . ': Delete', $this->slug . ': Delete', $capability, $this->slug . '-delete', function () {
+            echo $this->deleteEntryMarkup();
+        });
+    }
+
+    public function tableMarkup()
+    {
         $results = $this->tableConnection->getAll();
 
         $markup = '<div class="wrap">';
         $markup .= "<h1 class='wp-heading-inline'>" . $this->tableConnection->tableName . "</h1>";
         $markup .= '<a href="' . admin_url("admin.php?page=" . $this->slug . "-add") . '" class="page-title-action">Add New</a>';
         $markup .= '<hr class="wp-header-end">';
+
+        // $fields = array_keys($this->tableConnection->fields);
+        // $fields[] = "operations";
+        // $table = new HtmlTable($fields, "wp-list-table widefat fixed striped");
+        // foreach ($results as $row) {
+        //     $row["operations"] = '<a href="' . admin_url('admin.php?page=' . $this->slug . '-edit&id=' . $row->id) . '" >Edit</a>';
+        //     $row["operations"] .= " | ";
+        //     $row["operations"] .= '<a href="' . admin_url('admin.php?page=' . $this->slug . '-delete&id=' . $row->id) . '" class="delete-link"   >Delete</a>';
+        //     $table->addRow($row);
+        // }
+        // $markup .= $table->render();
+
 
         $markup .= '<table class="wp-list-table widefat fixed striped">';
         $markup .= '<thead><tr>';
@@ -1235,7 +1369,8 @@ class TableUI {
         return $markup;
     }
 
-    public function addEntryMarkup() {
+    public function addEntryMarkup()
+    {
         $markup = "";
 
         $nonceAction = $this->slug . "_add";
@@ -1253,7 +1388,8 @@ class TableUI {
         $markup .= '<form method="post">';
         $markup .= '<table class="form-table">';
         foreach ($this->tableConnection->fields as $key => $val) {
-            if ($key == "id") continue;
+            if ($key == "id")
+                continue;
             $markup .= "<tr>";
             $markup .= "<th scope='row'><label for='$key'>$key</label></th>";
             $markup .= "<td><input type='text' name='$key' id='$key' class='regular-text' required></td>";
@@ -1269,7 +1405,8 @@ class TableUI {
         return $markup;
     }
 
-    public function editEntryMarkup() {
+    public function editEntryMarkup()
+    {
         $markup = "";
 
         $nonceAction = $this->slug . "_edit";
@@ -1295,7 +1432,8 @@ class TableUI {
         $markup .= '<form method="post">';
         $markup .= '<table class="form-table">';
         foreach ($row as $key => $val) {
-            if ($key == "id") continue;
+            if ($key == "id")
+                continue;
             $markup .= "<tr>";
             $markup .= "<th scope='row'><label for='$key'>$key</label></th>";
             $markup .= "<td><input type='text' name='$key' id='$key' class='regular-text' required value='$val'></td>";
@@ -1311,7 +1449,8 @@ class TableUI {
         return $markup;
     }
 
-    public function deleteEntryMarkup() {
+    public function deleteEntryMarkup()
+    {
         $markup = "";
 
         $nonceAction = $this->slug . "_delete";
@@ -1328,10 +1467,9 @@ class TableUI {
             $this->tableConnection->delete($id);
             $markup .= '<div class="notice notice-success is-dismissible"><p>Datum removed successfully!</p></div>';
             $markup .= '<div class="wrap"><button class="button button-primary" onclick="window.location.href=`' . admin_url("admin.php?page=" . $this->slug) . '`">Back</button></div>';
-        }
-        else {
+        } else {
             $markup .= '<div class="wrap">';
-            $markup .= '<h1 class="wp-heading-inline">Remove datum '. $row->id .'</h1>';
+            $markup .= '<h1 class="wp-heading-inline">Remove datum ' . $row->id . '</h1>';
             $markup .= '<hr class="wp-header-end">';
 
             $markup .= '<form method="post">';
