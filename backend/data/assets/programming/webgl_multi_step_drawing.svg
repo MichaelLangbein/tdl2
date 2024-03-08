@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="523.35333"
+   height="560.29565"
+   viewBox="0 0 523.35333 560.29565"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="webgl_multi_step_drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="0.54882813"
+     inkscape:cx="408.14235"
+     inkscape:cy="410.87544"
+     inkscape:window-width="1920"
+     inkscape:window-height="1021"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-166.83564,-61.995458)">
+    <path
+       style="fill:#000000;fill-opacity:0.487002;stroke:#000000;stroke-width:3.20875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 252.21998,463.8241 H 439.9152 v -11.30096 l 21.39346,11.49557 -21.62087,10.24013 0.22741,-10.43474"
+       id="path26645"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#000000;fill-opacity:0.487002;stroke:#000000;stroke-width:2.62031;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 224.6402,566.05222 197.05033,20.07038 0.72363,-7.10464 21.72365,9.5146 -23.3542,4.12579 0.90692,-6.53575"
+       id="path26645-1"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#000000;fill-opacity:0.487002;stroke:#000000;stroke-width:2.62031;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 224.6402,566.05222 180.12198,-82.38765 -2.97049,-6.49429 23.5519,-2.7844 -18.05685,15.37501 -2.52456,-6.09632"
+       id="path26645-1-8"
+       sodipodi:nodetypes="cccccc" />
+    <g
+       id="g38614"
+       transform="translate(2.8889389)">
+      <rect
+         style="fill:#ff1700;fill-opacity:0.256784;stroke:#5b595a;stroke-width:3.2888;stroke-linejoin:bevel"
+         id="rect23930"
+         width="118.03513"
+         height="187.08641"
+         x="176.09569"
+         y="132.1102" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="200.30585"
+         y="167.03574"
+         id="text1970"><tspan
+           sodipodi:role="line"
+           id="tspan1968"
+           x="200.30585"
+           y="167.03574">Program</tspan><tspan
+           sodipodi:role="line"
+           x="200.30585"
+           y="180.36911"
+           id="tspan1972" /><tspan
+           sodipodi:role="line"
+           x="200.30585"
+           y="193.70248"
+           id="tspan1974">Framebuffer</tspan><tspan
+           sodipodi:role="line"
+           x="200.30585"
+           y="207.03586"
+           id="tspan1976" /><tspan
+           sodipodi:role="line"
+           x="200.30585"
+           y="220.36923"
+           id="tspan1978">Texture-Units</tspan></text>
+      <rect
+         style="fill:#ff9955;fill-opacity:0.487001;stroke:#5b595a;stroke-width:2.6;stroke-linejoin:bevel"
+         id="rect23932"
+         width="93.512932"
+         height="37.13184"
+         x="406.42563"
+         y="98.860374" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="427.25491"
+         y="120.20496"
+         id="text6152"><tspan
+           sodipodi:role="line"
+           id="tspan6150"
+           x="427.25491"
+           y="120.20496">Program1</tspan></text>
+      <rect
+         style="opacity:0.190748;fill:#ff9955;fill-opacity:0.487001;stroke:#5b595a;stroke-width:2.98155;stroke-linejoin:bevel"
+         id="rect23934"
+         width="90.864555"
+         height="37.011829"
+         x="462.08243"
+         y="142.35275" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;opacity:0.190748"
+         x="481.62921"
+         y="163.70764"
+         id="text9906"><tspan
+           sodipodi:role="line"
+           id="tspan9904"
+           x="481.62921"
+           y="163.70764">Program2</tspan></text>
+      <rect
+         style="fill:#a861f2;fill-opacity:0.432078;stroke:#5b595a;stroke-width:2.6;stroke-linejoin:bevel"
+         id="rect23936"
+         width="107.46272"
+         height="40.163784"
+         x="380.40979"
+         y="202.70718" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="401.08636"
+         y="226.76566"
+         id="text16576"><tspan
+           sodipodi:role="line"
+           id="tspan16574"
+           x="401.08636"
+           y="226.76566">Framebuffer</tspan></text>
+      <rect
+         style="fill:#005aff;fill-opacity:0.242886;stroke:#5b595a;stroke-width:2.6;stroke-linejoin:bevel"
+         id="rect23938"
+         width="96.552994"
+         height="27.558163"
+         x="457.23663"
+         y="271.68558" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="486.28912"
+         y="289.27716"
+         id="text20672"><tspan
+           sodipodi:role="line"
+           id="tspan20670"
+           x="486.28912"
+           y="289.27716">Texture</tspan></text>
+      <path
+         style="fill:#000000;fill-opacity:0.487002;stroke:#000000;stroke-width:1.48089;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 441.4989,230.25672 46.13434,43.41909 6.8554,-3.34107 -1.71506,8.3475 -11.52616,-1.97406 6.38582,-3.03237"
+         id="path26645-4"
+         sodipodi:nodetypes="cccccc" />
+      <path
+         style="fill:#000000;fill-opacity:0.487002;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 265.48916,190.95387 105.81234,29.06801 3.10829,-11.3147 8.89865,14.8227 -15.00518,6.9042 2.99824,-10.4122"
+         id="path26645-0"
+         sodipodi:nodetypes="cccccc" />
+      <path
+         style="fill:#000000;fill-opacity:0.487002;stroke:#000000;stroke-width:2.51511;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 248.19044,163.25512 141.97101,-24.60252 -4.78278,-8.3505 21.04696,5.69012 -12.02002,10.40063 -4.24416,-7.74025"
+         id="path26645-3"
+         sodipodi:nodetypes="cccccc" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 207.71964,225.05213 v 69.94915"
+         id="path27604" />
+      <text
+         xml:space="preserve"
+         style="font-size:21.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="161.85295"
+         y="78.203766"
+         id="text30632"><tspan
+           sodipodi:role="line"
+           id="tspan30630"
+           x="161.85295"
+           y="78.203766"
+           style="font-size:21.3333px">Phase 1: render Program1 to framebuffer</tspan></text>
+    </g>
+    <g
+       id="g38641"
+       transform="translate(-2.8889389)">
+      <rect
+         style="fill:#ff1700;fill-opacity:0.256784;stroke:#5b595a;stroke-width:3.2888;stroke-linejoin:bevel"
+         id="rect23930-4"
+         width="118.03513"
+         height="187.08641"
+         x="181.87357"
+         y="433.5603" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="206.08372"
+         y="468.48584"
+         id="text1970-4"><tspan
+           sodipodi:role="line"
+           id="tspan1968-4"
+           x="206.08372"
+           y="468.48584">Program</tspan><tspan
+           sodipodi:role="line"
+           x="206.08372"
+           y="481.81921"
+           id="tspan1972-7" /><tspan
+           sodipodi:role="line"
+           x="206.08372"
+           y="495.15259"
+           id="tspan1974-6">Framebuffer</tspan><tspan
+           sodipodi:role="line"
+           x="206.08372"
+           y="508.48596"
+           id="tspan1976-3" /><tspan
+           sodipodi:role="line"
+           x="206.08372"
+           y="521.81934"
+           id="tspan1978-1">Texture-Units</tspan></text>
+      <rect
+         style="opacity:0.314204;fill:#ff9955;fill-opacity:0.487001;stroke:#5b595a;stroke-width:2.6;stroke-linejoin:bevel"
+         id="rect23932-7"
+         width="93.512932"
+         height="37.13184"
+         x="412.20349"
+         y="400.31046" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;opacity:0.314204"
+         x="433.03278"
+         y="421.65506"
+         id="text6152-5"><tspan
+           sodipodi:role="line"
+           id="tspan6150-9"
+           x="433.03278"
+           y="421.65506">Program1</tspan></text>
+      <rect
+         style="opacity:1;fill:#ff9955;fill-opacity:0.487001;stroke:#5b595a;stroke-width:2.98155;stroke-linejoin:bevel"
+         id="rect23934-6"
+         width="90.864555"
+         height="37.011829"
+         x="467.86029"
+         y="443.80286" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;opacity:1"
+         x="487.40707"
+         y="465.15775"
+         id="text9906-2"><tspan
+           sodipodi:role="line"
+           id="tspan9904-1"
+           x="487.40707"
+           y="465.15775">Program2</tspan></text>
+      <rect
+         style="opacity:0.301338;fill:#a861f2;fill-opacity:0.432078;stroke:#5b595a;stroke-width:2.6;stroke-linejoin:bevel"
+         id="rect23936-7"
+         width="107.46272"
+         height="40.163784"
+         x="386.18765"
+         y="504.15729" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;opacity:0.301338"
+         x="406.86423"
+         y="528.21576"
+         id="text16576-8"><tspan
+           sodipodi:role="line"
+           id="tspan16574-5"
+           x="406.86423"
+           y="528.21576">Framebuffer</tspan></text>
+      <rect
+         style="fill:#005aff;fill-opacity:0.242886;stroke:#5b595a;stroke-width:2.6;stroke-linejoin:bevel"
+         id="rect23938-7"
+         width="96.552994"
+         height="27.558163"
+         x="463.0145"
+         y="573.13568" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="492.06699"
+         y="590.72723"
+         id="text20672-4"><tspan
+           sodipodi:role="line"
+           id="tspan20670-1"
+           x="492.06699"
+           y="590.72723">Texture</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 213.49751,526.50222 v 69.94915"
+         id="path27604-7" />
+      <text
+         xml:space="preserve"
+         style="font-size:21.3333px;line-height:1.25;font-family:sans-serif;word-spacing:0px"
+         x="167.63083"
+         y="379.65387"
+         id="text30632-5"><tspan
+           sodipodi:role="line"
+           id="tspan30630-3"
+           x="167.63083"
+           y="379.65387"
+           style="font-size:21.3333px">Phase 2: use texture from 1 as input to Program2</tspan></text>
+    </g>
+  </g>
+</svg>
