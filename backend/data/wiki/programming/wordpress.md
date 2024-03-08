@@ -270,7 +270,7 @@ volumes:
 define('WP_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', ''));
 define('WP_DEBUG_DISPLAY', !!getenv_docker('WORDPRESS_DEBUG', ''));
 define('WP_DEBUG_LOG', !!getenv_docker('WORDPRESS_DEBUG', ''));
-define('SCRIPT_DEBUG', !!getenv_docker('SCRIPT_DEBUG', ''));
+define('SCRIPT_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', ''));
 define('WP_DEVELOPMENT_MODE', 'theme');
 // you can now write to `debug.log` using `error_log`
 ```
@@ -1597,6 +1597,17 @@ Things that don't work with static sites:
 
 Only partial static site:
 https://wordpress.org/support/topic/do-you-have-to-convert-your-whole-site-to-static-or-partial-conversion-supported/
+
+You can use SimplyStatic, but make sure that the docker-container can curl itself!
+
+```php
+// plugins/simply-static/simply-static.php
+add_filter("ss_origin_url", function ($url) {
+  $ip = "1.2.3.4"; // the *host* ip, not the container's ip.
+  $url = "http://$ip:8080";
+  return $url;
+});
+```
 
 ## Deployment
 

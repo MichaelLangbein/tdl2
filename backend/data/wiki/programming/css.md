@@ -161,6 +161,13 @@ Grid elements may overlap each other:
 
 # Animation
 
+CSS animations:
+
+- pick the element that you want to animate
+- the `transition` or `animation` property is triggered when:
+
+  - one of the animate-able properties changes doe to js adding a new class
+
 - transition
   - `transition: <which property to animate (default=all)> <duration> <ease | linear | bezier> <delay>`
   - works with:

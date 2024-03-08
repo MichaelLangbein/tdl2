@@ -332,6 +332,155 @@ I've documented these points in a simple github-issue: https://github.com/maplib
 
 ## Placing scene is such a way that left eye looks exactly at some given point
 
+## Performance
+
+Maplibre can be slow. Reason:
+
+```python
+for phase in ["offscreen", "transparent", "opaque", "debug"]:
+  for layer in getLayersFor(phase):
+    for tile in tiles:
+      updateUniforms()
+      updateAttributes()
+      updateTextures()
+      render()
+```
+
+This means a few things:
+
+- one frame is created by many, many `drawElements` calls.
+  - you can still get the whole output frame if you enable `preserveDrawingBuffer`, but getting that data down to the CPU is still expensive (~140ms!)
+
+## Monkey patching painter to have maplibre draw to a framebuffer instead of screen
+
+**Note**: I think you could alternatively have maplibre draw to canvas like normal, then render threejs into _another_ canvas, but using the first canvas in a [canvas texture](https://threejs.org/docs/#api/en/textures/CanvasTexture).
+
+```ts
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+import { Map } from 'maplibre-gl';
+
+import style from '../public/osmStyleDLR.json';
+import {
+  ArrayBundle,
+  AttributeData,
+  Context,
+  createEmptyFramebufferObject,
+  Program,
+  TextureData,
+  UniformData,
+} from './engine2';
+import { rectangleA } from './utils/shapes';
+
+/*********************************************************
+ * CREATING MAP
+ ********************************************************/
+
+const mapContainer = document.getElementById('app') as HTMLDivElement;
+
+const map = new Map({
+  container: mapContainer,
+  center: { lon: 12, lat: 47 },
+  zoom: 12,
+  pitch: 30,
+  bearing: 45,
+  antialias: true,
+  // @ts-ignore
+  style: {
+    ...style,
+  },
+});
+
+/*********************************************************
+ * MONKEY PATCHING PAINTER TO RENDER TO FB
+ ********************************************************/
+
+const gl = map.painter.context.gl as WebGL2RenderingContext;
+const canvas = gl.canvas;
+const fbo = createEmptyFramebufferObject(gl, canvas.width, canvas.height, 'ubyte4', 'display');
+
+map.on('load', (ev) => {
+  console.log('monkey patching ', map.painter.context.bindFramebuffer);
+  const originalBindFB = map.painter.context.bindFramebuffer;
+  const originalBindFbSet = originalBindFB.set.bind(originalBindFB);
+  const monkeyPatchedBindFbSet = function (v?: WebGLFramebuffer | null) {
+    if (v !== null) return originalBindFbSet(v);
+    else return originalBindFbSet(fbo.framebuffer);
+  }.bind(originalBindFB);
+  map.painter.context.bindFramebuffer.set = monkeyPatchedBindFbSet;
+});
+
+/*********************************************************
+ * USING MAP FB IN CUSTOM PROGRAM
+ ********************************************************/
+
+const context = new Context(gl, true);
+
+const rect = rectangleA(2, 2);
+
+const postProcessor = new ArrayBundle(
+  new Program(
+    /*glsl*/ `#version 300 es
+    precision mediump float;
+    in vec4 a_vertex;
+    in vec2 a_textureCoord;
+    out vec2 v_textureCoord;
+    
+    void main() {
+        v_textureCoord = a_textureCoord;
+        gl_Position = a_vertex;  
+    }
+    `,
+    /*glsl*/ `#version 300 es
+    precision mediump float;
+    uniform sampler2D u_texture;
+    uniform vec2 u_textureSize;
+    in vec2 v_textureCoord;
+    out vec4 fragColor;
+
+    void main() {
+
+        vec2 deltaX = vec2(1.0 / u_textureSize.x, 0.0);
+        vec2 deltaY = vec2(0.0, 1.0 / u_textureSize.y);
+        vec4 texData00 = texture(u_texture, v_textureCoord );
+        vec4 texDataPX = texture(u_texture, v_textureCoord + deltaX);
+        vec4 texDataMX = texture(u_texture, v_textureCoord - deltaX);
+        vec4 texDataPY = texture(u_texture, v_textureCoord + deltaY);
+        vec4 texDataMY = texture(u_texture, v_textureCoord - deltaY);
+
+        fragColor = (texData00 + texDataPX + texDataMX + texDataPX + texDataMY) / 5.0;
+        // fragColor = fragColor * 0.0 + texData00;
+        fragColor = vec4(1.0, texData00.g, texData00.b, 1.0);
+    }
+`
+  ),
+  {
+    a_vertex: new AttributeData(new Float32Array(rect.vertices.flat()), 'vec4', false),
+    a_textureCoord: new AttributeData(new Float32Array(rect.texturePositions.flat()), 'vec2', false),
+  },
+  {
+    u_textureSize: new UniformData('vec2', [canvas.width, canvas.height]),
+  },
+  {
+    u_texture: new TextureData(fbo.texture, 'ubyte4'),
+  },
+  'triangles',
+  rect.vertices.length
+);
+
+/*********************************************************
+ * DRAW CUSTOM PROGRAM ON EVERY MAP-DRAW EVENT
+ ********************************************************/
+
+postProcessor.upload(context);
+postProcessor.initVertexArray(context);
+
+map.on('render', (ev) => {
+  postProcessor.bind(context);
+  postProcessor.draw(context);
+});
+```
+
 # Deckgl
 
 ## Integration

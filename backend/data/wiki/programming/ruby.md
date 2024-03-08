@@ -1,7 +1,9 @@
 # Ruby
 
 ## Functions
+
 Ruby has functions, procs, lambdas and blocks.
+
 - Functions cannot be passed around as arguments
 - Procs can.
   - Procs are also object-instances of the class Proc
@@ -28,7 +30,7 @@ sayHiP.call "Andreas"
 
 
 
-# Block. https://avdi.codes/why-does-ruby-have-blocks/ 
+# Block. https://avdi.codes/why-does-ruby-have-blocks/
 # A yielding function is assumed to have been given a block as its last parameter,
 # even if that block is not explicitly mentioned in the parameter list.
 # Intended as a short hand for the common case of passing one - and only one - function as a parameter.
@@ -55,12 +57,21 @@ yieldingFunction "Sabine" &sayHiP
 ```
 
 ## Objects and keys
+
 ```ruby
 
 
 
 ```
 
-
 ## Modules
+
 In other languages known as mixins.
+
+## Classes
+
+- You can call functions inside a class'es body, but outside of any of its functions.
+  - example: `before_action`
+  - https://stackoverflow.com/questions/1344797/ruby-method-calls-declared-in-class-body
+  - if no source-object (`1.to_s`) or class (`ActiveRecord.save`) is given, that function must belong to either the containing class or one of its parents
+  - Such in-class-body-functions are called once the class definition block is finished.
