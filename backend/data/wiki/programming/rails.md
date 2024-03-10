@@ -8,6 +8,10 @@
 
 ## CLI
 
+- `rbenv`
+  - ruby version manager
+- `gem`: very primitive package functionality, doesn't do transitive installs
+  - `gem  install rails`
 - `bundle`: ruby's equivalent to npm
   - `install`
   - `add <gem-name>`
@@ -162,7 +166,7 @@ Important methods:
 ```ruby
 # db/seeds.rb
 10.times do |x|
-  Post.create title: "fdsafs", body: "fdafdafasd"
+  Post.create title: Faker::Lorem.line, body: Faker::Lorem.paragraph
 end
 ```
 
@@ -180,6 +184,14 @@ rails db:seed
 
 https://prograils.com/three-ways-iterating-tree-like-active-record-structures
 
+### Active support
+
+General ruby-language extensions. Provides methods and classes.
+
+- `ActiveSupport::CurrentAttributes`
+  - Stores per-request data
+  - Available as a context-object everywhere, so no need to pass around as argument
+
 ## Scaffold
 
 Creates a default CRUD implementation: model, views, controller and routes.
@@ -192,13 +204,135 @@ If you already have a model, you can still create migrations, controller and vie
 
 Evaluated form-data is put into the `params` variable.
 
-```
-<%= form_with(model: comment) do |form| %>
+```ruby
+<%= form_with model: @student do |form| %>
+  <div>
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name %>
 
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name %>
+
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+
+     <%= form.submit %>
+    <!--
+      submitting posts to "create" route
+      automatically includes an authenticity token
+    -->
+
+  </div>
 <% end %>
 ```
 
+## Files
+
+- `rails active_storage:install`
+- `rails db:migrate`
+- `rails g action_text:install`
+- `rails db:migrate`
+- `sudo apt install imagemagick`
+
 ## Authentication
+
+### From scratch
+
+```ruby
+# rails g model User email password_digest
+
+
+# routes.rb
+resource :registration
+resource :session
+resource :password
+
+
+# models/user.rb
+class User < ApplicationRecord
+  has_secure_password
+  validates :email presence: true
+  normalizes :email, -> (email) {email.strip.downcase}
+end
+
+# models/current.rb
+class Current < ActiveSupport::CurrentAttributes
+  attribute :user
+end
+
+# registrations_controller.rb
+class RegistrationController < ApplicationController
+
+  def new
+    @user = User.new
+  end
+
+  def create
+    @user = User.new(registration_params)
+    if @user.save
+      login @user
+      redirect_to root_path
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def registration_params
+    params.require(:user).permit(:email, :password, :password_confirmation)
+  end
+end
+
+
+#s controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+
+  private
+
+  def current_user
+    Current.user ||= authenticate_user_from_session
+  end
+
+  def authentica
+    if user = User.find_by(id: session[:user_id])
+  end
+
+  def user_signed_in?
+    current_user.present?
+  end
+
+  def login user
+    Current.user = user
+    reset_session
+    session[:user_id] = user.id
+  end
+
+  def logout user
+    Current.user = nil
+    reset_session
+  end
+end
+
+
+# views/layouts/registrations/new.html.erb
+<h1>Signup</h1>
+<%= form_with model: @user, url: registration_path do |form| %>
+  <% if form.object.errors.any? %>
+    <% form.object.errors.full_message.each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  <% end %>
+
+  <%= form.label :email %>
+  <%= form.email_field :email %>
+
+  <%= form.label :password %>
+  <%= form.password_field :password %>
+
+  <%= form.submit "Sign up" %>
+<% end %>
+```
 
 ### Devise
 
@@ -215,10 +349,15 @@ $ rails db:migrate
 
 ### Authentication Zero
 
+- `bundle add authentication-zero`
+- `rails g authentication`
+  - `--pwd`, `--api`, `--two-factor`
+
 ## Console
 
-A wrapper around `irb` that knows about the current state of your rails-app.
-`./bin/rails console`
+- `./bin/rails console`
+- A wrapper around `irb` that knows about the current state of your rails-app.
+- Has autocomplete
 
 ## Active Storage
 
