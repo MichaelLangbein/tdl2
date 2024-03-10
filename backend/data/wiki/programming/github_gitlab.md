@@ -44,7 +44,7 @@ https://stackoverflow.com/questions/40509838/project-vs-repository-in-github#:~:
   - add project to client-org
   - add users to client-org
     - as members
-    - send them direct link to organization, because they probably haven't gotten a note on their github dashboard or an invitation mail
+    - send them direct link to organization, because they probably haven't gotten a note on their github dashboard (but probably _did_ get an invitation mail)
     - not necessary to explicitly give users read-access to forked repo or write access to projects, they automatically have those rights
       - if users have right to fork repo, they can write to repo
 
