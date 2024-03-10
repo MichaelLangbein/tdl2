@@ -61,6 +61,11 @@ I don't want different clients to see each other.
 - Can guest-user1 see project2? <-- Nope
 - Can guest-user1 and guest-user2 see the actual repo? <-- Jup
 
+## Actions
+- https://m.youtube.com/watch?v=yfBtjLxn_6k&pp=ygUJR2l0aHViIGNp
+- locally simulate with `act`
+
+
 ## Pages
 
 https://pages.github.com
