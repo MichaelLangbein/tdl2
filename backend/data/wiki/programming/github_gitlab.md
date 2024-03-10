@@ -34,7 +34,7 @@ https://stackoverflow.com/questions/40509838/project-vs-repository-in-github#:~:
   - Verify:
     - create private fork of wp-demo
       - for me to host a fork, I must add it to a new org, otherwise github will complain that I already have a copy
-- Stragegy 2.0
+- Strategy 2.0
   - 1 base-repo (private, only me)
   - 1 org per client (stadtwerke-ffb)
     - is this org private or publicly visible?
