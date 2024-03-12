@@ -1,41 +1,37 @@
 # Economics
 
 Terminology:
+
 - Price $p$
 - Each firm has a production function $q(L, K)$
-    - where $L$ is *labor*, coming at a cost $w$(ages)
-    - and $K$ is *capital*, costing $r$(ent)
-    - thus the firms cost is $c(L, K) = wL + rK$
-    - labor can be adjusted in the short term, capital only in the long term
+  - where $L$ is _labor_, coming at a cost $w$(ages)
+  - and $K$ is _capital_, costing $r$(ent)
+  - thus the firms cost is $c(L, K) = wL + rK$
+  - labor can be adjusted in the short term, capital only in the long term
 - We assume that firms don't buy work or capital, they just rent it. Makes cost-calculations easier.
 - Each firm tries to maximize profit $\pi = pq(L, K) - c(L, K)$
 
 # The steps of the game
 
 1. **Short term**:
-    - Givens:
-        - There are *n* firms and *m* consumers
-        - Each firm has some fixed capital $K_0$
-    - Derived:
-        - Consumers:
-            - ...
-        - Producers:
-            - Each firm calculates their costs $c(q | K_0)$
-            - Each firm decides how much they would produce for a price using profit-optimization, yielding $MC = p$, yielding $q_{opt}(p |K_0)$
-                - Additionally, each firm might decide not to produce anything in this round (shutdown-condition) if the price falls below a certain threshold.
-            - The market-supply is just the sum of the individual supplies: $q_{sup}(p) = \sum q_i(p)$
-        - Market:
-            - The market-price $p_0: q_{sup}(p) = q_{dmd}(p)$
+   - Givens:
+     - There are _n_ firms and _m_ consumers
+     - Each firm has some fixed capital $K_0$
+   - Derived:
+     - Consumers:
+       - ...
+     - Producers:
+       - Each firm calculates their costs $c(q | K_0)$
+       - Each firm decides how much they would produce for a price using profit-optimization, yielding $MC = p$, yielding $q_{opt}(p |K_0)$
+         - Additionally, each firm might decide not to produce anything in this round (shutdown-condition) if the price falls below a certain threshold.
+       - The market-supply is just the sum of the individual supplies: $q_{sup}(p) = \sum q_i(p)$
+     - Market:
+       - The market-price $p_0: q_{sup}(p) = q_{dmd}(p)$
 2. **Long term**:
-    - Each firm is given the opportunity to exit the market 
-    - Each firm is given the opportunity to pick a number of capital $K$ to use for the next short term
-        - For this they will minimize cost $c(q, K, L)$, which requires them to have $\frac{\partial q}{\partial L} \frac{1}{w} = \frac{\partial q}{\partial K} \frac{1}{r}$
-    - If the average profit is positive, a new firm may enter the market.
-
-
-
-
-
+   - Each firm is given the opportunity to exit the market
+   - Each firm is given the opportunity to pick a number of capital $K$ to use for the next short term
+     - For this they will minimize cost $c(q, K, L)$, which requires them to have $\frac{\partial q}{\partial L} \frac{1}{w} = \frac{\partial q}{\partial K} \frac{1}{r}$
+   - If the average profit is positive, a new firm may enter the market.
 
 # Producer theory
 
@@ -43,7 +39,7 @@ Terminology:
 
 The firm observes the market price $p$. In a perfectly competitive market, the firm has no influence on $p$.
 
-The firm produces a quantity $q$ to maximize profit  $\pi$.
+The firm produces a quantity $q$ to maximize profit $\pi$.
 They have a fixed amount of capital, so they can only change labor to get the maximizing quantity.
 
 $$ \pi(q|K_0) = pq(L|K_0) - c(L|K_0)$$
@@ -53,34 +49,33 @@ $$ p = w \frac{\partial L^{req}(q|K_0)}{\partial q} $$
 
 This equation is solved for $q$, yielding $q(p|K_0)$, the short run supply.
 
-$\frac{\partial c(L|K_0)}{\partial q}$ is called the *marginal cost* (MC). We see here that the marginal cost is the inverse of the short term supply.
+$\frac{\partial c(L|K_0)}{\partial q}$ is called the _marginal cost_ (MC). We see here that the marginal cost is the inverse of the short term supply.
 
->**Example calculation with Cobb-Douglas**:
+> **Example calculation with Cobb-Douglas**:
 >
 > $q = L^a K_0^{1-a}$
 >
 > $L^{req}(q|K_0) = q^\frac{1}{a} K_0^\frac{a-1}{a}$
-> 
+>
 > $p = w \frac{\partial L^{req}(q|K_0)}{\partial q} = \frac{w}{a} q^\frac{1-a}{a} K_0^\frac{a-1}{a}$
 >
 > Solving for $q$:
 >
 > $ q(p|K_0) = (\frac{p a}{w})^\frac{a}{1-a} K_0 $
 
-
 #### Shutdown condition
+
 Independent of the marginal cost, a firm might chose not to produce anything at all in a round. That would be the case when profit would be less than the costs of producing nothing:
 $$ pq -c(q | K_0) \leq - c(0 | K_0) $$
 This is equivalent to 
 $$ p \leq \frac{c(q|K_0) - c(0|K_0)}{q} = AVC$$
-where $AVC$ stands for average variable cost. 
+where $AVC$ stands for average variable cost.
 
 ## Long term
 
 Again the firm observes the market price $p$. In a perfectly competitive market, the firm has no influence on $p$.
 
-
-In the long term, the firm can set both $L^{opt}$ and $K^{opt}$ to the optimal values given $p$ (not just to the short-term *required*, but long-term sub-optimal $L^{req}$).
+In the long term, the firm can set both $L^{opt}$ and $K^{opt}$ to the optimal values given $p$ (not just to the short-term _required_, but long-term sub-optimal $L^{req}$).
 
 Assuming that the firm wants to produce $q_0$ goods, the firm will want to minimize $c(L, K)$ subject to $q(L, K) = q_0$. This is solved with constrained optimization:
 
@@ -88,13 +83,12 @@ $$ \nabla c(L, K) = \lambda \nabla (q(K, L) - q_0) $$
 $$ q(K, L) = q_0 $$
 
 Written out, this gives us the three equations:
-$$ \frac{\partial c}{\partial L} = \lambda \frac{\partial q(L, K)}{\partial L} $$ 
-$$ \frac{\partial c}{\partial K} = \lambda \frac{\partial q(L, K)}{\partial K} $$ 
+$$ \frac{\partial c}{\partial L} = \lambda \frac{\partial q(L, K)}{\partial L} $$
+$$ \frac{\partial c}{\partial K} = \lambda \frac{\partial q(L, K)}{\partial K} $$
 $$ q(K, L) = q_0 $$
 
 And equating $\lambda$:
 $$ \frac{\partial q(L, K)}{\partial L} \frac{1}{w} = \frac{\partial q(L, K)}{\partial K} \frac{1}{r} $$
-
 
 > **Example calculation with Cobb-Douglas**:
 >
@@ -109,7 +103,7 @@ $$ \frac{\partial q(L, K)}{\partial L} \frac{1}{w} = \frac{\partial q(L, K)}{\pa
 > $ K^{opt}(q) = \frac{q}{(\frac{a}{1-a} \frac{r}{w})^a} $
 >
 > $ L^{opt}(q) = \frac{q}{(\frac{a}{1-a} \frac{r}{w})^{a-1}} $
-> 
+>
 > $c(q) = w\frac{q}{(\frac{a}{1-a} \frac{r}{w})^{a-1}} + r\frac{q}{(\frac{a}{1-a} \frac{r}{w})^a}$
 
 Now something interesting is happening here: $c$ is now a linear function of $q$ and we can therefore not solve for $q$ in $p=\frac{\partial c}{\partial q}$. This means that we can't simply derive $q(p)$!
@@ -117,6 +111,7 @@ Now something interesting is happening here: $c$ is now a linear function of $q$
 This is where game-theory comes into play: it is now up to the firm's managers to decide if they'll want to expand or contract. Probably they'll account in their decision for $\frac{K}{L}$, the average profit in the market, and how much money they have. In the following code we'll plug in a strategy that just expands $K$ by one unit if there is still profit in the market.
 
 # Implementation
+
 ```python
 #%%
 import numpy as np
@@ -172,7 +167,7 @@ class Firm:
         """
             Short term supply.
             Obtained by picking L to optimize profit.
-            $$ 
+            $$
                 \pi(q|p) = qp - c(q)                                                                \\
                 \frac{\partial \pi}{\partial q} = 0   \to    p = \frac{\partial c}{\partial q}      \\
                 p = w \frac{\partial L^{req}(q|K) }{\partial q}                                     \\
@@ -192,10 +187,10 @@ class Firm:
         qAdjusted = np.where(price >= avc, q, 0)
 
         return qAdjusted
-    
+
     def cost(self, quantity):
         return self.rent * self.capital + self.wages * self.__laborRequired(quantity)
-    
+
     def marginalCost(self, quantity):
         """
         $$ \begin{align}
@@ -204,19 +199,19 @@ class Firm:
         \end{align}  $$
         """
         return self.wages * self.__marginalLaborRequired(quantity)
-    
+
     def averageCost(self, quantity):
         cost = self.cost(quantity)
         return cost / quantity
-    
+
     def variableCost(self, quantity):
         cost = self.cost(quantity)
         return cost - self.rent * self.capital
-    
+
     def averageVariableCost(self, quantity):
         variableCost = self.variableCost(quantity)
         return variableCost / quantity
-    
+
     def profit(self, quantity, price):
         costs = self.cost(quantity)
         return price * quantity - costs
@@ -322,7 +317,7 @@ class Market:
         pSettled = prices[indx]
         qSettled = supply[indx]
         return pSettled, qSettled
-    
+
 
     def averageProfit(self):
         pMarket, _ = self.settledPriceAndQuantity()
@@ -363,7 +358,7 @@ class Plotter:
         ax.set_ylim(0, self.maxPrice)
         ax.set_xlim(0, self.maxQuantity)
         return fig, ax
-    
+
 
     def plotFirmCurves(self, firm: Firm, market: Market, maxPrice=10):
         prices = np.linspace(0, maxPrice, 100)
@@ -380,7 +375,7 @@ class Plotter:
         ax.set_xlabel('quantity')
         ax.set_ylabel('price')
 
-        rect = patches.Rectangle((0, pMarket - profitPerUnit), qProduced, profitPerUnit, 
+        rect = patches.Rectangle((0, pMarket - profitPerUnit), qProduced, profitPerUnit,
                                  facecolor='b', alpha=0.2)
         ax.add_patch(rect)
         ax.annotate(f"profit={np.round(profit)}", (0, pMarket), color='b', fontsize=12, ha='left', va='top')
@@ -397,7 +392,7 @@ class Plotter:
 
 
 
-    
+
 
 
 
@@ -429,34 +424,33 @@ axes.plot(nrFirms)
 ```
 
 # Long-run results
+
 The above simulation depends on the `pickCapital` and `shouldExit` strategies that the functions use.
 Therefore, we have little concrete mathematical proofs of their long-term behavior.
 Running such a simulation for a long time however tends to yield a few useful results:
 
-1. The market develops to a point where there is no profit left to be gained. 
-    - Then we have $\pi = 0$, and thus:
-    - $p = \frac{c(q)}{q}$
+1. The market develops to a point where there is no profit left to be gained.
+   - Then we have $\pi = 0$, and thus:
+   - $p = \frac{c(q)}{q}$
 2. ...
-
-
-
-
 
 # Market interventions
 
 ## Effect of subsidies on market
+
 Free market prices for two competing products.
+
 - I, the buyer, need to order 10 meals. They could be pizza or burgers, I have no preference (=perfectly substitutable).
 - The marginal price of the $b$th burger is $c(b) = 3b$
 - The marginal prices of the $p$th pizza is $c(p) = 2p$
-- So my total costs are $\int^pc(p)dp + \int^bc(b)db = \frac{3}{2}b^2 + p^2$ 
+- So my total costs are $\int^pc(p)dp + \int^bc(b)db = \frac{3}{2}b^2 + p^2$
 - I want to minimize my total costs, subject to the condition $b + p = 10$
 - Minimizing with constrained optimization I get $\frac{p}{b} = \frac{3}{2}$, so I order 6 pizza's and 4 burgers.
 
 The big-burger lobby sees this and convinces congress to subsidize each burger with one dollar.
 This changes the marginal price of the $b$ th burger to $c(b) = 3b - 1$.
 
-- Again optimizing, I would now buy $4.2$ burgers and only $5.8$ pizza's. 
+- Again optimizing, I would now buy $4.2$ burgers and only $5.8$ pizza's.
 
 What does this do to the welfare in the system?
 
@@ -466,13 +460,12 @@ The first image shows the unimpeded market.
 The second one shows the effect of the subsidies.
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/burgers_pizzas_with_subsidies.png" width="70%"/>
 
+Applications:
 
-
-
-
+- Replace burgers with CO_2 saved in Germany with subsidies, and pizzas with CO_2 saved in other EU countries without subsidies.
+- Replace burgers with solar panels built in EU and pizzas with solar panels from China.
 
 # Preliminaries: utility functions
-
 
 **Perfectly substitutable production**:
 $$q(L, K) = L + K$$
@@ -485,31 +478,65 @@ Example: computers and programmers.
 - $L_{opt} = K_{opt} = \frac{bgt}{p_L + p_K}$
 - $\frac{\partial L_{opt}}{\partial p_L} = - \frac{bgt}{(p_L + p_K)^2}$
 
-
 **Somewhere in between: Cobb-Douglas production**
 $$ q(L, K) = L^aK^{1-a} $$
 Maximizing this utility function $u'$ subject to the budget-constraint (using constrained optimization) we get:
+
 - optimize $q(K, L) = L^aK^{1-a}$ subject to $Lp_L + Kp_K - bgt = 0$
 - We find $K \frac{a}{1-a} \frac{p_K}{p_L} = L$
-- $ L_{opt} = \frac{bgt \cdot a}{p_L} $
-- $ K_{opt} = \frac{bgt \cdot (1 - a)}{p_K} $
-- $ q(L_{opt}, K_{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
-
+- $L\_{opt} = \frac{bgt \cdot a}{p_L}$
+- $K\_{opt} = \frac{bgt \cdot (1 - a)}{p_K}$
+- $q(L*{opt}, K*{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
 
 More generally:
 $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
+# Banking
 
+## Calculating repayment-rate for fixed rate mortgages
 
+- Interest is applied at each time-step to outstanding debt of that time-step.
+  - $i$ = 1.0 + interest-rate
+  - $r$ = repayment-rate
+- $t_0$: outstanding debt = $d_0$
+- $t_1$: outstanding debt = $d_0 i - r$
+- $t_2$: outstanding debt = $(d_0 i - r)i - r$
+- $t_2$: outstanding debt = $((d_0 i - r)i - r)i - r$
+- ...
+- $t$: outstanding debt = $d_0 i^t - r \sum_{t=0}^{t-1}i^t$
+- At $t=T$, the outstanding debt must be 0:
+  - $d_0 i^T = r \sum_{t=0}^{T-1}i^t$
+  - Using geometric series $\sum_{t=0}^{T-1}i^t = \frac{1-i^{T+1}}{1-i}$
+  - $r = d_0 i^T \frac{1-i}{1-i^T}$
 
+## Present day value of single payment in future
+
+## Present day value of mortgage payments
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Macroeconomics
 
-
-
-
-
 <br/>
 <br/>
 <br/>
@@ -525,10 +552,6 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 <br/>
 <br/>
 <br/>
-
-
-
-
 
 # Economics (old notes)
 
@@ -539,19 +562,19 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 - $\frac{\partial cs}{\partial q_0} = 0 \to v(q_0) = p$
 - $q_0 = v^{-1}(p)$, we call $v^{-1}(p)$ the **demand** $q^{demand}(p)$.
 
-
 Corollaries
+
 - Increase in usefulness of any one unit: curve moves up
 - More units demanded: curve moves right
 
-
 Special cases:
-- *Normal* goods: higher income leads to higher demand
-- *Inferior* goods: higher income doesn't lead to higher demand
-- *Complementary* goods: higher consumption of *A* leads to higher demand for *B*
-    - Example: use of computers increases demand for printers.
-- *Substitute* goods
-    - Example: cola and pepsi
+
+- _Normal_ goods: higher income leads to higher demand
+- _Inferior_ goods: higher income doesn't lead to higher demand
+- _Complementary_ goods: higher consumption of _A_ leads to higher demand for _B_
+  - Example: use of computers increases demand for printers.
+- _Substitute_ goods
+  - Example: cola and pepsi
 
 # Cost, producer-surplus (aka. profit) and supply
 
@@ -560,32 +583,21 @@ Special cases:
 - $\frac{\partial ps}{\partial q_0} = 0 \to  p = c(q_0)$
 - $c^{-1}(p) = q_0$, we call $c^{-1}$ the **supply** $q^{supply}(p)$.
 
-
 # Markets
 
 **Theorem 1**: In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
+
+> _Proof_: By contradiction
 >
-> *Proof*: By contradiction
->
->> *Case 1*: assume that $p: q^{supply}(p) < q^{demand}(p)$
->>
->> This is a market of shortage. $q$ is determined by the producers: producers will be able to produce a quantity such that their producer-surplus is maximal ... whereas the consumer-surplus might not be.
->>
+> > _Case 1_: assume that $p: q^{supply}(p) < q^{demand}(p)$
+> >
+> > This is a market of shortage. $q$ is determined by the producers: producers will be able to produce a quantity such that their producer-surplus is maximal ... whereas the consumer-surplus might not be.
 
->
->> *Case 2*: assume that $p: q^{supply}(p) > q^{demand}(p)$
->>
+> > _Case 2_: assume that $p: q^{supply}(p) > q^{demand}(p)$
 
+**Theorem 2**: In a free market, the market-equilibrium is where _social welfare_ (consumer- plus producer-surplus) is maximized.
 
-
-**Theorem 2**: In a free market, the market-equilibrium is where *social welfare* (consumer- plus producer-surplus) is maximized.
->
-> *Proof*: 
->
-
-
-
-
+> _Proof_:
 
 # Producer theory
 
@@ -598,7 +610,6 @@ Special cases:
 - $q(K, L)$: quantity of product
 - profit $\pi(K, L) = pq(K, L) - Lp_L - Kp_K$
 
-
 **Perfectly substitutable production**:
 $$q(L, K) = L + K$$
 Example: tractors and farmhands.
@@ -610,58 +621,55 @@ Example: computers and programmers.
 - $L_{opt} = K_{opt} = \frac{bgt}{p_L + p_K}$
 - $\frac{\partial L_{opt}}{\partial p_L} = - \frac{bgt}{(p_L + p_K)^2}$
 
-
 **Somewhere in between: Cobb-Douglas production**
 $$ q(L, K) = L^aK^{1-a} $$
 Maximizing this utility function $u'$ subject to the budget-constraint (using constrained optimization) we get:
+
 - optimize $q(K, L) = L^aK^{1-a}$ subject to $w$, being $w := Lp_L + Kp_K - bgt = 0$
 - We find $K \frac{a}{1-a} \frac{p_K}{p_L} = L$
-- $ L_{opt} = \frac{bgt \cdot a}{p_L} $
-- $ K_{opt} = \frac{bgt \cdot (1 - a)}{p_K} $
-- $ q(L_{opt}, K_{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
-
+- $ L\_{opt} = \frac{bgt \cdot a}{p_L} $
+- $ K\_{opt} = \frac{bgt \cdot (1 - a)}{p_K} $
+- $ q(L*{opt}, K*{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
 
 More generally:
 $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 
-
 ## 2. Concepts:
+
 - Marginal utility of labor: $\frac{\partial q}{\partial L}$
 - Complements: $\frac{\partial^2 q}{\partial K \partial L} > 0$
-    - Interpretation: $\frac{\partial^2 q}{\partial K \partial L} = \frac{\partial}{\partial K}$ marginal utility of labor
-    - That means: increasing capital makes also labor more valuable
-    - If that is the case, labor and capital are compliments.
+  - Interpretation: $\frac{\partial^2 q}{\partial K \partial L} = \frac{\partial}{\partial K}$ marginal utility of labor
+  - That means: increasing capital makes also labor more valuable
+  - If that is the case, labor and capital are compliments.
 
 ## 3. Theorems:
 
 **Theorem 3**: In a free market, a firm produces an output where $\frac{\partial c}{\partial q} = p$
->
-> *Proof*: 
+
+> _Proof_:
 >
 > $\pi(q) = pq - c(q)$
 >
 > $\frac{\partial \pi}{\partial q} = 0 \to p = \frac{\partial c(q)}{\partial q}$
 
-
-
 # Producers to markets
+
 https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2018/resources/lec-6-costs/
 
 How does the suply curve get its upwards slope?
 We want to get the function $q_{supply}(p)$.
 
 It's surprisingly hard to find that function!
+
 1. First attempt: $q: \frac{\partial \pi}{\partial q} = 0$
-    - leads to $p = 0$ ... which is of course not helpful.
+   - leads to $p = 0$ ... which is of course not helpful.
 2. Second attempt: maybe a bit more specific, with $q: \frac{\partial \pi}{\partial K} = 0 \land \frac{\partial \pi}{\partial L} = 0$ and using Cobb-Douglas:
-    - $\pi(K, L)$ has no global maximum - is continously growing. 
+   - $\pi(K, L)$ has no global maximum - is continously growing.
 3. Third attempt: maybe when accounting for the $bgt$ constraint?
-    - $ q(L_{opt}, K_{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
-    - But this is not a function of $p$!
+   - $ q(L*{opt}, K*{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
+   - But this is not a function of $p$!
 
-
-
-Instead, a step-by-step derivation is required. 
+Instead, a step-by-step derivation is required.
 
 Example with Cobb-Douglas:
 
@@ -675,27 +683,14 @@ Optimizing profit $\pi$ with constant $K_0$ leaves only room to vary $L$: $\frac
 
 **Step 2: optimal supply in the long term**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <br/><br/><br/><br/><br/><br/><br/><br/>
-
 
 # My own notes:
 
 ### Effect of wages on employment:
+
 Example:
+
 ```python
 def isoq(K, q, a):
     return np.power(q * np.power(K, a-1), 1/a)
@@ -743,31 +738,23 @@ plt.hlines([L1, L2], xmin=[0, 0], xmax=[K1, K2], linestyles='dotted', label="L_{
 plt.legend()
 ```
 
-
-
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/economics_production_theory0.png" width="80%">
 
-
-
-
-
 How does increase in wages affect employment?
-- If labor and capital are substitutable (*example: workers or machine to build cars*):
-    - if labor initially cheap, now a bit more expensive:
-        - producers only use labor, not machines
-        - producers will reduce employers proportionally to the wage-increase
-    - if labor initially expensive, now a bit more expensive:
-        - producers never had any workers in the first place, because capital was more efficient 
-        - so no reduction in employment.
-- If labor and capital are non-substitutable (*example: programmers and computers to build software*):
-    - if labor initially cheap, now a bit more expensive:
-        - producers use computers and programmers in equal amounts 
-        - they also reduce them in equal amounts
-        - one unit change in wages means much change in both employment and capital
-    - if labor initially expensive, now a bit more expensive:
-        - producers use computers and programmers in equal amounts
-        - they also reduce them in equal amounts
-        - one unit change in wages means little change in neither employment nor capital
 
-
-
+- If labor and capital are substitutable (_example: workers or machine to build cars_):
+  - if labor initially cheap, now a bit more expensive:
+    - producers only use labor, not machines
+    - producers will reduce employers proportionally to the wage-increase
+  - if labor initially expensive, now a bit more expensive:
+    - producers never had any workers in the first place, because capital was more efficient
+    - so no reduction in employment.
+- If labor and capital are non-substitutable (_example: programmers and computers to build software_):
+  - if labor initially cheap, now a bit more expensive:
+    - producers use computers and programmers in equal amounts
+    - they also reduce them in equal amounts
+    - one unit change in wages means much change in both employment and capital
+  - if labor initially expensive, now a bit more expensive:
+    - producers use computers and programmers in equal amounts
+    - they also reduce them in equal amounts
+    - one unit change in wages means little change in neither employment nor capital

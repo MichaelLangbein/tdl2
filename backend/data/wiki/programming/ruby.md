@@ -52,8 +52,18 @@ altYieldingFunction "Chloe" do |greeting|
 end
 
 
+```
+
+Shorthands:
+
+```ruby
 # A proc can be turned into a block with `&`
 yieldingFunction "Sabine" &sayHiP
+
+# A block can be shortened: replacing do/end with {}
+ratings
+  .reduce(0) {|carry, rating| carry + rating.stars}
+  .div(ratings.count)
 ```
 
 ## Objects and keys
