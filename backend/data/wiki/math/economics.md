@@ -522,6 +522,14 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 
 ## Present day value of single payment in future
 
+100 Euro
+
+- if given today: 100 Euro
+- if next year: $100 / (1-i)$
+- if the year after: $100 / (1-i)^2$
+- ...
+- in year $t$: $100 / (1-i)^t $
+
 ## Present day value of mortgage payments
 
 - payment-rate: $r$
