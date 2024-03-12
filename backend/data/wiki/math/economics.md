@@ -518,7 +518,7 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 - $t$: outstanding debt = $d_0 j^t - r \sum_{t=0}^{t-1}j^t$
 - At $t=T$, the outstanding debt must be 0:
   - $d_0 j^T = r \sum_{t=0}^{T-1}j^t$
-  - Using geometric series $\sum_{t=0}^{T-1}j^t = \frac{1-j^{T+1}}{1-j}$
+  - Using geometric series $\sum_{t=0}^{T-1}j^t = \frac{1-j^{T}}{1-j}$
   - $r = d_0 j^T \frac{1-j}{1-j^T}$
 
 **Note** that inflation $i$ plays no role in this calculation, and neither does the _real_ interest rate $q_r$.
