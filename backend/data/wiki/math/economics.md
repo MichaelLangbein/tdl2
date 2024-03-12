@@ -524,6 +524,18 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 
 ## Present day value of mortgage payments
 
+- payment-rate: $r$
+- inflation: $i$
+- $t_0$: rate $r$ is worth $r$
+- $t_1$: rate $r$ is worth $r / (1 + i)$
+- $t_2$: rate $r$ is worth $r / (1 + i)^2$
+- ...
+- In sum, the payments from including $t_0$ up to including $T$ are worth:
+  - $v = r \sum_{t=0}^T (\frac{1}{1+i})^t$
+  - let $u = \frac{1}{1+i}$
+  - Again using geometric series:
+  - $v = r \frac{1-u^{T+1}}{1-u}$
+
 <br/>
 <br/>
 <br/>
