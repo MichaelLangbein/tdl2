@@ -507,23 +507,27 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 ## Calculating repayment-rate for fixed rate mortgages
 
 - Interest is applied at each time-step to outstanding debt of that time-step.
-  - $i$ = 1.0 + interest-rate
+  - interest-rate $q$
+  - $j$ = 1.0 + q
   - $r$ = repayment-rate
 - $t_0$: outstanding debt = $d_0$
-- $t_1$: outstanding debt = $d_0 i - r$
-- $t_2$: outstanding debt = $(d_0 i - r)i - r$
-- $t_2$: outstanding debt = $((d_0 i - r)i - r)i - r$
+- $t_1$: outstanding debt = $d_0 j - r$
+- $t_2$: outstanding debt = $(d_0 j - r)j - r$
+- $t_3$: outstanding debt = $((d_0 j - r)j - r)j - r$
 - ...
-- $t$: outstanding debt = $d_0 i^t - r \sum_{t=0}^{t-1}i^t$
+- $t$: outstanding debt = $d_0 j^t - r \sum_{t=0}^{t-1}j^t$
 - At $t=T$, the outstanding debt must be 0:
-  - $d_0 i^T = r \sum_{t=0}^{T-1}i^t$
-  - Using geometric series $\sum_{t=0}^{T-1}i^t = \frac{1-i^{T+1}}{1-i}$
-  - $r = d_0 i^T \frac{1-i}{1-i^T}$
+  - $d_0 j^T = r \sum_{t=0}^{T-1}j^t$
+  - Using geometric series $\sum_{t=0}^{T-1}j^t = \frac{1-j^{T+1}}{1-j}$
+  - $r = d_0 j^T \frac{1-j}{1-j^T}$
+
+**Note** that inflation $i$ plays no role in this calculation, and neither does the _real_ interest rate $q_r$.
 
 ## Present day value of single payment in future
 
 100 Euro
 
+- $i$ = inflation
 - if given today: 100 Euro
 - if next year: $100 / (1-i)$
 - if the year after: $100 / (1-i)^2$
@@ -543,6 +547,31 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
   - let $u = \frac{1}{1+i}$
   - Again using geometric series:
   - $v = r \frac{1-u^{T+1}}{1-u}$
+
+**Note** that interest-rate $q$ plays no role in this calculation, and neither does the _real_ interest rate $q_r$.
+
+## Choosing an interest rate for mortgage payments
+
+Finally relating $i$ and $q$.
+A bank will choose its interest rate such that they make a profit.
+
+1. Given inflation $i$,
+2. $v$ must be at least equal to the amount lent $d_0$
+   1. $v \geq d_0$
+   2. $r \frac{1-u^{T+1}}{1-u} \geq d_0$
+   3. $r \geq d_0 \frac{1-u}{1-u^{T+1}}$
+   4. $d_0 j^T \frac{1-j}{1-j^T} \geq d_0 \frac{1-u}{1-u^{T+1}}$
+      1. $j = 1 + q$
+      2. $u = \frac{1}{1+i}$
+      3. solve for interest-rate $q$
+
+**Note** that the real interest-rate $q_r$ plays no role in this calculation.
+
+## Real interest rate
+
+The nominal interest rate $q$ demanded of a customer is actually less harsh than it seems.
+The real interest rate is less due to the effects of inflation:
+$$ 1 + q_r = \frac{1 + q}{1 + i} $$
 
 <br/>
 <br/>
