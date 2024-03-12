@@ -508,7 +508,7 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 
 - Interest is applied at each time-step to outstanding debt of that time-step.
   - interest-rate $q$
-  - $j$ = 1.0 + q
+  - $j = 1 + q$
   - $r$ = repayment-rate
 - $t_0$: outstanding debt = $d_0$
 - $t_1$: outstanding debt = $d_0 j - r$
@@ -548,7 +548,7 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
   - Again using geometric series:
   - $v = r \frac{1-u^{T+1}}{1-u}$
 
-**Note** that interest-rate $q$ plays no role in this calculation, and neither does the _real_ interest rate $q_r$.
+**Note** that interest-rate $q$ plays no role in this calculation (as long as $r$ is given), and neither does the _real_ interest rate $q_r$.
 
 ## Choosing an interest rate for mortgage payments
 
