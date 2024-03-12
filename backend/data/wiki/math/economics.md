@@ -510,7 +510,7 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
   - fixed rate
     - here, initially most of the fixed rate goes into paying accrued interest, but then exponentially more goes into principal.
   - **ARM**: adjustable rate mortgage
-- **annuity** (Annuität): a fixed, _yearly_ repayment rate
+- **annuity** (Annuität, jähreliche Rate): a fixed, _yearly_ repayment rate
 - **accrued interest**: interest on last years outstanding debt (assumes that interest on all years before has already been payed off)
 - **capital recovery factor** = annuity / present-day-value
 - **equity(t)**: value of asset at time $t_0$ - outstanding debt at current $t$
