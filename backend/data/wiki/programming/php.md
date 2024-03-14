@@ -1,5 +1,42 @@
 # PHP
 
+## Minimum scaffold
+
+```php
+// index.php
+<html>
+<body>
+<h2>Hello, php!</h2>
+
+
+<form method="POST" action="processor.php">
+  // note how html supports nested properties
+  <input type="text" name="person[name]" required>
+  <input type="number" name="person[age]" required>
+  <button type="submit">OK</button>
+</form>
+
+</body>
+</html>
+```
+
+```php
+// process.php
+<html>
+<body>
+
+<h2>Response</h2>
+
+<div>
+  <?php echo print_r($_POST); ?>
+</div>
+
+</body>
+</html>
+```
+
+`php -S localhost:8000`
+
 ## Imports
 
 Insert file:

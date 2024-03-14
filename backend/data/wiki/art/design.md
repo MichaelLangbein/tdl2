@@ -44,6 +44,8 @@
 
 - https://sketchfab.com/
 - https://www.pexels.com/de-de/
+- https://www.flickr.com/
+- https://www.svgrepo.com/
 
 ### Colors
 
