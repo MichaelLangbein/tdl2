@@ -8,7 +8,7 @@
 <body>
 <h2>Hello, php!</h2>
 
-
+// if no action is given, post goes to same site again.
 <form method="POST" action="processor.php">
   // note how html supports nested properties
   <input type="text" name="person[name]" required>
