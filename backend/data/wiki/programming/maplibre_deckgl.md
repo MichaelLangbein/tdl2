@@ -28,8 +28,9 @@ Variable names, important for how `farZ` is calculated for projection matrix:
 - That matrix converts mercator-coords ([0,0 = nw, 1,1 = se]) to clip-space ([-1, 1]^3)
 - The clip-space `z` coordinate is relevant for that matrices inverse
 
-  - $z_{clip} (\text{top of screen}) == 1.0$
+  - when looking top down, z_clip == 1.0 for all points of the screen
     - assuming that clip-space data has been normalized by clip.w in this and all below examples
+  - $z_{clip} (\text{top of screen}) == 1.0$
   - $z_{clip} (\text{bottom of screen}) \approx 1.0 - pitch_{degrees} * 0.0005$
     - found through linear regression experiments (seriously)
     - But why?
