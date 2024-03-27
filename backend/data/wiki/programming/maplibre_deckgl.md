@@ -12,6 +12,12 @@ Important variables here are calculated as follows:
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/maplibre.jpg" />
 
+### `transform._calcMatrix` internals
+
+Variable names, important for how `farZ` is calculated for projection matrix:
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/maplibre_calcMatrix.svg">
+
 ## My understanding of threejs in maplibre
 
 ```ts
