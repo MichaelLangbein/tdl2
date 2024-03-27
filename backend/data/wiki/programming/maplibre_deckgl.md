@@ -18,6 +18,39 @@ Variable names, important for how `farZ` is calculated for projection matrix:
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/maplibre_calcMatrix.svg">
 
+### customLayer `projMatrix` and its inverse
+
+- A custom layer has to expose a function `render(gl: WebGL2RenderingContext, matrix: mat4)`
+- That matrix is `map.transform.mercatorMatrix`
+  - it's _not_ `map.transform.projMatrix`,
+  - its inverse is _not_ `map.transform.invProjMatrix`
+  - you have to calculate the inverse yourself: `mat4.invert([] as any, structuredClone(matrix)) as number[]`
+- That matrix converts mercator-coords ([0,0 = nw, 1,1 = se]) to clip-space ([-1, 1]^3)
+- The clip-space `z` coordinate is relevant for that matrices inverse
+
+  - $z_{clip} (\text{top of screen}) == 1.0$
+    - assuming that clip-space data has been normalized by clip.w in this and all below examples
+  - $z_{clip} (\text{bottom of screen}) \approx 1.0 - pitch_{degrees} * 0.0005$
+    - found through linear regression experiments (seriously)
+    - But why?
+  - Drawing a random point on screen and projecting it back to mercator:
+
+    ```glsl
+      float screenX = random() * 2.0 - 1.0;
+      float screenY = random() * 2.0 - 1.0;
+
+      float zTopScreen = 1.0;
+      float zBotScreen = 1.0 - cameraAngleDeg * 0.0005;
+      float topness = (screenY + 1.0) / 2.0;
+      float z = topness * (zTopScreen - zBotScreen) + zBotScreen;
+
+      vec4 clipSpacePoint = vec4(screenX, screenY, z, 1.0);
+      vec4 mercatorPoint = projMatrixInverse * clipSpacePoint;
+      mercatorPoint = mercatorPoint / mercatorPoint.w;
+    ```
+
+  - If you don't account for that clip-space `z` when using the `projMatrixInverse`,
+
 ## My understanding of threejs in maplibre
 
 ```ts
