@@ -34,18 +34,37 @@ Variable names, important for how `farZ` is calculated for projection matrix:
   - $z_{clip} (\text{bottom of screen}) \approx 1.0 - pitch_{degrees} * 0.0005$
     - found through linear regression experiments (seriously)
     - But why?
+      - we can derive this from the above `_calcMatrix` to be $1 - (1-y_{clip}) \tan(\theta)$ with $\theta$ the camera's pitch ... but that doesn't seem to be quite exactly it, either.
+      - better and more general would be to just take the 3rd matrix-row and solve that way:
+      - $z_{clip} = (- M_{3,1} x_{clip} - M_{3, 2} y_{clip} - M_{3,4}) / M_{3,3}$
   - Drawing a random point on screen and projecting it back to mercator:
 
     ```glsl
-      float screenX = random() * 2.0 - 1.0;
-      float screenY = random() * 2.0 - 1.0;
+      mat4 PMI = projMatrixInv;
 
-      float zTopScreen = 1.0;
-      float zBotScreen = 1.0 - cameraAngleDeg * 0.0005;
-      float topness = (screenY + 1.0) / 2.0;
-      float z = topness * (zTopScreen - zBotScreen) + zBotScreen;
+      // zMerc = 0 = M31 xClip + M32 yClip + M33 zClip? + M34 1
+      // zClip? = - M31 xClip - M32 yClip - M34 / M33
+      float zClipFromInverse(float xClip, float yClip) {
+        return (- PMI[0][2] * xClip - PMI[1][2] * yClip - PMI[3][2]) / PMI[2][2];
+      }
 
-      vec4 clipSpacePoint = vec4(screenX, screenY, z, 1.0);
+      // Or more generally, if zMerc !== 0, accounting for division by w:
+      // zMerc = M31 xClip + M32 yClip + M33 zClip? + M34 1
+      //        / M41 xClip + M42 yClip + M43 zClip? + M44 1
+      // zClip? = M31 xClip + M32 yClip + M34 - zMerc (M41 xClip + M42 yClip + M44 1)
+      //        / (zMerc M43 - M33)
+      float zClipFromInverseWithHeight(float xClip, float yClip, float zMerc) {
+        float a = PMI[0][2] * xClip + PMI[1][2] * yClip + PMI[3][2];
+        float b = zMerc * ( PMI[0][3] * xClip + PMI[1][3] * yClip + PMI[3][3] );
+        float c = zMerc * PMI[2][3] - PMI[2][2];
+        return (a - b) / c;
+      }
+
+      float clipX = random() * 2.0 - 1.0;
+      float clipY = random() * 2.0 - 1.0;
+      float clipZ = zClipFromInverse(clipX, clipY);
+
+      vec4 clipSpacePoint = vec4(clipX, clipY, clipZ, 1.0);
       vec4 mercatorPoint = projMatrixInverse * clipSpacePoint;
       mercatorPoint = mercatorPoint / mercatorPoint.w;
     ```
