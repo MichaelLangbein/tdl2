@@ -25,8 +25,8 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="0.19441511"
-     inkscape:cx="2741.5565"
-     inkscape:cy="18036.15"
+     inkscape:cx="5328.8039"
+     inkscape:cy="11946.088"
      inkscape:window-width="1920"
      inkscape:window-height="1021"
      inkscape:window-x="0"
@@ -403,6 +403,11 @@
        style="fill:none;stroke:#000000;stroke-width:2.11824px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 552.4594,-1785.3217 37.713,-1.7034 0.9444,750.1993 v 0 h -41.0915"
        id="path102-3-6-1"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.11824px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1662.3838,-1638.7877 37.713,-1.7034 0.9444,750.19935 v 0 h -41.0915"
+       id="path102-3-6-1-1"
        sodipodi:nodetypes="ccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.33419px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1499,6 +1504,16 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="1523.9923"
+       y="-873.87891"
+       id="text97992-1"><tspan
+         sodipodi:role="line"
+         id="tspan97990-8"
+         x="1523.9923"
+         y="-873.87891">1556</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
        x="374.91187"
        y="-1346.9561"
        id="text100240"><tspan
@@ -1579,13 +1594,27 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="1485.7898"
+       x="1707.7898"
        y="-1380.6428"
        id="text20477"><tspan
          sodipodi:role="line"
          id="tspan20475"
-         x="1485.7898"
+         x="1707.7898"
          y="-1380.6428">1517: 95 Theses (Luther)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40.2107px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00527"
+       x="1132.3485"
+       y="1711.9631"
+       id="text20477-3"
+       transform="matrix(-0.00944429,-1.005224,0.99471532,-0.00934555,0,0)"
+       inkscape:transform-center-x="2.8797207"
+       inkscape:transform-center-y="2.7278234"><tspan
+         sodipodi:role="line"
+         id="tspan20475-0"
+         x="1132.3485"
+         y="1711.9631"
+         style="stroke-width:1.00527">Charles V</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
@@ -2660,5 +2689,29 @@
          x="-1172.6091"
          y="2840.6912"
          id="tspan331027">1822: Haiti invades DR</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:32.3392px;line-height:1.25;font-family:sans-serif;word-spacing:0px;stroke-width:3.0318"
+       x="1097.9951"
+       y="1471.8558"
+       id="text48508"
+       transform="matrix(-0.02319209,-1.0065255,0.99298959,-0.0228802,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan48506"
+         x="1097.9951"
+         y="1471.8558"
+         style="stroke-width:3.0318">Italian wars</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:32.3392px;line-height:1.25;font-family:sans-serif;word-spacing:0px;stroke-width:3.0318"
+       x="1317.0374"
+       y="-1277.0441"
+       id="text48508-3"
+       transform="scale(1.0067927,0.99325313)"><tspan
+         sodipodi:role="line"
+         id="tspan48506-0"
+         x="1317.0374"
+         y="-1277.0441"
+         style="stroke-width:3.0318">1525: Peasant wars</tspan></text>
   </g>
 </svg>
