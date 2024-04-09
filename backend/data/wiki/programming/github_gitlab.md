@@ -69,3 +69,9 @@ I don't want different clients to see each other.
 ## Pages
 
 https://pages.github.com
+
+## Agile on GitHub
+
+- scrum is a brand of agile (though it does proceed agile)
+- 
+
