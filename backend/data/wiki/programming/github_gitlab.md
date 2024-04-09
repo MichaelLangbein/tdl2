@@ -62,9 +62,9 @@ I don't want different clients to see each other.
 - Can guest-user1 and guest-user2 see the actual repo? <-- Jup
 
 ## Actions
+
 - https://m.youtube.com/watch?v=yfBtjLxn_6k&pp=ygUJR2l0aHViIGNp
 - locally simulate with `act`
-
 
 ## Pages
 
@@ -73,5 +73,11 @@ https://pages.github.com
 ## Agile on GitHub
 
 - scrum is a brand of agile (though it does proceed agile)
-- 
+-
 
+| Concept         | Github                                                                            |
+| --------------- | --------------------------------------------------------------------------------- |
+| team            | org                                                                               |
+| project vision  |  vision.md                                                                        |
+| project backlog | issues with label "user story"                                                    |
+| sprint          | project with columns "user stories", "todo", "ongoing", "awaiting review", "done" |
