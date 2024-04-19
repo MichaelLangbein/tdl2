@@ -250,7 +250,11 @@ function scanLine(polyPoints: Point[]) {
 
 Basically, ScanLine is the polygon-equivalent of raster's FloodFill.
 
-## Triangulation: ear-cut-algorithm
+## Triangulation: ear-clipping-algorithm
+
+## Triangulation: Delaunay
+
+Different from ear-clipping: produces more evenly shaped triangles, not those narrow, long triangles that ear-clipping tends to produce.
 
 ## Creating Voronoi-diagrams
 
