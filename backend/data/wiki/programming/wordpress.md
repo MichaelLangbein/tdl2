@@ -308,20 +308,34 @@ Making sure that styles, blocks etc. are not cached:
 ### Block themes
 
 - https://www.youtube.com/watch?v=C088o0O7Snc&t=575s
+- https://www.youtube.com/watch?v=6wUTRjjb-Ho
 
 Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that allows you to pick a highly restrictive selection of fonts, colors, layout, spacing, etc., which will be made available to the admin through the UI.
 
 #### Manually
 
+- **style.css**
+  - Theme name and other meta-data - barely any actual CSS, because that's mostly inside theme.json
+- **theme.json**
+  - $schema: https://schemas.wp.org/trunk/theme.json
+  - **settings**: for the block-editor and for the options provided to the user
+    - appearanceTools
+    - color
+    - layout
+    - spacing
+    - typography
+  - **styles**: css
+    - color
+    - elements
+    - typography
+    - spacing
+    - blocks
+    - css
 - **parts** (optional): small, reusable elements made of html, to be used in templates.
   - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
   - Users can edit those parts in the UI
   - header.html
   - footer.html
-- **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
-  - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
-  - should be php
-  - requires meta-data comment at top
 - **templates**: functional (sub-)pages built out of blocks, parts and patterns. There're being looked up as required by the template hierarchy.
   - html files with block-placeholders (instead of php files in classic themes). But they may contain php, css, svg's etc ... though only in a custom-html-block.
     - If you add root-level html/css/svg/js outside of a block-comment, the editor-ui will complain
@@ -331,12 +345,10 @@ Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that
     - index.html
     - potentially any template from the template hierarchy
     - potentially any custom templates spliced into the lookup by you
-- **style.css**
-  - Theme name and other meta-data - barely any actual CSS, because that's mostly inside theme.json
-- **theme.json**
-  - $schema: https://schemas.wp.org/trunk/theme.json
-  - settings
-  - styles
+- **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
+  - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
+  - should be php
+  - requires meta-data comment at top
 - (optional) empty index.php (so that dir can't be inspected from outside)
 
 All the above are used to layout widgets and the sites "frame" - i.e. everything that is not an actual blog-posts content. Content itself is made of blocks and may use patterns.

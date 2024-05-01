@@ -5,16 +5,26 @@
   - useful as parent for absolute div's
 - _absolute_: Relative to nearest positioned parent (positioned: anything but static)
   - **note**: the parents of absolutely positioned elements won't automatically grow to encompass their child anymore.
+  - **note**: absolutely positioned children can no longer use their parents for width-percentages.
 - _fixed_: Similar to absolute, but positioned relative to the browser viewport. Scrolling will not move this element.
 - _sticky_:
   - element is confined to its parent
   - but within those confines, it slides along with the viewport like fixed.
+  - **note**: sticky will only work if:
+    - the parent has an absolute height
+      - except if the parent is the window
+    - and the parent has overflow: visible (https://css-tricks.com/dealing-with-overflow-and-position-sticky/)
+      - a sticky element “sticks” to its nearest ancestor that has a “scrolling mechanism” (created when overflow is hidden, scroll, auto, or overlay), even if that ancestor isn’t the nearest actually scrolling ancestor. This effectively inhibits any “sticky” behavior. (From MDN Web Docs)
+      - great script to check why sticky is not working: https://element.how/css-debugging-position-sticky-not-working/#:~:text=are%20expected%20to.-,Why%20isn't%20position%3Asticky%20working%3F,same%20height%20as%20its%20parent.
+    - if the parent is a flex-box, the sticky item should have `align-self: flex-start` (https://stackoverflow.com/questions/44446671/my-position-sticky-element-isnt-sticky-when-using-flexbox)
 
 # Display
 
 Display refers to how an element relates to its peers or its children.
 Per default, div's are displayed in block-style, while spans are displayed inline-style.
 
+- _flow_: the standard layout-algorithm
+  - z-index is not implemented in this algorithm
 - _block_: Element starts on a new line \& takes up the entire width.
   May contain other block or inline elements.
   Elements that are block-level by default include <div>, <p>, <h1>-<h6>, <ul>, <li>, \& <canvas>.
@@ -26,6 +36,8 @@ Per default, div's are displayed in block-style, while spans are displayed inlin
 - _table_
 - _grid_: Element is displayed block-level with inner content in grid layout.
 - _flex_ Element is displayed block-level with inner content in flexbox layout.
+  - width inside of flex-algorithm is more of a suggestion
+- _contents_: create no box for this element, just paste the children in
 
 # Resize
 
@@ -290,6 +302,39 @@ CSS animations:
 # Critical rendering path
 
 Some info [by google](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/optimizing-critical-rendering-path).
+
+# Underlying algorithms
+
+## Phases
+
+1.  Style computation: Assigns value to every css property.
+    1. accounts for selector-specificity
+    2. accounts for inheritance
+       1. text- & font-props are inherited
+       2. colors are inherited
+       3. rest is not
+    3. fill missing props with inherited or defaults
+    4. absolutize values
+       1. converts vw, em, % into pixel values
+       2. converts colors to sRGB
+2.  Box construction for each (pseudo-)element
+    1. Almost all elements get a box,
+    2. ... except display:none and display:contents, which get no box
+    3. ... except tables and list-items, which get two boxes
+3.  Layout
+    1. calculates `x,y,width,height` for each box
+4.  Painting
+
+## Stacking context: z-ordering, pos:abs, pos:sticky, dialogs, ...
+
+- new context created when:
+  - position:sticky
+  - position:absolute + z-index
+  - opacity < 1, mix-blend-mode
+  - ...
+- z-index will only work within the current stacking context
+- if child-node B comes after child-node A, then B is layered higher than A.
+- can be re-set with `isolation: isolate`
 
 # Tools
 
