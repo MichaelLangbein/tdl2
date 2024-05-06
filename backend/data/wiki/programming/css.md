@@ -7,6 +7,7 @@
   - **note**: the parents of absolutely positioned elements won't automatically grow to encompass their child anymore.
   - **note**: absolutely positioned children can no longer use their parents for width-percentages.
 - _fixed_: Similar to absolute, but positioned relative to the browser viewport. Scrolling will not move this element.
+  - width:100% doesn't always seem to work with position:fixed. You're better off with left:0;right:0 then.
 - _sticky_:
   - element is confined to its parent
   - but within those confines, it slides along with the viewport like fixed.

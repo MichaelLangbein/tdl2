@@ -331,24 +331,28 @@ Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that
     - spacing
     - blocks
     - css
-- **parts** (optional): small, reusable elements made of html, to be used in templates.
-  - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
-  - Users can edit those parts in the UI
-  - header.html
-  - footer.html
 - **templates**: functional (sub-)pages built out of blocks, parts and patterns. There're being looked up as required by the template hierarchy.
   - html files with block-placeholders (instead of php files in classic themes). But they may contain php, css, svg's etc ... though only in a custom-html-block.
     - If you add root-level html/css/svg/js outside of a block-comment, the editor-ui will complain
   - You can add your own template with the php-call ...
-  - They are referred to in other templates or patterns with `<!-- wp:template-part {} /-->`
+  - They cannot really be referred to by other templates, template-parts or patterns: they are meant to be alone-standing full pages.
   - Files:
     - index.html
     - potentially any template from the template hierarchy
     - potentially any custom templates spliced into the lookup by you
-- **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in parts, templates, or user-content. To be used in templates.
+- **template-parts** (optional): small, reusable elements made of html, to be used in templates.
+  - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
+  - Users can edit those parts in the UI
+  - header.html
+  - footer.html
+- **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in templates, template-parts, or user-content.
   - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
   - should be php
   - requires meta-data comment at top
+  - _patterns vs template-parts_:
+    - contrary to template-parts, patterns can be edited by the user
+    - the user can only insert template-parts in the site-editor, not in the page-editor. Thus they can only be added to the site-structure, not inside a content-block.
+    - patterns, however, can be used both in template(-part)s (and the side editor) _as well_ as in the content editor
 - (optional) empty index.php (so that dir can't be inspected from outside)
 
 All the above are used to layout widgets and the sites "frame" - i.e. everything that is not an actual blog-posts content. Content itself is made of blocks and may use patterns.
