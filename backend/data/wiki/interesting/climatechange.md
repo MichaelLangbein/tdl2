@@ -128,3 +128,24 @@ Um das 2.0°C Ziel zu erreichen,
 ### Gebäude
 
 https://www.umweltbundesamt.de/daten/umweltindikatoren/indikator-energieverbrauch-fuer-gebaeude#welche-bedeutung-hat-der-indikator
+
+# Stammtisch
+
+## Windkraft
+
+### Baumaterialien starke GHGs
+
+### Fledermäuse und Vögel
+
+### Wirtschaftlichkeit
+
+- Förderung:
+
+## Elektromobilität
+
+- Elektro bei aktuellem EU-Strom-Mix 20% weniger GHG https://onlinelibrary.wiley.com/doi/full/10.1111/j.1530-9290.2012.00532.x
+  - Beinhaltet auch Bau und Wrack
+
+## Solar
+
+- LCA: https://www.mdpi.com/2071-1050/11/9/2539

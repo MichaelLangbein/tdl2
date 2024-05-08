@@ -366,9 +366,24 @@ You'll often edit some pattern in the UI and later export it from the database t
 
 #### Create block theme plugin
 
-Creates theme code in themes folder.
-Changes your code files even after you've made your own adjustments.
-Lots of nice configs, like picking and downloading google fonts.
+My default way of creating themes.
+og block development has some issues:
+
+- doesn't export my patterns
+- to get an editor-made template into code, I need to manually copy-paste from the code-view
+
+This module:
+
+- Creates theme code in themes folder.
+- Changes your code files even after you've made your own adjustments.
+- Lots of nice configs, like picking and downloading google fonts.
+- https://www.youtube.com/watch?v=rQy0J8gcsPc
+- in editor, click `... > Create block theme > Save changes to theme` followed by `Export Zip`
+- also:
+  - install https://wordpress.org/plugins/pattern-editor/ to also export your custom patterns
+    - search for occurrences of `wp:block {"ref": ...}` in your templates, and replace them with `wp:pattern {"slug": ...}`
+  - install fakerpress
+    - having some fake content helps with the previews in the block editor
 
 #### Editing UI
 

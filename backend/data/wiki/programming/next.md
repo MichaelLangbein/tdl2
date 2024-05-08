@@ -8,10 +8,16 @@
   - happens on-demand, not on-compile
 - `Header`:
 
+## Fonts
+
+- Next has its own library of google fonts, which it adds to your public assets
+- Fonts are usually imported, configured and re-exported in `app/ui/fonts.ts`
+- They are then added to the body `<body className="${myFont.className}">`
+
 ## Routing
 
 - app (this name is required)
-  - posts (any name)
+  - posts (any name, any nesting ... folders in (parenthesis) won't show up as part of route)
     - page.tsx (this name is required to make this a page)
     - loading.tsx
     - not-found.tsx
@@ -19,6 +25,8 @@
   - layout.tsx
   - components: (not public)
     - any comps.tsx
+
+Layouts: there can be at most one layout.tsx per directory. layouts must always have the `children` property. layouts won't be re-rendered on navigation.
 
 Route using the `Link` component
 
@@ -34,7 +42,8 @@ Routing functions:
   - cannot listen to events
   - cannot access browser-api's (localstore, webgl, ...)
   - cannot maintain state
-  - cannot use effects
+  - cannot use effects (or any hooks)
+  - _can_ use async/await, which avoids the need for many useState or useEffect hooks.
 - Start file with `"use client";` -> becomes client side
 - Start function with `"use server";` -> executed on server
   - common for server-actions
@@ -70,6 +79,16 @@ Fetches should be made server-side when possible:
   - for this, nextjs has monkeypatched the `fetch` function.
   - configure cache life time with: `fetch("myurl", { cache: "no-store" })` or `{next: {revalidate: 10}}`
 
+### Suspense
+
+Async components can be wrapped in `Suspense` to show a fallback while async data is still loading:
+
+```tsx
+<Suspense fallback={<RevenueChartSkeleton />}>
+  <RevenueChart />
+</Suspense>
+```
+
 ## Magic methods
 
 - `generateStaticParams`: if you have a `src/[slug]/page.tsx` or a `src/[id].tsx` or such, those are pages that are created dynamically.
@@ -83,6 +102,7 @@ Fetches should be made server-side when possible:
   - components that are discovered as not being SSG'able:
     - any client side component
     - any component that has `fetch("url", {cache: "no-store"})`
+    - any component calling a function that has `unstable_noStore()` (I think?)
 
 ## CSS Modules
 
