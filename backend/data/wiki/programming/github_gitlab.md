@@ -81,3 +81,8 @@ https://pages.github.com
 | project vision  |  vision.md                                                                        |
 | project backlog | issues with label "user story"                                                    |
 | sprint          | project with columns "user stories", "todo", "ongoing", "awaiting review", "done" |
+
+## Github API
+
+Sometimes awful.
+https://github.com/orgs/community/discussions/123605
