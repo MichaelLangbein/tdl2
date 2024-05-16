@@ -305,171 +305,196 @@ AR \\ \midrule
 
 Bayesian networks are a neat tool when we can manually encode some complex causation-graphs.
 
-```python
+- There are analytical ways of calculating posteriors, like [here](https://ocw.mit.edu/courses/6-825-techniques-in-artificial-intelligence-sma-5504-fall-2002/7119c2c7a9d00760da07077d9c59c55f_Lecture16FinalPart1.pdf)
+- But these are hard to implement! Sampling is much simpler.
+- The core design trick is that each node specifies its _conditional_ probability distribution.
+- You _could_ do regression with a bayesian network like so:
+  - ```
+    const xs = new Nod("xs", [[1, 2, 3, 4]], (val) => val = xs.values[0] ? 1 : 0);
+    const a  = new Nod("a", [0, 1, 2, 3], (val) => 0.25);
+    const ys = new Nod("xs", [[2, 4, 6, 8]], (val) => val = ys.values[0] ? 1 : 0);
+    const net = new Net([xs, a, ys]);
+    const aPosterior = net.probDist([a]);
+    ```
+  ```
+  - But this is pretty finicky... for regression, better do bayesian regression using MCMC.
+  ```
 
-def find(lst, predicate):
-  for entry in lst:
-      if predicate(entry):
-          return entry
+```ts
+import embed from 'vega-embed';
+import { TopLevelSpec } from 'vega-lite';
 
-def prod(lst):
-  p = lst[0]
-  for entry in lst[1:]:
-      p *= entry
-  return p
+type Sample = { [name: string]: any };
+type Bin = { samples: Sample[]; groupedBy: { [name: string]: any } };
+type EmpiricalPdf = (Bin & { prob: number })[];
 
-def getCombinations(lists):
-  combinations = []
-  if len(lists) == 0:
-      combinations = []
-  elif len(lists) == 1:
-      combinations = lists[0]
-  elif len(lists) == 2:
-      for a in lists[0]:
-          for b in lists[1]:
-              combinations.append([a, b])
-  else:
-      firstList = lists[0]
-      subCombos = getCombinations(lists[1:])
-      for a in firstList:
-          for b in subCombos:
-              combinations.append([a, *b])
-  return combinations
+class Utils {
+  static scalarMult(scalar: number, arr: number[]) {
+    return arr.map((a) => a * scalar);
+  }
 
+  static allExcept(xs: Nod<any>[], yNames: string[]) {
+    const outs: Nod<any>[] = [];
+    for (const x of xs) {
+      if (!yNames.includes(x.name)) outs.push(x);
+    }
+    return outs;
+  }
 
+  static arraysEqual(xs: any[], ys: any[]) {
+    if (xs.length !== ys.length) return false;
+    for (let i = 0; i < xs.length; i++) {
+      const x = xs[i];
+      const y = ys[i];
+      if (x !== y) return false;
+    }
+    return true;
+  }
 
-class Node:
-  def __init__(self, name, pmf, allowedValues, parents = []):
-      self.name = name
-      self.pmf = pmf
-      self.allowedValues = allowedValues
-      self.parents = parents
+  static binByNodes(nodes: Nod<any>[], samples: Sample[]) {
+    function doBin(samples: Sample[], node: Nod<any>): Bin[] {
+      const bins: Bin[] = [];
+      for (const value of node.values) {
+        bins.push({ samples: [], groupedBy: { [node.name]: value } });
+      }
 
-  def setPmf(self, pmf):
-      self.pmf = pmf
+      for (const sample of samples) {
+        const bin = bins.find((b) => b.groupedBy[node.name] === sample[node.name])!;
+        bin.samples.push(sample);
+      }
 
-  def calcProb(self, value):
+      return bins;
+    }
 
-      if value not in self.allowedValues:
-          return 0.0
+    function spreadBinsBy(node: Nod<any>, binned: Bin[]): Bin[] {
+      const newBins: Bin[] = [];
+      for (const oldBin of binned) {
+        for (const value of node.values) {
+          const newBin: Bin = {
+            samples: oldBin.samples.filter((s) => s[node.name] === value),
+            groupedBy: {
+              ...oldBin.groupedBy,
+              [node.name]: value,
+            },
+          };
+          newBins.push(newBin);
+        }
+      }
+      return newBins;
+    }
 
-      parentData = self.__getParentData()
+    const node = nodes[0];
 
-      p = 0.0
-      if len(parentData) > 0:
-          for combination in getCombinations(parentData):
-              parentValues = {entry['name']: entry['value'] for entry in combination}
-              parentProbs = [entry['prob'] for entry in combination]
-              p += self.pmf(value, parentValues) * prod(parentProbs)
-      else:
-          p = self.pmf(value, {})
+    if (nodes.length === 1) {
+      const binned = doBin(samples, node);
+      return binned;
+    }
 
-      return p
+    const binned = this.binByNodes(nodes.slice(1), samples);
+    const subBinned = spreadBinsBy(node, binned);
 
-  def __getParentData(self):
-      parentData = []
-      for i, parent in enumerate(self.parents):
-          parentData.append([])
-          for value in parent.allowedValues:
-              prob = parent.calcProb(value)
-              parentData[i].append({
-                  'name': parent.name,
-                  'value': value,
-                  'prob': prob
-              })
-      return parentData
+    return subBinned;
+  }
 
+  static empiricalPmf(nodes: Nod<any>[], samples: Sample[]): EmpiricalPdf {
+    const bins = this.binByNodes(nodes, samples);
+    for (const bin of bins) {
+      (bin as any)['prob'] = bin.samples.length / samples.length;
+    }
+    return bins as any;
+  }
+}
 
-class Net:
-  def __init__(self, nodes):
-      self.nodes = nodes
-      self.memo = {}
-      for node in self.nodes:
-          self.memo[node.name] = {}
+class Nod<T> {
+  constructor(
+    readonly name: string,
+    readonly values: T[],
+    public conditionalProbability: (val: T, givens: { [name: string]: any }) => number
+  ) {}
 
-  def calcProb(self, nodeName, value):
-      if self.memo[nodeName][value]:
-          return self.memo[nodeName][value]
-      else:
-          node = self.__findNode(nodeName)
-          prob = node.calcProb(value)
-          self.memo[nodeName][value] = prob
-          return prob
+  sample(givens: { [name: string]: any }) {
+    const cmf = this.cmf(givens);
+    const randP = Math.random();
+    for (const [val, cumProb] of cmf) {
+      if (randP <= cumProb) return val;
+    }
+  }
 
-  def setPmf(self, nodeName, pmf):
-      # setting pmf
-      node = self.__findNode(nodeName)
-      node.setPmf(pmf)
+  // @TODO: memoize
+  cmf(givens: { [name: string]: any }) {
+    const cmf = new Map<T, number>();
+    let lastP = 0;
+    for (const val of this.values) {
+      const p = this.conditionalProbability(val, givens);
+      const cumP = p + lastP;
+      cmf.set(val, cumP);
+      lastP = cumP;
+    }
+    return cmf;
+  }
+}
 
-      # invalidating downstream cached results
-      self.memo[nodeName] = {}
-      children = self.__findChildren(nodeName, True)
-      for child in children:
-          self.memo[child.name] = {}
+class BayesianBeliefNet {
+  constructor(
+    /* Must be ordered from roots to leaves */
+    readonly nodes: Nod<any>[]
+  ) {}
 
-  def __findNode(self, nodeName):
-      node = find(self.nodes, lambda n: n.name == nodeName)
-      return node
+  private sample(givens: { [name: string]: any }) {
+    const sampled = structuredClone(givens);
+    for (const node of this.nodes) {
+      if (node.name in sampled) continue;
+      const nodeVal = node.sample(sampled);
+      sampled[node.name] = nodeVal;
+    }
+    return sampled;
+  }
 
-  def __findChildren(self, nodeName, recursive=False):
-      pass
+  private samples(sampleSize: number, givens: { [name: string]: any }) {
+    const out = [];
+    for (let i = 0; i < sampleSize; i++) {
+      out.push(this.sample(givens));
+    }
+    return out;
+  }
 
+  probDist(nodes: Nod<any>[]) {
+    const samples = this.samples(5000, {});
+    const pdf = Utils.empiricalPmf(nodes, samples);
+    return pdf;
+  }
 
+  conditionalProbDist(nodes: Nod<any>[], givens: { [name: string]: any }) {
+    const samples = this.samples(5000, givens);
+    const pdf = Utils.empiricalPmf(nodes, samples);
+    return pdf;
+  }
+}
 
-def randomSelection(door, parents):
-  return 1/3
+const eq = new Nod('earthquake', [0, 1, 2, 3, 4, 5], (val, _) => {
+  return 5 / 12 - 0.1 * val;
+});
 
-guest = Node('guest', randomSelection, [1, 2, 3])
+const burglary = new Nod('burglary', [true, false], (val, _) => {
+  return val ? 0.1 : 0.9;
+});
 
-real = Node('real', randomSelection, [1, 2, 3])
+const alarm = new Nod('alarm', [true, false], (val, givens) => {
+  const probOfAlarm = Math.min(1, givens[eq.name] * 0.1 + givens[burglary.name] * 0.8);
+  return val ? probOfAlarm : 1 - probOfAlarm;
+});
 
+const bp = new Nod('blood-pressure', [100, 110, 120, 130, 140, 150, 160], (val, givens) => {
+  const bpExpected = 120 + 30 * givens[alarm.name];
+  const distance = Math.abs(val - bpExpected);
+  return 3.1 / 7 - 0.01 * distance;
+});
 
-def revealRandomFallsDoor(door, parents):
-  if parents['real'] == door:
-      return 0  # wont reveal the price door
-  if parents['guest'] == door:
-      return 0  # wont reveal the guest door
-  elif parents['real'] == parents['guest']:
-      return 1/2  # the guest is at the right door, so pick one of the remaining ones at random
-  else:
-      # one door is the guest, another is the price, this door must be the only revealable option
-      return 1
+const net = new BayesianBeliefNet([eq, burglary, alarm, bp]);
 
-monty = Node('monty', revealRandomFallsDoor, [1, 2, 3], [real, guest])
-
-# %%
-monty.calcProb(1)
-# %%
-def guestPicked1(door, parents):
-  if door == 1:
-      return 1
-  else:
-      return 0
-
-guest.setPmf(guestPicked1)
-
-monty.calcProb(2)
-# %%
-def realDoorIs2(door, parents):
-  if door == 2:
-      return 1
-  else:
-      return 0
-
-real.setPmf(realDoorIs2)
-
-monty.calcProb(3)
+const prior = net.probDist([bp]); // distribution of blood pressure
+const posterior = net.conditionalProbDist([bp], { [eq.name]: 5 }); // distribution of blood pressure if there is a heavy eq
 ```
-
-Note that you can change the direction of an edge in a bayesian net - but you'll have to change the associated probability tables.
-Let's say we start with a relation $A \to B$ and have given $P(A)$ and $P(B|A)$.
-To turn this around into $B \to A$ we need to obtain $P(B)$ and $P(A|B)$.
-We can get $P(A|B)$ as:
-$$ P(A|B) = \frac{P(A, B)}{P(B)} = \frac{P(B|A)P(A)}{P(B)} = \frac{P(B|A)P(A)}{ \int_A P(B|A)P(A) } $$
-which is, obviously, different from $P(A)$, so we *do need* to make changes to the tables.
-We can also obtain $P(B)$ as:
-$$ P(B) = \int_A P(A, B) = \int_A P(B|A)P(A) $$
-So we can calculate the terms $P(B)$ and $P(A|B)$ from our given $P(A)$ and $P(B|A)$.
 
 ## Hidden-state models
 

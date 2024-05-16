@@ -54,7 +54,7 @@ Beauftragter: wenn > 20 Personen mit personenbezogenen Daten arbeiten
 
 **Braucht man wenn**:
 
-- jeder der Inhalte im Internet veröffentlicht, die nicht ausschließlich privat sind
+- Jeder, der Inhalte im Internet veröffentlicht, die nicht ausschließlich privat sind
 - Onlineshops
 - Dienstleistungen oder Software
 - Kommerziell
