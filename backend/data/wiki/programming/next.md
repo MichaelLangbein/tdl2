@@ -114,7 +114,11 @@ Next supports css _modules_: any css file ending in `.module.css` is going to be
 
 ## Strapi
 
-## Search
+## URL-Params and Search
+
+- `useSearchParams`- Allows you to access the parameters of the current URL. For example, the search params for this URL /dashboard/invoices?page=1&query=pending would look like this: {page: '1', query: 'pending'}.
+- `usePathname` - Lets you read the current URL's pathname. For example, for the route /dashboard/invoices, usePathname would return '/dashboard/invoices'.
+- `useRouter` - Enables navigation between routes within client components programmatically. There are multiple methods you can use.
 
 ## Auth
 
