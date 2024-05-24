@@ -495,6 +495,218 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 <br/>
 <br/>
 <br/>
+
+# Macro economics
+
+We will build an equilibrium model of macro-economics.
+That means that when we calculate an optimal demand for something, this will in equilibrium equal the optimal supply for it, and vice versa.
+
+## Firms - macro
+
+As before, firms aim to maximize profit:
+$$ \pi = Y - w L - r K $$
+
+- $Y$ is production, which replaces $q p$ in our micro-economic model
+- $r$, the rent on capital, can now be assumed to equal the **real interest rate**.
+- We use (a slightly different version of) the Cobb-Douglass production function: $q = A K^a L^{1-a}$
+- We want to maximize $\pi$ by changing $L$ and $K$.
+- $\frac{\partial \pi}{\partial L} = (1-a) A K^a N^{-a} - w = 0$
+  - **Labor demand**: $L = (\frac{w}{(1-a) A K^a})^{-1/a}$
+  - **wages**: $w = (1-a) A K^a N^{-a}$
+- $\frac{\partial \pi}{\partial K} = a A K^{a-1}L^{1-a} - r = 0$
+  - Kapital, which equals **investment**: $K = I = (\frac{aAN^{1-a}}{r})^{1/(1-a)}$
+  - **Real interest rate**: $r = \frac{I^{a-1}}{aAN^{1-a}}$
+
+## Government
+
+- $G = T + B$
+  - $G$: government spending
+  - $T$: taxes
+  - $B$: government debt (=bonds)
+- In future: $G_f = T_f + (1+r)B$
+- Solving for B and equating:
+  - $G - \frac{G_f}{1+r} = T - \frac{T_f}{1+r}$
+
+## Households
+
+Households want to maximize utility $U$, which comes from:
+
+- consumption $C$
+- future consumption $C_f$
+- leisure $1-L$
+- having money at hand (not in a bank) $M/P$
+  - where $M$ is the money supply, $P$ is the price-level
+
+We use a log-utility function:
+$$ U = \ln{[C + b_1 \ln{(1-L)}]} + b_2 \ln{C_f} + b3 \ln{\frac{M}{P}}$$
+
+This is subject to the household budget:
+$$C = Y - T - S - \frac{M}{P}$$
+
+- where $Y$ is production, which equals the households' wages
+- $S$ is savings
+
+There is also the future budget:
+$$C_f = Y_f - T_f + (1+r)S + \frac{(1+r)M}{(1 + r_{nom})P}$$
+
+Combining the two household-budgets with the government budget-equation, we obtain:
+
+$$C_f = (Y - C - G)(1+r) + Y_f - G_f - \frac{(1+r)r_{nom}M}{(1 + r_{nom})P}$$
+
+The task now is to maximize $U$ by varying $C, L, M$, subject to the above combined-household-equation. This is a lot of pencil-pushing, but with patience we get:
+
+- **Labor supply**: $L = 1 - \frac{b_1}{w}$
+- **Cash-money demand**: $M = \frac{b_3(1 + r_{nom})PC}{r_{nom}}$
+- **Consumption**: $C = \frac{1}{1 + b2 + b3} [ Y - G + \frac{Y_f - G_f}{1+r} - b_1(b_2 + b_3) \ln{\frac{b_1}{w}} ]$
+
+## Equilibrium conditions
+
+- Goods market equilibrium:
+  - $Y = C + I + G$
+  - In words: realOutput = consumption + investment + governmentExpenditure
+- equilibrium between investment and saving is interpreted as loanable-funds-market
+
+## Implementation
+
+```python
+#%% https://macrosimulation.org/a_neoclassical_macro_model
+
+"""
+Y = real output,
+K = capital stock,
+N = employment,
+w = real wage,
+C = consumption,
+G = government expenditure,
+r = real interest rate,
+I = investment,
+r_n = nominal interest rate,
+pi = inflation,
+M_s = money supply,
+M_d = money demand,
+P_t = price level
+
+Assumptions:
+- Output: (Cobb-Douglass) Y = AK^a * N^(1-a), a in (0,1)
+- Classical dichotomy aka neutrality of money: money supply is exogenous, only impacts price level, not real economy
+- Ricardian equivalence: Government expenditures crowd out private expenditures
+- Short-term model: prices are flexible, capital stock is fixed
+"""
+
+#%%
+import math as m
+
+
+# Cobb Douglass parameter
+A = 2
+a = 0.5 # a in (0, 1), capital elasticity of output
+
+# Household utility function weights
+b1 = 0.4  # b1 > 0
+b2 = 0.9  # discount rate
+b3 = 0.6  # household preference for money
+
+# Derived parameters
+c1 = 1 / (1 + b2 + b3)
+c2 = b1 * (b2 + b3)
+
+G0 = 1 # government expenditure
+M0 = 10 # money supply
+K = 5
+pi_future = 0.02
+Y_future = 1
+
+def calcRealOutput(capital, employment):
+    # Cobb Douglass
+    return A * m.pow(capital, a) * m.pow(employment, 1-a)
+#     # goods market equilibrium condition
+#     return consumption + investment + governmentExpenditure
+
+
+def calcRealWage(capital, employment):
+    # labor demand of firms, solved for real wage
+    return (1-a) * A * m.pow(capital, a) * m.pow(employment, -a)
+
+def calcEmployment(realWage):
+    # labor supply
+    return 1 - b1 / realWage
+
+def calcConsumption(realOutput, governmentExpenditure, realOutputFuture, governmentExpenditureFuture, realInterestRate, realWage):
+    # consumption demand
+    # consumption smoothing: if governments spends much today, it'll have to raise taxes tomorrow, so better save up today.
+    income = realOutput - governmentExpenditure
+    futureIncome = (realOutputFuture - governmentExpenditureFuture) / (1 - realInterestRate)
+    return c1 * (income + futureIncome - c2 * m.log(b1 / realWage))
+
+def calcInvestment(realOutput, consumption, governmentExpenditure):
+    # investment demand
+    # equilibrium between investment and saving is interpreted as loanable-funds-market
+    # return m.pow(a * A * m.pow(employment, 1-a) / realInterestRate, 1/(1-a))
+    # goods marked equilibrium condition, solved for I
+    return realOutput - consumption - governmentExpenditure
+
+def calcRealInterestRate(employment, investment):
+    # investment demand, solved for r
+    return m.pow(investment, a-1) * a * A * m.pow(employment, 1-a)
+
+def calcGovernmentExpenditure():
+    return G0
+
+def calcNominalInterestRate(realInterestRate, futureInflation):
+    # fisher equation
+    return realInterestRate + futureInflation
+
+def  calcMoneySupply():
+    return M0
+
+def calcMoneyDemand(nominalInterestRate, priceLevel, consumption):
+    return b3 * (1 + nominalInterestRate) * priceLevel * consumption / nominalInterestRate
+
+def calcMoney():
+    # money market equilibrium condition: M = M_d(P) = M_s
+    return M0
+
+def calcPriceLevel(moneySupply, nominalInterestRate, consumption):
+    nom = moneySupply * nominalInterestRate
+    denom = (1 + nominalInterestRate) * b3 * consumption
+    return nom / denom
+
+
+#%%
+capital = 1
+employment = 1
+realOutput = 1
+realWage = 1
+consumption = 1
+governmentExpenditure = G0
+governmentExpenditureFuture = G0
+realOutputFuture = 1
+realInterestRate = 0.01
+nominalInterestRate = 0.01
+investment = 1
+futureInflation = 1
+priceLevel = 1
+
+# solving relations through fixed-point iteration:
+for i in range(100):
+    governmentExpenditure = calcGovernmentExpenditure()
+    realOutput = calcRealOutput(capital, employment)
+    realWage = calcRealWage(capital, employment)
+    employment = calcEmployment(realWage)
+    consumption = calcConsumption(realOutput, governmentExpenditure, realOutputFuture, governmentExpenditureFuture, realInterestRate, realWage)
+    investment = calcInvestment(realOutput, consumption, governmentExpenditure)
+    realInterestRate = calcRealInterestRate(employment, investment)
+    nominalInterestRate = calcNominalInterestRate(realInterestRate, futureInflation)
+    priceLevel = calcPriceLevel(M0, nominalInterestRate, consumption)
+
+
+# %%
+```
+
+<br/>
+<br/>
+<br/>
+<br/>
 <br/>
 <br/>
 <br/>

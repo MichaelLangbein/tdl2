@@ -15,6 +15,11 @@ M_s = money supply,
 M_d = money demand,
 P_t = price level
 
+
+
+
+
+
 Assumptions:
 - Output: (Cobb-Douglass) Y = AK^a * N^(1-a), a in (0,1)
 - Classical dichotomy aka neutrality of money: money supply is exogenous, only impacts price level, not real economy
@@ -47,11 +52,11 @@ pi_future = 0.02
 Y_future = 1
 
 def calcRealOutput(capital, employment):
+    # Cobb Douglass
     return A * m.pow(capital, a) * m.pow(employment, 1-a)
-
-# def calcRealOutput(consumption, investment, governmentExpenditure):
 #     # goods market equilibrium condition
 #     return consumption + investment + governmentExpenditure
+
 
 def calcRealWage(capital, employment):
     # labor demand of firms, solved for real wage
