@@ -36,6 +36,10 @@ Routing functions:
   - Works both in server-side- and client-side-code.
 - `revalidatePath from next/navigation`
 
+- `generateStaticParams`: if you have a `src/[slug]/page.tsx` or a `src/[id].tsx` or such, those are pages that are created dynamically.
+  - That means that they cannot be SSG'ed into static html at build-time.
+  - To prevent that, return in this method a list of the possible values for `slug` (respectively `id`)
+
 ## Server- vs client-components
 
 - Default: server-side
@@ -48,10 +52,10 @@ Routing functions:
 - Start function with `"use server";` -> executed on server
   - common for server-actions
 
-## Server-actions
+## Forms and server-actions
 
 - `form.action={onSubmit}` instead of `form.onSubmit(e => e.preventDefault; ...)` (JS) and instead of `form.action="someUrl"` (PHP)
-- `onSubmit = async (formData) => { "use server"; await someServerAction(); revalidatePath("/posts"); }`
+- `onSubmit = async (formData: FormData) => { "use server"; await someServerAction(); revalidatePath("/posts"); }`
 
 ## Async components
 
@@ -89,12 +93,6 @@ Async components can be wrapped in `Suspense` to show a fallback while async dat
 </Suspense>
 ```
 
-## Magic methods
-
-- `generateStaticParams`: if you have a `src/[slug]/page.tsx` or a `src/[id].tsx` or such, those are pages that are created dynamically.
-  - That means that they cannot be SSG'ed into static html at build-time.
-  - To prevent that, return in this method a list of the possible values for `slug` (respectively `id`)
-
 ## SSG
 
 - dev mode: everything dynamically generated
@@ -114,9 +112,10 @@ Next supports css _modules_: any css file ending in `.module.css` is going to be
 
 ## Strapi
 
-## URL-Params and Search
+## URL-Params
 
 - `useSearchParams`- Allows you to access the parameters of the current URL. For example, the search params for this URL /dashboard/invoices?page=1&query=pending would look like this: {page: '1', query: 'pending'}.
+- On server, use the `searchParams` prop instead (passed by default to all server-side components)
 - `usePathname` - Lets you read the current URL's pathname. For example, for the route /dashboard/invoices, usePathname would return '/dashboard/invoices'.
 - `useRouter` - Enables navigation between routes within client components programmatically. There are multiple methods you can use.
 

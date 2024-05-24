@@ -514,7 +514,7 @@ $$ \pi = Y - w L - r K $$
   - **Labor demand**: $L = (\frac{w}{(1-a) A K^a})^{-1/a}$
   - **wages**: $w = (1-a) A K^a N^{-a}$
 - $\frac{\partial \pi}{\partial K} = a A K^{a-1}L^{1-a} - r = 0$
-  - Kapital, which equals **investment**: $K = I = (\frac{aAN^{1-a}}{r})^{1/(1-a)}$
+  - Capital, which equals **investment**: $K = I = (\frac{aAN^{1-a}}{r})^{1/(1-a)}$
   - **Real interest rate**: $r = \frac{I^{a-1}}{aAN^{1-a}}$
 
 ## Government
@@ -559,12 +559,46 @@ The task now is to maximize $U$ by varying $C, L, M$, subject to the above combi
 - **Cash-money demand**: $M = \frac{b_3(1 + r_{nom})PC}{r_{nom}}$
 - **Consumption**: $C = \frac{1}{1 + b2 + b3} [ Y - G + \frac{Y_f - G_f}{1+r} - b_1(b_2 + b_3) \ln{\frac{b_1}{w}} ]$
 
+We calculate the cash-money demand as a function of households, not of firms, because in practice households hold more cash-money (M) than firms. Firms will largely invest (I) their money.
+
+## Cash money market
+
+With $M$ we mean cash-money and checking accounts - so called $M_1$ money. We don't mean wealth, which includes bonds, stocks, and other investments (these other forms are less liquid).
+
+While the money-demand is downward-sloping as a function of the interest rate ($M = \frac{b_3(1 + r_{nom})PC}{r_{nom}}$), the money supply is set fixed by the central bank.
+
+### Market for loanable funds
+
+Crowding out: https://www.youtube.com/watch?v=J_-55Y1eU0s, https://www.youtube.com/watch?v=4lBmOfNtYLE&pp=ygUiY3Jvd2Rpbmcgb3V0IGVmZmVjdCBtYWNyb2Vjb25vbWljcw%3D%3D
+
+Inflation: https://www.youtube.com/watch?v=FdtBj1juEQs
+
+### Fed policy
+
+- Expansionary monetary policy: fed increases money supply -> interest rate drops -> investment increases, demand increases
+- Contractionary monetary policy: fed decreases money supply -> interest rate increases -> decreases investment, demand, but fights inflation
+
+Fed has three ways of acting on money market:
+
+- Open market operations = fed buys or sells bonds to private banks
+  - buying bonds:
+    - remove bonds
+    - give money to banks -> increases money supply
+      - (because bonds are not counted as money-supply: because banks cannot lend out bonds, only cash)
+- Discount rate: interest rate the fed charges to private banks (different from $r$ as felt by consumers)
+  - low discount rate -> more banks borrow from fed -> higher money supply
+- Reserve ratio
+
 ## Equilibrium conditions
 
-- Goods market equilibrium:
+- **Goods market** equilibrium:
   - $Y = C + I + G$
   - In words: realOutput = consumption + investment + governmentExpenditure
-- equilibrium between investment and saving is interpreted as loanable-funds-market
+- **GDP**:
+  - expenditure approach: $GDP = C + I + G$
+  - income approach: $GDP = Y$ = wages
+- **Loanable funds**:
+  - equilibrium between investment and saving is interpreted as loanable-funds-market
 
 ## Implementation
 
@@ -797,24 +831,24 @@ The nominal interest rate $q$ demanded of a customer is actually less harsh than
 The real interest rate is less due to the effects of inflation:
 $$ 1 + q_r = \frac{1 + q}{1 + i} $$
 
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+## How banks create money
 
-# Macroeconomics
+Required reserves: 10%
 
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+- Person A has 100$. -> Money supply: 100$
+- Person A deposits 100$ in bank checking account. -> Checking accounts are part of money supply, so the money supply remains 100$.
+- Bank lends 90$ to person B. -> Money supply: 190$, debt: 90$
+- B deposits 90$ in another bank
+- That bank lends 81$ to person C. -> Money supply: 271$, debt: 171$
+- Repeat: next bank lends out 73$ -> Money supply: 344$, debt: 244$
+- Repeat: ...
+- Repeat: Money supply: 1000$, debt: 900$
+- Money supply = initial deposit / reserve ratio
+
+Note: When a person deposits 100$, the money supply increases by 1000$ - 100$ = 900$ (because the first 100$ were already in the money market). When the government buys back a bond for 100$ from a bank, the supply increases by 1000$, because the first 100$ were _not_ already in the market. When the government sells a bond for 100$, 100$ are removed from the money supply.
+
+## How the fed adds and removes money
+
 <br/>
 <br/>
 <br/>
