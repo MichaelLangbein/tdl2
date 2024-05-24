@@ -61,7 +61,7 @@ $\frac{\partial c(L|K_0)}{\partial q}$ is called the _marginal cost_ (MC). We se
 >
 > Solving for $q$:
 >
-> $ q(p|K_0) = (\frac{p a}{w})^\frac{a}{1-a} K_0 $
+> $q(p|K_0) = (\frac{p a}{w})^\frac{a}{1-a} K_0$
 
 #### Shutdown condition
 
@@ -100,9 +100,9 @@ $$ \frac{\partial q(L, K)}{\partial L} \frac{1}{w} = \frac{\partial q(L, K)}{\pa
 >
 > Plugging this back into $q(K, L)$, we get $K^{opt}(q)$ and $L^{opt}(q)$:
 >
-> $ K^{opt}(q) = \frac{q}{(\frac{a}{1-a} \frac{r}{w})^a} $
+> $K^{opt}(q) = \frac{q}{(\frac{a}{1-a} \frac{r}{w})^a}$
 >
-> $ L^{opt}(q) = \frac{q}{(\frac{a}{1-a} \frac{r}{w})^{a-1}} $
+> $L^{opt}(q) = \frac{q}{(\frac{a}{1-a} \frac{r}{w})^{a-1}}$
 >
 > $c(q) = w\frac{q}{(\frac{a}{1-a} \frac{r}{w})^{a-1}} + r\frac{q}{(\frac{a}{1-a} \frac{r}{w})^a}$
 

@@ -752,7 +752,7 @@ $$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq |x_1 - x_2|$$
 In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ _again_ to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
 
 - If a function is a contraction, it has at most one fixed point $x_{fix}$.
-- $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
+- $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ...$ converges to the fixed point $x_{fix}$
 
 Applied to programming, we can replace a recursive calculation ...
 
