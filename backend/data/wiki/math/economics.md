@@ -496,12 +496,12 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 <br/>
 <br/>
 
-# Macro economics
+# Macro economics: static neo-classical model
 
 We will build an equilibrium model of macro-economics.
 That means that when we calculate an optimal demand for something, this will in equilibrium equal the optimal supply for it, and vice versa.
 
-## Firms - macro
+## Firms
 
 As before, firms aim to maximize profit:
 $$ \pi = Y - w L - r K $$
@@ -553,6 +553,18 @@ Combining the two household-budgets with the government budget-equation, we obta
 
 $$C_f = (Y - C - G)(1+r) + Y_f - G_f - \frac{(1+r)r_{nom}M}{(1 + r_{nom})P}$$
 
+<small>
+We've combined today's household-budget with the future household-budget, and with today's and the future government-budget. 
+This implies that households account not only for current taxes, but also for future taxes, 
+and even that households know that the government will raise taxes in the future if it has high spending today.
+This is a strong assumption, known as the [Ricardo-Barro-effect](https://en.wikipedia.org/wiki/Ricardian_equivalence),
+but if it does hold, that means that whether the government finances extra-spending by new taxes, new debt or money-printing has no effect on consumption.
+
+Suppose that the government finances some extra spending through deficits; i.e. it chooses to tax later. According to the hypothesis, taxpayers will anticipate that they will have to pay higher taxes in future. As a result, they will save, rather than spend, the extra disposable income from the initial tax cut, leaving demand and output unchanged.
+
+If Ricardo-Barro does hold, then governments' counter-cyclical policies must fail.
+</small>
+
 The task now is to maximize $U$ by varying $C, L, M$, subject to the above combined-household-equation. This is a lot of pencil-pushing, but with patience we get:
 
 - **Labor supply**: $L = 1 - \frac{b_1}{w}$
@@ -573,7 +585,12 @@ Crowding out: https://www.youtube.com/watch?v=J_-55Y1eU0s, https://www.youtube.c
 
 Inflation: https://www.youtube.com/watch?v=FdtBj1juEQs
 
-### Fed policy
+### Fiscal policy
+
+Taxes and government spending.
+Governments mostly try to keep inflation and unemployment low.
+
+### Monetary (Fed) policy
 
 - Expansionary monetary policy: fed increases money supply -> interest rate drops -> investment increases, demand increases
 - Contractionary monetary policy: fed decreases money supply -> interest rate increases -> decreases investment, demand, but fights inflation
@@ -603,139 +620,591 @@ Fed has three ways of acting on money market:
 ## Implementation
 
 ```python
-#%% https://macrosimulation.org/a_neoclassical_macro_model
+#%%
+import matplotlib.pyplot as plt
+import numpy as np
 
-"""
-Y = real output,
-K = capital stock,
-N = employment,
-w = real wage,
-C = consumption,
-G = government expenditure,
-r = real interest rate,
-I = investment,
-r_n = nominal interest rate,
-pi = inflation,
-M_s = money supply,
-M_d = money demand,
-P_t = price level
 
-Assumptions:
-- Output: (Cobb-Douglass) Y = AK^a * N^(1-a), a in (0,1)
-- Classical dichotomy aka neutrality of money: money supply is exogenous, only impacts price level, not real economy
-- Ricardian equivalence: Government expenditures crowd out private expenditures
-- Short-term model: prices are flexible, capital stock is fixed
-"""
+def radioPlot(labels, stats1, stats2, label1, label2):
+    angles = np.linspace(0, 2 * np.pi, len(labels) + 1, endpoint=False).tolist()
+    _, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    ax.fill(angles[:-1], stats1, color='red', alpha=0.25)
+    ax.fill(angles[:-1], stats2, color='blue', alpha=0.25)
+    ax.plot(angles[:-1], stats1, color='red', linewidth=2, label=label1)
+    ax.plot(angles[:-1], stats2, color='blue', linewidth=2, label=label2)
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(labels)
+    plt.legend()
+    plt.show()
 
 #%%
-import math as m
+"""
+The neoclassical model is the only macro economic model that still optimizes profit (for firms) and utility (for households)
+It assumes households are very rational and know that today's government spending must be financed with tomorrow's taxes.
+It implies Ricardo-Barro effect (demand is unchanged when government tries to stimulate the economy by debt-financed spending).
+That seems quite unrealistic, but it describes an economy where everyone
+is rational and budgets are (in the long term) balanced.
+"""
+
+def neoclassical(
+        A = 2,       # productivity
+        a = 0.3,     # Douglass-Cobb factor
+        b1 = 0.4,    # household preference for leisure
+        b2 = 0.9,    # discount rate
+        b3 = 0.6,    # household preference for money
+        G0 = 1,      # Government spending
+        Gf = 1,      # future government spending
+        Yf = 1,      # expected future productivity
+        M0 = 5,      # money supply
+        K = 5,       # capital (exogenous)
+        pe = 0.02    # expected future profit
+):
+
+    # Initialise endogenous variables at arbitrary positive value
+    w = C = I = Y = r = N = P = 1
+
+    for _ in range(1000):
+
+        # Cobb douglass production
+        Y = A * K**a * N**(1-a)
+
+        # Labor demand
+        w = A * (1-a) * K**a * N**(-a)
+
+        # Labor supply
+        N = 1 - b1/w
+
+        # Consumption demand
+        C = (1/(1 + b2 + b3)) * (Y - G0 + (Yf - Gf)/(1+r)   - b1*(b2+b3) * np.log(b1/w))
+
+        # Investment demand, solved for r
+        r = I**(a-1) * a * A * N**(1-a)
+
+        # Goods market equilibrium, solved for I
+        I = Y - C - G0
+
+        # Nominal interest rate
+        rn = r + pe
+
+        # Price level
+        P = (M0 * rn) / ((1 + rn) * b3 * C)
+
+    return w , C , I , Y , r , N , P
 
 
-# Cobb Douglass parameter
-A = 2
-a = 0.5 # a in (0, 1), capital elasticity of output
+stats1 = neoclassical()
+stats2 = neoclassical(G0=1.5)
+radioPlot(["w" , "C" , "I" , "Y" , "r" , "N" , "P"], stats1, stats2, "baseline", "fiscal policy")
 
-# Household utility function weights
-b1 = 0.4  # b1 > 0
-b2 = 0.9  # discount rate
-b3 = 0.6  # household preference for money
-
-# Derived parameters
-c1 = 1 / (1 + b2 + b3)
-c2 = b1 * (b2 + b3)
-
-G0 = 1 # government expenditure
-M0 = 10 # money supply
-K = 5
-pi_future = 0.02
-Y_future = 1
-
-def calcRealOutput(capital, employment):
-    # Cobb Douglass
-    return A * m.pow(capital, a) * m.pow(employment, 1-a)
-#     # goods market equilibrium condition
-#     return consumption + investment + governmentExpenditure
-
-
-def calcRealWage(capital, employment):
-    # labor demand of firms, solved for real wage
-    return (1-a) * A * m.pow(capital, a) * m.pow(employment, -a)
-
-def calcEmployment(realWage):
-    # labor supply
-    return 1 - b1 / realWage
-
-def calcConsumption(realOutput, governmentExpenditure, realOutputFuture, governmentExpenditureFuture, realInterestRate, realWage):
-    # consumption demand
-    # consumption smoothing: if governments spends much today, it'll have to raise taxes tomorrow, so better save up today.
-    income = realOutput - governmentExpenditure
-    futureIncome = (realOutputFuture - governmentExpenditureFuture) / (1 - realInterestRate)
-    return c1 * (income + futureIncome - c2 * m.log(b1 / realWage))
-
-def calcInvestment(realOutput, consumption, governmentExpenditure):
-    # investment demand
-    # equilibrium between investment and saving is interpreted as loanable-funds-market
-    # return m.pow(a * A * m.pow(employment, 1-a) / realInterestRate, 1/(1-a))
-    # goods marked equilibrium condition, solved for I
-    return realOutput - consumption - governmentExpenditure
-
-def calcRealInterestRate(employment, investment):
-    # investment demand, solved for r
-    return m.pow(investment, a-1) * a * A * m.pow(employment, 1-a)
-
-def calcGovernmentExpenditure():
-    return G0
-
-def calcNominalInterestRate(realInterestRate, futureInflation):
-    # fisher equation
-    return realInterestRate + futureInflation
-
-def  calcMoneySupply():
-    return M0
-
-def calcMoneyDemand(nominalInterestRate, priceLevel, consumption):
-    return b3 * (1 + nominalInterestRate) * priceLevel * consumption / nominalInterestRate
-
-def calcMoney():
-    # money market equilibrium condition: M = M_d(P) = M_s
-    return M0
-
-def calcPriceLevel(moneySupply, nominalInterestRate, consumption):
-    nom = moneySupply * nominalInterestRate
-    denom = (1 + nominalInterestRate) * b3 * consumption
-    return nom / denom
-
-
-#%%
-capital = 1
-employment = 1
-realOutput = 1
-realWage = 1
-consumption = 1
-governmentExpenditure = G0
-governmentExpenditureFuture = G0
-realOutputFuture = 1
-realInterestRate = 0.01
-nominalInterestRate = 0.01
-investment = 1
-futureInflation = 1
-priceLevel = 1
-
-# solving relations through fixed-point iteration:
-for i in range(100):
-    governmentExpenditure = calcGovernmentExpenditure()
-    realOutput = calcRealOutput(capital, employment)
-    realWage = calcRealWage(capital, employment)
-    employment = calcEmployment(realWage)
-    consumption = calcConsumption(realOutput, governmentExpenditure, realOutputFuture, governmentExpenditureFuture, realInterestRate, realWage)
-    investment = calcInvestment(realOutput, consumption, governmentExpenditure)
-    realInterestRate = calcRealInterestRate(employment, investment)
-    nominalInterestRate = calcNominalInterestRate(realInterestRate, futureInflation)
-    priceLevel = calcPriceLevel(M0, nominalInterestRate, consumption)
-
-
-# %%
 ```
+
+## Accounting for a central bank and for banks
+
+```python
+
+
+"""
+Neo-classical synthesis model
+- no longer optimizes for profit (firms) or utility (households)
+
+- monetary policy:
+    - fed spending
+    - affects mostly investment?
+- fiscal policy:
+    - government spending
+    - affects mostly consumption?
+"""
+
+
+def neoclassicalSynthesis(
+    c0 = 2    ,  # autonomous consumption
+    c1 = 0.6  ,  # sensitivity of consumption w.r.t. income
+    i0 = 2    ,  # investment demand (aka. animal spirits)
+    i1 = 0.1  ,  # sensitivity of investment w.r.t. interest rate
+    A = 2     ,  # productivity
+    Pe = 1    ,  # expected price level
+    m0 = 6    ,  # liquidity preference
+    m1 = 0.2  ,  # sensitivity of money demand w.r.t. income
+    m2 = 0.4  ,  # sensitivity of money demand w.r.t. interest rate
+    M0 = 5    ,  # money demand
+    G0 = 1    ,  # government spending
+    T0 = 1    ,  # taxes
+    K0 = 1    ,  # capital stock (exogenous)
+    Nf = 7    ,  # full employment
+    a = 0.3   ,  # capital elasticity of output
+    b = 0.4   ,  # household preference for leisure
+):
+    """
+    https://macrosimulation.org/a_neoclassical_synthesis_model_is_lm_as_ad
+    """
+
+    # Endogenous variables
+    Y = C = I = r = P = w = N = W = 1
+
+    for _ in range(100):
+
+        # Goods market equilibrium
+        Y = C + I + G0
+
+        # Consumption demand
+        C = c0 + c1 * (Y - T0)
+
+        # Investment demand
+        I = i0 - i1 * r
+
+        # Money market, solved for interest rate
+        r = (m0 - (M0/P)) / m2  +  m1 * Y/m2
+
+        # Unemployment rate
+        U = 1 - N/Nf
+
+        # Real wage
+        w = A * (1-a) * K0**a * N**(-a)
+
+        # Nominal wage
+        W = Pe * b * C / U
+
+        # Price level
+        P = W / w
+
+        # Employment
+        N = (Y / (A * K0**a))**(1/(1-a))
+
+    return Y, C, I, r, U, w, W, P, N
+
+
+stats1 = neoclassicalSynthesis()
+stats2 = neoclassicalSynthesis(G0=1.125)
+radioPlot(["Y", "C", "I", "r", "U", "w", "W", "P", "N"], stats1, stats2, "baseline", "fiscal policy")
+
+
+#%%
+
+
+# Post keynesian with endogenous money
+def postKeynesianWithMoney(
+    b = 0.5,    # propensity to spend out of income
+    c = 0.7,    # share of credit-demand that is accommodated
+    d0 = 5,     # autonomous demand, debt-financed
+    d1 = 0.8,   # sensitivity of demand w.r.t. interest rate
+    i0 = 0.01,  # central bank rate, discretionary component
+    i1 = 0.5,   # sensitivity of central bank rate w.r.t. price level
+    m = 0.15,   # banks' interest rate markup
+    k = 0.3,    # desired reserve ratio
+    n = 0.15,   # price mark-up
+    W0 = 2,     # nominal wage (exogenous)
+    h = 0.8,    # sensitivity of nominal wage w.r.t. unemployment
+    a = 0.8,    # productivity
+    Nf = 12     # full employment
+):
+    """
+    https://macrosimulation.org/a_post_keynesian_macro_model_with_endogenous_money#overview
+    """
+
+    for _ in range(1000):
+        # Initialize endogenous variables at some arbitrary positive value
+        Y = D = ND = r = N = U = P = w = W = i = dL = dR = dM = 1
+
+        # Goods market
+        Y = ND + c * D
+
+        # Non-debt financed component of demand
+        ND = b * Y
+
+        # Debt financed component of demand
+        D = d0 - d1 * r
+
+        # Policy rate
+        # Assumes that fed raises interest when prices increase
+        i = i0 + i1 * P
+
+        # Lending rate
+        # Banks lend at policy rate plus markup
+        r = (1 + m) * i
+
+        # Change in loans
+        dL = c * D
+
+        # Change in deposits
+        dM = dL
+
+        # Change in reserves
+        dR = k * dM
+
+        # Price level
+        # Firms charge at production cost plus markup
+        P =  (1 + n) * a * W
+
+        # Nominal wage
+        # base wage, lower if high unemployment
+        W = W0 - h * U
+
+        # Real wage
+        w = 1 / ((1+n) * a)
+
+        # Employment
+        N = a * Y
+
+        # Unemployment
+        U = (Nf - N) / Nf
+
+    return Y, D, ND, r, N, U, P, w, W, i, dL, dR, dM
+
+
+stats1 = postKeynesianWithMoney()
+stats2 = postKeynesianWithMoney(c=0.9)
+
+
+labels = ["Y", "D", "ND", "r", "N", "U", "P", "w", "W", "i", "dL", "dR", "dM" ]
+radioPlot(labels, stats1, stats2, "baseline", "more lending")
+# %%
+
+```
+
+# Macro economics - new Keynesian model
+
+## Preliminaries: The circular flow model of macro-economics
+
+### Capital through factor markets and through investment in goods-markets
+
+From microeconomics, we're used to the Cobb-Douglas function, which relates production to labor and capital:
+
+$$Q = L^a K^{1-a}$$
+This is done to maximize profit:
+$$\Pi = PQ - wL -rK$$
+
+But we need to be careful with terminology here. In the _circular-flow_ model of macroeconomics, capital appears _twice_:
+
+- in the factors market, firms rent labor and capital for the price $Y$
+- in the goods market,
+  - consumers, government and foreigners order products from firms ($C$, $G$, and $X-M$, respectively)
+  - firms buy capital from themselves - this is called investment $I$.
+
+In micro-economics, using Cobb-Douglas, we assumed that all capital was rented on the factor market. We can no longer make this assumption in macroeconomics and the long-run.
+
+Also, when a firm buys capital on the goods-market, its expense is the income of another firm, meaning that overall the amount of money among firms has not changed. What has changed, however, is the capital stock, which has now increased. So there is a net-increase in value of firms equal to the value of the produced capital.
+The purchased capital comes into the ownership of the owner of the firm - and as such $I$ flows back through $Y$ to the households.
+
+<small>I think you could also think of it as such: when firm $A$, owned by household $h_A$ buys capital from firm $B$, owned by household $h_B$, that is consumption $C$ of $h_A$ and revenue $Y$ of $h_B$. But this view is rarely taken: in real economies, 60% of investment comes from firms.</small>
+
+### Wages, rent, profits
+
+From firms away flows $Y$ to households through the factor-market.
+From microeconomics we're used to this being wages $w$ payed for labor, but $Y$ also includes rent $r$ for capital and profits for entrepreneurship. In other words, all of a firms money is making its way to households, much more than just wages.
+
+## Basic equations
+
+- Steady state: demand equals production equals $Y$
+- Firms' equilibrium equation $Y = C + I + G + (X - M)$
+  - where $I$ is non-zero because of the value of the produced capital, not because of paying for them
+  - $(X - M)$ ignored for now, assuming a closed economy
+- Consumption $C = c_a + c_y (Y - T)$
+  - increases with disposable income
+- Taxes $T = t_a + t_y Y$
+- Investment $I = a_a - a_r r + a_y Y$
+  - decreases with real interest-rate $r$
+  - increases with demand
+- Saving $S = Y - C - T$
+
+## Multiplier
+
+$$Y = C + I + G$$
+$$Y = c_a + c_y (Y - t_a - t_y Y) + a_a - a_r r + a_y Y + G$$
+Since $Y$ equals GDP, we can calculate the sensitivity of GDP to different measures:
+
+- Effect of fiscal policy $\frac{\partial GDP}{\partial G} =$
+  - if government spends 1 more dollar, GDP increases by ...
+  - the first fraction, $\mu_G =$, is called the multiplier for $G$.
+  - the second term is called the _autonomous demand_.
+- Effect of fiscal policy: $\frac{\partial GDP}{\partial r} =$
+  - if fed reduces real interest by, ...
+  - the first fraction, $\mu_r =$, is called the multiplier for $r$.
+  - the second term is called the _autonomous demand_.
+
+```python
+#%%
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+def radioPlot(labels, plotData, ax = None):
+    isSubplot = ax is not None
+    if not isSubplot:
+        _, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+
+    angles = np.linspace(0, 2 * np.pi, len(labels) + 1, endpoint=False).tolist()
+    for (stats, label, color) in plotData:
+        ax.fill(angles[:-1], stats, color=color, alpha=0.25)
+        ax.plot(angles[:-1], stats, color=color, linewidth=1, label=label)
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(labels)
+
+    if not isSubplot:
+        plt.legend()
+        plt.show()
+
+def radioPlotRow(labels, titleLeft, plotDataLeft, titleRight, plotDataRight):
+    _, axes = plt.subplots(1, 2, subplot_kw=dict(polar=True))
+    radioPlot(labels, plotDataLeft, axes[0])
+    axes[0].set_title(titleLeft)
+    radioPlot(labels, plotDataRight, axes[1])
+    axes[1].set_title(titleRight)
+    plt.show()
+
+
+
+#%%
+def simulate(
+        i_a,
+        i_Y,
+        i_r,
+        r, # real interest rate
+        t_a,
+        t_w,
+        c_a,
+        c_w,
+        a, # Cobb-Douglass factor
+        G0, # government spending
+        balancedBudget = False
+):
+    # setting initial values
+    I = T = C = Y = L = 1
+
+    for _ in range(100):
+        I = i_a + i_Y * Y - i_r * r
+        T = t_a + t_w * Y
+        C = c_a + c_w * (Y - T)
+        G = T if balancedBudget else G0
+        Y = C + G + I
+        L = Y
+
+    return I, T, C, Y, L
+
+
+stats1 = simulate(i_a=1, i_Y=0.2, i_r=0.2, r=10, t_a=1, t_w=0.3, c_a=2, c_w=0.5, G0=10, a=0.5, balancedBudget=False)
+stats2 = simulate(i_a=1, i_Y=0.2, i_r=0.2, r=1,t_a=1, t_w=0.3, c_a=2, c_w=0.5, G0=10, a=0.5, balancedBudget=False)
+stats3 = simulate(i_a=1, i_Y=0.2, i_r=0.2, r=10, t_a=1, t_w=0.3, c_a=2, c_w=0.5, G0=10, a=0.5, balancedBudget=False)
+stats4 = simulate(i_a=1, i_Y=0.2, i_r=0.2, r=10,t_a=1, t_w=0.3, c_a=2, c_w=0.5, G0=15, a=0.5, balancedBudget=False)
+
+
+radioPlotRow(
+    ["I", "T", "C", "Y", "L"],
+    "decreased interest",
+    [
+        (stats1, "baseline", "red"),
+        (stats2, "low interest", "blue")
+    ],
+    "increased govt",
+    [
+        (stats3, "baseline", "red"),
+        (stats4, "high govt", "blue")
+    ],
+)
+"""
+monetary policy -> decreased interest -> more investment, gdp
+fiscal policy -> more govt. spending -> more gdp
+
+Fiscal policy seems to have a stronger effect on employment than monetary policy does.
+"""
+```
+
+## IS curve
+
+The IS curve shows GDP as a function of real interest rate.
+We've already established this relation:
+$$Y = c_a + c_y (Y - t_a - t_y Y) + a_a - a_r r + a_y Y + G$$
+Since the IS curve only cares about $r$, we can simplify this to:
+$$Y = A - \alpha r$$
+with $A$ called the _autonomous demand_, containing all $r$-independent terms, and $\alpha$ containing all $r$-dependent terms.
+
+We also now take into account the fact that markets react with some lag to changes in $r$:
+$$Y_t = A - \alpha r_{t-1}$$
+
+## Inflation: the Phillips curve
+
+Relates inflation to unemployment.
+
+### Setting the wages in the factor market
+
+Work is rented by firms from households in the factor-markets.
+Wages are determined by the maximum firms will pay and the minimum unions will demand.
+
+#### Supply side $w_r^S$
+
+Unions can demand more wages if
+
+- employment $L$ is already high
+- they have much bargaining power $b$
+- expected prices $P^{ex}$ are high
+
+$$w^D_r = w^D_{nom} / P^{ex} = b + kL$$
+This is the demand curve for wage $w$ as a function of $L$.
+
+#### Demand side $w_r^D$
+
+The macro-economic version of Cobb-Douglas is:
+$$Y = pL$$
+where $p$ is the _worker-productivity_.
+
+The cost per unit is then:
+$$\frac{Cost}{Y} = \frac{w_{nom}L}{Y} = \frac{w_{nom}}{p}$$
+
+If companies are not in _perfect_ competition, they'll add a markup $m$ to their prices so they can make a profit:
+$$P = (1+m)\frac{Cost}{Y} = (1+m)\frac{w_{nom}}{p}$$
+
+Solving for $w_{nom}$:
+$$w_{nom} = \frac{Pp}{1+m}$$
+$$w^S_r = \frac{w_{nom}}{P} = \frac{p}{1+m}$$
+
+This is the supply curve for $w$ as a function of $L$ ... but notice that $L$ does not appear in the function: the demand is a horizontal line!
+
+#### Equilibrium $w^{eq}, L^{eq}$
+
+$$L^{eq}: w^D_r(L) = w^S_r(L)$$
+$$b + kL = \frac{p}{1+m}$$
+$$L^{eq} = \frac{1}{k}[\frac{p}{1+m} - b]$$
+$$w_r^{eq} = \frac{p}{1+m}$$
+
+**Note** that with $L^{eq}$ we mean the labor at the factor-market equilibrium, _not_ the goods market equilibrium.
+At steady state the labor that firms need to serve the goods market is equal to the labor that firms get for their wage-offer on the factor market. But when demand on the goods market requires more labor than $L^{eq}$, we get inflation:
+
+### Causing inflation
+
+Inflation is caused by lagging/wrong predictions of future price levels.
+
+- Employment is at a level above equilibrium, e.g. as a result of the demand shock.
+  - Caused by higher demand on the goods market.
+- Employees and trade unions demand stronger increases in nominal wages in order to realize a higher real wage, initially assuming that the price level grows at the previous rate of inflation.
+- Companies concede the nominal wage increase.
+- But immediately after the nominal wage increase is negotiated, the companies realize an impending fall in their profit margin.
+- In order to defend their profit margin, the companies raise prices, and thus the inflation rate, just enough to restore the original real wage.
+- Thus we observe an increase in the inflation rate. This results from a conflict between target real wages and profits, or between employees and enterprises, which the enterprises can temporarily decide in their favour through an increase in the inflation rate.
+- However, the employees have not reached their target and will therefore force the increase in nominal wages in the next period, which will then also cause the inflation rate to rise further.
+
+This relation is described by the **Phillips curve**.
+
+We begin with current labor $L^0$, as determined by the needs of the goods-market, being higher than $L^{eq}$.
+
+#### Unions increase demands
+
+Unions will now (at time 0) demand an adjustment of real wages $\Delta w_r$ for the next year (time 1):
+
+$$\Delta w_r = w_r^1(L^0) - w_r^0 = b + kL^0 - (b + kL^{eq}) = k(L^0 - L^{eq})$$
+
+But wage-negotiations are executed in _nominal_ money $\Delta w_{nom}$.
+
+To transform real to nominal wage-change, we use a heuristic: the change in real wage is approximately the wage-inflation minus the global inflation:
+
+$$\Delta w_r \approx \frac{\Delta w_{nom}}{w_{nom}^0} - \frac{\Delta P}{P^0}$$
+
+We call $\frac{\Delta P}{P^0} = \Pi$ and approximate it by the last observed inflation $\Pi^0$.
+
+This yields:
+$$\frac{\Delta w_{nom}}{w_{nom}^0} \approx \Pi^0 -k(L^0 - L^{eq})$$
+
+#### Firms adjust prices
+
+Firms protect their margin by increasing prices $P^1$ after giving in to unions demanded $\frac{\Delta w_{nom}}{w_{nom}^0}$.
+
+Remember that firms' prices are determined as:
+$$P = (1+m)\frac{w_{nom}}{p}$$
+
+Say one firm dominates the whole market, then increases in this firms prices equal inflation. That firm will increase prices such that $m$ stays the same:
+$$\Pi^1 = \frac{\Delta P}{P^0} = \frac{ (1+m)\frac{\Delta w_{nom}^1}{p}  }{(1+m)\frac{w_{nom}^{eq}}{p}} = \frac{\Delta w_{nom}^1}{w_{nom}^{eq}}$$
+
+#### Inflation higher than expected
+
+Combining the unions' demand $\frac{\Delta w_{nom}^1}{w_{nom}^{eq}}$ with the firms' $\Pi$, we get a relation between inflation and labor:
+
+$$\Pi^1 = \Pi^0 -k(L^0 - L^{eq})$$
+
+This is known as the **Phillips curve**.
+
+## Central bank policy
+
+The fed attempts to minimize unemployment (or, better said, the difference between real employment $Y$ and $Y^{eq}$) and at the same time to make $\Pi$ as close as possible to the target inflation $\Pi^T$. It does this by minimizing the function
+$$E = (Y - Y^{eq})^2 + \beta(\Pi - \Pi^T)^2$$
+$\beta$ determines the fed's policy: if it's bigger than one, the fed is mostly inflation-averse, if its smaller, its mostly unemployment-averse.
+
+Now:
+
+- substitute into $E$ the Phillips curve for $\Pi$
+- Minimize to find the optimal employment/output: $\frac{\partial E}{\partial Y} = 0$
+- In that expression, substitute the IS-curve once for $Y^t = A - a_1 r^{t-1}$ and once for $Y^{eq} = A - a_1 r^{eq}$
+
+You'll obtain:
+$$r^1 = r^{eq} + \beta \cdot cte(\Pi^1 - \Pi^T)$$
+
+This is the **central bank policy**.
+
+## Implementation
+
+https://macrosimulation.org/a_new_keynesian_3_equation_model
+
+```python
+import numpy as np
+
+# Set number of periods
+Q = 50
+
+# Set number of scenarios
+S = 3
+
+# Set period in which shock/shift will occur
+s = 5
+
+# Create (S x Q) arrays to store simulated data
+y = np.zeros((S, Q))  # Income/output
+p = np.zeros((S, Q))  # Inflation rate
+r = np.zeros((S, Q))  # Real interest rate
+rs = np.zeros((S, Q))  # Stabilizing interest rate
+
+# Set constant parameter values
+a1 = 0.3  # Sensitivity of inflation with respect to output gap
+a2 = 0.7  # Sensitivity of output with respect to interest rate
+b = 1     # Sensitivity of the central bank to inflation gap
+a3 = (a1 * (1 / (b * a2) + a2)) ** (-1)
+
+# Set parameter values for different scenarios
+A = np.full((S, Q), 10)  # Autonomous spending
+pt = np.full((S, Q), 2)  # Inflation target
+ye = np.full((S, Q), 5)  # Potential output
+
+A[0, s:Q] = 12  # Scenario 1: AD boost
+pt[1, s:Q] = 3  # Scenario 2: Higher inflation target
+ye[2, s:Q] = 7  # Scenario 3: Higher potential output
+
+# Initialize endogenous variables at equilibrium values
+y[:, 0] = ye[:, 0]
+p[:, 0] = pt[:, 0]
+rs[:, 0] = (A[:, 0] - ye[:, 0]) / a1
+r[:, 0] = rs[:, 0]
+
+# Simulate the model by looping over Q time periods for S different scenarios
+for i in range(S):
+    for t in range(1, Q):
+        # (1) IS curve
+        y[i, t] = A[i, t] - a1 * r[i, t - 1]
+        # (2) Phillips Curve
+        p[i, t] = p[i, t - 1] + a2 * (y[i, t] - ye[i, t])
+        # (3) Stabilizing interest rate
+        rs[i, t] = (A[i, t] - ye[i, t]) / a1
+        # (4) Monetary policy rule, solved for r
+        r[i, t] = rs[i, t] + a3 * (p[i, t] - pt[i, t])
+```
+
+## Caveats
+
+### investment trap
+
+Strongly pessimistic expectations regarding future economic conditions, aggregate demand and the profitability of investment mean that even a significant reduction in the interest rate has little, if any, incentive effect on investment.
+
+# Macro economics - agent based models
+
+https://www.researchgate.net/profile/Edoardo-Gaffeo/publication/23536238_Adaptive_Microfoundations_for_Emergent_Macroeconomics/links/0912f513f4f7e3e7d3000000/Adaptive-Microfoundations-for-Emergent-Macroeconomics.pdf
 
 <br/>
 <br/>
@@ -848,220 +1317,3 @@ Required reserves: 10%
 Note: When a person deposits 100$, the money supply increases by 1000$ - 100$ = 900$ (because the first 100$ were already in the money market). When the government buys back a bond for 100$ from a bank, the supply increases by 1000$, because the first 100$ were _not_ already in the market. When the government sells a bond for 100$, 100$ are removed from the money supply.
 
 ## How the fed adds and removes money
-
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-# Economics (old notes)
-
-# Value, consumer-surplus and demand
-
-- $v(q)$: **marginal value**, i.e. $\frac{\partial \text{happyness}}{\partial q}$
-- $cs(q) | p$: **consumer surplus**, defined as $cs(q) | p = \int^{q}v d q - pq$
-- $\frac{\partial cs}{\partial q_0} = 0 \to v(q_0) = p$
-- $q_0 = v^{-1}(p)$, we call $v^{-1}(p)$ the **demand** $q^{demand}(p)$.
-
-Corollaries
-
-- Increase in usefulness of any one unit: curve moves up
-- More units demanded: curve moves right
-
-Special cases:
-
-- _Normal_ goods: higher income leads to higher demand
-- _Inferior_ goods: higher income doesn't lead to higher demand
-- _Complementary_ goods: higher consumption of _A_ leads to higher demand for _B_
-  - Example: use of computers increases demand for printers.
-- _Substitute_ goods
-  - Example: cola and pepsi
-
-# Cost, producer-surplus (aka. profit) and supply
-
-- $c(q)$: **marginal costs**, i.e. $\frac{\partial \text{total production costs}}{\partial q}$
-- $ps(q) | p$: **producer surplus**, aka. profit, defined as $ps(q) | p = pq - \int^{q}c d q$
-- $\frac{\partial ps}{\partial q_0} = 0 \to  p = c(q_0)$
-- $c^{-1}(p) = q_0$, we call $c^{-1}$ the **supply** $q^{supply}(p)$.
-
-# Markets
-
-**Theorem 1**: In a free market, we have $p: q^{supply}(p) = q^{demand}(p)$
-
-> _Proof_: By contradiction
->
-> > _Case 1_: assume that $p: q^{supply}(p) < q^{demand}(p)$
-> >
-> > This is a market of shortage. $q$ is determined by the producers: producers will be able to produce a quantity such that their producer-surplus is maximal ... whereas the consumer-surplus might not be.
-
-> > _Case 2_: assume that $p: q^{supply}(p) > q^{demand}(p)$
-
-**Theorem 2**: In a free market, the market-equilibrium is where _social welfare_ (consumer- plus producer-surplus) is maximized.
-
-> _Proof_:
-
-# Producer theory
-
-## 1: Production functions
-
-- $bgt$: budget
-- $p_L$: price of labor (wages), $p_K$: price of capital (rent)
-- $K$: quantity of capital
-- $L$: quantity of labor
-- $q(K, L)$: quantity of product
-- profit $\pi(K, L) = pq(K, L) - Lp_L - Kp_K$
-
-**Perfectly substitutable production**:
-$$q(L, K) = L + K$$
-Example: tractors and farmhands.
-
-**Perfectly non-substitutable production (aka. perfect complements, aka. Leontief)**:
-$$q(L, K) = min(L, K)$$
-Example: computers and programmers.
-
-- $L_{opt} = K_{opt} = \frac{bgt}{p_L + p_K}$
-- $\frac{\partial L_{opt}}{\partial p_L} = - \frac{bgt}{(p_L + p_K)^2}$
-
-**Somewhere in between: Cobb-Douglas production**
-$$ q(L, K) = L^aK^{1-a} $$
-Maximizing this utility function $u'$ subject to the budget-constraint (using constrained optimization) we get:
-
-- optimize $q(K, L) = L^aK^{1-a}$ subject to $w$, being $w := Lp_L + Kp_K - bgt = 0$
-- We find $K \frac{a}{1-a} \frac{p_K}{p_L} = L$
-- $ L\_{opt} = \frac{bgt \cdot a}{p_L} $
-- $ K\_{opt} = \frac{bgt \cdot (1 - a)}{p_K} $
-- $ q(L*{opt}, K*{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
-
-More generally:
-$$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
-
-## 2. Concepts:
-
-- Marginal utility of labor: $\frac{\partial q}{\partial L}$
-- Complements: $\frac{\partial^2 q}{\partial K \partial L} > 0$
-  - Interpretation: $\frac{\partial^2 q}{\partial K \partial L} = \frac{\partial}{\partial K}$ marginal utility of labor
-  - That means: increasing capital makes also labor more valuable
-  - If that is the case, labor and capital are compliments.
-
-## 3. Theorems:
-
-**Theorem 3**: In a free market, a firm produces an output where $\frac{\partial c}{\partial q} = p$
-
-> _Proof_:
->
-> $\pi(q) = pq - c(q)$
->
-> $\frac{\partial \pi}{\partial q} = 0 \to p = \frac{\partial c(q)}{\partial q}$
-
-# Producers to markets
-
-https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2018/resources/lec-6-costs/
-
-How does the suply curve get its upwards slope?
-We want to get the function $q_{supply}(p)$.
-
-It's surprisingly hard to find that function!
-
-1. First attempt: $q: \frac{\partial \pi}{\partial q} = 0$
-   - leads to $p = 0$ ... which is of course not helpful.
-2. Second attempt: maybe a bit more specific, with $q: \frac{\partial \pi}{\partial K} = 0 \land \frac{\partial \pi}{\partial L} = 0$ and using Cobb-Douglas:
-   - $\pi(K, L)$ has no global maximum - is continously growing.
-3. Third attempt: maybe when accounting for the $bgt$ constraint?
-   - $ q(L*{opt}, K*{opt}) = bgt (\frac{a}{p_L})^a (\frac{1-a}{p_K})^{1-a}$
-   - But this is not a function of $p$!
-
-Instead, a step-by-step derivation is required.
-
-Example with Cobb-Douglas:
-
-**Step 1: optimal supply in the short term**
-
-Optimizing profit $\pi$ with constant $K_0$ leaves only room to vary $L$: $\frac{\partial\pi}{\partial L} = 0$
-
-- $p \frac{\partial q}{\partial L} = p_L$
-- $L^{opt} |K_0 = (\frac{p_L}{pa})^{\frac{1}{a-1}}K_0$
-- $q^{opt}(p)|K_0 = (\frac{p_L}{pa})^{\frac{a}{a-1}}K_0 = (\frac{pa}{p_L})^{\frac{1-a}{a}} K_0$
-
-**Step 2: optimal supply in the long term**
-
-<br/><br/><br/><br/><br/><br/><br/><br/>
-
-# My own notes:
-
-### Effect of wages on employment:
-
-Example:
-
-```python
-def isoq(K, q, a):
-    return np.power(q * np.power(K, a-1), 1/a)
-
-def bdgt(b, pL, pK, K):
-    return (b - K * pK) / pL
-
-def Lopt(b, a, pL):
-    return b * a / pL
-
-def Kopt(b, a, pK):
-    return b * (1 - a) / pK
-
-def prod(L, K, a):
-    return np.power(L, a) * np.power(K, 1-a)
-
-bgt = 10
-a = 2/3
-pK = 2
-pL1 = 3
-
-L1 = Lopt(bgt, a, pL1)
-K1 = Kopt(bgt, a, pK)
-q1 = prod(L1, K1, a)
-
-pL2 = pL1 + 1
-L2 = Lopt(bgt, a, pL2)
-K2 = Kopt(bgt, a, pK)
-q2 = prod(L2, K2, a)
-
-Kdomain = np.linspace(0.5, 5, 100)
-budgetLine1 = bdgt(bgt, pL, pK, Kdomain)
-isoquant1 = isoq(Kdomain, q1, a)
-budgetLine2 = bdgt(bgt, pL2, pK, Kdomain)
-isoquant2 = isoq(Kdomain, q2, a)
-
-plt.plot(Kdomain, budgetLine1, color="r", label="budget line")
-plt.plot(Kdomain, isoquant1, color="b", label="isoquant")
-plt.plot(Kdomain, budgetLine2, color="r")
-plt.plot(Kdomain, isoquant2, color="b")
-plt.xlabel("K")
-plt.ylabel("L")
-plt.vlines([K1, K2], ymin=[0, 0], ymax=[L1, L2], linestyles='dotted', label="K_{opt}")
-plt.hlines([L1, L2], xmin=[0, 0], xmax=[K1, K2], linestyles='dotted', label="L_{opt}")
-plt.legend()
-```
-
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/economics_production_theory0.png" width="80%">
-
-How does increase in wages affect employment?
-
-- If labor and capital are substitutable (_example: workers or machine to build cars_):
-  - if labor initially cheap, now a bit more expensive:
-    - producers only use labor, not machines
-    - producers will reduce employers proportionally to the wage-increase
-  - if labor initially expensive, now a bit more expensive:
-    - producers never had any workers in the first place, because capital was more efficient
-    - so no reduction in employment.
-- If labor and capital are non-substitutable (_example: programmers and computers to build software_):
-  - if labor initially cheap, now a bit more expensive:
-    - producers use computers and programmers in equal amounts
-    - they also reduce them in equal amounts
-    - one unit change in wages means much change in both employment and capital
-  - if labor initially expensive, now a bit more expensive:
-    - producers use computers and programmers in equal amounts
-    - they also reduce them in equal amounts
-    - one unit change in wages means little change in neither employment nor capital
