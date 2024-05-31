@@ -1017,6 +1017,8 @@ The IS curve shows GDP as a function of real interest rate.
 We've already established this relation:
 $$Y = c_a + c_y (Y - t_a - t_y Y) + a_a - a_r r + a_y Y + G$$
 Since the IS curve only cares about $r$, we can simplify this to:
+$$Y = \frac{c_a + c_y t_a + a_a + G}{1 - c_y + c_y t_y - a_y} - \frac{a_r}{1 - c_y + c_y t_y - a_y} r$$
+or
 $$Y = A - \alpha r$$
 with $A$ called the _autonomous demand_, containing all $r$-independent terms, and $\alpha$ containing all $r$-dependent terms.
 
@@ -1113,11 +1115,11 @@ Remember that firms' prices are determined as:
 $$P = (1+m)\frac{w_{nom}}{p}$$
 
 Say one firm dominates the whole market, then increases in this firms prices equal inflation. That firm will increase prices such that $m$ stays the same:
-$$\Pi^1 = \frac{\Delta P}{P^0} = \frac{ (1+m)\frac{\Delta w_{nom}^1}{p}  }{(1+m)\frac{w_{nom}^{eq}}{p}} = \frac{\Delta w_{nom}^1}{w_{nom}^{eq}}$$
+$$\Pi^1 = \frac{\Delta P}{P^0} = \frac{ (1+m)\frac{\Delta w_{nom}}{p}  }{(1+m)\frac{w_{nom}^{eq}}{p}} = \frac{\Delta w_{nom}}{w_{nom}^{eq}}$$
 
 #### Inflation higher than expected
 
-Combining the unions' demand $\frac{\Delta w_{nom}^1}{w_{nom}^{eq}}$ with the firms' $\Pi$, we get a relation between inflation and labor:
+Combining the unions' demand $\frac{\Delta w_{nom}}{w_{nom}^{eq}}$ with the firms' $\Pi$, we get a relation between inflation and labor:
 
 $$\Pi^1 = \Pi^0 -k(L^0 - L^{eq})$$
 
@@ -1132,10 +1134,14 @@ $\beta$ determines the fed's policy: if it's bigger than one, the fed is mostly 
 Now:
 
 - substitute into $E$ the Phillips curve for $\Pi$
-- Minimize to find the optimal employment/output: $\frac{\partial E}{\partial Y} = 0$
-- In that expression, substitute the IS-curve once for $Y^t = A - a_1 r^{t-1}$ and once for $Y^{eq} = A - a_1 r^{eq}$
+- substitute into $E$ the IS curve for $Y$ and $Y^{eq}$, using $L = Y/p$
+- Minimize to find the optimal $r$: $\frac{\partial E}{\partial r} = 0$
 
 You'll obtain:
+$$r^{eq} - r^1 = \frac{\beta k }{\alpha (1 + \frac{\beta k^2}{p})} (\Pi^0 - \Pi^T)$$
+<small>(not sure about this, but the simplified below is correct)</small>
+
+or simpler:
 $$r^1 = r^{eq} + \beta \cdot cte(\Pi^1 - \Pi^T)$$
 
 This is the **central bank policy**.
@@ -1146,54 +1152,77 @@ https://macrosimulation.org/a_new_keynesian_3_equation_model
 
 ```python
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Set number of periods
-Q = 50
+def simulate(
+        T = 50,      # time steps
+        b = 2,       # wage bargaining: base demands
+        k = 0.5,     # wage bargaining: labor sensitive demands
+        c_a = 2,     # consumption, autonomous
+        c_y = 0.5,   # consumption, wage sensitive
+        a_a = 0.5,   # investment, autonomous
+        a_y = 0.5,   # investment, demand sensitive
+        a_r = 0.5,   # investment, interest-rate sensitive
+        t_a = 0.5,   # taxes, base interest-rate
+        t_y = 0.25,  # taxes, wage sensitive
+        p = 1,       # labor productivity
+        m = 0.1,     # gains markup
+        beta = 1,    # fed inflation/unemployment sensitivity,
+        PiT = 0.05,  # target inflation
+        G = 5,       # government spending
+        Yeq = 5,     # equilibrium production=goods-demand=employment*productivity && wage-demand=wage-supply, as determined by both goods- and factor-markets
+):
 
-# Set number of scenarios
-S = 3
+    A = (c_a + c_y * t_a + a_a + G) / (1 - c_y + c_y * t_y - a_y)
+    alpha = a_r / (1 - c_y + c_y * t_y - a_y)
+    rEq = (A - Yeq) / alpha
+    Leq = Yeq / p
 
-# Set period in which shock/shift will occur
-s = 5
+    # core variables
+    Y = np.ones(T)
+    r = np.ones(T)
+    Pi = np.ones(T)
 
-# Create (S x Q) arrays to store simulated data
-y = np.zeros((S, Q))  # Income/output
-p = np.zeros((S, Q))  # Inflation rate
-r = np.zeros((S, Q))  # Real interest rate
-rs = np.zeros((S, Q))  # Stabilizing interest rate
+    # derived
+    w_nom = np.ones(T)
+    L = np.ones(T)
+    P = np.ones(T)
 
-# Set constant parameter values
-a1 = 0.3  # Sensitivity of inflation with respect to output gap
-a2 = 0.7  # Sensitivity of output with respect to interest rate
-b = 1     # Sensitivity of the central bank to inflation gap
-a3 = (a1 * (1 / (b * a2) + a2)) ** (-1)
+    # initial values: everything normal except goods-market requires more labor than the current wage-equilibrium
+    Y[0] = Yeq + 0.5   # shock: had to produce more because high demand on goods-market
+    L[0] = Y[0]/p      # Thus had to hire more people
+    r[0] = rEq         # r, Pi, w_nom, P have not yet adjusted
+    Pi[0] = PiT
+    w_nom[0] = b + k*(Yeq/p)
+    P[0] = (1 + m) * (w_nom[0] / p)
 
-# Set parameter values for different scenarios
-A = np.full((S, Q), 10)  # Autonomous spending
-pt = np.full((S, Q), 2)  # Inflation target
-ye = np.full((S, Q), 5)  # Potential output
+    for t in range(1, T):
 
-A[0, s:Q] = 12  # Scenario 1: AD boost
-pt[1, s:Q] = 3  # Scenario 2: Higher inflation target
-ye[2, s:Q] = 7  # Scenario 3: Higher potential output
+        # core variables
+        # IS curve: productivity(interest-rate)
+        Y[t] = A - alpha * r[t-1]
+        # Phillips curve: inflation(Labor)
+        Pi[t] = Pi[t-1] - k*(L[t-1] - Leq)
+        ## Central bank: rate(inflation)
+        cte = k / (alpha * (1 + (beta*k*k)/p))
+        r[t] = rEq - beta * cte * (Pi[t-1] - PiT)
 
-# Initialize endogenous variables at equilibrium values
-y[:, 0] = ye[:, 0]
-p[:, 0] = pt[:, 0]
-rs[:, 0] = (A[:, 0] - ye[:, 0]) / a1
-r[:, 0] = rs[:, 0]
+        # derived
+        L[t] = Y[t] / p
+        delta_w_nom = (Pi[t-1] - k*(L[t] - Leq)) * w_nom[t-1]
+        w_nom[t] = w_nom[t-1] + delta_w_nom
+        P[t] = (1 + m) * (w_nom[t] / p)
 
-# Simulate the model by looping over Q time periods for S different scenarios
-for i in range(S):
-    for t in range(1, Q):
-        # (1) IS curve
-        y[i, t] = A[i, t] - a1 * r[i, t - 1]
-        # (2) Phillips Curve
-        p[i, t] = p[i, t - 1] + a2 * (y[i, t] - ye[i, t])
-        # (3) Stabilizing interest rate
-        rs[i, t] = (A[i, t] - ye[i, t]) / a1
-        # (4) Monetary policy rule, solved for r
-        r[i, t] = rs[i, t] + a3 * (p[i, t] - pt[i, t])
+    return Y, L, r, Pi, w_nom, P
+
+
+T = 50
+Ts = np.arange(0, T, 1)
+Y, L, r, Pi, w_nom, P = simulate(T=T)
+
+plt.plot(Ts, w_nom)
+plt.plot(Ts, P)
+
 ```
 
 ## Caveats
