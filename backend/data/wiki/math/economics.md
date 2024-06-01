@@ -1015,15 +1015,22 @@ Fiscal policy seems to have a stronger effect on employment than monetary policy
 
 The IS curve shows GDP as a function of real interest rate.
 We've already established this relation:
-$$Y = c_a + c_y (Y - t_a - t_y Y) + a_a - a_r r + a_y Y + G$$
+$$Y^* = c_a + c_y (Y - t_a - t_y Y) + a_a - a_r r + a_y Y + G$$
+
+**We mark with a \* values determined by the goods-market**.
+
 Since the IS curve only cares about $r$, we can simplify this to:
-$$Y = \frac{c_a + c_y t_a + a_a + G}{1 - c_y + c_y t_y - a_y} - \frac{a_r}{1 - c_y + c_y t_y - a_y} r$$
+$$Y^* = \frac{c_a + c_y t_a + a_a + G}{1 - c_y + c_y t_y - a_y} - \frac{a_r}{1 - c_y + c_y t_y - a_y} r$$
 or
-$$Y = A - \alpha r$$
+$$Y^* = A - \alpha r$$
 with $A$ called the _autonomous demand_, containing all $r$-independent terms, and $\alpha$ containing all $r$-dependent terms.
 
 We also now take into account the fact that markets react with some lag to changes in $r$:
-$$Y_t = A - \alpha r_{t-1}$$
+$$Y^*_t = A - \alpha r_{t-1}$$
+
+The macro-economic version of Cobb-Douglas is:
+$$Y^* = pL^*$$
+where $p$ is the _worker-productivity_.
 
 ## Inflation: the Phillips curve
 
@@ -1077,8 +1084,8 @@ At steady state the labor that firms need to serve the goods market is equal to 
 
 Inflation is caused by lagging/wrong predictions of future price levels.
 
-- Employment is at a level above equilibrium, e.g. as a result of the demand shock.
-  - Caused by higher demand on the goods market.
+- Employment $L^*$ gets determined by a surge in demand on the goods-market
+- $L^*$ is at a level above wage-equilibrium $L^N$.
 - Employees and trade unions demand stronger increases in nominal wages in order to realize a higher real wage, initially assuming that the price level grows at the previous rate of inflation.
 - Companies concede the nominal wage increase.
 - But immediately after the nominal wage increase is negotiated, the companies realize an impending fall in their profit margin.
@@ -1088,13 +1095,13 @@ Inflation is caused by lagging/wrong predictions of future price levels.
 
 This relation is described by the **Phillips curve**.
 
-We begin with current labor $L^0$, as determined by the needs of the goods-market, being higher than $L^{eq}$.
+We begin with current labor $L^*$, as determined by the needs of the goods-market, being higher than $L^{N}$.
 
 #### Unions increase demands
 
 Unions will now (at time 0) demand an adjustment of real wages $\Delta w_r$ for the next year (time 1):
 
-$$\Delta w_r = w_r^1(L^0) - w_r^0 = b + kL^0 - (b + kL^{eq}) = k(L^0 - L^{eq})$$
+$$\Delta w_r = w_r^1(L^*) - w_r^0 = b + kL^* - (b + kL^N) = k(L^* - L^N)$$
 
 But wage-negotiations are executed in _nominal_ money $\Delta w_{nom}$.
 
@@ -1105,7 +1112,7 @@ $$\Delta w_r \approx \frac{\Delta w_{nom}}{w_{nom}^0} - \frac{\Delta P}{P^0}$$
 We call $\frac{\Delta P}{P^0} = \Pi$ and approximate it by the last observed inflation $\Pi^0$.
 
 This yields:
-$$\frac{\Delta w_{nom}}{w_{nom}^0} \approx \Pi^0 -k(L^0 - L^{eq})$$
+$$\frac{\Delta w_{nom}}{w_{nom}^0} \approx \Delta w_r  + \Pi^0 =  \Pi^0 +  k(L^* - L^N)$$
 
 #### Firms adjust prices
 
@@ -1121,20 +1128,20 @@ $$\Pi^1 = \frac{\Delta P}{P^0} = \frac{ (1+m)\frac{\Delta w_{nom}}{p}  }{(1+m)\f
 
 Combining the unions' demand $\frac{\Delta w_{nom}}{w_{nom}^{eq}}$ with the firms' $\Pi$, we get a relation between inflation and labor:
 
-$$\Pi^1 = \Pi^0 -k(L^0 - L^{eq})$$
+$$\Pi^1 = \Pi^0 +  k(L^* - L^N)$$
 
 This is known as the **Phillips curve**.
 
 ## Central bank policy
 
-The fed attempts to minimize unemployment (or, better said, the difference between real employment $Y$ and $Y^{eq}$) and at the same time to make $\Pi$ as close as possible to the target inflation $\Pi^T$. It does this by minimizing the function
-$$E = (Y - Y^{eq})^2 + \beta(\Pi - \Pi^T)^2$$
+The fed attempts to minimize unemployment (or, better said, the difference between real employment $Y$ and $Y^N$) and at the same time to make $\Pi$ as close as possible to the target inflation $\Pi^T$. It does this by minimizing the function
+$$E = (Y - Y^N)^2 + \beta(\Pi - \Pi^T)^2$$
 $\beta$ determines the fed's policy: if it's bigger than one, the fed is mostly inflation-averse, if its smaller, its mostly unemployment-averse.
 
 Now:
 
 - substitute into $E$ the Phillips curve for $\Pi$
-- substitute into $E$ the IS curve for $Y$ and $Y^{eq}$, using $L = Y/p$
+- substitute into $E$ the IS curve for $Y$ and $Y^N$, using $L^* = Y^*/p$
 - Minimize to find the optimal $r$: $\frac{\partial E}{\partial r} = 0$
 
 You'll obtain:
@@ -1142,7 +1149,7 @@ $$r^{eq} - r^1 = \frac{\beta k }{\alpha (1 + \frac{\beta k^2}{p})} (\Pi^0 - \Pi^
 <small>(not sure about this, but the simplified below is correct)</small>
 
 or simpler:
-$$r^1 = r^{eq} + \beta \cdot cte(\Pi^1 - \Pi^T)$$
+$$r^1 = r^{eq} - \beta \cdot cte(\Pi^1 - \Pi^T)$$
 
 This is the **central bank policy**.
 
@@ -1151,77 +1158,94 @@ This is the **central bank policy**.
 https://macrosimulation.org/a_new_keynesian_3_equation_model
 
 ```python
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 def simulate(
-        T = 50,      # time steps
-        b = 2,       # wage bargaining: base demands
-        k = 0.5,     # wage bargaining: labor sensitive demands
+        G: np.ndarray,       # government spending
+        beta: np.ndarray,    # fed inflation/unemployment sensitivity,
+        PiT: np.ndarray,     # target inflation
+        w_a = 2,       # wage bargaining: base demands
+        w_L = 0.5,     # wage bargaining: labor sensitive demands
         c_a = 2,     # consumption, autonomous
-        c_y = 0.5,   # consumption, wage sensitive
-        a_a = 0.5,   # investment, autonomous
-        a_y = 0.5,   # investment, demand sensitive
-        a_r = 0.5,   # investment, interest-rate sensitive
+        c_Y = 0.5,   # consumption, wage sensitive
+        i_a = 0.5,   # investment, autonomous
+        i_Y = 0.5,   # investment, demand sensitive
+        i_r = 0.5,   # investment, interest-rate sensitive
         t_a = 0.5,   # taxes, base interest-rate
         t_y = 0.25,  # taxes, wage sensitive
         p = 1,       # labor productivity
         m = 0.1,     # gains markup
-        beta = 1,    # fed inflation/unemployment sensitivity,
-        PiT = 0.05,  # target inflation
-        G = 5,       # government spending
-        Yeq = 5,     # equilibrium production=goods-demand=employment*productivity && wage-demand=wage-supply, as determined by both goods- and factor-markets
 ):
+    T = len(G)
 
-    A = (c_a + c_y * t_a + a_a + G) / (1 - c_y + c_y * t_y - a_y)
-    alpha = a_r / (1 - c_y + c_y * t_y - a_y)
-    rEq = (A - Yeq) / alpha
-    Leq = Yeq / p
-
-    # core variables
-    Y = np.ones(T)
-    r = np.ones(T)
-    Pi = np.ones(T)
-
-    # derived
+    Y     = np.ones(T) * 100
+    LN    = np.ones(T) * 100
+    r     = np.ones(T)
+    Pi    = np.ones(T)
     w_nom = np.ones(T)
-    L = np.ones(T)
-    P = np.ones(T)
+    L     = np.ones(T) * 100
+    P     = np.ones(T)
 
-    # initial values: everything normal except goods-market requires more labor than the current wage-equilibrium
-    Y[0] = Yeq + 0.5   # shock: had to produce more because high demand on goods-market
-    L[0] = Y[0]/p      # Thus had to hire more people
-    r[0] = rEq         # r, Pi, w_nom, P have not yet adjusted
-    Pi[0] = PiT
-    w_nom[0] = b + k*(Yeq/p)
-    P[0] = (1 + m) * (w_nom[0] / p)
+    # first values
+    # r[0] = 1
+    # A     = (c_a + c_Y * t_a + i_a + G[0]) / (1 - c_Y + c_Y * t_y - i_Y)
+    # alpha = i_r / (1 - c_Y + c_Y * t_y - i_Y)
+    # Y[0] = A - alpha * r[0]
+    # L[0] = Y[0] / p
+    # w_nom[0] = w_a + w_L * L[0]
+    # Pi[0] = PiT[0]
+    # P[0] = (1+m) * w_nom[0] / p
 
     for t in range(1, T):
 
-        # core variables
-        # IS curve: productivity(interest-rate)
+        # 1. given the last interest rate, some output is produced
+        A     = (c_a + c_Y * t_a + i_a + G[t]) / (1 - c_Y + c_Y * t_y - i_Y)
+        alpha = i_r / (1 - c_Y + c_Y * t_y - i_Y)
         Y[t] = A - alpha * r[t-1]
-        # Phillips curve: inflation(Labor)
-        Pi[t] = Pi[t-1] - k*(L[t-1] - Leq)
-        ## Central bank: rate(inflation)
-        cte = k / (alpha * (1 + (beta*k*k)/p))
-        r[t] = rEq - beta * cte * (Pi[t-1] - PiT)
-
-        # derived
         L[t] = Y[t] / p
-        delta_w_nom = (Pi[t-1] - k*(L[t] - Leq)) * w_nom[t-1]
-        w_nom[t] = w_nom[t-1] + delta_w_nom
-        P[t] = (1 + m) * (w_nom[t] / p)
 
-    return Y, L, r, Pi, w_nom, P
+        # 2. unions demand a change in nominal wages
+        delta_w_nom_normalized = Pi[t-1] - w_L * (L[t] - LN[t])
+        w_nom[t] = w_nom[t-1] + delta_w_nom_normalized * w_nom[t-1]
+
+        # 3. under these new wages, the negotiated labor supply LN would be:
+        LN[t] = (1/w_L) * (p/(1+m) - w_a)
+
+        # 4. firms adjust prices to maintain $m$
+        P[t] = (1+m) * w_nom[t] / p
+
+        # 5. this increases inflation
+        Pi[t] = Pi[t-1] - w_L * (L[t] - LN[t])
+        # Pi[t] = (P[t] - P[t-1]) / P[t-1] <-- should be the same value
+
+        # 6. fed adjusts r to minimize unemployment and inflation
+        r[t] = (LN[t]/p - A)/alpha - (beta[t] * w_L) / (alpha * (1 - beta[t] * w_L * w_L)) * (Pi[t] - PiT[t])
+        r[t] = np.max([0.0, r[t]])
+
+    return Y, L, LN, r, Pi, w_nom, P
 
 
-T = 50
+T = 20
 Ts = np.arange(0, T, 1)
-Y, L, r, Pi, w_nom, P = simulate(T=T)
+G = np.ones(T) * 5
+beta = np.ones(T) * 1
+PiT = np.ones(T) * 0.05
+Y, L, LN, r, Pi, w_nom, P = simulate(G=G, beta=beta, PiT=PiT)
 
-plt.plot(Ts, w_nom)
-plt.plot(Ts, P)
+fig, axes = plt.subplots(4, 1)
+axes[0].plot(Ts, L, label="L")
+axes[0].plot(Ts, LN, label="LN")
+axes[0].legend()
+axes[1].plot(Ts, Pi, label="Pi")
+axes[1].plot(Ts, PiT, label="PiT")
+axes[1].legend()
+axes[2].plot(Ts, r, label="r")
+axes[2].legend()
+axes[3].plot(Ts, P, label="P")
+axes[3].plot(Ts, w_nom, label="w_nom")
+axes[3].legend()
 
 ```
 
