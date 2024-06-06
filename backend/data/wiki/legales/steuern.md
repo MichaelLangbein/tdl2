@@ -2,28 +2,29 @@
 
 ## Übersicht
 
--   Umsatzsteuer
--   Einkommenssteuer
--   Gewerbesteuer
+- Umsatzsteuer
+- Einkommenssteuer
+- Gewerbesteuer
 
 ## Umsatzsteuer
 
 Aka. Mehrwertsteuer.
 Monatlich muss geschätzter Umsatz an Finanzamt vor-angemeldet und Ust. vorausbezahlt werden.
+Firmen nehmen von Kunden für Finanzamt 19%
 
 ### Kleinunternehmerregelung:
 
--   Keine eigene Geschäftsform, sondern Regeln für Umsatzsteuergesetze
--   Normalerweise müssen Firmen 19% Umsatzsteuer in Rechnung stellen nud dem Finanzamt abführen
--   Können aber die 19% die sie für Einkäufe gezahlt haben wieder zurückfordern
--   Kleinunternehmen fordern keine Ust von ihren Kunden, fordern aber auch keine zurück
--   Voraussetzungen:
-    -   Umsatz letztes Jahr < 17.500€
-    -   und Umsatz dieses Jahr voraussichtlich < 50.000€
--   Trotzdem muss man Umsatzsteuererklärung abgeben
--   Falls Kunden Privatpersonen sind, können für die Kunden hierdurch geringere Preise bekommen.
--   Beantragen: man bekommt nach Gewerbeanmeldung automatisch vom Finanzamt den "Fragebogen zur steuerlichen Erfassung"
--   Müssen nicht monatlich Umsatzsteuer voranmelden
+- Keine eigene Geschäftsform, sondern Regeln für Umsatzsteuergesetze
+- Normalerweise müssen Firmen 19% Umsatzsteuer in Rechnung stellen nud dem Finanzamt abführen
+- Können aber die 19% die sie für Einkäufe gezahlt haben wieder zurückfordern
+- Kleinunternehmen fordern keine Ust von ihren Kunden, fordern aber auch keine zurück
+- Voraussetzungen:
+  - Umsatz letztes Jahr < 17.500€
+  - und Umsatz dieses Jahr voraussichtlich < 50.000€
+- Trotzdem muss man Umsatzsteuererklärung abgeben
+- Falls Kunden Privatpersonen sind, können für die Kunden hierdurch geringere Preise bekommen.
+- Beantragen: man bekommt nach Gewerbeanmeldung automatisch vom Finanzamt den "Fragebogen zur steuerlichen Erfassung"
+- Müssen nicht monatlich Umsatzsteuer voranmelden
 
 ## Einkommenssteuer
 
@@ -47,3 +48,6 @@ Nicht für Freiberufler ... aber schon für Kleingewerbe!
 Vierteljährlich muss fester Betrag an Gemeinde gezahlt werden. Genannt "Hebesatz", denn natürlich heist der so.
 Gilt ab einem Gewinn > 24.500€
 Je nach Gemeinde. Ca. 45%, kann teilweise von Einkommenssteuer als Steuerermäßigung abgesetzt werden.
+
+Wird im Vorhinein bezahlt (!)
+https://qonto.com/de/glossar/gewerbesteuer
