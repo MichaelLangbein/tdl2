@@ -1,5 +1,7 @@
 # Website
 
+https://www.ihk-muenchen.de/de/Service/Recht-und-Steuern/Internetrecht/Rechtssichere-Internetseite/
+
 ## DSGVO (en: GDPR)
 
 https://www.youtube.com/watch?v=xFnkDxccp2g

@@ -2,9 +2,9 @@
 
 ## Basics
 
-Kraft F [N]
-Arbeit W [J] = F*x [N*m] . Auch gegeben in 1 kWh = 3.600.000 J
-Leistung P [W] = W / t [J/s]
+- Kraft $F [N]$
+- Arbeit $W [J] = Fx [Nm]$ . Auch gegeben in 1 kWh = 3.600.000 J
+- Leistung $P [W] = \frac{W}{t} [\frac{J}{s}]$
 
 ## Kleinste
 
@@ -101,6 +101,12 @@ Endenergie pro Konsument:
 
 ## Gesetze
 
+- Bundesregierung: [CO2-neutral bis 2045](https://www.bundesregierung.de/breg-de/schwerpunkte/klimaschutz/klimaschutzgesetz-2021-1913672)
+- EU: [CO2-neutral bis 2050](https://www.europarl.europa.eu/news/de/press-room/20210419IPR02302/eu-klimaneutralitat-bis-2050-europaisches-parlament-erzielt-einigung-mit-rat)
+- USA: [CO2-neutral bis 2050](https://www.handelsblatt.com/unternehmen/nachhaltigkeit/erderwaermung-zehn-laender-und-noch-mehr-probleme-welche-staaten-bis-wann-klimaneutral-sein-wollen/27739372.html)
+- Russland, China: [CO2-neutral bis 2060](https://www.handelsblatt.com/unternehmen/nachhaltigkeit/erderwaermung-zehn-laender-und-noch-mehr-probleme-welche-staaten-bis-wann-klimaneutral-sein-wollen/27739372.html)
+- Paris:
+
 ### Primärenergieverbrauch
 
 (Quelle: https://www.umweltbundesamt.de/daten/umweltindikatoren/indikator-primaerenergieverbrauch#wie-ist-die-entwicklung-zu-bewerten )
@@ -110,7 +116,7 @@ Noch 2006 lag der Verbrauch fast so hoch wie 1990. Seitdem ist er deutlich gesun
 Im Jahr 2021 stieg der Verbrauch gegenüber dem Jahr 2020 wieder um 2,6 %. Dies ist der zweitniedrigste Wert seit 1990.
 
 Der bisherige ⁠Trend⁠ reicht wahrscheinlich nicht aus, um die Ziele der Bundesregierung zu erreichen.
-Diese hat sich 2010 in ihrem Energiekonzept auf eine Senkung des Primärenergieverbrauchs um 20 % bis 2020 und 50 % bis 2050 gegenüber 2008 geeinigt (BMWi, ⁠BMU⁠ 2010).
+Diese hat sich 2010 in ihrem Energiekonzept auf eine **Senkung des Primärenergieverbrauchs um 20 % bis 2020 und 50 % bis 2050 gegenüber 2008** geeinigt (BMWi, ⁠BMU⁠ 2010).
 Der Integrierte Nationale Energie- und Klimaplan (NECP) Deutschlands sieht eine Senkung des Primärenergieverbrauchs um 30 % im Jahre 2030 und um 50 % im Jahre 2050 gegenüber 2008 vor (BReg 2020, Energieeffizienzstrategie 2050).
 Das Ziel des Energiekonzeptes für das Jahr 2020 (- 20 % gegenüber 2008) wurde mit einem Rückgang von 17,3 % verfehlt.
 
