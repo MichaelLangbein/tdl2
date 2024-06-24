@@ -1,20 +1,5 @@
 $
-\gdef\then{\to}
-\gdef\thereis{\exists}
-\gdef\iff{\leftrightarrow}
-\gdef\intersection{\cap}
-\gdef\union{\cup}
-\gdef\reals{\mathbb{R}}
-\gdef\naturals{\mathbb{N}}
 \gdef\partDiff#1#2{\frac{\mathop{d#1}}{\mathop{d#2}}}
-\gdef\convol{\circledast}
-\gdef\pointwise{\odot}
-\gdef\mtrx#1{\mathbf{#1}}
-\gdef\myarray#1{
-    \begin{bmatrix}
-        #1 \\
-    \end{bmatrix}
-}
 $
 
 # Thoughts on AI
@@ -61,14 +46,14 @@ The analytical way of deriving the back-propagation algorithm consist of just a 
 A few definitions:
 
 - A layers output-vector $\vec{y}^l$ is obtained by the activation function $\vec{y}^l = f(\vec{x}^l)$
-- The layers input-vector is obtained as a weighted sum of previous outputs: $\vec{x}^l = \mtrx{W}^l \vec{y}^{l-1}$. We can express a single $x_t^l = \sum_f W_{t,f}^l y_f^{l-1}$
-- We strive to minimize the error-function. Assuming only one single training item we get $e = \frac{1}{2} \sum_t (\vec{y}^*_t - \vec{y}^L_t)^2 = \frac{1}{2} (\vec{y}^* - \vec{y}^L) \pointwise (\vec{y}^* - \vec{y}^L)$
+- The layers input-vector is obtained as a weighted sum of previous outputs: $\vec{x}^l = \mathbf{W}^l \vec{y}^{l-1}$. We can express a single $x_t^l = \sum_f W_{t,f}^l y_f^{l-1}$
+- We strive to minimize the error-function. Assuming only one single training item we get $e = \frac{1}{2} \sum_t (\vec{y}^*_t - \vec{y}^L_t)^2 = \frac{1}{2} (\vec{y}^* - \vec{y}^L) \odot (\vec{y}^* - \vec{y}^L)$
 
 Let's first consider only the top layer.
 
 $$
 \begin{aligned}
-    \partDiff{e}{x_{t_0}^L} &= \frac{1}{2} \sum_t \partDiff{}{x_{t_0}^L} (\vec{y}^*_t - \vec{y}^L_t)^2  \\
+    \frac{\mathop{d}e}{\mathop{d}x_{t_0}^L} &= \frac{1}{2} \sum_t \frac{\mathop{d}}{\mathop{d}x_{t_0}^L} (\vec{y}^*_t - \vec{y}^L_t)^2  \\
                             &= (y_{t_0}^* - y_{t_0}^L) f'(x_{t_0})
 \end{aligned}
 $$
@@ -76,14 +61,14 @@ $$
 Or, in vector form:
 
 $$
-\partDiff{e}{\vec{x}^L} = (\vec{y}^* - \vec{y}^L)^T \pointwise f'(\vec{x}^L)
+\frac{\mathop{d}e}{\mathop{d}\vec{x}^L} = (\vec{y}^* - \vec{y}^L)^T \odot f'(\vec{x}^L)
 $$
 
 That part was easy. But how do we obtain the same differential for _any_ layer $l$?
 
 $$
 \begin{aligned}
-\partDiff{e}{x_{f_0}^l} &= \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{x_t^{l+1}}{x_{f_0}^l}  \\
+\frac{\mathop{d}e}{\mathop{d}x_{f_0}^l} &= \sum_t \frac{\mathop{d}e}{\mathop{d}x_t^{l+1}} \frac{\mathop{d}x_t^{l+1}}{\mathop{d}x_{f_0}^l}  \\
                         &= \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{}{x_{f_0}^l} ( \sum_f W_{t,f}^{l+1} y_f^l ) \\
                         &= \sum_t \partDiff{e}{x_t^{l+1}} W_{t,f_0}^{l+1} f'(x_{f_0}^l)
 \end{aligned}
@@ -91,9 +76,9 @@ $$
 
 Or, in vector form:
 
-$$ \partDiff{e}{\vec{x}^l} = ( \partDiff{e}{\vec{x}^{l+1}} \mtrx{W}^{l+1} ) \pointwise f'(\vec{x}^l) $$
+$$\partDiff{e}{\vec{x}^l} = ( \partDiff{e}{\vec{x}^{l+1}} \mathbf{W}^{l+1} ) \odot f'(\vec{x}^l)$$
 
-The smart part here was to not derive $ \partDiff{e}{\vec{x}^l} $ by going through $\vec{y}^L$, $\vec{x}^L$, $\mtrx{W}^L$, $\vec{y}^{L-1}$, $\vec{x}^{L-1}$, $\mtrx{W}^{L-1}$, ..., but by instead creating a recurrence relation by differentiating by $\vec{x}^{l+1}$.
+The smart part here was to not derive $ \partDiff{e}{\vec{x}^l} $ by going through $\vec{y}^L$, $\vec{x}^L$, $\mathbf{W}^L$, $\vec{y}^{L-1}$, $\vec{x}^{L-1}$, $\mathbf{W}^{L-1}$, ..., but by instead creating a recurrence relation by differentiating by $\vec{x}^{l+1}$.
 
 Finally, we can obtain the gradient at our weights as:
 
@@ -107,13 +92,13 @@ $$
 
 Or, in vector form:
 
-$$ \partDiff{e}{\mtrx{W}^l} = \left( \partDiff{e}{\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T $$
+$$\partDiff{e}{\mathbf{W}^l} = \left( \partDiff{e}{\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
 
 So we should change the weights by:
 
 $$
 \begin{aligned}
-    \Delta \mtrx{W}^l &= - \alpha \partDiff{e}{\mtrx{W}^l} \\
+    \Delta \mathbf{W}^l &= - \alpha \partDiff{e}{\mathbf{W}^l} \\
                       &= - \alpha \partDiff{e}{\vec{x}^l} \vec{y}^{l-1}
 \end{aligned}
 $$
@@ -121,23 +106,23 @@ $$
 It makes sense to reiterate the whole process in matrix-form.
 
 First, we get $\delta^L$:
-$$ \partDiff{e}{\vec{y}^L} = (\vec{y}^\* - \vec{y}^L)^T := \delta^L $$
+$$\partDiff{e}{\vec{y}^L} = (\vec{y}^\* - \vec{y}^L)^T := \delta^L$$
 
 Then we go through the highest layer:
-$$ \partDiff{e}{\vec{x}^L} = \delta^L \pointwise f'(\vec{x}^L) $$
-$$ \partDiff{e}{\mtrx{W}^L} = \left( \partDiff{e}{\vec{x}^L} \right)^T \left( \vec{y}^{L-1} \right)^T $$
-$$ \delta^{L-1} = \partDiff{e}{\vec{x}^L} \mtrx{W}^L $$
+$$\partDiff{e}{\vec{x}^L} = \delta^L \odot f'(\vec{x}^L)$$
+$$\partDiff{e}{\mathbf{W}^L} = \left( \partDiff{e}{\vec{x}^L} \right)^T \left( \vec{y}^{L-1} \right)^T$$
+$$\delta^{L-1} = \partDiff{e}{\vec{x}^L} \mathbf{W}^L$$
 
 Then we pass $\delta^{L-1}$ to the next layer.
-$$ \partDiff{e}{\vec{x}^l} = \delta^l \pointwise f'(\vec{x}^l) $$
-$$ \partDiff{e}{\mtrx{W}^l} = \left( \partDiff{e}{\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T $$
-$$ \delta^{l-1} = \partDiff{e}{\vec{x}^l} \mtrx{W}^l $$
+$$\partDiff{e}{\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
+$$\partDiff{e}{\mathbf{W}^l} = \left( \partDiff{e}{\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
+$$\delta^{l-1} = \partDiff{e}{\vec{x}^l} \mathbf{W}^l$$
 
 ### Universal approximation
 
 Let $f$ be a function mapping images to labels. $f$ stems from a vector space of functions $\mathscr{F}$. Let $B$ be a basis for $\mathscr{F}$, meaning that
-$$ \forall f \in \mathscr{F}: \thereis \vec{\alpha}: \sum \alpha_n b_n = f $$
-So far, so simple. This holds for any basis of any vector space. Let's just propose that sigmoid functions do constitute a basis for these image-to-label functions. We cannot prove this, since we don't know what the image-to-label functions look like, but notice the potential: 
+$$\forall f \in \mathscr{F}: \exists \vec{\alpha}: \sum \alpha_n b_n = f$$
+So far, so simple. This holds for any basis of any vector space. Let's just propose that sigmoid functions do constitute a basis for these image-to-label functions. We cannot prove this, since we don't know what the image-to-label functions look like, but notice the potential:
 $ \sum \alpha_n b_n $ is then just the output of one layer of a neural net!
 
 It turns out that sigmoid functions do indeed form a basis for any continuous function on $[0,1]^n$ (Note also that, while sigmoids do form a basis, they do not constitute an _orthogonal_ basis, meaning that we cannot obtain weights with the inner-product-trick. We couldn't have obtained them anyway, because for that trick we need the analytical form of $f$, which is generally not known to us.).
@@ -151,7 +136,7 @@ The backpropagation algorithm requires a networks layers to transform its input 
 ### Some functions can be better approximated with a deep net than with a shallow one
 
 Consider the case of a hierarchical function.
-$$ f(x_1, x_2) = h_2( h_11(x_1), h_12(x_2))$$
+$$f(x_1, x_2) = h_2( h_11(x_1), h_12(x_2))$$
 We will prove that a deep net needs less neurons than a shallow one to approximate this function.
 
 ## Autodiff
@@ -170,20 +155,20 @@ In detail.
 #### 0. **The matrix trick**
 
 It's hard to calculate
-$$ \frac{\partial MN}{\partial M}$$
-For one, this requires tensor-calculus, and also this is an object of dimension $ |MN| \times |M| $.
+$$\frac{\partial MN}{\partial M}$$
+For one, this requires tensor-calculus, and also this is an object of dimension $|MN| \times |M|$.
 
 Not only is this hard, but such higher-dimensional matrices easily exceed even modern computers RAM.
 But there is a trick: if there's a scalar-valued function $s$ _on top_ of $MN$, that complicated $\frac{\partial MN}{\partial M}$ reduces to $N^T$ - which is just two dimensional.
 
-$$ \frac{\partial s(MN)}{\partial M} = \frac{\partial s(MN)}{\partial MN} \frac{\partial MN}{\partial M} = \frac{\partial s(MN)}{\partial MN} N^T$$
-$$ \frac{\partial s(MN)}{\partial N} = \frac{\partial s(MN)}{\partial MN} \frac{\partial MN}{\partial N} = M^T \frac{\partial s(MN)}{\partial MN} $$
+$$\frac{\partial s(MN)}{\partial M} = \frac{\partial s(MN)}{\partial MN} \frac{\partial MN}{\partial M} = \frac{\partial s(MN)}{\partial MN} N^T$$
+$$\frac{\partial s(MN)}{\partial N} = \frac{\partial s(MN)}{\partial MN} \frac{\partial MN}{\partial N} = M^T \frac{\partial s(MN)}{\partial MN}$$
 We don't need to bother with the case where $M$ or $N$ are functions of $x$, either, since we'll use the chain rule in which protects us from having to think about $M$ or $N$ being functions of other variables.
 
 #### 1. **Chain rule first**
 
 Calculating deep derivatives is hard. But the chain rule protects us from that:
-$$ \frac{\partial f(g(x))}{\partial x} = \frac{\partial f(g)}{\partial g} \frac{\partial g(x)}{\partial x} $$
+$$\frac{\partial f(g(x))}{\partial x} = \frac{\partial f(g)}{\partial g} \frac{\partial g(x)}{\partial x}$$
 Only the part $\frac{\partial f(g)}{\partial g}$ will be calculated by our nodes. And this expression is evaluated under the assumption, that $g$ is not function of any deeper variables.
 
 #### 2. **Pass $\nabla_{node}s$ = `grad_s_node` to `op.grad_s_v(v, at, grad_s_node)`**
@@ -541,50 +526,50 @@ We give the backpropagation-steps for convolutional layers and pooling layers.
 
 In convolutional layers, the forward step goes:
 
-$$ \vec{x}^l = \vec{y}^{l-1} \convol \vec{w}^l $$
-$$ \vec{y}^l = f(\vec{x}^l) $$
+$$\vec{x}^l = \vec{y}^{l-1} \circledast \vec{w}^l$$
+$$\vec{y}^l = f(\vec{x}^l)$$
 
 Where the convolution is defined (in our simplified case) as:
-$$ (\vec{y} \convol \vec{w})_n = \sum_{m=-1}^1 \vec{y}\_{n+m} \vec{w}\_m $$
+$$(\vec{y} \circledast \vec{w})_n = \sum_{m=-1}^1 \vec{y}\_{n+m} \vec{w}\_m$$
 
 Differentiating a convolution is unfamiliar, but not too hard:
 
 $$
-\partDiff{(\vec{y} \convol \vec{w})}{\vec{w}} = \myarray{
+\partDiff{(\vec{y} \circledast \vec{w})}{\vec{w}} = \begin{bmatrix}
 	0   && y_0 && y_1 \\
 	y_0 && y_1 && y_2 \\
 	y_1 && y_2 && y_3 \\
 	... \\
 	y_{l-1} && y_l && 0 \\
-} := tr(\vec{y})
+\end{bmatrix} := tr(\vec{y})
 $$
 
 $$
-\partDiff{(\vec{y} \convol \vec{w})}{\vec{y}} = \myarray{
+\partDiff{(\vec{y} \circledast \vec{w})}{\vec{y}} = \begin{bmatrix}
 	w_0    && w_1    && 0   && ... \\
 	w_{-1} && w_0    && w_1 && ... \\
 	0      && w_{-1} && w_0 && ... \\
 	...    \\
 	0      && ...    && w_{-1} && w_0 \\
-} := br(\vec{w})
+\end{bmatrix} := br(\vec{w})
 $$
 
 Accordingly, the backwards step goes:
 
-$$ \partDiff{e}{\vec{x}^l} = \delta^l \pointwise f'(\vec{x}^l) $$
-$$ \partDiff{e}{\vec{w}^l} = \partDiff{e}{\vec{x}^l} tr(\vec{y}) = (\sum*{n=1}^l e'*{x*n} y*{n+1}, \sum*{n=0}^l e'*{x*n} y_n, \sum*{n=0}^{l-1} e'_{x_n} y_{n+1}) $$
-$$ \delta^{l-1} = \partDiff{e}{\vec{x}^l} br(\vec{w}) = \partDiff{e}{\vec{x}^l} \convol \vec{w} $$
+$$\partDiff{e}{\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
+$$\partDiff{e}{\vec{w}^l} = \partDiff{e}{\vec{x}^l} tr(\vec{y}) = (\sum_{n=1}^l e'_{x*n} y_{n+1}, \sum_{n=0}^l e'_{x*n} y_n, \sum_{n=0}^{l-1} e'_{x_n} y_{n+1})$$
+$$\delta^{l-1} = \partDiff{e}{\vec{x}^l} br(\vec{w}) = \partDiff{e}{\vec{x}^l} \circledast \vec{w}$$
 
 In pooling layers, the forward step goes:
 
-$$ x*t^l = \frac{1}{4} \sum_f y*{4t + f}^{l-1} $$
-$$ y_t^l = x_t^l $$
+$$x*t^l = \frac{1}{4} \sum_f y_{4t + f}^{l-1}$$
+$$y_t^l = x_t^l$$
 
 And the backwards step:
 
-$$ \partDiff{e}{\vec{x}^l} = \partDiff{e}{\vec{y}^l} \partDiff{\vec{y}^l}{\vec{x}^l} = \delta^l $$
-$$ \partDiff{e}{\vec{w}^l} = 0 $$
-$$ \delta^{l-1} = \frac{1}{4} \partDiff{e}{\vec{x}^l} $$
+$$\partDiff{e}{\vec{x}^l} = \partDiff{e}{\vec{y}^l} \partDiff{\vec{y}^l}{\vec{x}^l} = \delta^l$$
+$$\partDiff{e}{\vec{w}^l} = 0$$
+$$\delta^{l-1} = \frac{1}{4} \partDiff{e}{\vec{x}^l}$$
 
 ## Self-attention
 
@@ -630,13 +615,13 @@ Interpretation: self attention takes in data and exaggerates it: it stretches bi
 
 Proof:
 This becomes visible when we realize that $X^T X$ is a covariance-matrix (since $X$ will likely be centered around 0).
-$$ Cov = X^T X $$
-$$ Y^T = Cov X^T $$
+$$Cov = X^T X$$
+$$Y^T = Cov X^T$$
 Through eigenvalue-decomposition:
-$$ Cov = E*c \Lambda_C E_c^{-1} $$
+$$Cov = E*c \Lambda_C E_c^{-1}$$
 Because $Cov$ is symmetric we have $E_C^{-1} = E_C^T$:
-$$ Cov = E_c \Lambda_C E_c^T $$
-$$ Cov X^T = \underbrace{E_c \underbrace{\Lambda_C \underbrace{E_c^T X^T}*{\text{Projects $X^T$ into eigenvector space}}}_{\text{Scales projected data by $\lambda$s}}}_{\text{Projects back}} $$
+$$Cov = E_c \Lambda_C E_c^T$$
+$$Cov X^T = \underbrace{E_c \underbrace{\Lambda_C \underbrace{E_c^T X^T}_{\text{Projects $X^T$ into eigenvector space}}}_{\text{Scales projected data by $\lambda$s}}}_{\text{Projects back}}$$
 
 - $E_c^T X^T$ projects $X^T$ into eigenvector space. That is exactly the same thing that PCA does, by the way!
 - $\Lambda_C E_c^T X^T$ scales the projected data. Where there is already lot of variance, the data gets streched even more, where there is little, it gets compressed.
@@ -1126,7 +1111,7 @@ $P(s' | s, a)$ reduces to $P(s' | s)$.
 
 The objective is to chose a $\pi$ that will maximize my cumulative reward:
 
-$$ E[ \Sigma_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ] $$
+$$E[ \Sigma_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ]$$
 Where $\gamma$ is some discount value $0 \leq \gamma \leq 1$ which accounts for the fact that I'd rather have my earnings today than tomorrow.
 
 The value $V = E[U]$ is defined as the expected reward. This expands to:
@@ -1141,7 +1126,7 @@ E[U] &= E[R(s_1 | s_0)] + \gamma E[R(s_2 | s_1)] + ... \\
 $$
 
 This is a recursive calculation. So, given a policy we can calculate our value per state:
-$$ V(s) | \pi = \Sigma*{s'} P*{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')] $$
+$$V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')]$$
 
 And we can chose $\pi(s)$ like so:
 
@@ -1171,7 +1156,7 @@ def evalPolicy(policy, s):
 ### Better performance for MDPs
 
 A policies value is calculated recursively:
-$$ V(s) | \pi = \Sigma*{s'} P*{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')] $$
+$$V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')]$$
 But in practice, that $V(s')$ is problematic: this keeps recursing down until at some point `isEndState(s) == true`.
 
 We can get a better performance by employing **contraction mapping** aka. **fixed-point iteration**:
@@ -1240,7 +1225,7 @@ Contraction-mapping only converges in certain cases (see below), and if it does,
 ### **Contraction mapping: background information**
 
 Imagine we want to find an $x$ such that
-$$ x = f(x) $$
+$$x = f(x)$$
 We first try candidate $x_0$.
 
 $$
@@ -1252,10 +1237,10 @@ $$
 How did that work? It's because $f$ is a **contraction**, and this algorithm is called **fixed point iteration**.
 
 > A **fixed point** $x_{fix}$ for a function $f: X \to X$ is one where:
-> $$ f(x*{fix}) = x*{fix} $$
+> $$f(x_{fix}) = x_{fix}$$
 
 > A **contraction** is a function $f: X \to X$ for which:
-> $$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq \alpha |x_1 - x_2|$$
+> $$\forall x_1, x_2: |f(x_1) - f(x_2)| \leq \alpha |x_1 - x_2|$$
 > for some fixed $\alpha < 1$.
 >
 > In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ _again_ to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
@@ -1265,7 +1250,7 @@ That is: a function is a contraction if its slope $\frac{f(x + \delta) - f(x)}{\
 Contractions have useful properties:
 
 > - If a function is a contraction, it has at most one fixed point $x_{fix}$.
-> - $ \forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
+> - $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
 
 Applied to programming, we can replace a recursive calculation ...
 
