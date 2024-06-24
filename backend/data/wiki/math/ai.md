@@ -1,7 +1,3 @@
-$
-\gdef\partDiff#1#2{\frac{\mathop{d#1}}{\mathop{d#2}}}
-$
-
 # Thoughts on AI
 
 - LLMs understand how to arrange words
@@ -69,61 +65,61 @@ That part was easy. But how do we obtain the same differential for _any_ layer $
 $$
 \begin{aligned}
 \frac{\mathop{d}e}{\mathop{d}x_{f_0}^l} &= \sum_t \frac{\mathop{d}e}{\mathop{d}x_t^{l+1}} \frac{\mathop{d}x_t^{l+1}}{\mathop{d}x_{f_0}^l}  \\
-                        &= \sum_t \partDiff{e}{x_t^{l+1}} \partDiff{}{x_{f_0}^l} ( \sum_f W_{t,f}^{l+1} y_f^l ) \\
-                        &= \sum_t \partDiff{e}{x_t^{l+1}} W_{t,f_0}^{l+1} f'(x_{f_0}^l)
+                        &= \sum_t \frac{\mathop{d} e}{\mathop{d}x_t^{l+1}} \frac{\mathop{d} }{\mathop{d}x_{f_0}^l} ( \sum_f W_{t,f}^{l+1} y_f^l ) \\
+                        &= \sum_t \frac{\mathop{d} e}{\mathop{d}x_t^{l+1}} W_{t,f_0}^{l+1} f'(x_{f_0}^l)
 \end{aligned}
 $$
 
 Or, in vector form:
 
-$$\partDiff{e}{\vec{x}^l} = ( \partDiff{e}{\vec{x}^{l+1}} \mathbf{W}^{l+1} ) \odot f'(\vec{x}^l)$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{x}^l} = ( \frac{\mathop{d} e}{\mathop{d}\vec{x}^{l+1}} \mathbf{W}^{l+1} ) \odot f'(\vec{x}^l)$$
 
-The smart part here was to not derive $ \partDiff{e}{\vec{x}^l} $ by going through $\vec{y}^L$, $\vec{x}^L$, $\mathbf{W}^L$, $\vec{y}^{L-1}$, $\vec{x}^{L-1}$, $\mathbf{W}^{L-1}$, ..., but by instead creating a recurrence relation by differentiating by $\vec{x}^{l+1}$.
+The smart part here was to not derive $\frac{\mathop{d} e}{\mathop{d}\vec{x}^l}$ by going through $\vec{y}^L$, $\vec{x}^L$, $\mathbf{W}^L$, $\vec{y}^{L-1}$, $\vec{x}^{L-1}$, $\mathbf{W}^{L-1}$, ..., but by instead creating a recurrence relation by differentiating by $\vec{x}^{l+1}$.
 
 Finally, we can obtain the gradient at our weights as:
 
 $$
 \begin{aligned}
-    \partDiff{e}{W_{t_0, f_0}^l} &= \partDiff{e}{x_{t_0}^l} \partDiff{x_{t_0}^l}{W_{t_0, f_0}^l} \\
-                                 &= \partDiff{e}{x_{t_0}^l} \partDiff{}{W_{t_0, f_0}^l} ( \sum_f W_{t_0, f}^l y_f^{l-1} ) \\
-                                 &= \partDiff{e}{x_{t_0}^l} y_{f_0}^{l-1}
+    \frac{\mathop{d} e}{\mathop{d}W_{t_0, f_0}^l} &= \frac{\mathop{d} e}{\mathop{d}x_{t_0}^l} \frac{\mathop{d}x_{t_0}^l}{\mathop{d}W_{t_0, f_0}^l} \\
+                                 &= \frac{\mathop{d} e}{\mathop{d}x_{t_0}^l} \frac{\mathop{d} }{\mathop{d}W_{t_0, f_0}^l} \left( \sum_f W_{t_0, f}^l y_f^{l-1} \right) \\
+                                 &= \frac{\mathop{d} e}{\mathop{d}x_{t_0}^l} y_{f_0}^{l-1}
 \end{aligned}
 $$
 
 Or, in vector form:
 
-$$\partDiff{e}{\mathbf{W}^l} = \left( \partDiff{e}{\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
+$$\frac{\mathop{d} e}{\mathop{d}\mathbf{W}^l} = \left( \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
 
 So we should change the weights by:
 
 $$
 \begin{aligned}
-    \Delta \mathbf{W}^l &= - \alpha \partDiff{e}{\mathbf{W}^l} \\
-                      &= - \alpha \partDiff{e}{\vec{x}^l} \vec{y}^{l-1}
+    \Delta \mathbf{W}^l &= - \alpha \frac{\mathop{d} e}{\mathop{d}\mathbf{W}^l} \\
+                      &= - \alpha \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \vec{y}^{l-1}
 \end{aligned}
 $$
 
 It makes sense to reiterate the whole process in matrix-form.
 
 First, we get $\delta^L$:
-$$\partDiff{e}{\vec{y}^L} = (\vec{y}^\* - \vec{y}^L)^T := \delta^L$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{y}^L} = (\vec{y}^\* - \vec{y}^L)^T := \delta^L$$
 
 Then we go through the highest layer:
-$$\partDiff{e}{\vec{x}^L} = \delta^L \odot f'(\vec{x}^L)$$
-$$\partDiff{e}{\mathbf{W}^L} = \left( \partDiff{e}{\vec{x}^L} \right)^T \left( \vec{y}^{L-1} \right)^T$$
-$$\delta^{L-1} = \partDiff{e}{\vec{x}^L} \mathbf{W}^L$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{x}^L} = \delta^L \odot f'(\vec{x}^L)$$
+$$\frac{\mathop{d} e}{\mathop{d}\mathbf{W}^L} = \left( \frac{\mathop{d} e}{\mathop{d}\vec{x}^L} \right)^T \left( \vec{y}^{L-1} \right)^T$$
+$$\delta^{L-1} = \frac{\mathop{d} e}{\mathop{d}\vec{x}^L} \mathbf{W}^L$$
 
 Then we pass $\delta^{L-1}$ to the next layer.
-$$\partDiff{e}{\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
-$$\partDiff{e}{\mathbf{W}^l} = \left( \partDiff{e}{\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
-$$\delta^{l-1} = \partDiff{e}{\vec{x}^l} \mathbf{W}^l$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
+$$\frac{\mathop{d} e}{\mathop{d}\mathbf{W}^l} = \left( \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
+$$\delta^{l-1} = \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \mathbf{W}^l$$
 
 ### Universal approximation
 
 Let $f$ be a function mapping images to labels. $f$ stems from a vector space of functions $\mathscr{F}$. Let $B$ be a basis for $\mathscr{F}$, meaning that
 $$\forall f \in \mathscr{F}: \exists \vec{\alpha}: \sum \alpha_n b_n = f$$
 So far, so simple. This holds for any basis of any vector space. Let's just propose that sigmoid functions do constitute a basis for these image-to-label functions. We cannot prove this, since we don't know what the image-to-label functions look like, but notice the potential:
-$ \sum \alpha_n b_n $ is then just the output of one layer of a neural net!
+$\sum \alpha_n b_n$ is then just the output of one layer of a neural net!
 
 It turns out that sigmoid functions do indeed form a basis for any continuous function on $[0,1]^n$ (Note also that, while sigmoids do form a basis, they do not constitute an _orthogonal_ basis, meaning that we cannot obtain weights with the inner-product-trick. We couldn't have obtained them anyway, because for that trick we need the analytical form of $f$, which is generally not known to us.).
 
@@ -131,12 +127,12 @@ There is an important point that the universal approximation theorem does not co
 
 ### Some data in n dimensions requires more than n neurons in a layer
 
-The backpropagation algorithm requires a networks layers to transform its input data in a continuous fashion, i.e. distort the input surface without cutting it at any point. In topology, such a transformation is known as a homomorphism.
+The backpropagation algorithm requires a network's layers to transform its input data in a continuous fashion, i.e. distort the input surface without cutting it at any point. In topology, such a transformation is known as a homomorphism.
 
 ### Some functions can be better approximated with a deep net than with a shallow one
 
 Consider the case of a hierarchical function.
-$$f(x_1, x_2) = h_2( h_11(x_1), h_12(x_2))$$
+$$f(x_1, x_2) = h_2( h_{11}(x_1), h_{12}(x_2))$$
 We will prove that a deep net needs less neurons than a shallow one to approximate this function.
 
 ## Autodiff
@@ -535,7 +531,7 @@ $$(\vec{y} \circledast \vec{w})_n = \sum_{m=-1}^1 \vec{y}\_{n+m} \vec{w}\_m$$
 Differentiating a convolution is unfamiliar, but not too hard:
 
 $$
-\partDiff{(\vec{y} \circledast \vec{w})}{\vec{w}} = \begin{bmatrix}
+\frac{\mathop{d}(\vec{y} \circledast \vec{w})}{\mathop{d}\vec{w}} = \begin{bmatrix}
 	0   && y_0 && y_1 \\
 	y_0 && y_1 && y_2 \\
 	y_1 && y_2 && y_3 \\
@@ -545,7 +541,7 @@ $$
 $$
 
 $$
-\partDiff{(\vec{y} \circledast \vec{w})}{\vec{y}} = \begin{bmatrix}
+\frac{\mathop{d}(\vec{y} \circledast \vec{w})}{\mathop{d}\vec{y}} = \begin{bmatrix}
 	w_0    && w_1    && 0   && ... \\
 	w_{-1} && w_0    && w_1 && ... \\
 	0      && w_{-1} && w_0 && ... \\
@@ -556,9 +552,9 @@ $$
 
 Accordingly, the backwards step goes:
 
-$$\partDiff{e}{\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
-$$\partDiff{e}{\vec{w}^l} = \partDiff{e}{\vec{x}^l} tr(\vec{y}) = (\sum_{n=1}^l e'_{x*n} y_{n+1}, \sum_{n=0}^l e'_{x*n} y_n, \sum_{n=0}^{l-1} e'_{x_n} y_{n+1})$$
-$$\delta^{l-1} = \partDiff{e}{\vec{x}^l} br(\vec{w}) = \partDiff{e}{\vec{x}^l} \circledast \vec{w}$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{w}^l} = \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} tr(\vec{y}) = (\sum_{n=1}^l e'_{x*n} y_{n+1}, \sum_{n=0}^l e'_{x*n} y_n, \sum_{n=0}^{l-1} e'_{x_n} y_{n+1})$$
+$$\delta^{l-1} = \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} br(\vec{w}) = \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \circledast \vec{w}$$
 
 In pooling layers, the forward step goes:
 
@@ -567,9 +563,9 @@ $$y_t^l = x_t^l$$
 
 And the backwards step:
 
-$$\partDiff{e}{\vec{x}^l} = \partDiff{e}{\vec{y}^l} \partDiff{\vec{y}^l}{\vec{x}^l} = \delta^l$$
-$$\partDiff{e}{\vec{w}^l} = 0$$
-$$\delta^{l-1} = \frac{1}{4} \partDiff{e}{\vec{x}^l}$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{x}^l} = \frac{\mathop{d} e}{\mathop{d}\vec{y}^l} \frac{\mathop{d}\vec{y}^l}{\mathop{d}\vec{x}^l} = \delta^l$$
+$$\frac{\mathop{d} e}{\mathop{d}\vec{w}^l} = 0$$
+$$\delta^{l-1} = \frac{1}{4} \frac{\mathop{d} e}{\mathop{d}\vec{x}^l}$$
 
 ## Self-attention
 
