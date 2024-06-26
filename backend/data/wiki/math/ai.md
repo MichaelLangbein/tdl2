@@ -114,6 +114,339 @@ $$\frac{\mathop{d} e}{\mathop{d}\vec{x}^l} = \delta^l \odot f'(\vec{x}^l)$$
 $$\frac{\mathop{d} e}{\mathop{d}\mathbf{W}^l} = \left( \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \right)^T \left( \vec{y}^{l-1} \right)^T$$
 $$\delta^{l-1} = \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \mathbf{W}^l$$
 
+### Application
+
+#### Fully connected layer - output layer
+
+- $x^l = W^l y^{l-1}$
+- $y^l = \phi(x^l)$
+- $s$: sample
+- $y^*_{s,i}$: true value of $y$ for sample $s$ at index $i$
+
+Derivative of error wrt. $x^L_{i_0, s_0}$:
+
+$$
+\begin{aligned}
+    \text{SSE} &= \sum_s \sum_i (y^*_{s,i} - y^L_{i, s})^2    \\
+    \frac{\partial \text{SSE}}{\partial x^L_{i_0, s_0}} &= \sum_s \sum_i 2(y^*_{s,i} - y^L_{i, s}) \frac{\partial y^L_{i,s}}{\partial x^L_{i_0, s_0}}  \\
+            &= (...0 \text{ if } s \neq s_0 ...) \\
+            &= 2 \sum_i (y^*_{i, s_0} - y^L_{i, s_0}) \frac{\partial y^L_{i,s_0}}{\partial x^L_{i_0, s_0}}  \\
+            &= (...0 \text{ if } i \neq i_0 ...) \\
+            &= 2 (y^*_{i_0, s_0} - y^L_{i_0, s_0}) \frac{\partial y^L_{i_0,s_0}}{\partial x^L_{i_0, s_0}} \\
+            &= 2 (y^*_{i_0, s_0} - y^L_{i_0, s_0}) \phi'(x^L_{i_0, s_0})
+\end{aligned}
+$$
+
+In code:
+
+```python
+for s in range(batchSize):
+    ...
+    x_s = self.weights @ input_s
+    dSig_s = diffSigmoid(x_s)
+    dEdx_s = 2 * (trueValue_s - prediction_s) * dSig_s
+```
+
+Derivative of error wrt. $W^L_{i_0, j_0}$:
+
+$$
+\begin{aligned}
+    \frac{\partial \text{SSE}}{\partial W^L_{i_0, j_0}} &= \sum_s \sum_i \frac{\partial \text{SSE}}{\partial x^L_{i, s}} \frac{\partial x^L_{i, s}}{\partial W^L_{i_0, j_0}} \\
+        &= (... 0 \text{ if } i \neq i_0 ...) \\
+        &= \sum_s \frac{\partial \text{SSE}}{\partial x^L_{i_0, s}} \frac{\partial x^L_{i_0, s}}{\partial W^L_{i_0, j_0}}  \\
+        &= \sum_s \frac{\partial \text{SSE}}{\partial x^L_{i_0, s}} y^{L-1}_{j_0}
+\end{aligned}
+$$
+
+In code:
+
+```python
+dEdW = np.zeros(self.weights.shape)
+for s in range(batchSize):
+    dEdx_s = ...
+    dEdW += np.outer(dEdx_s, input_s)
+```
+
+#### Fully connected layer - intermediate layer
+
+Derivative of error wrt. $x^l_{i_0, s_0}$:
+
+$$
+\begin{aligned}
+    \frac{\partial \text{SSE}}{\partial x^l_{i_0, s_0}} &= \sum_s \sum_j \frac{\partial \text{SSE}}{\partial x^{l+1}_{j,s}} \frac{\partial x^{l+1}_{j, s}}{\partial x^l_{i_0, s_0}}  \\
+        &= (... 0 \text{ if } s \neq s_0 ...) \\
+        &= \sum_j \frac{\partial \text{SSE}}{\partial x^{l+1}_{j,s_0}} \frac{\partial x^{l+1}_{j, s_0}}{\partial x^l_{i_0, s_0}}
+\end{aligned}
+$$
+
+Using:
+
+$$
+\begin{aligned}
+    x^{l+1}_{j, s_0} &= \sum_k W^{l+1}_{j,k} y^l_{k, s_0}  \\
+    \frac{\partial x^{l+1}_{j, s_0}}{\partial x^l_{i_0, s_0}} &= \sum_k W^{l+1}_{j,k} \frac{\partial y^l_{k, s_0}}{\partial x^l_{i_0, s_0}}  \\
+        &= (... 0 \text{ if } k \neq i_0 ...) \\
+        &= W^{l+1}_{j,i_0} \phi'(x^l_{i_0, s_0})
+\end{aligned}
+$$
+
+This becomes:
+
+$$
+\begin{aligned}
+    \frac{\partial \text{SSE}}{\partial x^l_{i_0, s_0}} &= \sum_j \frac{\partial \text{SSE}}{\partial x^{l+1}_{j,s_0}} W^{l+1}_{j,i_0} \phi'(x^l_{i_0, s_0})
+\end{aligned}
+$$
+
+In code:
+
+```python
+for s in range(batchSize):
+    ...
+    x_s = self.weights @ input_s
+    dSig_s = diffSigmoid(x_s)
+    dEdx_l_s = (dEdx_lp1_s @ W_lp1) * dSig_s
+```
+
+Derivative of error wrt. $W^l_{i_0, j_0}$:
+
+$$
+\begin{aligned}
+    \frac{\partial \text{SSE}}{\partial W^l_{i_0, j_0}} &= \sum_s \sum_i \frac{\partial \text{SSE}}{\partial x^l_{i, s}}  \frac{\partial x^l_{i,s}}{\partial W^l_{i_0,j_0}}    \\
+        &= (... 0 \text{ if } i \neq i_0 ...) \\
+        &= \sum_s \frac{\partial \text{SSE}}{\partial x^l_{i_0, s}} \frac{\partial x^l_{i_0,s}}{\partial W^l_{i_0,j_0}}  \\
+        &= \sum_s \frac{\partial \text{SSE}}{\partial x^l_{i_0, s}} y^{l-1}_{j_0,s} \\
+\end{aligned}
+$$
+
+In code:
+
+```python
+dEdW = np.zeros(self.weights.shape)
+for s in range(batchSize):
+    dEdx_l_s = ...
+    dEdW += np.outer(dEdx_l_s, input_s)
+```
+
+#### Full code
+
+```python
+#%%
+import numpy as np
+import random
+
+
+
+def pick_random_numbers(n, m):
+    if n > m:
+        raise ValueError("n cannot be greater than m as it's not possible to pick n unique numbers less than m.")
+    return random.sample(range(m), n)
+
+
+def pick(data, indices):
+    out = []
+    for i in indices:
+        out.append(data[i])
+    return out
+
+def errors(predictions, realValues):
+    es = []
+    for i in range(len(predictions)):
+        es.append(np.abs(predictions[i] - realValues[i])[0])
+    return es
+
+
+# %%
+
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def diffSigmoid(x):
+    return sigmoid(x) * (1 - sigmoid(x))
+
+
+class FullyConnectedOutputLayer:
+    def __init__(self, inSize, outSize):
+        self.weights = np.random.randn(outSize, inSize) * np.sqrt(2. / (outSize + inSize))
+
+    def forward(self, inputs):
+        out = []
+        for input in inputs:
+            x = self.weights @ input
+            y = sigmoid(x)
+            out.append(y)
+        return out
+
+    def backward(self, trueValues, predictions, inputs):
+
+        dEdx = []
+        dEdW = np.zeros(self.weights.shape)
+
+        batchSize = len(trueValues)
+        for s in range(batchSize):
+
+            input_s = inputs[s]
+            prediction_s = predictions[s]
+            trueValue_s = trueValues[s]
+
+            x_s = self.weights @ input_s
+            dSig_s = diffSigmoid(x_s)
+            dEdx_s = 2 * (trueValue_s - prediction_s) * dSig_s
+
+            dEdx.append(dEdx_s)
+            dEdW += np.outer(dEdx_s, input_s)
+
+        return dEdx, dEdW
+
+
+
+class FullyConnectedLayer:
+    def __init__(self, inSize, outSize):
+        self.weights = np.random.randn(outSize, inSize) * np.sqrt(2. / (outSize + inSize))
+
+    def forward(self, inputs):
+        out = []
+        for input in inputs:
+            x = self.weights @ input
+            y = sigmoid(x)
+            out.append(y)
+        return out
+
+    def backward(self, dEdx_lp1, W_lp1, inputs):
+
+        dEdx = []
+        dEdW = np.zeros(self.weights.shape)
+
+        batchSize = len(dEdx_lp1)
+        for s in range(batchSize):
+
+            dEdx_lp1_s = dEdx_lp1[s]
+            input_s = inputs[s]
+
+            x_s = self.weights @ input_s
+            dSig_s = diffSigmoid(x_s)
+            dEdx_l_s = (dEdx_lp1_s @ W_lp1) * dSig_s
+
+            dEdx.append(dEdx_l_s)
+            dEdW += np.outer(dEdx_l_s, input_s)
+
+        return dEdx, dEdW
+
+
+
+class Network:
+    def __init__(self, shapes):
+        self.layers = []
+
+        nrLayers = len(shapes) - 1
+        for i in range(1, nrLayers + 1):
+            inSize = shapes[i-1]
+            outSize = shapes[i]
+            if i <= nrLayers - 1:
+                layer = FullyConnectedLayer(inSize, outSize)
+            else:
+                layer = FullyConnectedOutputLayer(inSize, outSize)
+            self.layers.append(layer)
+
+
+    def predict(self, inputs):
+        allOutputs = [inputs]
+        for layer in self.layers:
+            outputs = layer.forward(inputs)
+            allOutputs.append(outputs)
+            inputs = outputs
+        return allOutputs
+
+
+    def trainBatch(self, inputs, trueValues, alpha):
+        # 1. forward
+        allOutputs = self.predict(inputs)
+
+        # 2. backward
+        allDEdWs = [None for i in range(len(self.layers))]
+
+        layer_p1 = self.layers[-1]
+        dEdx_lp1, dEdW = layer_p1.backward(trueValues, allOutputs[-1], allOutputs[-2])
+        allDEdWs[-1] = dEdW
+
+        for l in reversed(range(0, len(self.layers)-1)):
+            layer = self.layers[l]
+            dEdx, dEdW = layer.backward(dEdx_lp1, layer_p1.weights, allOutputs[l])
+            allDEdWs[l] = dEdW
+            dEdx_lp1 = dEdx
+            layer_p1 = layer
+
+        # 3. update
+        for l, layer in enumerate(self.layers):
+            layer.weights += alpha * allDEdWs[l]
+
+
+
+
+
+
+#%%
+
+# # LAND
+# data = [
+#     {"input": np.array([0, 0]), "output": np.array([0.0])},
+#     {"input": np.array([0, 1]), "output": np.array([0.0])},
+#     {"input": np.array([1, 0]), "output": np.array([0.0])},
+#     {"input": np.array([1, 1]), "output": np.array([1.0])},
+# ]
+# XOR
+data = [
+    {"input": np.array([0, 0]), "output": np.array([0.0])},
+    {"input": np.array([0, 1]), "output": np.array([1.0])},
+    {"input": np.array([1, 0]), "output": np.array([1.0])},
+    {"input": np.array([1, 1]), "output": np.array([0.0])},
+]
+
+
+net = Network([2, 3, 1])
+
+
+nrIterations = 20_000
+batchSize = 3
+
+
+
+# prediction 1
+batchIndices = pick_random_numbers(batchSize, len(data))
+validationInputs     = [d["input"]  for d in data]
+validationTrueValues = [d["output"] for d in data]
+def predictionError(predictions, trueValues):
+    e = 0
+    for i in range(len(predictions)):
+        e += (predictions[i] - trueValues[i]) * (predictions[i] - trueValues[i])
+    return e
+
+predictions1 = net.predict(validationInputs)[-1]
+print("prediction before training: ", predictionError(predictions1, validationTrueValues))
+
+
+
+# training
+for i in range(nrIterations):
+    batchIndices = pick_random_numbers(batchSize, len(data))
+    inputs     = [d["input"]  for d in pick(data, batchIndices)]
+    trueValues = [d["output"] for d in pick(data, batchIndices)]
+    net.trainBatch(inputs, trueValues, 0.1 * (1. - i/nrIterations))
+    if i % 1_000 == 0:
+        prediction = net.predict(validationInputs)[-1]
+        print(predictionError(prediction, validationTrueValues))
+
+
+
+# prediction 2
+predictions2 = net.predict(validationInputs)[-1]
+print("prediction after training: ", predictionError(predictions2, validationTrueValues))
+
+# %%
+
+```
+
 ### Universal approximation
 
 Let $f$ be a function mapping images to labels. $f$ stems from a vector space of functions $\mathscr{F}$. Let $B$ be a basis for $\mathscr{F}$, meaning that
@@ -1107,7 +1440,7 @@ $P(s' | s, a)$ reduces to $P(s' | s)$.
 
 The objective is to chose a $\pi$ that will maximize my cumulative reward:
 
-$$E[ \Sigma_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ]$$
+$$E[ \sum_{t=0..\infty} \gamma^t R_{a_t}(s_{t}, s_{t+1}) ]$$
 Where $\gamma$ is some discount value $0 \leq \gamma \leq 1$ which accounts for the fact that I'd rather have my earnings today than tomorrow.
 
 The value $V = E[U]$ is defined as the expected reward. This expands to:
@@ -1116,20 +1449,20 @@ $$
 \begin{aligned}
 U    &= R(s_1 | s_0) + \gamma R(s_2 | s_1) + ...  \\
 E[U] &= E[R(s_1 | s_0)] + \gamma E[R(s_2 | s_1)] + ... \\
-     &= \Sigma_{s_1} P(s_1) R(s_1 | s_0) + \gamma \Sigma_{s_1} P(s_1) E | s_1[R(s_2 | s_1)]   + ... \\
-     &= \Sigma_{s_1} P(s_1) R(s_1 | s_0) + \gamma \Sigma_{s_1} \Sigma_{s_2} P(s_1) P(s_2 | s_1) R(s_2 | s_1) + ...
+     &= \sum_{s_1} P(s_1) R(s_1 | s_0) + \gamma \sum_{s_1} P(s_1) E | s_1[R(s_2 | s_1)]   + ... \\
+     &= \sum_{s_1} P(s_1) R(s_1 | s_0) + \gamma \sum_{s_1} \sum_{s_2} P(s_1) P(s_2 | s_1) R(s_2 | s_1) + ...
 \end{aligned}
 $$
 
 This is a recursive calculation. So, given a policy we can calculate our value per state:
-$$V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')]$$
+$$V(s) | \pi = \sum_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')]$$
 
 And we can chose $\pi(s)$ like so:
 
 $$
 \begin{aligned}
     &\forall s \in S: \\
-    &\pi(s) | V = \text{argmax}_a \{ \Sigma_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \}
+    &\pi(s) | V = \text{argmax}_a \{ \sum_{s'} P_a(s, s')[R_a(s, s') + \gamma V(s')] \}
 \end{aligned}
 $$
 
@@ -1152,7 +1485,7 @@ def evalPolicy(policy, s):
 ### Better performance for MDPs
 
 A policies value is calculated recursively:
-$$V(s) | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')]$$
+$$V(s) | \pi = \sum_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V(s')]$$
 But in practice, that $V(s')$ is problematic: this keeps recursing down until at some point `isEndState(s) == true`.
 
 We can get a better performance by employing **contraction mapping** aka. **fixed-point iteration**:
@@ -1162,7 +1495,7 @@ $$
   V^{new}, & V^{old}: \text{dictionaries} \\
   \text{while } & V^{new} - V^{old} > \epsilon: \\
                 & V^{old} = V^{new} \\
-                & V^{new}[s] | \pi = \Sigma_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V^{old}[s']]
+                & V^{new}[s] | \pi = \sum_{s'} P_{\pi(s)}(s, s') [ R_{\pi(s)}(s, s') + \gamma V^{old}[s']]
 \end{aligned}
 $$
 
