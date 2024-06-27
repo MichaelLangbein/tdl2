@@ -12,7 +12,10 @@
   - apps
   - mobile os
   - excel
-  -
+- llm's are essentially blind: they are not good at transforming code to images or describing images in words. 
+   - robots that interact with the real world would learn to do that
+- Cholet: llm's learn new concepts much slower than humans do.
+   - suggests combining with program synthesis
 
 # Human cognition
 
