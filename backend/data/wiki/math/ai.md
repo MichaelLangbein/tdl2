@@ -12,10 +12,11 @@
   - apps
   - mobile os
   - excel
-- llm's are essentially blind: they are not good at transforming code to images or describing images in words. 
-   - robots that interact with the real world would learn to do that
+- llm's are essentially blind: they are not good at transforming code to images or describing images in words.
+  - robots that interact with the real world would learn to do that
 - Cholet: llm's learn new concepts much slower than humans do.
-   - suggests combining with program synthesis
+  - indeed, human brains don't seem to do backpropagation.
+  - Cholet suggests combining with program synthesis
 
 # Human cognition
 
@@ -973,6 +974,12 @@ V = X * Wv
 A = softmax(Q.T @ K) @ V.T
 ```
 
+where `q`: query, `k`: key, `v`: value.
+
+> <small>I like to think of this `qkv`-attention as the concept-equivalent of CNN's. Convolution detects abstract features (edge) from a more noisy representation (pixels). `qkv`-Attention detects abstract concepts in a more noise representation (words)</small>
+
+# Specific Deep learning techniques
+
 ## Stable diffusion
 
 <img width="100%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/stable_diffusion.jpg" />
@@ -982,19 +989,41 @@ A = softmax(Q.T @ K) @ V.T
 - SD works by trying to remove noise from what it thinks is an image - but actually is just random noise.
 - Training on SD is still hard, so instead of training a big UNet, one compresses the input-image with a GAN-encoder and expands the UNet's output again with a GAN's decoder. One then trains the UNet on the compressed image. This reduces parameters and training-time.
 
-### Self organizing maps
+Keras has a ready-trained version of stable diffusion:
+https://www.tensorflow.org/tutorials/generative/generate_images_with_stable_diffusion
+
+## Aging a face with variational autoencoders
+
+- Autoencoder:
+  - Input = output
+  - encoder CNN
+  - latent representation
+  - decoder CNN
+- Step 1: Input: face -> Encoder; yielsd latent repr_face
+- Step 2: Input: same face, but older -> Encoder: yields latent repr_oldface
+- Step 3: repr_oldface - repr_face = aging_direction
+- Step 4: Input: new face -> Encoder; yields latent repr_newface
+- Step 5: repr_newface + aging_direction -> Decoder; yields aged face
+
+Alternatively, you can just get a random face by sampling from the latent representation.
+
+Autoencoders per se are a little outdated: https://blog.keras.io/building-autoencoders-in-keras.html
+VAE's: https://keras.io/examples/generative/vae/
+
+## Activation maximization
+
+- CNNs learn specific features in their lower layers
+- In a trained net, detect one layer where you can discern an "eye" feature
+- Find an input image that maximizes that eye's activation
+- You get that net's idea of what "maximum eye" looks like
+
+## Deep dream
+
+## Style transfer
+
+## Self organizing maps
 
 Self organizing maps are another, fundamentally different type of neural network. Where feedforward nets employ supervised learning with backpropagation, SOM's do unsupervised learning with a competitive algorithm.
-
-## Computer vision
-
-**Feature detection and pose estimation**
-
-Say you want to locate the position of the nose in a portrait.
-
-# Feature extraction and dimensionality reduction
-
-The art of preprocessing input has developed in a branch of machine learning itself. Classifiers like SVM's and nnets work better when they get cleaned up and encoded input instead of raw data.
 
 # Symbolic AI
 
