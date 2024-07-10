@@ -417,9 +417,9 @@ def rasterizeGeojson(geojson, bbox, imgShape):
     imgH, imgW = imgShape
 
     lonMin, latMin, lonMax, latMax = bbox
-    scaleX = (lonMax - lonMin) / imgH
+    scaleX = (lonMax - lonMin) / imgW
     transX = lonMin
-    scaleY = -(latMax - latMin) / imgW
+    scaleY = -(latMax - latMin) / imgH
     transY = latMax
 
     # tMatrix = np.array([
@@ -500,7 +500,7 @@ interface Catalog {
   stac_version: number;
   stac_extensions?: Extension[];
   id: string;
-  type: "Catalog";
+  type: 'Catalog';
   description: string;
   links: Link[];
   title?: string;
@@ -600,12 +600,12 @@ https://medium.com/planet-stories/a-handy-introduction-to-cloud-optimized-geotif
   I guess that image 1 contains images 2,3,4,5; image 2 contains images 6,7,8,9; etc.
 
 ```js
-import "./style.css";
-import { fromUrl } from "geotiff";
+import './style.css';
+import { fromUrl } from 'geotiff';
 
 // https://github.com/geotiffjs/geotiff.js/
 
-const cogUrl = "https://oin-hotosm.s3.amazonaws.com/56f9b5a963ebf4bc00074e70/0/56f9c2d42b67227a79b4faec.tif";
+const cogUrl = 'https://oin-hotosm.s3.amazonaws.com/56f9b5a963ebf4bc00074e70/0/56f9c2d42b67227a79b4faec.tif';
 
 // makes a Range-request for bytes 0-65.536 to get the header (range is just a guess; but surely the header fits in that many bytes.)
 const tif = await fromUrl(cogUrl);
