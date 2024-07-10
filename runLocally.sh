@@ -21,8 +21,17 @@ if [[ $compile == "y" || $compile == "Y" ]]; then
 fi
 
 echo "Running in bash ..."
-cd $thisDir/backend
-gnome-terminal -- npm run run:prod
-cd $thisDir/frontend
-gnome-terminal -- npm run host:locally
+if command -v gnome-terminal &> /dev/null
+then
+    cd $thisDir/backend
+    gnome-terminal -- npm run run:prod
+    cd $thisDir/frontend
+    gnome-terminal -- npm run host:locally
+else
+    cd $thisDir/backend
+    xfce4-terminal -e 'npm run run:prod' --hold
+    cd $thisDir/frontend
+    xfce4-terminal -e 'npm run host:locally' --hold
+fi
+
 
