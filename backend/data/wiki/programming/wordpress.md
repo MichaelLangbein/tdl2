@@ -342,20 +342,46 @@ Wordpress uses one abstraction higher than CSS. There's a `theme.json` file that
     - potentially any custom templates spliced into the lookup by you
 - **template-parts** (optional): small, reusable elements made of html, to be used in templates.
   - They are referred to in templates or patterns with `<!-- wp:template-part {} /-->`
-  - Users can edit those parts in the UI
   - header.html
   - footer.html
+  - meant to be parts of templates
+  - Users can edit those parts in the UI, but those edits will affect all pages where template parts are used
 - **patterns** (optional): Multiple blocks can be grouped together to make a pattern, which may be used in templates, template-parts, or user-content.
   - They are referred to in templates or other patterns with `<!-- wp:pattern {} /-->`
   - should be php
-  - requires meta-data comment at top
-  - _patterns vs template-parts_:
-    - contrary to template-parts, patterns can be edited by the user
-    - the user can only insert template-parts in the site-editor, not in the page-editor. Thus they can only be added to the site-structure, not inside a content-block.
-    - patterns, however, can be used both in template(-part)s (and the side editor) _as well_ as in the content editor
+  - create in ui and export to code using https://wordpress.org/plugins/pattern-editor/
+  - aka _reusable blocks_
+  - aka _(synced) patterns_
+  - if synced, changes on one carry over to all. Otherwise, they don't.
+  - **synced pattern override**:
+    - https://www.youtube.com/watch?v=VGw3aNIwTNw
+    -
 - (optional) empty index.php (so that dir can't be inspected from outside)
 
 All the above are used to layout widgets and the sites "frame" - i.e. everything that is not an actual blog-posts content. Content itself is made of blocks and may use patterns.
+
+- **site structure**
+  - _template_:
+    - one per page-type
+    - e.g. blog-post, landing-page, contact-page, ...
+  - _template parts_
+    - parts of site structure, shared between templates
+    - eg header, footer
+    - identical over all places
+- **content**
+  - patterns
+    - _un-synced pattern_ (aka reusable-block)
+      - one template, arbitrary modifications in each location
+      - won't sync again once used
+    - _synced pattern_
+      - stays same over all locations
+      - e.g. "where to find us", "contact us"
+    - _synced pattern override_
+      - e.g. "product description": structure the same on all locations, but content different
+      - only heading, paragraph, button and image allow overrides
+      - block >> "advanced" >> "allow instance overrides"
+      - requires WP 6.6
+      - these are really wp's equivalent of react-components and my personal tool of choice.
 
 Users can overwrite your settings:
 
