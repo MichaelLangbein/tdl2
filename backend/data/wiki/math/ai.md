@@ -1021,6 +1021,13 @@ VAE's: https://keras.io/examples/generative/vae/
 
 ## Style transfer
 
+## LLMs
+
+- Attempt to deep dream with LLMs: https://pair-code.github.io/interpretability/text-dream/explainable/textspecial
+- Do NNs memoize or generalize?: https://pair.withgoogle.com/explorables/
+- https://aclanthology.org/2023.blackboxnlp-1.20.pdf
+- LLM's don't encode _simple_ concepts in neurons: https://arxiv.org/pdf/2104.07143
+
 ## Self organizing maps
 
 Self organizing maps are another, fundamentally different type of neural network. Where feedforward nets employ supervised learning with backpropagation, SOM's do unsupervised learning with a competitive algorithm.

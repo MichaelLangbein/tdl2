@@ -1158,94 +1158,80 @@ This is the **central bank policy**.
 https://macrosimulation.org/a_new_keynesian_3_equation_model
 
 ```python
-
+#%%
 import numpy as np
 import matplotlib.pyplot as plt
 
-def simulate(
-        G: np.ndarray,       # government spending
-        beta: np.ndarray,    # fed inflation/unemployment sensitivity,
-        PiT: np.ndarray,     # target inflation
-        w_a = 2,       # wage bargaining: base demands
-        w_L = 0.5,     # wage bargaining: labor sensitive demands
-        c_a = 2,     # consumption, autonomous
-        c_Y = 0.5,   # consumption, wage sensitive
-        i_a = 0.5,   # investment, autonomous
-        i_Y = 0.5,   # investment, demand sensitive
-        i_r = 0.5,   # investment, interest-rate sensitive
-        t_a = 0.5,   # taxes, base interest-rate
-        t_y = 0.25,  # taxes, wage sensitive
-        p = 1,       # labor productivity
-        m = 0.1,     # gains markup
-):
-    T = len(G)
-
-    Y     = np.ones(T) * 100
-    LN    = np.ones(T) * 100
-    r     = np.ones(T)
-    Pi    = np.ones(T)
-    w_nom = np.ones(T)
-    L     = np.ones(T) * 100
-    P     = np.ones(T)
-
-    # first values
-    # r[0] = 1
-    # A     = (c_a + c_Y * t_a + i_a + G[0]) / (1 - c_Y + c_Y * t_y - i_Y)
-    # alpha = i_r / (1 - c_Y + c_Y * t_y - i_Y)
-    # Y[0] = A - alpha * r[0]
-    # L[0] = Y[0] / p
-    # w_nom[0] = w_a + w_L * L[0]
-    # Pi[0] = PiT[0]
-    # P[0] = (1+m) * w_nom[0] / p
-
-    for t in range(1, T):
-
-        # 1. given the last interest rate, some output is produced
-        A     = (c_a + c_Y * t_a + i_a + G[t]) / (1 - c_Y + c_Y * t_y - i_Y)
-        alpha = i_r / (1 - c_Y + c_Y * t_y - i_Y)
-        Y[t] = A - alpha * r[t-1]
-        L[t] = Y[t] / p
-
-        # 2. unions demand a change in nominal wages
-        delta_w_nom_normalized = Pi[t-1] - w_L * (L[t] - LN[t])
-        w_nom[t] = w_nom[t-1] + delta_w_nom_normalized * w_nom[t-1]
-
-        # 3. under these new wages, the negotiated labor supply LN would be:
-        LN[t] = (1/w_L) * (p/(1+m) - w_a)
-
-        # 4. firms adjust prices to maintain $m$
-        P[t] = (1+m) * w_nom[t] / p
-
-        # 5. this increases inflation
-        Pi[t] = Pi[t-1] - w_L * (L[t] - LN[t])
-        # Pi[t] = (P[t] - P[t-1]) / P[t-1] <-- should be the same value
-
-        # 6. fed adjusts r to minimize unemployment and inflation
-        r[t] = (LN[t]/p - A)/alpha - (beta[t] * w_L) / (alpha * (1 - beta[t] * w_L * w_L)) * (Pi[t] - PiT[t])
-        r[t] = np.max([0.0, r[t]])
-
-    return Y, L, LN, r, Pi, w_nom, P
+#%%
 
 
-T = 20
-Ts = np.arange(0, T, 1)
-G = np.ones(T) * 5
-beta = np.ones(T) * 1
-PiT = np.ones(T) * 0.05
-Y, L, LN, r, Pi, w_nom, P = simulate(G=G, beta=beta, PiT=PiT)
 
-fig, axes = plt.subplots(4, 1)
-axes[0].plot(Ts, L, label="L")
-axes[0].plot(Ts, LN, label="LN")
+def simulate(A, pt, ye):
+    Q = len(A)
+
+    # Create arrays to store simulated data
+    y = np.zeros(Q)  # Income/output
+    p = np.zeros(Q)  # Inflation rate
+    r = np.zeros(Q)  # Real interest rate
+    rs = np.zeros(Q)  # Stabilizing interest rate
+
+    # Set constant parameter values
+    a1 = 0.3  # Sensitivity of inflation with respect to output gap
+    a2 = 0.7  # Sensitivity of output with respect to interest rate
+    b = 1     # Sensitivity of the central bank to inflation gap
+    a3 = (a1 * (1 / (b * a2) + a2)) ** (-1)
+
+    # Initialize endogenous variables at equilibrium values
+    y[0] = ye[0]
+    p[0] = pt[0]
+    rs[0] = (A[0] - ye[0]) / a1
+    r[0] = rs[0]
+
+    # Simulate the model by looping over Q time periods for S different scenarios
+    for t in range(1, Q):
+        # (1) IS curve
+        y[t] = A[t] - a1 * r[t - 1]
+        # (2) Phillips Curve
+        p[t] = p[t - 1] + a2 * (y[t] - ye[t])
+        # (3) Stabilizing interest rate
+        rs[t] = (A[t] - ye[t]) / a1
+        # (4) Monetary policy rule, solved for r
+        r[t] = rs[t] + a3 * (p[t] - pt[t])
+
+    return y, p, rs, r
+
+
+#%%
+
+# Set number of periods
+Q = 50
+# Set parameter values
+A = np.full(Q, 10)  # Autonomous spending
+pt = np.full(Q, 2)  # Inflation target
+ye = np.full(Q, 5)  # Potential output
+
+# A[5:Q] = 12  # Scenario 1: AD boost
+# pt[5:Q] = 3  # Scenario 2: Higher inflation target
+ye[5:Q] = 7  # Scenario 3: Higher potential output
+
+y, p, rs, r = simulate(A, pt, ye)
+
+
+#%%
+
+img, axes = plt.subplots(2, 1)
+axes[0].plot(y, label="y: production")
+axes[0].plot(p, label="p: inflation")
 axes[0].legend()
-axes[1].plot(Ts, Pi, label="Pi")
-axes[1].plot(Ts, PiT, label="PiT")
+axes[1].plot(rs, label="rs: stabilizing interest rate")
+axes[1].plot(r, label="r: interest rate")
 axes[1].legend()
-axes[2].plot(Ts, r, label="r")
-axes[2].legend()
-axes[3].plot(Ts, P, label="P")
-axes[3].plot(Ts, w_nom, label="w_nom")
-axes[3].legend()
+
+# plt.plot(y)
+# plt.plot(p)
+# plt.plot(rs)
+# plt.plot(r)
+# %%
 
 ```
 
