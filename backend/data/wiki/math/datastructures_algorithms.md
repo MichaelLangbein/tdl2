@@ -953,4 +953,56 @@ Example: multiplication with covariance matrix
 - Transforms back
   Reduces small differences, exaggerates large differences
 
-##
+# Parallel algorithms
+
+- **span**: nr of times the gpu needs to execute
+- **work**: nr of computations done == instructions/core \* nr cores ~ nr threads
+
+## Prefix sum
+
+Given an input sequence $x$, return a sequence $y$ where $y_j = y_{j-1} + x_j$
+
+Example:
+
+```python
+input  = [1, 2, 3, 4,  5,  6,  7,  8 ]
+output = [1, 3, 6, 10, 15, 21, 28, 36]
+```
+
+### Single threaded
+
+```ts
+function prefix_sum(x: number[]) {
+  const n = x.length;
+  const y = Array(n);
+  y[0] = x[0];
+  for (let j = 1; y < n; j++) {
+    y[j] = y[j - 1] + x[j];
+  }
+  return y;
+}
+```
+
+### Hill & Steele: span-efficient, work-inefficient
+
+- $n$: input length
+- work: $n$ threads
+- span: $\lfloor \log_2{n} \rfloor$ iterations
+
+```python
+for i in 0 ... floor(log2(n)) do:         # iterations
+    for j in 0 ... n-1 do in parallel:    # threads
+      if y < 2**i:
+          x[i+1][j] = x[i][j]
+      else:
+          x[i+1][j] = x[i][j] + x[i][j-2**i]
+```
+
+## span inefficient, work-efficient
+
+https://en.wikipedia.org/wiki/Prefix_sum
+
+## Sorting
+
+https://www.dcc.fc.up.pt/~ricroc/aulas/1516/cp/apontamentos/slides_sorting.pdf
+https://en.wikipedia.org/wiki/Bitonic_sorter

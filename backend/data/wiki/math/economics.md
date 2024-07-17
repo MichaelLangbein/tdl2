@@ -1129,6 +1129,8 @@ $$\Pi^1 = \frac{\Delta P}{P^0} = \frac{ (1+m)\frac{\Delta w_{nom}}{p}  }{(1+m)\f
 Combining the unions' demand $\frac{\Delta w_{nom}}{w_{nom}^{eq}}$ with the firms' $\Pi$, we get a relation between inflation and labor:
 
 $$\Pi^1 = \Pi^0 +  k(L^* - L^N)$$
+or, using $Y^* = pL^*$
+$$\Pi^1 = \Pi^0 +  \frac{k}{p}(Y^* - Y^N)$$
 
 This is known as the **Phillips curve**.
 
