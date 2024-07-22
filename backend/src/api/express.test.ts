@@ -1,80 +1,80 @@
-import { Database } from 'sqlite';
-import { createDatabase } from '../db/db';
-import { TaskRow, TaskService } from '../model/task.service';
-import { appFactory } from './express';
-import { Express } from "express";
 import axios from "axios";
-import { FileService } from '../files/fileService';
-import { CardService } from '../model/card.service';
+import { Express } from "express";
+import { Database } from "sqlite";
 
-describe("rest api", () => {
+import { createDatabase } from "../db/db";
+import { FileService } from "../files/fileService";
+import { CardService } from "../model/card.service";
+import { TaskRow, TaskService } from "../model/task.service";
+import { appFactory } from "./express";
 
-    let database: Database;
-    let taskService: TaskService;
-    let fileService: FileService;
-    let cardService: CardService;
-    let app: Express;
-    beforeAll(async () => {
-        database = await createDatabase(":memory:");
-        
-        taskService = new TaskService(database);
-        await taskService.init();
 
-        cardService = new CardService(database);
-        await cardService.init();
+describe('rest api', () => {
+  let database: Database;
+  let taskService: TaskService;
+  let fileService: FileService;
+  let cardService: CardService;
+  let app: Express;
+  beforeAll(async () => {
+    database = await createDatabase(':memory:');
 
-        fileService = new FileService("./data/tmp/");
-        await fileService.init();
+    taskService = new TaskService(database);
+    await taskService.init();
 
-        app = appFactory(taskService, fileService, cardService);
-        
-        const port = 1411;
-        app.listen(port);
-    });
+    cardService = new CardService(database);
+    await cardService.init();
 
-    afterAll(async () => {
-        await database.close();
-    });
+    fileService = new FileService('./data/tmp/');
+    await fileService.init();
 
-    test("GET /subtree", async () => {
-        const response = await axios.get("http://localhost:1411/subtree/0/3");
-        expect(response.status).toBe(200);
-        expect(response.data).toBe("");
-    });
+    app = appFactory(taskService, fileService, cardService);
 
-    test("POST /tasks", async () => {
-        const task = {
-            title: "first task",
-            parent: null
-        }
-        const response = await axios.post("http://localhost:1411/tasks/create", task);
-        expect(response.status).toBe(200);
-        expect(response.data).toBeTruthy();
-        expect(response.data.title).toBe(task.title);
+    const port = 1411;
+    app.listen(port);
+  });
 
-        const getResponse = await axios.get(`http://localhost:1411/subtree/${response.data.id}/3`);
-        expect(getResponse.status).toBe(200);
-        expect(getResponse.data.title).toBe(task.title);
-        expect(getResponse.data.children.length).toBe(0);
-    });
+  afterAll(async () => {
+    await database.close();
+  });
 
-    test("PATCH /tasks/update", async () => {
-        const task = {
-            title: "first task",
-            description: "...",
-            parent: null
-        }
-        const response = await axios.post("http://localhost:1411/tasks/create", task);
-        const originalTask: TaskRow = response.data;
+  test('GET /subtree', async () => {
+    const response = await axios.get('http://localhost:1411/subtree/0/3');
+    expect(response.status).toBe(200);
+    expect(response.data).toBe('');
+  });
 
-        originalTask.deadline = new Date().getTime();
-        originalTask.description = "This task is going to be simple.";
+  test('POST /tasks', async () => {
+    const task = {
+      title: 'first task',
+      parent: null,
+    };
+    const response = await axios.post('http://localhost:1411/tasks/create', task);
+    expect(response.status).toBe(200);
+    expect(response.data).toBeTruthy();
+    expect(response.data.title).toBe(task.title);
 
-        const updateResponse = await axios.patch(`http://localhost:1411/tasks/update`, originalTask);
-        expect(updateResponse.status).toBe(200);
-        const updatedTask = updateResponse.data;
-        expect(updatedTask.description).toBe(originalTask.description);
-        expect(updatedTask.deadline).toBe(originalTask.deadline);
-        
-    });
+    const getResponse = await axios.get(`http://localhost:1411/subtree/${response.data.id}/3`);
+    expect(getResponse.status).toBe(200);
+    expect(getResponse.data.title).toBe(task.title);
+    expect(getResponse.data.children.length).toBe(0);
+  });
+
+  test('PATCH /tasks/update', async () => {
+    const task = {
+      title: 'first task',
+      description: '...',
+      parent: null,
+    };
+    const response = await axios.post('http://localhost:1411/tasks/create', task);
+    const originalTask: TaskRow = response.data;
+
+    originalTask.deadline = new Date().getTime();
+    originalTask.description = 'This task is going to be simple.';
+
+    const updateResponse = await axios.patch(`http://localhost:1411/tasks/update`, originalTask);
+    expect(updateResponse.status).toBe(200);
+    const updatedTask = updateResponse.data;
+    expect(updatedTask.description).toBe(originalTask.description);
+    expect(updatedTask.deadline).toBe(originalTask.deadline);
+  });
 });
