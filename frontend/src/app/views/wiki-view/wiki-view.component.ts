@@ -1,6 +1,5 @@
-import { environment } from "src/environments/environment";
+import { ApiService } from "src/app/services/api.service";
 
-import { HttpClient } from "@angular/common/http";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 
@@ -21,14 +20,12 @@ export class WikiViewComponent implements OnInit {
     macros: {},
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiService) {}
 
   ngOnInit(): void {
-    this.http
-      .get<string[]>(`${environment.backendUrl}/wiki/list`)
-      .subscribe((response: string[]) => {
-        this.entries = response;
-      });
+    this.api.get<string[]>(`/wiki/list`).subscribe((response: string[]) => {
+      this.entries = response;
+    });
   }
 
   activate(entry: string) {
