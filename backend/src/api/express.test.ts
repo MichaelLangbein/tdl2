@@ -15,6 +15,8 @@ describe('rest api', () => {
   let fileService: FileService;
   let cardService: CardService;
   let app: Express;
+  const port = 1411;
+
   beforeAll(async () => {
     database = await createDatabase(':memory:');
 
@@ -27,9 +29,8 @@ describe('rest api', () => {
     fileService = new FileService('./data/tmp/');
     await fileService.init();
 
-    app = appFactory(taskService, fileService, cardService);
+    app = appFactory(taskService, fileService, cardService, {});
 
-    const port = 1411;
     app.listen(port);
   });
 
@@ -38,7 +39,7 @@ describe('rest api', () => {
   });
 
   test('GET /subtree', async () => {
-    const response = await axios.get('http://localhost:1411/subtree/0/3');
+    const response = await axios.get(`http://localhost:${port}/subtree/0/3`);
     expect(response.status).toBe(200);
     expect(response.data).toBe('');
   });
@@ -48,12 +49,12 @@ describe('rest api', () => {
       title: 'first task',
       parent: null,
     };
-    const response = await axios.post('http://localhost:1411/tasks/create', task);
+    const response = await axios.post(`http://localhost:${port}/tasks/create`, task);
     expect(response.status).toBe(200);
     expect(response.data).toBeTruthy();
     expect(response.data.title).toBe(task.title);
 
-    const getResponse = await axios.get(`http://localhost:1411/subtree/${response.data.id}/3`);
+    const getResponse = await axios.get(`http://localhost:${port}/subtree/${response.data.id}/3`);
     expect(getResponse.status).toBe(200);
     expect(getResponse.data.title).toBe(task.title);
     expect(getResponse.data.children.length).toBe(0);
@@ -65,13 +66,13 @@ describe('rest api', () => {
       description: '...',
       parent: null,
     };
-    const response = await axios.post('http://localhost:1411/tasks/create', task);
+    const response = await axios.post(`http://localhost:${port}/tasks/create`, task);
     const originalTask: TaskRow = response.data;
 
     originalTask.deadline = new Date().getTime();
     originalTask.description = 'This task is going to be simple.';
 
-    const updateResponse = await axios.patch(`http://localhost:1411/tasks/update`, originalTask);
+    const updateResponse = await axios.patch(`http://localhost:${port}/tasks/update`, originalTask);
     expect(updateResponse.status).toBe(200);
     const updatedTask = updateResponse.data;
     expect(updatedTask.description).toBe(originalTask.description);

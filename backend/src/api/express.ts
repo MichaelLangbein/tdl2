@@ -14,11 +14,15 @@ import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
 
 
+export interface AppConfig {
+  withAuthentication?: { userName: string; saltedHashedPassword: string; sessionSecret: string; requireHttps: boolean };
+}
+
 export function appFactory(
   taskService: TaskService,
   fileService: FileService,
   cardService: CardService,
-  withAuthentication?: { userName: string; saltedHashedPassword: string; sessionSecret: string; requireHttps: boolean }
+  appConfig: AppConfig
 ) {
   const app = express();
 
@@ -29,7 +33,7 @@ export function appFactory(
   /***********************************************************************
    * Authentication
    **********************************************************************/
-  if (withAuthentication) {
+  if (appConfig.withAuthentication) {
     // sessions: https://www.youtube.com/watch?v=oExWh86IgHA&t=398s
     // passport-local: https://www.youtube.com/watch?v=_lZUq39FGv0
     // local authentication
@@ -44,11 +48,11 @@ export function appFactory(
         (username: string, password: string, callback) => {
           /** callback(error: Error | null, user: User | false, responseData?: any) */
 
-          const trueUserName = withAuthentication.userName;
+          const trueUserName = appConfig.withAuthentication.userName;
           if (username !== trueUserName) return callback(null, false, { message: 'Incorrect username.' });
 
           try {
-            const saltedHashedTruePassword = withAuthentication.saltedHashedPassword;
+            const saltedHashedTruePassword = appConfig.withAuthentication.saltedHashedPassword;
             const [saltHex, hashedTruePasswordHex] = saltedHashedTruePassword.split(':');
             const hashedTruePassword = Buffer.from(hashedTruePasswordHex, 'hex');
             const hashedGivenPassword = scryptSync(password, saltHex, 64);
@@ -80,7 +84,7 @@ export function appFactory(
 
     app.use(
       session({
-        secret: withAuthentication.sessionSecret,
+        secret: appConfig.withAuthentication.sessionSecret,
         resave: false,
         saveUninitialized: false,
         cookie: { maxAge: 24 * 60 * 60 * 1000 },
@@ -96,7 +100,7 @@ export function appFactory(
     app.use(authWithSession);
 
     function requireHTTPS(req: Request, res: Response, next: NextFunction) {
-      if (!withAuthentication.requireHttps) return next();
+      if (!appConfig.withAuthentication.requireHttps) return next();
       if (!req.secure) {
         return res.redirect('https://' + req.get('host') + req.url);
       }
@@ -108,7 +112,7 @@ export function appFactory(
   }
 
   function checkAuthenticated(req: Request, res: Response, next: NextFunction) {
-    if (!withAuthentication) return next();
+    if (!appConfig.withAuthentication) return next();
     if ((req as any).isAuthenticated()) {
       return next();
     }

@@ -47,7 +47,7 @@ describe('rest api authentication', () => {
       requireHttps: false,
     };
 
-    app = appFactory(taskService, fileService, cardService, authenticationData);
+    app = appFactory(taskService, fileService, cardService, { withAuthentication: authenticationData });
 
     app.listen(port);
   });
