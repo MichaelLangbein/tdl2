@@ -75,6 +75,15 @@ describe('rest api authentication', () => {
   });
 
   test('POST works with auth', async () => {
+    /**
+     * Big difference between these node-tests and browser-behavior:
+     * Browser-JS usually cannot access cookies.
+     * Browsers will set cookies in the background, without JS interfering.
+     * Thus JS (like angular's http) cannot access `Set-Cookie` data.
+     */
+
+    // step 1: login
+
     const authResponse = await axios.post(
       `http://localhost:${port}/login/password`,
       { username, password },
@@ -82,6 +91,8 @@ describe('rest api authentication', () => {
     );
     expect(authResponse.status).toBe(200);
     const setCookieHeader = authResponse.headers['set-cookie'][0];
+
+    // step 2: create task (should now work)
 
     const task = {
       title: 'first task',
@@ -95,6 +106,8 @@ describe('rest api authentication', () => {
     expect(response.data).toBeTruthy();
     expect(response.data.title).toBe(task.title);
 
+    // step 3: get some data (should now work)
+
     const getResponse = await axios.get(`http://localhost:${port}/subtree/${response.data.id}/3`, {
       withCredentials: true,
       headers: { Cookie: setCookieHeader },
@@ -102,5 +115,26 @@ describe('rest api authentication', () => {
     expect(getResponse.status).toBe(200);
     expect(getResponse.data.title).toBe(task.title);
     expect(getResponse.data.children.length).toBe(0);
+
+    // step 4: logout
+
+    const unauthResponse = await axios.get(`http://localhost:${port}/login/logout`, {
+      withCredentials: true,
+      headers: { Cookie: setCookieHeader },
+    });
+    expect(unauthResponse.status).toBe(200);
+
+    // step 5: try to post new data (should now fail)
+
+    const task2 = {
+      title: 'second task',
+      parent: response.data.id,
+    };
+    try {
+      const _ = await axios.post(`http://localhost:${port}/tasks/create`, task);
+      fail();
+    } catch (error) {
+      expect(error.response.status).toBe(401);
+    }
   });
 });

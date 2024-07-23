@@ -3,7 +3,7 @@ import { scryptSync, timingSafeEqual } from "crypto";
 import express, { NextFunction, Request, Response } from "express";
 import fileUpload, { FileArray } from "express-fileupload";
 import session from "express-session";
-import passport from "passport";
+import passport, { Request as PassportRequest } from "passport";
 import { Strategy } from "passport-local";
 
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from "../files/files";
@@ -95,9 +95,18 @@ export function appFactory(
     app.use(
       session({
         secret: appConfig.withAuthentication.sessionSecret,
+        // https://stackoverflow.com/questions/40381401/when-to-use-saveuninitialized-and-resave-in-express-session
         resave: false,
-        saveUninitialized: false,
-        cookie: { maxAge: 24 * 60 * 60 * 1000 },
+        saveUninitialized: true,
+        cookie: {
+          // if maxAge is commented out, cookie won't persist across browser restarts
+          maxAge: 24 * 60 * 60 * 1000,
+          // https://stackoverflow.com/questions/40324121/express-session-secure-true
+          // https://expressjs.com/en/resources/middleware/cookie-session.html
+          secure: appConfig.withAuthentication.requireHttps,
+          // if httpOnly, cookie can't be accessed through JS
+          httpOnly: true,
+        },
       })
     );
 
@@ -119,18 +128,24 @@ export function appFactory(
 
     const authWithPassword = passport.authenticate('local', { failureMessage: true });
     app.post('/login/password', requireHTTPS, authWithPassword, (req, res) => res.send({ success: true }));
-    app.post('/login/logout', requireHTTPS, (req, res) => {
-      if (!(req as any).user) return res.status(401).send({ error: 'already logged out' });
-      (req as any).logout((err) => {
+
+    app.get('/login/logout', requireHTTPS, (req: PassportRequest, res) => {
+      if (!req.user) return res.status(401).send({ error: 'already logged out' });
+      req.logout((err) => {
         if (err) return res.status(400).send({ error: err });
         return res.status(200).send({ success: 'logged out' });
       });
     });
+
+    app.get(`/login/status`, requireHTTPS, (req: PassportRequest, res) => {
+      if (!req.user) return res.status(200).send({ loggedIn: false });
+      if (req.user) return res.status(200).send({ loggedIn: true });
+    });
   }
 
-  function checkAuthenticated(req: Request, res: Response, next: NextFunction) {
+  function checkAuthenticated(req: PassportRequest, res: Response, next: NextFunction) {
     if (!appConfig.withAuthentication) return next();
-    if ((req as any).isAuthenticated()) {
+    if (req.isAuthenticated()) {
       return next();
     }
     res.sendStatus(401);
