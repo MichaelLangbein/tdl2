@@ -27,6 +27,7 @@ import { LoginComponent } from "./views/login/login.component";
 import { StatsComponent } from "./views/stats/stats.component";
 import { TaskViewComponent } from "./views/task-view/task-view.component";
 import { WikiViewComponent } from "./views/wiki-view/wiki-view.component";
+import { LoginButtonComponent } from './components/login-button/login-button.component';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { WikiViewComponent } from "./views/wiki-view/wiki-view.component";
     SearchEntryComponent,
     TimelineComponent,
     LoginComponent,
+    LoginButtonComponent,
   ],
   imports: [
     BrowserModule,

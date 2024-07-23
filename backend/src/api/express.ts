@@ -120,8 +120,11 @@ export function appFactory(
     const authWithPassword = passport.authenticate('local', { failureMessage: true });
     app.post('/login/password', requireHTTPS, authWithPassword, (req, res) => res.send({ success: true }));
     app.post('/login/logout', requireHTTPS, (req, res) => {
-      if (!(req as any).user) return res.status(401);
-      (req as any).logout((err) => (err ? res.status(400) : res.status(200)));
+      if (!(req as any).user) return res.status(401).send({ error: 'already logged out' });
+      (req as any).logout((err) => {
+        if (err) return res.status(400).send({ error: err });
+        return res.status(200).send({ success: 'logged out' });
+      });
     });
   }
 
