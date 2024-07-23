@@ -16,6 +16,7 @@ import { estimateTime, estimateTreeTime } from "../stats/estimates";
 
 export interface AppConfig {
   withAuthentication?: { userName: string; saltedHashedPassword: string; sessionSecret: string; requireHttps: boolean };
+  cors?: { origin: string };
 }
 
 export function appFactory(
@@ -26,7 +27,16 @@ export function appFactory(
 ) {
   const app = express();
 
-  app.use(cors());
+  if (appConfig.cors) {
+    app.use(
+      cors({
+        origin: appConfig.cors.origin,
+        credentials: appConfig.withAuthentication ? true : false,
+      })
+    );
+  } else {
+    app.use(cors());
+  }
   app.use(fileUpload());
   app.use(express.json());
 
