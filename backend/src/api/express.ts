@@ -119,6 +119,10 @@ export function appFactory(
 
     const authWithPassword = passport.authenticate('local', { failureMessage: true });
     app.post('/login/password', requireHTTPS, authWithPassword, (req, res) => res.send({ success: true }));
+    app.post('/login/logout', requireHTTPS, (req, res) => {
+      if (!(req as any).user) return res.status(401);
+      (req as any).logout((err) => (err ? res.status(400) : res.status(200)));
+    });
   }
 
   function checkAuthenticated(req: Request, res: Response, next: NextFunction) {
