@@ -1,14 +1,17 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+
+
+import { Injectable } from "@angular/core";
+
+import { ApiService } from "./api.service";
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StatsService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private api: ApiService) {}
 
   public loadCompletionTimes() {
-    return this.http.get(`http://localhost:1410/statistics/completionTimes`);
+    return this.api.get(`/statistics/completionTimes`);
   }
 }

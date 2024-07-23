@@ -1,5 +1,5 @@
 import { first } from "rxjs";
-import { AuthService } from "src/app/services/auth.service";
+import { ApiService } from "src/app/services/api.service";
 
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -21,10 +21,10 @@ export class LoginComponent {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthService
+    private apiService: ApiService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.isLoggedIn()) {
+    if (this.apiService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
   }
@@ -48,7 +48,7 @@ export class LoginComponent {
     this.loading = true;
     const f = this.loginForm.controls;
 
-    this.authenticationService
+    this.apiService
       .login(f['username'].value, f['password'].value)
       .pipe(first())
       .subscribe({

@@ -127,20 +127,26 @@ export function appFactory(
     }
 
     const authWithPassword = passport.authenticate('local', { failureMessage: true });
-    app.post('/login/password', requireHTTPS, authWithPassword, (req, res) => res.send({ success: true }));
+    app.post('/auth/password', requireHTTPS, authWithPassword, (req, res) => res.send({ loggedIn: true }));
 
-    app.get('/login/logout', requireHTTPS, (req: PassportRequest, res) => {
+    app.get('/auth/logout', requireHTTPS, (req: PassportRequest, res) => {
       if (!req.user) return res.status(401).send({ error: 'already logged out' });
       req.logout((err) => {
         if (err) return res.status(400).send({ error: err });
-        return res.status(200).send({ success: 'logged out' });
+        return res.status(200).send({ loggedIn: false });
       });
     });
 
-    app.get(`/login/status`, requireHTTPS, (req: PassportRequest, res) => {
+    app.get(`/auth/status`, requireHTTPS, (req: PassportRequest, res) => {
       if (!req.user) return res.status(200).send({ loggedIn: false });
       if (req.user) return res.status(200).send({ loggedIn: true });
     });
+  }
+  // if no authentication, we still provide a dummy-login-api
+  else {
+    app.post('/auth/password', (req, res) => res.send({ loggedIn: true }));
+    app.get('/auth/logout', (req, res) => res.send({ loggedIn: true }));
+    app.get(`/auth/status`, (req, res) => res.send({ loggedIn: true }));
   }
 
   function checkAuthenticated(req: PassportRequest, res: Response, next: NextFunction) {

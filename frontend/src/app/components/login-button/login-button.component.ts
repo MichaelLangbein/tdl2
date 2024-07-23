@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { AuthService } from "src/app/services/auth.service";
+import { ApiService } from "src/app/services/api.service";
 
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
@@ -12,11 +12,11 @@ import { Router } from "@angular/router";
 })
 export class LoginButtonComponent {
   public loggedIn$: Observable<boolean>;
-  constructor(private authService: AuthService, private router: Router) {
-    this.loggedIn$ = authService.observeLoggedIn();
+  constructor(private apiService: ApiService, private router: Router) {
+    this.loggedIn$ = apiService.observeLoggedIn();
   }
   logout() {
-    this.authService.logout().subscribe(() => this.router.navigate(['/login']));
+    this.apiService.logout().subscribe(() => this.router.navigate(['/login']));
   }
   login() {
     this.router.navigate(['/login'], {});

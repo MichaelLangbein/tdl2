@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  backendUrl: 'https://codeandcolors.net/tdl2/backend/',
 };
