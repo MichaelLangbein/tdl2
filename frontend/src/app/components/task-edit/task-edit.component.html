@@ -17,9 +17,9 @@
 </form>
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">
-    <p>Time active: {{ currentTask.secondsActive | secondsToTimestring }}</p>
+    <p>Time active: {{ recursiveTimeActive(currentTask) | secondsToTimestring }}</p>
 
-    <app-timeline *ngIf="estimate" [estimate]="estimate" [active]="currentTask.secondsActive"></app-timeline>
+    <app-timeline *ngIf="estimate" [estimate]="estimate" [active]="recursiveTimeActive(currentTask)"></app-timeline>
 
     <ul>
         <li *ngFor="let attachment of currentTask.attachments">

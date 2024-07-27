@@ -6,85 +6,89 @@ import { EstimateService } from 'src/app/services/estimate.service';
 import { TaskService, TaskTree } from 'src/app/services/task.service';
 
 @Component({
-  selector: 'app-task-edit',
-  templateUrl: './task-edit.component.html',
-  styleUrls: ['./task-edit.component.css']
+    selector: 'app-task-edit',
+    templateUrl: './task-edit.component.html',
+    styleUrls: ['./task-edit.component.css'],
 })
 export class TaskEditComponent implements OnInit {
+    showDeleteModal = false;
+    currentTask$ = new BehaviorSubject<TaskTree | null>(null);
+    form: FormGroup;
+    estimate: any = undefined;
 
-  showDeleteModal = false;
-  currentTask$ = new BehaviorSubject<TaskTree | null>(null);
-  form: FormGroup;
-  estimate: any = undefined;
-
-  constructor(private taskSvc: TaskService, private estimateSvc: EstimateService) {
-    this.form = new FormGroup({
-      title: new FormControl(),
-      description: new FormControl(),
-      deadline: new FormControl()
-    });
-
-    this.taskSvc.watchCurrentTask().subscribe(this.currentTask$);
-
-    this.currentTask$.subscribe(task => {
-      if (task) {
-        this.form.setValue({
-          title: task.title,
-          description: task.description,
-          deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : null
-        }, {
-          // prevents looping between `currentTask$` and `valueChanges`
-          emitEvent: false,
+    constructor(private taskSvc: TaskService, private estimateSvc: EstimateService) {
+        this.form = new FormGroup({
+            title: new FormControl(),
+            description: new FormControl(),
+            deadline: new FormControl(),
         });
 
-        this.estimate = this.estimateSvc.estimateCached(task.id);
-      }
-    });
+        this.taskSvc.watchCurrentTask().subscribe(this.currentTask$);
 
-    this.form.valueChanges.pipe(
-        debounceTime(1000),
-        distinctUntilChanged((prev, cur) => shallowEqual(prev, cur))
-      ).subscribe(({ title, description, deadline }) => {
-        this.taskSvc.editCurrent(title, description, deadline ? new Date(deadline).getTime() : null);
-    });
-  }
+        this.currentTask$.subscribe((task) => {
+            if (task) {
+                this.form.setValue(
+                    {
+                        title: task.title,
+                        description: task.description,
+                        deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : null,
+                    },
+                    {
+                        // prevents looping between `currentTask$` and `valueChanges`
+                        emitEvent: false,
+                    }
+                );
 
-  ngOnInit(): void {}
+                this.estimate = this.estimateSvc.estimateCached(task.id);
+            }
+        });
 
-  addChildTask()  {
-    this.taskSvc.addChildToCurrent("untitled", "");
-  }
+        this.form.valueChanges
+            .pipe(
+                debounceTime(1000),
+                distinctUntilChanged((prev, cur) => shallowEqual(prev, cur))
+            )
+            .subscribe(({ title, description, deadline }) => {
+                this.taskSvc.editCurrent(title, description, deadline ? new Date(deadline).getTime() : null);
+            });
+    }
 
-  addSiblingTask() {
-    this.taskSvc.addSiblingToCurrent("untitled", "");
-  }
+    ngOnInit(): void {}
 
-  estimateTime() {
-    const currentTask = this.currentTask$.value;
-    if (currentTask === null) return;
-    this.estimateSvc.estimateLive(currentTask.id).subscribe((r: any) => {
-      const d = new Date();
-      const newText = `
+    addChildTask() {
+        this.taskSvc.addChildToCurrent('untitled', '');
+    }
+
+    addSiblingTask() {
+        this.taskSvc.addSiblingToCurrent('untitled', '');
+    }
+
+    estimateTime() {
+        const currentTask = this.currentTask$.value;
+        if (currentTask === null) return;
+        this.estimateSvc.estimateLive(currentTask.id).subscribe((r: any) => {
+            const d = new Date();
+            const newText = `
         Latest estimate: ${d.toISOString()} ${d.toLocaleTimeString()}
             buvs: ${secondsToTimestring(r['buvs'])}
             tdvs: ${secondsToTimestring(r['tdvs'])}
-            estimated percentage: ${Math.round(100 * currentTask.secondsActive / ((r['buvs'] + r['tdvs']) / 2))}%
+            estimated percentage: ${Math.round((100 * currentTask.secondsActive) / ((r['buvs'] + r['tdvs']) / 2))}%
       `;
-      this.appendToDescription(newText);
-      this.estimate = r;
-    });
-  }
+            this.appendToDescription(newText);
+            this.estimate = r;
+        });
+    }
 
-  completeTask() {
-    this.taskSvc.completeCurrent();
-  }
+    completeTask() {
+        this.taskSvc.completeCurrent();
+    }
 
-  reactivateTask() {
-    this.taskSvc.reactivateCurrent();
-  }
+    reactivateTask() {
+        this.taskSvc.reactivateCurrent();
+    }
 
-  template() {
-    const textToAppend = `
+    template() {
+        const textToAppend = `
 
     1.  Understand the problem
         * What are you asked to find or show?
@@ -113,45 +117,51 @@ export class TaskEditComponent implements OnInit {
     4. If you can't solve a problem, then there is an easier problem you can solve: find it.
     5.  Look back on your work. How could it be better?
           `;
-    this.appendToDescription(textToAppend);
-  }
+        this.appendToDescription(textToAppend);
+    }
 
-  deleteTask() {
-    this.taskSvc.deleteCurrent();
-    this.showDeleteModal = false;
-  }
+    deleteTask() {
+        this.taskSvc.deleteCurrent();
+        this.showDeleteModal = false;
+    }
 
-  removeAttachment(attachmentId: number) {
-    this.taskSvc.removeAttachmentFromCurrent(attachmentId);
-  }
+    removeAttachment(attachmentId: number) {
+        this.taskSvc.removeAttachmentFromCurrent(attachmentId);
+    }
 
-  private appendToDescription(textToAppend: string) {
-    const currentValue = this.form.value;
-    this.form.setValue({
-      ... currentValue,
-      description: currentValue.description += textToAppend
-    });
-  }
+    private appendToDescription(textToAppend: string) {
+        const currentValue = this.form.value;
+        this.form.setValue({
+            ...currentValue,
+            description: (currentValue.description += textToAppend),
+        });
+    }
+
+    recursiveTimeActive(tt: TaskTree): number {
+        let sum = tt.secondsActive;
+        for (const child of tt.children) {
+            sum += this.recursiveTimeActive(child);
+        }
+        return sum;
+    }
 }
-
 
 function shallowEqual(o1: any, o2: any) {
-  const keys1 = Object.keys(o1);
-  const keys2 = Object.keys(o2);
+    const keys1 = Object.keys(o1);
+    const keys2 = Object.keys(o2);
 
-  const union: string[] = [];
-  for (const key of keys1) {
-    if (!union.includes(key)) union.push(key);
-  }
-  for (const key of keys2) {
-    if (!union.includes(key)) union.push(key);
-  }
-  if (union.length !== keys1.length) return false;
-  if (union.length !== keys2.length) return false;
+    const union: string[] = [];
+    for (const key of keys1) {
+        if (!union.includes(key)) union.push(key);
+    }
+    for (const key of keys2) {
+        if (!union.includes(key)) union.push(key);
+    }
+    if (union.length !== keys1.length) return false;
+    if (union.length !== keys2.length) return false;
 
-  for (const key of keys1) {
-    if (o1[key] !== o2[key]) return false;
-  }
-  return true;
+    for (const key of keys1) {
+        if (o1[key] !== o2[key]) return false;
+    }
+    return true;
 }
-
