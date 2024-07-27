@@ -17,7 +17,7 @@
 </form>
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">
-    <p>Time active: {{currentTask.secondsActive | secondsToTimestring}} / recursive: {{ recursiveTimeActive(currentTask) | secondsToTimestring }}</p>
+    <p>Time active: {{ currentTask.secondsActive | secondsToTimestring }} / recursive: {{ recursiveTimeActive(currentTask) | secondsToTimestring }}</p>
 
     <app-timeline *ngIf="estimate" [estimate]="estimate" [active]="recursiveTimeActive(currentTask)"></app-timeline>
 
