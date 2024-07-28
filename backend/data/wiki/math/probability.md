@@ -1,53 +1,48 @@
 # Probability
 
-$$
-\gdef\samplespace{\Omega}
-\gdef\probFunct{\text{Pr}}
-$$
-
 # Basics
 
 ## Probability space
 
 Probability works on some basic entities:
 
-- $\samplespace$ is a nonempty set called the sample-space.
-- $\omega \in \samplespace$ is called an outcome
-- $E \subseteq \samplespace$ is called an event
+-   $\Omega$ is a nonempty set called the sample-space.
+-   $\omega \in \Omega$ is called an outcome
+-   $E \subseteq \Omega$ is called an event
 
 > **Definition** [Probability]
-> Probability is a measure on \samplespace. It is a total function $\probFunct: \samplespace \to \reals$ such that:
+> Probability is a measure on \Omega. It is a total function $\text{Pr}: \Omega \to \reals$ such that:
 >
-> - $ \forall \omega \in \samplespace : \probFunct[\omega] \geq 0 $
-> - $ \sum\_{\omega \in \samplespace} \probFunct[\omega] = 1 $
+> -   $\forall \omega \in \Omega : \text{Pr}[\omega] \geq 0$
+> -   $\sum\_{\omega \in \Omega} \text{Pr}[\omega] = 1$
 
 A probability measure together with a sample-space is called a probability space.
 
 We define the probability of an event as:
-$$\probFunct[E] = \sum_{\omega \in E} \probFunct[\omega]$$
+$$\text{Pr}[E] = \sum_{\omega \in E} \text{Pr}[\omega]$$
 
 > **Definition** [Random variable]
-> A random variable is a function mapping a $\omega$ from $\samplespace$ to the reals.
-> $$ X(\omega) : \samplespace \to \reals$$
+> A random variable is a function mapping a $\omega$ from $\Omega$ to the reals.
+> $$ X(\omega) : \Omega \to \reals$$
 
 Note that a random variable strictly takes a single $\omega$ as argument, not a set of outcomes.
 
 We then calculate the probability that a random variable $X$ has a certain value $x$ as such:
 
-$$\probFunct[X=x] = \sum_{X^{-1}(x)} \probFunct[\omega]$$
+$$\text{Pr}[X=x] = \sum_{X^{-1}(x)} \text{Pr}[\omega]$$
 
 **From sample-space to probability of a random variable**
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/prob.png">
 
 > **Definition** [Expectation]
 > The expectation of a random variable is defined as
-> $$ E[X] = \sum\_\samplespace X(\omega)P(\omega)$$
+> $$ E[X] = \sum\_\Omega X(\omega)P(\omega)$$
 
 > **Definition** [Conditional Probability]
-> $$ \probFunct[A | B] = \frac{\probFunct[A \cap B]}{\probFunct[B]}$$
+> $$ \text{Pr}[A | B] = \frac{\text{Pr}[A \cap B]}{\text{Pr}[B]}$$
 
 > As a nice little exercise, we prove the formula for the conditional probability of the _complement_ of $B$.
-> $$ \probFunct[A | \overline{B}] = $$
+> $$ \text{Pr}[A | \overline{B}] = $$
 
 As an illustrative example, consider the following probabilities. People can be _small_ (S) or _tall_ (T). They can be _good_ (G) or _bad_ (B) at basketball.
 Here are the tables of probabilities:
@@ -67,22 +62,18 @@ Here are the tables of probabilities:
 
 Notice the following facts:
 
-- notice how $P(G|T) \neq 1 - P(G|S)$
-- notice how $P(G|T) = 1 - P(B|T)$
-- $P(A, B) = P(A|B) P(B) = P(B|A) P(A)$
-- $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
+-   notice how $P(G|T) \neq 1 - P(G|S)$
+-   notice how $P(G|T) = 1 - P(B|T)$
+-   $P(A, B) = P(A|B) P(B) = P(B|A) P(A)$
+-   $ \Sigma_A \Sigma_B P(A, B) = 1.0 $
 
 > As yet another exercise, here is the formula of the probability of a union of arbitrary events:
-> $$ \probFunct (\cup A_i) = \sum_i \probFunct(A_i)
-
-            - \sum_i \sum_{j>i} \probFunct(A_i \cap A_j)
-            + \sum_i \sum_{j>i} \sum_{k>j} \probFunct(A_i \cap A_j \cap A_k)
-            - ...  $$
-
+>
+> $$\begin{aligned}\text{Pr} (\cup A_i) &= \sum_i \text{Pr}(A_i) \\ &- \sum_i \sum_{j>i} \text{Pr}(A_i \cap A_j) \\ &+ \sum_i \sum_{j>i} \sum_{k>j} \text{Pr}(A_i \cap A_j \cap A_k) \\ &- ... \end{aligned}$$
 > This is proven by induction.
 >
 > > Base case:
-> > $\probFunct(A_1 \cup A_2) = \probFunct(A_1) + \probFunct(A_2) - \probFunct(A_1 \cap A_2) $
+> > $\text{Pr}(A_1 \cup A_2) = \text{Pr}(A_1) + \text{Pr}(A_2) - \text{Pr}(A_1 \cap A_2)$
 > > This is trivially true when looking at a Venn diagram.
 >
 > > Induction step. Suppose that...
@@ -92,32 +83,44 @@ Notice the following facts:
 In a "causal" chain of events $A, B, C$ we can integrate out the middle-event $B$.
 
 $$
+
     \begin{aligned}
         p(A, B, C)  &= \frac{p(A, B, C)}{p(A, B)} \frac{p(A, B)}{p(A)} p(A) \\
                     &= p(C|AB) p(B|A) p(A) \\
     \end{aligned}
+
+
 $$
 
 $$
+
     p(A, C) = \Sigma_B p(A, B, C)
+
+
 $$
 
 $$
+
     \begin{aligned}
             p(C | A) &= \frac{p(A, C)}{p(A)} \\
                      &= \Sigma_B p(C|A, B) p(B|A)
     \end{aligned}
+
+
 $$
 
 We can take the expression for conditional probability and condition _every term_ on a third event.
 
 $$
+
     \begin{aligned}
         p(B|A, C) &= \frac{p(A, B, C)}{p(A, C)} \\
         p(A|B, C) &= \frac{p(A, B, C)}{p(B, C)} \\
         p(A|B, C) &= \frac{p(B|A, C) p(A|C) p(C)}{p(B|C)p(C)} \\
                   &= \frac{p(B|A, C) p(A|C)}{p(B|C)} \\
     \end{aligned}
+
+
 $$
 
 ## Decomposing variance - the road to sensitivity analysis
@@ -125,11 +128,14 @@ $$
 **Expressing variance as expectation** ...
 
 $$
+
     \begin{aligned}
         V_X &= E_{ (X - E_X)^2 } \\
             &= E_{ X^2 - 2 X E_X + E_X^2 } \\
             &= E_{X^2} - E_X^2
     \end{aligned}
+
+
 $$
 
 **Conditional expectation and variance** ...
@@ -145,6 +151,7 @@ $$
 **Law of total expectation** ... <a id="lawOfTotalExpectation"></a>
 
 $$
+
     \begin{aligned}
         E_Y &= \Sigma_Y y P(y) \\
             &= \Sigma_Y y \Sigma_X P(y|x) P(x) \\
@@ -152,11 +159,14 @@ $$
             &= \Sigma_X E_{Y|x} P(x) \\
             &= E_{E_{Y|x}}
     \end{aligned}
+
+
 $$
 
 **Law of total variance** ...<a id="lawOfTotalVariance"></a>
 
 $$
+
     \begin{aligned}
         V_Y &= E_{Y^2} - E_Y^2 \\
             &= E_{E_{Y^2 | X}} - E^2_{E_{Y|X}} \\
@@ -168,6 +178,9 @@ $$
 
 **Illustration of the law of total variance**
 <img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/law_of_total_variance.jpg">
+
+**Bias/variance tradeoff**:
+https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff
 
 # Probability density functions
 
@@ -184,23 +197,29 @@ We'll start with $P(x | x > x_0)$.
 We have:
 
 $$
+
     \begin{aligned}
         P(X | X > x_0) &= \left( \text{ using the fact that } P(B|A) = \frac{P(A \land B)}{P(A)} \right) \\
                           &= \frac{ P(X = x \land X > x_0) }{ P(X > x_0) } \\
                           &= \frac{ s_{x_0} P(X=x) }{ P(x > x_0) }  (\text{ with $s_{x_0}$ the step-function at $x_0$}) \\
                           &= \frac{ s_{x_0} P(X=x) }{ \int_{x_0}^\infty p(x) dx }
     \end{aligned}
+
+
 $$
 
 This leads us to the expectation:
 
 $$
+
     \begin{aligned}
         E(X | X > x_0)  &= \int_{-\infty}^\infty x p(X | X > x_0) dx \\
                         &= \frac{ s_{x_0} \int_{-\infty}^\infty x p(x) dx }{ \int_{x_0}^\infty p(x) dx } \\
                         &= \frac{ \int_{x_0}^\infty x p(x) dx }{ \int_{x_0}^\infty p(x) dx } \\
                         &= \frac{ s_{x_0} E(X) }{ P(X > x_0) }
     \end{aligned}
+
+
 $$
 
 # Probability distributions
@@ -211,9 +230,9 @@ There is an abundance of ready made probability distributions to chose from, cov
 
 **The Bernoulli family** based on modelling a series of coin-tosses.
 
-- Bernoulli: heads or tails?
-- Binominal: k heads in n trials
-- Poisson: k heads in $\infty$ trials.
+-   Bernoulli: heads or tails?
+-   Binominal: k heads in n trials
+-   Poisson: k heads in $\infty$ trials.
 
 A remarkable feature of the Poisson-distribution is that it has only a parameter for the mean, but always the same variance.
 
@@ -221,27 +240,33 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
 
 ## Probabilistic fallacies
 
-- T-Test interpretation: If $\probFunct[A|B] = x$, then this does _not_ mean that $\probFunct[A|\overline{B}] = 1 - x$.
-- Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
+-   T-Test interpretation: If $\text{Pr}[A|B] = x$, then this does _not_ mean that $\text{Pr}[A|\overline{B}] = 1 - x$.
+-   Prosecutors fallacy aka. inverse fallacy: $P(A|B) \neq P(B|A)$
 
-> $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$
+> $\text{Pr}[A|\overline{B}] \neq 1 - \text{Pr}[A | B]$
 >
 > By contradiction.
 >
-> > $$
-> >     \begin{aligned}
-> >        \probFunct[A|B]                 &= 1 - \probFunct[A | \overline{B}] \\
-> >                                        &= \frac{  \probFunct[B] - \probFunct[A \cap \overline{B}]  }{  \probFunct[B]  }  \\
-> >        \probFunct[A|B] \probFunct[B]   &=         \probFunct[B] - \probFunct[A \cap \overline{B}] \\
-> >        \probFunct[A \cap B]   &= \probFunct[B] - \probFunct[A \cap \overline{B}] \\
-> >        \probFunct[A \cap B] + \probFunct[A \cap \overline{B}]  &= \probFunct[B] \\
-> >        \probFunct[A] &= \probFunct[B]
-> >     \end{aligned}
-> > $$
 > >
-> > Thus $\probFunct[A|\overline{B}] \neq 1 - \probFunct[A | B]$.
+
+$$
+
+> >     \begin{aligned}
+> >        \text{Pr}[A|B]                 &= 1 - \text{Pr}[A | \overline{B}] \\
+> >                                        &= \frac{  \text{Pr}[B] - \text{Pr}[A \cap \overline{B}]  }{  \text{Pr}[B]  }  \\
+> >        \text{Pr}[A|B] \text{Pr}[B]   &=         \text{Pr}[B] - \text{Pr}[A \cap \overline{B}] \\
+> >        \text{Pr}[A \cap B]   &= \text{Pr}[B] - \text{Pr}[A \cap \overline{B}] \\
+> >        \text{Pr}[A \cap B] + \text{Pr}[A \cap \overline{B}]  &= \text{Pr}[B] \\
+> >        \text{Pr}[A] &= \text{Pr}[B]
+> >     \end{aligned}
+> >
+> >
+$$
+
+> > Thus $\text{Pr}[A|\overline{B}] \neq 1 - \text{Pr}[A | B]$.
+> > $$
 >
-> But not that it _does_ hold true that $\probFunct[\overline{A}|B] = 1 - \probFunct[A | B]$
+> But not that it _does_ hold true that $\text{Pr}[\overline{A}|B] = 1 - \text{Pr}[A | B]$
 
 # Relation between data-size and estimation-quality
 
@@ -249,12 +274,12 @@ A remarkable feature of the Poisson-distribution is that it has only a parameter
 
 https://en.wikipedia.org/wiki/Cram%C3%A9r%E2%80%93Rao_bound#Scalar_unbiased_case
 
-- Variable to estimate: $\theta$, a fixed scalar
-- Unbiased estimator $\hat{\theta}$
-- $n$ observations of $x$, which is a random variable distributed according to $f(x|\theta)$
-  $$\var{\hat{\theta}} \geq \frac{1}{I(\theta)}$$
-  With $I$ the Fisher information:
-  $$I(\theta) = n   E  \left[ \left(\frac{\partial log(f(x|\theta))}{\partial \theta}   \right)^2 \right]$$
+-   Variable to estimate: $\theta$, a fixed scalar
+-   Unbiased estimator $\hat{\theta}$
+-   $n$ observations of $x$, which is a random variable distributed according to $f(x|\theta)$
+    $$\var{\hat{\theta}} \geq \frac{1}{I(\theta)}$$
+    With $I$ the Fisher information:
+    $$I(\theta) = n   E  \left[ \left(\frac{\partial log(f(x|\theta))}{\partial \theta}   \right)^2 \right]$$
 
 Thus to cut the estimation-error by $u$, you'll need $u^2$ as many data-points.
 It has been claimed that [this causes diminishing returns in training LLM's](https://spectrum.ieee.org/deep-learning-computational-cost).
@@ -292,3 +317,9 @@ plt.plot(sampleLocations, sampledData)
 https://math.stackexchange.com/questions/3267041/proof-of-fermi-estimation-variance
 
 The statement is a consequence of a well-known theorem in statistics stating that if $𝑋$ and $Y$ are independent random variables with variances $\sigma^2_X$ and $\sigma^2_Y$ respectively, then the variance of $𝑋+𝑌$ is $\sigma^2_X+\sigma^2_Y$. Therefore if $X_1,X_2,X_3,…,X_n$ are independent random variables each of which has variance $\sigma^2$, then the variance of $X_1+X_2+X_3+⋯+X_𝑛$ is $n\sigma^2$, and the standard deviation of the sum is $\sqrt{n\sigma^2} = \sqrt{n} \sigma$.
+
+## Bias/variance tradeoff
+
+https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff
+
+### Double descent
