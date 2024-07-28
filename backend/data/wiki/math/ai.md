@@ -1,40 +1,40 @@
 # Thoughts on AI
 
-- LLMs understand how to arrange words
-  - surprisingly, they have some internal understanding of logic and math
-  - but it doesn't have a dedicated mechanism for creativity,
-    - even though combining different domains together with constraints can yield quite creative answers.
-- You can't beat centralized AI with more centralized AI:
-  - AI that operates robots which interact with a complex environment is likely to evolve fast
-  - maybe faster and in a different direction than centralized prompt-AI
-- Even if current AI doesn't get much smarter, it can still penetrate much deeper:
-  - games
-  - apps
-  - mobile os
-  - excel
-- llm's are essentially blind: they are not good at transforming code to images or describing images in words.
-  - robots that interact with the real world would learn to do that
-- Cholet: llm's learn new concepts much slower than humans do.
-  - indeed, human brains don't seem to do backpropagation.
-  - Cholet suggests combining with program synthesis
+-   Neural nets often display a "double descent":
+    -   initially, as models get complexer, they better predict training data, but get increasingly worse for validation data (aka bias/variance tradeoff)
+    -   but with more epochs and yet complexer models, validation-performance gets better again (second, thus "double", descent)
+-   You can't beat centralized AI with more centralized AI:
+    -   AI that operates robots which interact with a complex environment is likely to evolve fast
+    -   maybe faster and in a different direction than centralized prompt-AI
+-   Even if current AI doesn't get much smarter, it can still penetrate much deeper:
+    -   games
+    -   apps
+    -   mobile os
+    -   excel
+-   llm's are essentially blind: they are not good at transforming code to images or describing images in words.
+    -   robots that interact with the real world would learn to do that
+-   Cholet: llm's learn new concepts much slower than humans do.
+    -   indeed, human brains don't seem to do backpropagation.
+    -   Cholet suggests combining with program synthesis
+-
 
 # Human cognition
 
-- lizard brain
-  - gives will to live
-  - gives aesthetic feeling
-  - machines don't have that
-- behavioral brain
-  - learnt behavior
-  - like sports-movements, riding a bike, ...
-  - makes frustrated if response to action is not as expected
-  - that's what backprop-deep-learning does.
-- conscious brain
-  - requires memory
-  - gives step-by-step, slow, logic reasoning
-  - gives thinking back to past events and analyzing them
-  - machines don't have that
-  - Humans without memory have trouble learning new things through reasoning, but can learn through much repetition on the _behavioral brain_ level
+-   lizard brain
+    -   gives will to live
+    -   gives aesthetic feeling
+    -   machines don't have that
+-   behavioral brain
+    -   learnt behavior
+    -   like sports-movements, riding a bike, ...
+    -   makes frustrated if response to action is not as expected
+    -   that's what backprop-deep-learning does.
+-   conscious brain
+    -   requires memory
+    -   gives step-by-step, slow, logic reasoning
+    -   gives thinking back to past events and analyzing them
+    -   machines don't have that
+    -   Humans without memory have trouble learning new things through reasoning, but can learn through much repetition on the _behavioral brain_ level
 
 # Machine learning
 
@@ -45,9 +45,9 @@
 The analytical way of deriving the back-propagation algorithm consist of just a few steps.
 A few definitions:
 
-- A layers output-vector $\vec{y}^l$ is obtained by the activation function $\vec{y}^l = f(\vec{x}^l)$
-- The layers input-vector is obtained as a weighted sum of previous outputs: $\vec{x}^l = \mathbf{W}^l \vec{y}^{l-1}$. We can express a single $x_t^l = \sum_f W_{t,f}^l y_f^{l-1}$
-- We strive to minimize the error-function. Assuming only one single training item we get $e = \frac{1}{2} \sum_t (\vec{y}^*_t - \vec{y}^L_t)^2 = \frac{1}{2} (\vec{y}^* - \vec{y}^L) \odot (\vec{y}^* - \vec{y}^L)$
+-   A layers output-vector $\vec{y}^l$ is obtained by the activation function $\vec{y}^l = f(\vec{x}^l)$
+-   The layers input-vector is obtained as a weighted sum of previous outputs: $\vec{x}^l = \mathbf{W}^l \vec{y}^{l-1}$. We can express a single $x_t^l = \sum_f W_{t,f}^l y_f^{l-1}$
+-   We strive to minimize the error-function. Assuming only one single training item we get $e = \frac{1}{2} \sum_t (\vec{y}^*_t - \vec{y}^L_t)^2 = \frac{1}{2} (\vec{y}^* - \vec{y}^L) \odot (\vec{y}^* - \vec{y}^L)$
 
 Let's first consider only the top layer.
 
@@ -122,10 +122,10 @@ $$\delta^{l-1} = \frac{\mathop{d} e}{\mathop{d}\vec{x}^l} \mathbf{W}^l$$
 
 #### Fully connected layer - output layer
 
-- $x^l = W^l y^{l-1}$
-- $y^l = \phi(x^l)$
-- $s$: sample
-- $y^*_{s,i}$: true value of $y$ for sample $s$ at index $i$
+-   $x^l = W^l y^{l-1}$
+-   $y^l = \phi(x^l)$
+-   $s$: sample
+-   $y^*_{s,i}$: true value of $y$ for sample $s$ at index $i$
 
 Derivative of error wrt. $x^L_{i_0, s_0}$:
 
@@ -512,8 +512,8 @@ The matrix trick (0) only works if there is a scalar-valued function on top of t
 
 For one, that is a requirement for the matrix-trick. But also this makes checking the dimensions of our gradients trivial:
 
-- we can be sure that $\nabla_{node}s$ = `grad_s_node` has the dimensions of `node.eval(at)`
-- we can be sure that $\nabla_{v}s$ = `grad_s_v = node.grad_s_v(v, at, grad_s_node)` has the dimensions of `v.eval(at)`.
+-   we can be sure that $\nabla_{node}s$ = `grad_s_node` has the dimensions of `node.eval(at)`
+-   we can be sure that $\nabla_{v}s$ = `grad_s_v = node.grad_s_v(v, at, grad_s_node)` has the dimensions of `v.eval(at)`.
 
 #### **Pseudocode**
 
@@ -848,8 +848,8 @@ def gradient(op, x, at):
 
 These are the networks most commonly found employed in image-classification. Really, they are just a simplified version of our backpropagation-networks (they are even trained using an only slightly altered algorithm). Instead of connecting every node from layer $l$ to every node of layer $l+1$, they impose some restrictions on the connection-matrix:
 
-- Nodes are connected in a pyramid scheme. A node on layer $l+1$ is connected to 9 nodes directly beneath it. Instead of a $n_l \times n_{l+1}$ connection matrix, we thus have several $9 \times 1$ matrices.
-- The connection-strengths of these $9 \times 1$ matrices are all the same - so really there is only just one $9 \times 1$ matrix.
+-   Nodes are connected in a pyramid scheme. A node on layer $l+1$ is connected to 9 nodes directly beneath it. Instead of a $n_l \times n_{l+1}$ connection matrix, we thus have several $9 \times 1$ matrices.
+-   The connection-strengths of these $9 \times 1$ matrices are all the same - so really there is only just one $9 \times 1$ matrix.
 
 These restrictions are inspired by the physiology of the visual cortex. They have the nice effect that a network is trained much faster, since they massively reduce the amount of weights that need to be learned.
 
@@ -956,9 +956,9 @@ Because $Cov$ is symmetric we have $E_C^{-1} = E_C^T$:
 $$Cov = E_c \Lambda_C E_c^T$$
 $$Cov X^T = \underbrace{E_c \underbrace{\Lambda_C \underbrace{E_c^T X^T}_{\text{Projects $X^T$ into eigenvector space}}}_{\text{Scales projected data by $\lambda$s}}}_{\text{Projects back}}$$
 
-- $E_c^T X^T$ projects $X^T$ into eigenvector space. That is exactly the same thing that PCA does, by the way!
-- $\Lambda_C E_c^T X^T$ scales the projected data. Where there is already lot of variance, the data gets streched even more, where there is little, it gets compressed.
-- $E_c \Lambda_C E_c^T X^T$ converts the stretched data back.
+-   $E_c^T X^T$ projects $X^T$ into eigenvector space. That is exactly the same thing that PCA does, by the way!
+-   $\Lambda_C E_c^T X^T$ scales the projected data. Where there is already lot of variance, the data gets streched even more, where there is little, it gets compressed.
+-   $E_c \Lambda_C E_c^T X^T$ converts the stretched data back.
 
 For comparison, in PCA we have $Y = X E_c$. Thus $Y^T = E_c^T X^T$. Because $C$ is symmetric, this equals $E_c^{-1} X^T$ ... and that is the projection of $X^T$ into eigenvector space.
 
@@ -984,26 +984,26 @@ where `q`: query, `k`: key, `v`: value.
 
 <img width="100%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/stable_diffusion.jpg" />
 
-- GAN's used to be the dominant way of making images.
-- But they tend to get stuck: once a generator finds one convincing face, it keeps making only that one.
-- SD works by trying to remove noise from what it thinks is an image - but actually is just random noise.
-- Training on SD is still hard, so instead of training a big UNet, one compresses the input-image with a GAN-encoder and expands the UNet's output again with a GAN's decoder. One then trains the UNet on the compressed image. This reduces parameters and training-time.
+-   GAN's used to be the dominant way of making images.
+-   But they tend to get stuck: once a generator finds one convincing face, it keeps making only that one.
+-   SD works by trying to remove noise from what it thinks is an image - but actually is just random noise.
+-   Training on SD is still hard, so instead of training a big UNet, one compresses the input-image with a GAN-encoder and expands the UNet's output again with a GAN's decoder. One then trains the UNet on the compressed image. This reduces parameters and training-time.
 
 Keras has a ready-trained version of stable diffusion:
 https://www.tensorflow.org/tutorials/generative/generate_images_with_stable_diffusion
 
 ## Aging a face with variational autoencoders
 
-- Autoencoder:
-  - Input = output
-  - encoder CNN
-  - latent representation
-  - decoder CNN
-- Step 1: Input: face -> Encoder; yielsd latent repr_face
-- Step 2: Input: same face, but older -> Encoder: yields latent repr_oldface
-- Step 3: repr_oldface - repr_face = aging_direction
-- Step 4: Input: new face -> Encoder; yields latent repr_newface
-- Step 5: repr_newface + aging_direction -> Decoder; yields aged face
+-   Autoencoder:
+    -   Input = output
+    -   encoder CNN
+    -   latent representation
+    -   decoder CNN
+-   Step 1: Input: face -> Encoder; yielsd latent repr_face
+-   Step 2: Input: same face, but older -> Encoder: yields latent repr_oldface
+-   Step 3: repr_oldface - repr_face = aging_direction
+-   Step 4: Input: new face -> Encoder; yields latent repr_newface
+-   Step 5: repr_newface + aging_direction -> Decoder; yields aged face
 
 Alternatively, you can just get a random face by sampling from the latent representation.
 
@@ -1012,10 +1012,10 @@ VAE's: https://keras.io/examples/generative/vae/
 
 ## Activation maximization
 
-- CNNs learn specific features in their lower layers
-- In a trained net, detect one layer where you can discern an "eye" feature
-- Find an input image that maximizes that eye's activation
-- You get that net's idea of what "maximum eye" looks like
+-   CNNs learn specific features in their lower layers
+-   In a trained net, detect one layer where you can discern an "eye" feature
+-   Find an input image that maximizes that eye's activation
+-   You get that net's idea of what "maximum eye" looks like
 
 ## Deep dream
 
@@ -1023,10 +1023,10 @@ VAE's: https://keras.io/examples/generative/vae/
 
 ## LLMs
 
-- Attempt to deep dream with LLMs: https://pair-code.github.io/interpretability/text-dream/explainable/textspecial
-- Do NNs memoize or generalize?: https://pair.withgoogle.com/explorables/
-- https://aclanthology.org/2023.blackboxnlp-1.20.pdf
-- LLM's don't encode _simple_ concepts in neurons: https://arxiv.org/pdf/2104.07143
+-   Attempt to deep dream with LLMs: https://pair-code.github.io/interpretability/text-dream/explainable/textspecial
+-   Do NNs memoize or generalize?: https://pair.withgoogle.com/explorables/
+-   https://aclanthology.org/2023.blackboxnlp-1.20.pdf
+-   LLM's don't encode _simple_ concepts in neurons: https://arxiv.org/pdf/2104.07143
 
 ## Self organizing maps
 
@@ -1040,32 +1040,32 @@ Contrary to the before mentioned approaches, symbolic AI uses logical deduction 
 
 A inference engine can do the following:
 
-- Learning:
-  - Gather if-then statements (usually in the form of Horn-clauses).
-  - Create a graph of dependencies between statements (a so called and-or-tree).
-- Applying the learned things: Given a question:
-  - Possible answers: find all potential answers to the problem
-  - Backward pass: go through the graph to see what data is required
-  - Data acquisition: ask user to provide the data
-  - Forward pass: trace the graph forward again to arrive at a single one of the possible answers
+-   Learning:
+    -   Gather if-then statements (usually in the form of Horn-clauses).
+    -   Create a graph of dependencies between statements (a so called and-or-tree).
+-   Applying the learned things: Given a question:
+    -   Possible answers: find all potential answers to the problem
+    -   Backward pass: go through the graph to see what data is required
+    -   Data acquisition: ask user to provide the data
+    -   Forward pass: trace the graph forward again to arrive at a single one of the possible answers
 
 Depending on how much effort you put into the expressions that the engine can understand, we differentiate between different levels of logic:
 
-- 0th order logic: understands simple facts and chains them using modus ponens
-- 1st order logic: understands variables: all of naive math can be written in 1st order logic.
-- higher order logic: is better at inference; can create new if-then-statements as a result of inference or even explore
+-   0th order logic: understands simple facts and chains them using modus ponens
+-   1st order logic: understands variables: all of naive math can be written in 1st order logic.
+-   higher order logic: is better at inference; can create new if-then-statements as a result of inference or even explore
 
 Popular expert-system-libraries are Prolog, CLIPS and Pyke.
 
 There are many variants to how you can write an expert system.
 The most important variables are
 
-- How are rules parsed? Do we allow for other logical connectives than 'AND'? See [this example](https://medium.com/a-42-journey/expert-systems-how-to-implement-a-backward-chaining-resolver-in-python-bf7d8924f72f).
-- How is inference done? Forward pass on `addFact` or backward pass on `eval`, or a mixture?
-- How is pattern-matching done? The Rete-algorithm is very popular for this.
-- Are meta-heuristics used?
-  - Does the engine try to infer more general rules while idle?
-  - Does the engine keep track if a search down one branch takes very long (needs a watching strategy-module)?
+-   How are rules parsed? Do we allow for other logical connectives than 'AND'? See [this example](https://medium.com/a-42-journey/expert-systems-how-to-implement-a-backward-chaining-resolver-in-python-bf7d8924f72f).
+-   How is inference done? Forward pass on `addFact` or backward pass on `eval`, or a mixture?
+-   How is pattern-matching done? The Rete-algorithm is very popular for this.
+-   Are meta-heuristics used?
+    -   Does the engine try to infer more general rules while idle?
+    -   Does the engine keep track if a search down one branch takes very long (needs a watching strategy-module)?
 
 ```python
 
@@ -1468,11 +1468,11 @@ Actions applied to a state yield another state *probabilistic*ally.
 Arriving at a new state yields some _reward_.
 We try to find a _policy_ which maximizes our _cumulative_ reward, aka. the _value_.
 
-- $s$: **State**.
-- $a$: **Action**. Probabilistic - might result in $s' = s_1$ or $s' = s_2$ or ...
-- $P_a(s, s') = P(s_{t+1} = s' | s_t = s, a_t = a)$: **Transition probabilities**
-- $R_a(s, s')$: Immediate **reward** for getting to state $s'$ from $s$ through $a$
-- $\pi(s) = a$: **Policy**: decides on which action to take given a state.
+-   $s$: **State**.
+-   $a$: **Action**. Probabilistic - might result in $s' = s_1$ or $s' = s_2$ or ...
+-   $P_a(s, s') = P(s_{t+1} = s' | s_t = s, a_t = a)$: **Transition probabilities**
+-   $R_a(s, s')$: Immediate **reward** for getting to state $s'$ from $s$ through $a$
+-   $\pi(s) = a$: **Policy**: decides on which action to take given a state.
 
 Once a policy $\pi$ has been decided on, this process reduces to a Markov-chain.
 $P(s' | s, a)$ reduces to $P(s' | s)$.
@@ -1617,8 +1617,8 @@ That is: a function is a contraction if its slope $\frac{f(x + \delta) - f(x)}{\
 
 Contractions have useful properties:
 
-> - If a function is a contraction, it has at most one fixed point $x_{fix}$.
-> - $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
+> -   If a function is a contraction, it has at most one fixed point $x_{fix}$.
+> -   $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ... $ converges to the fixed point $x_{fix}$
 
 Applied to programming, we can replace a recursive calculation ...
 
@@ -1643,8 +1643,8 @@ while |Anew - Aold| > e:
 
 Applying this to our MDP:
 
-- $x = f(x)$ maps to `V = evalPolicy() # recursive`
-- $x_1$ maps to `vOld`
-- $x_{fix} = f(f(f(x_1)))$ maps to `vNew = qVal(qVal(qVal(vOld)))`
+-   $x = f(x)$ maps to `V = evalPolicy() # recursive`
+-   $x_1$ maps to `vOld`
+-   $x_{fix} = f(f(f(x_1)))$ maps to `vNew = qVal(qVal(qVal(vOld)))`
 
 By the way: Contraction-mapping [is a slightly more general form of Newton's method](https://schoolbag.info/mathematics/advanced/18.html).
