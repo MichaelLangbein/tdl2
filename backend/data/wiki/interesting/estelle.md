@@ -29,6 +29,24 @@ Kernfragen
     -   <- antrieb dazu kommt von selbst, muss aber wissen, wofür
     -   <- wenn ich nicht weiß, wofür, dann werde ich die Energie dafür nicht haben
 
+## Heute
+- Soll ich es mit Estelle beenden?
+    - weil ich ihr nicht gesagt habe, dass Nicolle mit Olli Schluss gemacht hat.
+        - ich habe ein sehr schlechtes gewissen
+    - Das wäre silly
+        - Ich sollte endlich erwachsen werden
+        - Ich sollte außerdem endlich einen Job festhalten
+    - Warum denke ich überhaupt darüber nach?
+        - Ich spüre nach wie vor keine Liebe
+        - Ich mochte sie am meisten, während sie weg war
+        - Ich sehne mich nicht danach, sie wieder zu sehen
+    - bin ich nicht verliebt?
+        - liebe entwickelt sich mit zeit, bei mir besonders langsam
+        - ich habe bindungsangst, lasse leute nur langsam an mir teilhaben 
+        - warum will ich nicht, dass leute mich besser kennen lernen?
+            - weil ich mich schäme: ich bin nicht zufrieden mit mit selbst.
+
+
 ## Thesen
 
 -   Ich spiele eine Rolle

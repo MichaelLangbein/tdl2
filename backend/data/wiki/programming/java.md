@@ -485,12 +485,17 @@ Relations are the most important and most difficult part of JPA.
 
 # Spring(-Boot)
 
+## Spring
 A backend-framework centered around dependency injection.
  - In your `pom.xml` declare `providers` to add functionality to your project
  - In your code, implement an interface exposed by that `provider` to use it in your app.
  - Common providers:
     - `jpa` for database-access
     - ``
+
+## Spring boot
+All that spring stuff is just stupid. Create boilerplate online and only do the actual business logic coding.
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/spring_boot.jpg" />
 
 
 # Geoserver
