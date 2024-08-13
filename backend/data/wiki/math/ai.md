@@ -16,7 +16,10 @@
 -   Cholet: llm's learn new concepts much slower than humans do.
     -   indeed, human brains don't seem to do backpropagation.
     -   Cholet suggests combining with program synthesis
--
+- still don't seem to generalize very well: https://m.youtube.com/watch?v=Pv0cfsastFs
+    - seem to learn small skills
+    - mostly state what was written in training data over what logic might deduce. Example: Bing refuses to acknowledge the ETS flight waterbed effect, even when prompted with the ETS mechanism.
+    - think of got as an intern with lots of school but little independent thinking.
 
 # Human cognition
 
