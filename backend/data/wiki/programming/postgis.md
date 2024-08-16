@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS public.heat
 ```
 
 ## Raster data
-- `raster2pgsql` takes a raster-file and imports it as tiles of some wxh into a table.
+- `raster2pgsql` takes a raster-file and imports it as tiles of some width_by_height into a table.
 
 ## Performance-settings
 
@@ -446,3 +446,28 @@ so it should be done in around 10 minutes.
 Was actually done after ~5 minutes.
 
 ```
+
+
+
+
+# Other databases
+
+- Column databases
+  - duckdb
+    - good for small ad-hoc on local machine
+    - great pandas integration
+    - slow insertion, fast for analytics
+  - clickhouse
+    - not good at joins
+    - huge
+    - no row deleting
+  - timescaledb 
+    - more for event-streams, but compresses really nicely
+- Files
+  - parquet
+  - netCdf
+  - hdf5
+- Warehouses
+  - Snowflake
+  - BigQuery
+  - Amazon Redshift
