@@ -2,10 +2,6 @@
 
 ## Beziehung
 
-Danke für Zeit nehmen
-Empfehlung von Nicole Schmidt - ihr war es sehr wichtig, klarzustellen, was für ein guter Mensch Sie sind!
-Arbeiten für Soldaten in Ukraine - ganz andere Arbeit. Mein Fall muss etwas ganz anderes.
-
 Einleitung:
 Beziehung wird ernst.
 Estelle. Online kennen gelernt. Faszinierende Person. Viel gemeinsam: Sprachen, Länder, Kunst.
@@ -23,31 +19,31 @@ Estelle. Online kennen gelernt. Faszinierende Person. Viel gemeinsam: Sprachen, 
 Kernfragen
 
 -   was fühle ich für sie?
-    -   <- ich brauche die fgefühle um verantwortung tragen zu wollen
+    -   <- ich brauche die gefühle um verantwortung tragen zu wollen
         -   so hatte ich es bei Hazme
 -   muss selbst lernen verantwortung zu tragen
     -   <- antrieb dazu kommt von selbst, muss aber wissen, wofür
     -   <- wenn ich nicht weiß, wofür, dann werde ich die Energie dafür nicht haben
 
 ## Heute
-- Soll ich es mit Estelle beenden?
-    - weil ich ihr nicht gesagt habe, dass Nicolle mit Olli Schluss gemacht hat.
-        - ich habe ein sehr schlechtes gewissen
-    - Das wäre silly
-        - Ich sollte endlich erwachsen werden
-        - Ich sollte außerdem endlich einen Job festhalten
-    - Warum denke ich überhaupt darüber nach?
-        - Ich spüre nach wie vor keine Liebe
-        - Ich mochte sie am meisten, während sie weg war
-        - Ich sehne mich nicht danach, sie wieder zu sehen
-    - bin ich nicht verliebt?
-        - liebe entwickelt sich mit zeit, bei mir besonders langsam
-        - ich habe bindungsangst, lasse leute nur langsam an mir teilhaben 
-        - warum will ich nicht, dass leute mich besser kennen lernen?
-            - weil ich mich schäme: ich bin nicht zufrieden mit mit selbst.
 
+-   Soll ich es mit Estelle beenden?
+    -   weil ich ihr nicht gesagt habe, dass Nicolle mit Olli Schluss gemacht hat.
+        -   ich habe ein sehr schlechtes gewissen
+    -   Das wäre silly
+        -   Ich sollte endlich erwachsen werden
+        -   Ich sollte außerdem endlich einen Job festhalten
+    -   Warum denke ich überhaupt darüber nach?
+        -   Ich spüre nach wie vor keine Liebe
+        -   Ich mochte sie am meisten, während sie weg war
+        -   Ich sehne mich nicht danach, sie wieder zu sehen
+    -   bin ich nicht verliebt?
+        -   liebe entwickelt sich mit zeit, bei mir besonders langsam
+        -   ich habe bindungsangst, lasse leute nur langsam an mir teilhaben
+        -   warum will ich nicht, dass leute mich besser kennen lernen?
+            -   weil ich mich schäme: ich bin nicht zufrieden mit mit selbst.
 
-## Thesen
+## Thesen aus Besprechung mit Nataliya
 
 -   Ich spiele eine Rolle
 -   Darin bin ich nicht ganz ich selbst
@@ -86,3 +82,13 @@ Kernfragen
 - Ich habe lieber mit ihr Schluss gemacht, als sie noch länger im Unklaren zu lassen
 - Sie will, dass ich noch in mich gehe, um mir sicher zu sein, dass das das Richtige ist. 
 - Ich gehe also in 2 Wochen zum Psychologen um das herauszufinden
+## Aus Besprechung mit Susanne Lex
+
+-   Ja, ich will eine Beziehung
+-   Aber ich weiß nicht, ob ich eine mit Estelle will
+
+## Aus Besprechung mit
+
+-   Zwei Möglichkeiten:
+    -   Celebrate differences between Estelle and Hazme
+    -   Or end relationship

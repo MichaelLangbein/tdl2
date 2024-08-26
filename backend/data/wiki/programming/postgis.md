@@ -1,17 +1,18 @@
-
 # PostGIS
+
 Most geo-data occurs in such large quantities, that we have to analyse them in postgis.
- - Vector data: postgis
- - Raster data: gdal (Qgis is a nice gui for gdal)
-Still, when doing a first, exploratory analysis, you should focus on a very small, but representative subset of the data.
 
+-   Vector data: postgis
+-   Raster data: gdal (Qgis is a nice gui for gdal)
+    Still, when doing a first, exploratory analysis, you should focus on a very small, but representative subset of the data.
 
-## Installation and setup 
+## Installation and setup
 
 `sudo apt-get install postgis -y`
 `service postgresql status`
 
-Or with one docker-container: 
+Or with one docker-container:
+
 ```bash
 docker image pull postgis/postgis:11-3.3
 docker container run -e POSTGRES_PASSWORD=mysecretpassword -d --name=mypostgis postgis/postgis
@@ -19,74 +20,77 @@ docker exec -it mypostgis psql -U postgres
 ```
 
 Or with pg-admin:
+
 ```yml
 version: "3.8"
 services:
-  db:
-    image: postgis/postgis
-    restart: always
-    ports:
-      - "54320:5432"
-    networks:
-      - pg
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: admin
-    volumes:
-      - /some/local/dir:/var/lib/postgresql/data  # mount to bring in your own data
-      - pg-data:/var/lib/postgresql/data     # volume to maintain state
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    ports:
-      - "5050:80"
-    networks:
-      - pg
-    environment:
-      PGADMIN_DEFAULT_EMAIL: raj@nola.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-    - pgadmin-data:/var/lib/pgadmin    # volume to remember configuration
+    db:
+        image: postgis/postgis
+        restart: always
+        ports:
+            - "54320:5432"
+        networks:
+            - pg
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: admin
+        volumes:
+            - /some/local/dir:/var/lib/postgresql/data # mount to bring in your own data
+            - pg-data:/var/lib/postgresql/data # volume to maintain state
+    pgadmin:
+        image: dpage/pgadmin4
+        restart: always
+        ports:
+            - "5050:80"
+        networks:
+            - pg
+        environment:
+            PGADMIN_DEFAULT_EMAIL: raj@nola.com
+            PGADMIN_DEFAULT_PASSWORD: admin
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin # volume to remember configuration
 
 networks:
-  pg:
+    pg:
 
 volumes:
-  pg-data:
-  pgadmin-data:
+    pg-data:
+    pgadmin-data:
 ```
-Note: 
- - the above setup can connect to the database in the connection-window with the hostname `db`, not `http://db`.
- - on the db-machine, you might have to re-install postgis to get gdal and raster2pgsql.
 
+Note:
 
-Fist steps: create user as in https://wiki.postgresql.org/wiki/First_steps 
+-   the above setup can connect to the database in the connection-window with the hostname `db`, not `http://db`.
+-   on the db-machine, you might have to re-install postgis to get gdal and raster2pgsql.
+
+Fist steps: create user as in https://wiki.postgresql.org/wiki/First_steps
 
 Log in to admin db
 `psql template1`
 
 Good admin tool: pgAdmin3
 
-
 ## Most common commands
-- `\l`: list databases
-- `\c <db-name>`: use database
-- `\dt`: list tables
-- `\d <table-name>`: describe table
-- `\dn`: list schemes
-- `\df`: list functions
-- `\dv`: list views
-- `\i <file-name>`: execute psql commands from a file
-- `\copy`
 
+-   `\l`: list databases
+-   `\c <db-name>`: use database
+-   `\dt`: list tables
+-   `\d <table-name>`: describe table
+-   `\dn`: list schemes
+-   `\df`: list functions
+-   `\dv`: list views
+-   `\i <file-name>`: execute psql commands from a file
+-   `\copy`
 
 ## Extensions
-- Extension-manager: `pgxn`
-    - `pgxn install h3`
-- Activating extension: 
-    - `create extension h3;`
+
+-   Extension-manager: `pgxn`
+    -   `pgxn install h3`
+-   Activating extension:
+    -   `create extension h3;`
 
 ## H3
+
 ```bash
 apt install postgis make cmake pgxnclient wget postgresql-server-dev-15
 # potentially install cmake manually:
@@ -110,16 +114,15 @@ CREATE TABLE IF NOT EXISTS public.heat
 ```
 
 ## Raster data
-- `raster2pgsql` takes a raster-file and imports it as tiles of some width_by_height into a table.
+
+-   `raster2pgsql` takes a raster-file and imports it as tiles of some width_by_height into a table.
 
 ## Performance-settings
 
-
 ## Schemes, databases, user-rights
 
-
-
 ## Example analysis
+
 Importing data, creating summary statistics, performance optimization.
 
 ### Creating OCO2 table and importing data
@@ -145,7 +148,7 @@ create index idx_oco2_date on oco2 using btree(date);
 ```
 
 ```sh
-for dir in */; do 
+for dir in */; do
     for f in `ls $dir`; do
         fileName=`pwd`/$dir$f;
         echo "Now importing $fileName ...";
@@ -158,9 +161,6 @@ done
 -- For geodetic coordinates, X is longitude and Y is latitude
 UPDATE oco2 SET geom = ST_SetSRID(ST_MakePoint(lon, lat), 4326);
 ```
-
-
-
 
 ### Importing administrative borders, filtering data
 
@@ -178,7 +178,7 @@ create table oco2_bavaria (
 );
 
 
-insert into oco2_bavaria 
+insert into oco2_bavaria
 select
   oco2.*
 from oco2
@@ -194,49 +194,49 @@ create table join_oco_countries (
 create index idx_joc_cid on join_oco_countries using btree(cid);
 create index idx_joc_oid on join_oco_countries using btree(oid);
 
-insert into join_oco_countries 
-    select c.ogc_fid as cid, o.id as oid 
-    from oco2 as o 
-    join countries as c 
+insert into join_oco_countries
+    select c.ogc_fid as cid, o.id as oid
+    from oco2 as o
+    join countries as c
     on st_contains(c.wkb_geometry, o.geom);
 
 ```
 
-### Analysis 
+### Analysis
+
 ```sql
 \copy (select date, avg(mu) from oco2_bavaria group by date) to '/home/michael/Desktop/code/python/oco2/out.csv' with csv;
 ```
 
-
 This gets the daily average XCO2 per Bundesland per day.
+
 ```sql
 \copy (
 select j.id, j.date, avg(j.mu)
 from (
     select oco2.mu, oco2.date, bundeslaender.id from oco2
     join bundeslaender
-    on ST_Contains(bundeslaender.wkb_geometry, oco2.geom) 
+    on ST_Contains(bundeslaender.wkb_geometry, oco2.geom)
 ) as j
 group by j.id, j.date
 
 ) to '/home/michael/Desktop/code/python/oco2/meansPerBLPerDate.csv' with csv;
 ```
 
-
-
 ### Analysis for a very large amount of data
+
 ```sql
-\copy ( 
-    select j.admin, j.date, avg(j.mu) from ( 
-        select oco2.mu, oco2.date, countries.admin, countries.iso_a3 
-        from oco2 
-        join countries on ST_Contains(countries.wkb_geometry, oco2.geom) 
-    ) as j group by j.admin, j.date 
+\copy (
+    select j.admin, j.date, avg(j.mu) from (
+        select oco2.mu, oco2.date, countries.admin, countries.iso_a3
+        from oco2
+        join countries on ST_Contains(countries.wkb_geometry, oco2.geom)
+    ) as j group by j.admin, j.date
 ) to '/home/michael/Desktop/code/python/oco2/meansPerCountryPerDate.csv' with csv;
 
 
 
-                                        QUERY PLAN                                        
+                                        QUERY PLAN
 ------------------------------------------------------------------------------------------
  HashAggregate  (cost=528236393.59..528241206.72 rows=385050 width=23)
    Group Key: countries.admin, oco2.date
@@ -254,13 +254,13 @@ group by j.id, j.date
 
 
 
-explain select j.admin, j.date, avg(j.mu) from ( 
-        select oco2.mu, oco2.date, countries.admin, countries.iso_a3 
+explain select j.admin, j.date, avg(j.mu) from (
+        select oco2.mu, oco2.date, countries.admin, countries.iso_a3
         from countries
-        join oco2 on ST_Contains(countries.wkb_geometry, oco2.geom) 
-    ) as j group by j.admin, j.date 
+        join oco2 on ST_Contains(countries.wkb_geometry, oco2.geom)
+    ) as j group by j.admin, j.date
 
-                                        QUERY PLAN                                        
+                                        QUERY PLAN
 ------------------------------------------------------------------------------------------
  HashAggregate  (cost=528236393.59..528241206.72 rows=385050 width=23)
    Group Key: countries.admin, oco2.date
@@ -276,15 +276,17 @@ explain select j.admin, j.date, avg(j.mu) from (
 (11 rows)
 
 ```
+
 What postgres does here is:
-    It takes every point
-        goes through every country to check if the point is inside the country.
-Better: for each point, find the nearest country. 
-    If that country covers the point, you have a match.
+It takes every point
+goes through every country to check if the point is inside the country.
+Better: for each point, find the nearest country.
+If that country covers the point, you have a match.
 This way, we get early stopping.
 I think this page has a good description: https://postgis.net/workshops/postgis-intro/knn.html
 
-Indeed, the following *might be* quite fast:
+Indeed, the following _might be_ quite fast:
+
 ```sql
 insert into join_oco_countries_2
 select c.ogc_fid as cid, o.id as oid
@@ -303,12 +305,13 @@ join countries as c on j.ogc_fid = j.cid
 where not st_intersects(c.wkb_geometry, o.geom);
 ```
 
-Note that order by distance gives *smallest* distances first:
+Note that order by distance gives _smallest_ distances first:
+
 ```sql
 select c.admin, st_distance(c.wkb_geometry, 'SRID=4326;POINT(-150.5 49.5)') as dist
 from countries as c
 order by c.wkb_geometry <-> 'SRID=4326;POINT(-150.5 49.5)'::geometry limit 10;
-                admin                 |        dist        
+                admin                 |        dist
 --------------------------------------+--------------------
  United States of America             |  7.809353548757471
  Canada                               | 14.390310868570625
@@ -322,7 +325,7 @@ Explain-analyzing a smaller query.
 We see that indeed the '<->' query is a lot faster.
 
 ```sql
-explain analyze 
+explain analyze
     select c.ogc_fid as cid, o.id as oid
     from oco2_bavaria as o
     cross join lateral (
@@ -346,10 +349,10 @@ Nested Loop  (cost=0.14..31686.36 rows=9051 width=8) (actual time=0.518..1190.48
 =======> 1.191 ms
 
 
-explain analyse 
-    select c.ogc_fid, o.id 
-    from oco2_bavaria as o 
-    join countries as c 
+explain analyse
+    select c.ogc_fid, o.id
+    from oco2_bavaria as o
+    join countries as c
     on st_intersects(c.wkb_geometry, o.geom);
 
 Nested Loop  (cost=0.15..7176.81 rows=283555 width=8) (actual time=59.083..32947.648 rows=9051 loops=1)
@@ -372,12 +375,12 @@ Nested Loop  (cost=0.15..7176.81 rows=283555 width=8) (actual time=59.083..32947
 
 But the fastest thing to do is to ditch polygons and so a bbox-intersect (&&) only:
 
-explain analyze 
-    select o.id,  c.ogc_fid 
-    from oco2_bavaria as o 
-    join countries as c 
+explain analyze
+    select o.id,  c.ogc_fid
+    from oco2_bavaria as o
+    join countries as c
     on o.geom && c.wkb_geometry;
-                                                                   QUERY PLAN                                                                    
+                                                                   QUERY PLAN
 -------------------------------------------------------------------------------------------------------------------------------------------------
  Nested Loop  (cost=0.15..801.81 rows=283555 width=8) (actual time=4.034..38.469 rows=51294 loops=1)
    ->  Seq Scan on countries c  (cost=0.00..52.55 rows=255 width=34731) (actual time=0.011..0.087 rows=255 loops=1)
@@ -403,12 +406,12 @@ create index idx_join_ctr on join_oco_countries using btree(cid);
 
 
 
-explain select c.admin, o.date, avg(o.mu)                                                                   
+explain select c.admin, o.date, avg(o.mu)
 from join_oco_countries as j
 join oco2 as o on o.id = j.oid
 join countries as c on c.ogc_fid = cid
 group by o.date, c.admin;
-                                                       QUERY PLAN                                                       
+                                                       QUERY PLAN
 ------------------------------------------------------------------------------------------------------------------------
  Finalize HashAggregate  (cost=4820867.90..4825681.02 rows=385050 width=23)
    Group Key: o.date, c.admin
@@ -431,12 +434,12 @@ group by o.date, c.admin;
 (18 rows)
 
 
-This cost of 4.8 million units is comparable 
+This cost of 4.8 million units is comparable
 to the cost of 5.7 million of the && query earlier,
 so it should be done in around 10 minutes.
 
 \copy (
-    select c.admin, o.date, avg(o.mu)                                                                   
+    select c.admin, o.date, avg(o.mu)
     from join_oco_countries as j
     join oco2 as o on o.id = j.oid
     join countries as c on c.ogc_fid = cid
@@ -499,9 +502,13 @@ Was actually done after ~5 minutes.
 
 
 ### Files
-  - parquet
-  - netCdf
-  - hdf5
+    -   hdf5: h=hierarchical
+        -   mostly for high-dimensional, non-columnar data
+    -   netCdf: nowadays (since version 4) based on hdf5
+        -   groups: ~directories
+        -   dimensions: all variables must have a dimension
+        -   variables: ~ np.ndarray
+    -   parquet: mostly for big, columnar data
 
 
 ### Warehouses
