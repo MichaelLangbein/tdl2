@@ -447,27 +447,64 @@ Was actually done after ~5 minutes.
 
 ```
 
+# Dealing with concurrency
 
+- Row-level locking: `SELECT .... FOR UPDATE`
+- Make next transactions serializable: `ISOLATION LEVEL SERIALIZABLE`
+- `Version` column (application side; most ORMs do this, eg hybernate)
+
+# Architectures
+
+## Single machine with regular backups
+
+## Single machine with replication and automatic failover
+
+## Sharding
+- Multiple primary machines
+- Either application-side sharding, or postgres-plugin (pg_shard) or hosted solution (citus)
+
+## Multi-master
+
+
+# Offline first application
+
+- No writes? -> any db possible
+- Writes? -> choose between Availability and Consistency
+  - Consistency:
+    - Transactions can wait? -> Postgres possible 
+    - Can't wait?
+        - insist on postgres: simulate connection with:
+            - optimistic prediction
+    - Prevent most inconsistencies with spatio-temporal IDs: one client will only update IDs associated with his physical location
+  - Availability:
+    - Mongo, Couch: but make sure to configure conflict resolution
 
 
 # Other databases
 
-- Column databases
-  - duckdb
+### Column databases
+  - start making sense at tables > 50GB
+  - **duckdb**
     - good for small ad-hoc on local machine
     - great pandas integration
     - slow insertion, fast for analytics
-  - clickhouse
+  - **clickhouse**
     - not good at joins
     - huge
     - no row deleting
-  - timescaledb 
+  - **timescaledb** 
+    - postgres-extension
     - more for event-streams, but compresses really nicely
-- Files
+    - takes ordinary postgres-tables and partitions them by a chosen column
+
+
+### Files
   - parquet
   - netCdf
   - hdf5
-- Warehouses
+
+
+### Warehouses
   - Snowflake
   - BigQuery
   - Amazon Redshift

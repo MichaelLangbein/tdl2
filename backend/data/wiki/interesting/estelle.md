@@ -69,3 +69,20 @@ Kernfragen
         -   zwei Themen: Exman verarbeiten, Eltern verarbeiten: beides wird nicht umsonst sein
 -   das potential ist da
 -   verantwortung übernehme ich so, wie ich kann
+
+
+
+
+## Heute
+- Gerade mit Estelle Schluss gemacht
+- Sie hat noch vor dem Abendessen darauf bestanden, von mir zu hören, was für Gefühle ich für sie habe
+- ich habe seit Wochen keine - jedenfalls keine, die mir auffallen würden
+- Wenn ich an sie denke, spüre ich nichts. Ein take-it-or-leave-it Gefühl
+- Warum nicht?
+    - Meine Arbeit nimmt viel Zeit ein
+    - Nicole ebenfalls
+    - Sie braucht sehr viel Sicherheit
+    - Sie ist sehr verletzlich
+- Ich habe lieber mit ihr Schluss gemacht, als sie noch länger im Unklaren zu lassen
+- Sie will, dass ich noch in mich gehe, um mir sicher zu sein, dass das das Richtige ist. 
+- Ich gehe also in 2 Wochen zum Psychologen um das herauszufinden

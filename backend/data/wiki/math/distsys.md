@@ -18,6 +18,7 @@ A transaction is a sequence of database operations that can be considered one in
 A database transaction should have the ACID-properties:
 - Atomicity: Transactions are often composed of multiple statements. Atomicity guarantees that each transaction is treated as a single "unit", which either succeeds completely, or fails completely.
 - Consistency: All nodes must see the same results of an operation at any given time
+    - <-- I think this definition may be wrong - see "Designing data intensive systems". According to that book, C only has a meaning as implemented in the client-app, not in the db.
 - Isolation: Each Transaction must proceed as if it were the only one
 - Durability: All state changes must be persistent upon commit
 
@@ -30,16 +31,38 @@ You need ACID in banking, except credit cards, which can handle eventual consist
 
 ## Theorems
 
+### Lamport’s Logical Clocks
+
+Importance: Lamport’s logical clocks provide a way to order events in a distributed system without relying on synchronized physical clocks. This is essential for ensuring causality.
+
+Proof Sketch:
+
+    Event Ordering: Each process maintains a logical clock that increments with each event. When a message is sent, the logical clock value is included.
+    Causal Ordering: The algorithm ensures that if event A causally precedes event B, then the logical clock of A is less than the logical clock of B. The proof involves showing that this ordering is maintained across all processes.
+
+###  Chandy-Lamport Snapshot Algorithm
+
+Importance: This algorithm allows for capturing a consistent global state of a distributed system, which is useful for debugging, checkpointing, and recovery.
+
+Proof Sketch:
+
+    Marker Messages: Processes send marker messages to indicate the start of a snapshot. Upon receiving a marker, a process records its state and the state of incoming channels.
+    Consistency: The proof shows that the recorded state represents a consistent snapshot of the system, meaning it could have occurred in a single instant in the actual execution.
+
+
 
 ### FLP theorem
+
+The FLP theorem proves that in an asynchronous system, it’s impossible to guarantee consensus if even one process can fail. 
  
-We will prove that there is no algorithm which, for all possible sequences of events, always reaches a point in time $t$ such that the configuration $C_t$ is decided.
+We will prove that there is no algorithm which, for all possible sequences of events ($s$), always reaches a point in time $t$ such that the configuration $C_t$ is decided (=univalent).
 
 $$ !\exists \text{alg}: \forall s \exists t: C_t:\text{unival}   $$
 Proof by contradiction.
 
 #### Definitions
 - $C$: a system configuration
+    - $C_t = [0, 1, 0, 1]$ means the configuration at time $t$ is such that process 1 suggests a value of 0, process 2 suggests a value of 1, process 3 one of 0, and process 4 one of 1.
 - $e = (m, p)$: an event, consisting of a message $m$ and a receiving process $p$
 - $s = [(m_0, p_0), (m_1, p_1), ...]$: a sequence of events
 - $C:\text{unival}$: a configuration from which any sequence of events can only lead to one outcome.
@@ -233,11 +256,13 @@ Consider your servers and a client.
 - Eventual consistency: Servers are allowed to return inconsistent answers for a while, but will eventually settle into a consistent state.
 
 There are nowadays no *distributed* databases that are not partition tolerant - it is illusionary to assume that a network cannot be partitioned. (However, if your database will always stay on one machine only, feel free to design for CA)
-If a distributed database provides the acid-properties, then it must chose consistency (CP) over availability (AP) according to the cap theorem. An available (AP) database cannot provide acid-transactions.
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/cap_triangle.png" />
+If a distributed database provides the acid-properties, then it must chose consistency (CP) over availability (AP) according to the cap theorem. An available (AP) database cannot provide acid-transactions.
+> Actually, that last statement is wrong, because there is confusion about what $C$ stands for in acid. In the original paper, it meant something else. However, ACID databases like postgres have historically always chosen C over A, so it's still right to classify postgres as CP
 
 Just as in the FLP-triangle we relaxed termination to probabilistic termination, in CAP we commonly replace consistency with eventual consistency.
+
+A much better classification scheme than CAP is PACELC: https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf 
 
 #### CRDTs
 A neat way to achieve eventual consistency are CRDTS, set-based databases that automatically correct themselves on reads. They are useful because they achieve consistency without the need for a consensus algorithm. 
@@ -246,7 +271,13 @@ Instead of consensus, writes always happen immediately. If a node lags behind, t
 
 ### Byzantine agreement
 
-In the FLP-theorem, we considered the so-called 'crash'-mode of process failure, where a process stops responding. This is not the worst kind of error, though. Byzantine errors are those where a node actively tries to sabotage the consensus-process.
+https://www.youtube.com/watch?v=LoGx_ldRBU0
+
+This problem addresses the challenge of achieving consensus in the presence of malicious nodes (Byzantine faults). It’s crucial for systems requiring high fault tolerance, like blockchain.
+
+In the FLP-theorem, we considered the so-called 'crash'-mode of process failure, where a process stops responding. This is not the worst kind of error, though. Byzantine errors are those where a node actively tries to sabotage the consensus-process, including sending one statement to one server and a _conflicting_ statement to another.
+- FLP deals with crash failures, whereas Byzantine Generals handle arbitrary (Byzantine) failures, including deliberately conflicting messages.
+- FLP assumes no message loss, only delays, while Byzantine Generals account for message loss and corruption.
 
 
 
@@ -358,6 +389,10 @@ This is an equally good mode of verification, but not as calculation-intensive a
 
 #### Byzantine fault tolerance
 Bitcoin is byzantine fault tolerant: if less than 50% of the peers are evil, the chain will overwhelm them in the long run.
+But doesn't that contradict the statement that byzantine generals can only be solved with 2n + 1 good generals?
+Bitcoin doesn't solve byzantine generals, but it does so probabilisically: 
+https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro.ps 
+https://ethereum.stackexchange.com/questions/40213/how-is-the-two-generals-problem-solved-with-proof-of-work
 
 
 

@@ -191,3 +191,38 @@ Geeignet:
     - Teilnahmewettbewerb: schon beim Teilnahmewettbewerb mit abgeben 
 - Inhalt:
     - Eigenerklärung: 
+
+
+Ablauf:
+- offenes Verfahren = öffentliche Ausschreibung
+    - Vorbereitung:
+        - gegenstand genau definieren
+        - in teillose/fachlose aufteilbar?
+        - kriterien?
+            - eignungen,
+            - nachweise
+            - kriterien
+            - <- alle in doukmentation des verfahrens
+        - Vergabeunterlagen:
+            - leistungsbeschreibung
+            - vertragsbedingungen
+            - weiteres
+    - Bekanntgebung
+        - print
+        - online
+    - Angebote durch unternehmen
+        - eventuell Rückfragen an Bieter, dann Frist verlängern
+        - wenn hier die Unterlagen und Kriterien des Vergebers nicht stichhaltig sind, muss das Verfahren neu begonnen werden!
+    - Öffnungsphase
+        - müssen unter vier Augen erst am Stichtag gelesen werden
+        - Ausschluss von Angeboten mit Formfehlern
+    - Wertungsphase
+        - Bieter müssen Eignungsprüfung bestehen:
+            - technisch, personell und wirtschaftlich für Auftrag geeignet sein
+            - alle geforderten Qualifikationen, Genehmigungen und Referenzen müssen eingereicht worden sein <- können nachgereicht werden
+            - Kommunikation ist erlaubt; verhandeln aber nicht
+    - wenn zu wenige Angebote, oder zu teuer:
+        - dann Verfahren aufheben
+    - Absagen versenden
+    - Zuschlag vergeben
+    - Eventuelle Beschwerden von Abgesagten
