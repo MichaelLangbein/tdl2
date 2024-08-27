@@ -498,7 +498,7 @@ All that spring stuff is just stupid. Create boilerplate online and only do the 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/spring_boot.jpg" />
 
 
-# Geoserver
-Geoserver is the quintessential example of a complex but working java-application.
-
-- 
+# VsCode
+- make sure you've set $JAVA_HOME
+- make sure that $JAVA_HOME matches `<properties><maven.compiler.source>`
+- make sure that $JAVA_HOME matches `Java: configure java runtime`
