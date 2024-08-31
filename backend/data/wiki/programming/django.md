@@ -5,6 +5,7 @@ Using `conda activate django`
 ## CLI
 - `django-admin startproject name`
 - `python manage.py runserver`
+- `python manage.py createsuperuser`
 - `python manage.py startapp name`
 - `python manage.py makemigrations`
 - `python manage.py migrate`
@@ -13,15 +14,17 @@ Using `conda activate django`
 
 ## Structure
 app
-    - admin
+    - `admin.py`
         - for registering your models
-    - model
-    - routes
+    - `models.py`
+    - `urls.py`
         - routing urls to views
-    - views
+    - `views.py`
         - controllers to load models and return to templates
+    - `templates/*.html`
+        - folder must be named `templates`
 
- - A request is routed to a view function f(request) -> response.
+ - A request is routed to a view function:  `f(request) -> response`.
    - if this request makes use of a model and/or a template is up to the view to decide.
    - really, the view here is much rather a *controller*.
 
@@ -76,12 +79,41 @@ class Article(models.Model):
 
 ## Views (aka. controllers)
 
+```python
+from django.shortcuts import render, HttpResponse
+from .models import TodoItem
+
+def home(request):
+    # return HttpResponse("Hello, world!")    <-- returns raw text
+    return render(request, "home.html")     # <-- renders a jinja template
+
+def todos(request):
+    items = TodoItem.objects.all()          # <-- access the db
+    return render(request, "todos.html", {  # <-- template with arguments
+        "todos": items
+    })
+```
+
 ## Template (aka. view)
 
+```html
+{% extends "base.html" %} 
+<!-- `extends` means that this template will overwrite the `content` block in `base.html` -->
+  {% block content %}
+    <h1>Todo list</h1>
+    <ul>
+        {% for todo in todos %}
+          <li>
+              {{ todo.title }}: {% if todo.completed %}Completed{% else %}Not completed{% endif %}
+          </li>
+        {% endfor %}
+    </ul>
+  {% endblock %}
+```
 
 ## Common errors
- - Reverse for 'project' with keyword arguments '{'pk': ''}' not found.
+ - `Reverse for 'project' with keyword arguments '{'pk': ''}' not found.`
    - either there is no url named 'project'
    - or the argument pk has not been set to a concrete value.
- - Generic detail view SprintCreate must be called with either an object pk or a slug in the URLconf.
+ - `Generic detail view SprintCreate must be called with either an object pk or a slug in the URLconf.`
    - you're referencing self.object too early.
