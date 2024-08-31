@@ -1,6 +1,5 @@
 # Basics
 
-
 ```bash
 mkdir main
 touch main/Greeter.java
@@ -31,17 +30,17 @@ java main.Main
 ```
 
 Java has this weird thing where it's not being compiled into a single executable.
-Instead, `javac` creates *several* `*.class` files, all containing JVM-bytecode.
+Instead, `javac` creates _several_ `*.class` files, all containing JVM-bytecode.
 But since things are in multiple files, `java` now needs to know how to resolve those files when imported from another location.
 
 Per default for that java looks through the `CLASSPATH`: `java main.class -classpath ./my/libs/`.
-But we can also *package* the compiled `*.class` files into a standard structure.
+But we can also _package_ the compiled `*.class` files into a standard structure.
 In *jar*s, the `MANIFEST.MF` file tells java where it can find compiled files and which file to start from: `java -jar myPackagedApp.jar`.
 
 <small>(Really, this is very similar to `tsc`s default behavior when compiling to javascript. Also like `tsc`, java does not require a standard directory-structure - classes appear in the same dir as their `.java` counterparts. Only with the birth of package-formats (war and jar) did java's deeply nested folder-structures appear.)</small>
 
-- **classpath**: java-runtime looks for imports in those dirs.
-- **jar**:
+-   **classpath**: java-runtime looks for imports in those dirs.
+-   **jar**:
     ```
     META-INF/
         MANIFEST.MF  # may contain additional metadata about the files stored in the archive
@@ -49,7 +48,7 @@ In *jar*s, the `MANIFEST.MF` file tells java where it can find compiled files an
         baeldung/
             MyApplication.class
     ```
-- **war**:
+-   **war**:
     ```
     META-INF/
         MANIFEST.MF
@@ -68,26 +67,29 @@ In *jar*s, the `MANIFEST.MF` file tells java where it can find compiled files an
 # Settings
 
 First things first, to find out if you're using a 64 bit version of the jdk, just execute
+
 ```bash
 java -d64 -version
 ```
-This will throw an error if your version is not made for 64 bit. 
 
-There are a few environment variables that you should know about: 
+This will throw an error if your version is not made for 64 bit.
 
-- `PATH`: Sys looks for exes here. Your JAVA_HOME/bin should be part of PATH
-- `CLASSPATH`: Java looks for code here
-- `JAVA_HOME`: location jdk (example: /usr/lib/jvm/java-7-openjdk-amd64/bin)
-- `JRE_HOME`: location jre (example: /usr/lib/jvm/java-7-openjdk-amd64/jre/bin)
+There are a few environment variables that you should know about:
 
+-   `PATH`: Sys looks for exes here. Your JAVA_HOME/bin should be part of PATH
+-   `CLASSPATH`: Java looks for code here
+-   `JAVA_HOME`: location jdk (example: /usr/lib/jvm/java-7-openjdk-amd64/bin)
+-   `JRE_HOME`: location jre (example: /usr/lib/jvm/java-7-openjdk-amd64/jre/bin)
 
-The most important setting for the JVM is the heap size: how much memory will we allocate to the java-process? There are two settings: 
-- `-Xms<size>` - Set initial Java heap size
-- `-Xmx<size>` - Set maximum Java heap size
+The most important setting for the JVM is the heap size: how much memory will we allocate to the java-process? There are two settings:
+
+-   `-Xms<size>` - Set initial Java heap size
+-   `-Xmx<size>` - Set maximum Java heap size
 
 These are either set in .... or used directly when invoking java with `java -Xms512m -Xmx1024m JavaApp`.
 
-You can display the default settings like this: 
+You can display the default settings like this:
+
 ```bash
 $ java -XX:+PrintFlagsFinal -version | grep -iE 'HeapSize|PermSize|ThreadStackSize'
 
@@ -101,76 +103,74 @@ OpenJDK Runtime Environment (IcedTea 2.4.4) (7u51-2.4.4-0ubuntu0.13.10.1)
 OpenJDK 64-Bit Server VM (build 24.45-b08, mixed mode)
 ```
 
-Here are some suggested values: 
-- Heap = -Xms512m -Xmx1024m
-- PermGen = -XX:PermSize=64m -XX:MaxPermSize=128m
-- Thread = -Xss512k
+Here are some suggested values:
 
-Unfortunately, with java11 and its module system and the deprecation of former JavaEE packages, java has introduced its own breaking change á lá python2/3. Often, you will find that older programs only run in java8 or lower. 
-You can see which java versions you have installed and choose the appropriate one by 
+-   Heap = -Xms512m -Xmx1024m
+-   PermGen = -XX:PermSize=64m -XX:MaxPermSize=128m
+-   Thread = -Xss512k
+
+Unfortunately, with java11 and its module system and the deprecation of former JavaEE packages, java has introduced its own breaking change á lá python2/3. Often, you will find that older programs only run in java8 or lower.
+You can see which java versions you have installed and choose the appropriate one by
 
 ```bash
 update-alternatives --config java
 ```
 
 Usually, java programs will have their own, linux-specific startup-script, like `/etc/init.d/openfire`. Here, these scripts will pick java based on `\$JAVA_HOME`.
-To set this variable for your own user only, append 
+To set this variable for your own user only, append
 
 ```bash
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre"
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 
-to `\~/.bashrc`, to set it for every user, append to `/etc/profiles` for login-shells and `/etc/bash.bashrc` for non-login-shells. Even better, put it in `/etc/environment` to cover both cases at once. 
-
+to `\~/.bashrc`, to set it for every user, append to `/etc/profiles` for login-shells and `/etc/bash.bashrc` for non-login-shells. Even better, put it in `/etc/environment` to cover both cases at once.
 
 # Maven
 
-- creating a new project: `-mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart`
-- common way of compiling: `mvn package -DskipTests=true`
+-   creating a new project: `-mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart`
+-   common way of compiling: `mvn package -DskipTests=true`
 
 ## Concepts
 
-Maven itself is really just a Mojo-container (*Maven*-Pojo), running the Maven-core-execution. Mojo's are executed as children and do the actual work.
+Maven itself is really just a Mojo-container (_Maven_-Pojo), running the Maven-core-execution. Mojo's are executed as children and do the actual work.
 
-- **phases**: `mvn <phasename>` executes every build-lifecycle-phase up to and including `phasename`.
-    - default-phases:
-        - *validate*: validate the project is correct and all necessary information is available
-        - *compile*: compile the source code of the project
-        - *test*: test the compiled source code using a suitable unit testing framework. These tests should not require the code be packaged or deployed
-        - *package*: take the compiled code and package it in its distributable format, such as a JAR.
-        - *integration-test*: process and deploy the package if necessary into an environment where integration tests can be run
-        - *verify*: run any checks to verify the package is valid and meets quality criteria
-        - *install*: install the package into the local repository, for use as a dependency in other projects locally
-        - *deploy*: done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects.
-- Lingo: each phase has a sequence of **goals**.
+-   **phases**: `mvn <phasename>` executes every build-lifecycle-phase up to and including `phasename`.
+    -   default-phases:
+        -   _validate_: validate the project is correct and all necessary information is available
+        -   _compile_: compile the source code of the project
+        -   _test_: test the compiled source code using a suitable unit testing framework. These tests should not require the code be packaged or deployed
+        -   _package_: take the compiled code and package it in its distributable format, such as a JAR.
+        -   _integration-test_: process and deploy the package if necessary into an environment where integration tests can be run
+        -   _verify_: run any checks to verify the package is valid and meets quality criteria
+        -   _install_: install the package into the local repository, for use as a dependency in other projects locally
+        -   _deploy_: done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects.
+-   Lingo: each phase has a sequence of **goals**.
 
 ## pom.xml
 
-- **project**
-    - **modules**: potential sub-projects, each with their own pom.xml
-    - **dependencies**
-    - dependencyManagement: hints about dependencies for potential sub-projects
-        - dependencies
-    - **build**
-        - **plugins**: Mojo's that add functionality. May even add additional phases.
-        - pluginManagement
-            - plugins
-        - **extensions**: Less common than plugins. Artifacts that are added to the classpath; may then do anything *inside* of core execution of maven (unlike plugins, which run in a child-classloader).
-        - **profiles**
-        - **resources**
+-   **project**
+    -   **modules**: potential sub-projects, each with their own pom.xml
+    -   **dependencies**
+    -   dependencyManagement: hints about dependencies for potential sub-projects
+        -   dependencies
+    -   **build**
+        -   **plugins**: Mojo's that add functionality. May even add additional phases.
+        -   pluginManagement
+            -   plugins
+        -   **extensions**: Less common than plugins. Artifacts that are added to the classpath; may then do anything _inside_ of core execution of maven (unlike plugins, which run in a child-classloader).
+        -   **profiles**
+        -   **resources**
 
 ## Important plugins and extensions
 
-- plugins
-    - maven-compiler-plugin
-    - maven-resource-plugin
-    - maven-surefire-plugin
-        - Common source of compile-problems because of java1.8 incompatability. `-DskipTests=true`.
-    - maven-assembly-plugin
-- extensions
-
-
+-   plugins
+    -   maven-compiler-plugin
+    -   maven-resource-plugin
+    -   maven-surefire-plugin
+        -   Common source of compile-problems because of java1.8 incompatability. `-DskipTests=true`.
+    -   maven-assembly-plugin
+-   extensions
 
 # Servers
 
@@ -178,16 +178,15 @@ Contrary to CGI programs, a servlet only is started once and then sits there run
 
 For a servlet to run in a servlet-container, it must simply extend the class `HttpServlet`. Also, the servlet needs a `web.xml` file. That file tells the container which requests should go to this servlet, where the base dir is, which class extended `HttpServlet`.
 
-
 **Important files and dirs**:
-Tomcat expects applets to be saved under `tomcat/webapps` in the *war*-packaging-format:
-- `tomcat/webapps/MyServlet/`
-    - `./src/` <-- source-files
-    - `./WEB-INF/`
-        - `./classes/` <-- compiled java-byte-code
-        - `./*.html`
-        - `./web.xml` <-- meta-data
+Tomcat expects applets to be saved under `tomcat/webapps` in the _war_-packaging-format:
 
+-   `tomcat/webapps/MyServlet/`
+    -   `./src/` <-- source-files
+    -   `./WEB-INF/`
+        -   `./classes/` <-- compiled java-byte-code
+        -   `./*.html`
+        -   `./web.xml` <-- meta-data
 
 Place the following in an eclipse "dynamic-web-project"'s src-folder:
 
@@ -203,7 +202,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     public MainServlet() {
         super();
     }
@@ -218,7 +217,7 @@ public class MainServlet extends HttpServlet {
 }
 ```
 
-And put this DD in the project's `WebContent/WEB-INF` folder: 
+And put this DD in the project's `WebContent/WEB-INF` folder:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -240,27 +239,24 @@ And put this DD in the project's `WebContent/WEB-INF` folder:
 </web-app>
 ```
 
-With these two files, tomcat will know how to handle the servlet. Now if you go to  `http://localhost:8080/meinServlet/hallo` you should see the site. 
-
+With these two files, tomcat will know how to handle the servlet. Now if you go to `http://localhost:8080/meinServlet/hallo` you should see the site.
 
 ## Building servlets with maven
 
-- `mvn archetype:generate` with maven-archetype-webapp
-- add folder `src/main/java` 
-- add package `org.langbein.michael.qa`
-- add dependencies to pom, especially `httpservlet`
-- add servlet in  `org.langbein.michael.qa`
-- add `web.xml` in `src/main/webapp/WEB-INF`
-- `mvn compile war:war`
-- copy new war into `<tomcat>/webapps`
-- restart tomcat
-- visit `localhost:8080/qa/`
-
+-   `mvn archetype:generate` with maven-archetype-webapp
+-   add folder `src/main/java`
+-   add package `org.langbein.michael.qa`
+-   add dependencies to pom, especially `httpservlet`
+-   add servlet in `org.langbein.michael.qa`
+-   add `web.xml` in `src/main/webapp/WEB-INF`
+-   `mvn compile war:war`
+-   copy new war into `<tomcat>/webapps`
+-   restart tomcat
+-   visit `localhost:8080/qa/`
 
 This is a ridiculously complex setup, especially since you'll have to repeat the last four steps for every iteration. That's why during development you should use the jetty plugin:
 
-
-- Add the jetty-plugin to your pom: 
+-   Add the jetty-plugin to your pom:
     ```xml
     <build>
         <finalName>qa3</finalName>
@@ -282,21 +278,15 @@ This is a ridiculously complex setup, especially since you'll have to repeat the
         </plugins>
     </build>
     ```
--  run jetty with `mvn jetty:run`
-
-
-
-
-
-
-
+-   run jetty with `mvn jetty:run`
 
 # Databases
+
 Java allows for simple query-based database access (JDBC) and for automated marshaling of pojos into tables (JPA and hibernate).
 
 ## First level db-access: JDBC
 
-Every kind of database (MySQL, JavaDB, filesystem-based, ...) can be accessed by its own *driver*. Because those drivers are vendor-specific, they are abstracted away using a *driver manager*. 
+Every kind of database (MySQL, JavaDB, filesystem-based, ...) can be accessed by its own _driver_. Because those drivers are vendor-specific, they are abstracted away using a _driver manager_.
 
 ```java
 Connection conn = DriverManager.getConnection("jdbc:mysql://10.112.70.133", "michael", "meinpw");
@@ -307,7 +297,7 @@ while(res.next()){
 }
 ```
 
-However, nowadays it is more common to set up a DataSource instead of using the driver manager. The datasource will take care of managing a pool of connections, whereas with a drivermanager you would have to handle a connection-pool manually. Note how the concrete implementation of the Datasource is vendor specific. It therefore makes sense to create a factory. 
+However, nowadays it is more common to set up a DataSource instead of using the driver manager. The datasource will take care of managing a pool of connections, whereas with a drivermanager you would have to handle a connection-pool manually. Note how the concrete implementation of the Datasource is vendor specific. It therefore makes sense to create a factory.
 
 ```java
 MysqlDataSource mysqlDS = new MysqlDataSource();
@@ -327,9 +317,11 @@ while(rs.next()){
 ```
 
 ## Second level db-access: JPA and Hibernate
-The JPA is a specification implemented by Hibernate (say: hibernate is a "jpa provider"), among others. Its function is to persist pojos in a relational database - it's an ORM. Hibernate will accept pojos and scan them for annotations explaining how the pojo should be persisted (if you don't want to use annotations, you can instead create a mapping.xml). 
 
-**Hibernate** will generate automatic sql for you. It will also create tables where needed. Therefore, it makes no sense to use it on an existing database where the structure mustn't change. Under such conditions, you're way better off using JDBC (or even better spring jdbc-template). 
+The JPA is a specification implemented by Hibernate (say: hibernate is a "jpa provider"), among others. Its function is to persist pojos in a relational database - it's an ORM. Hibernate will accept pojos and scan them for annotations explaining how the pojo should be persisted (if you don't want to use annotations, you can instead create a mapping.xml).
+
+**Hibernate** will generate automatic sql for you. It will also create tables where needed. Therefore, it makes no sense to use it on an existing database where the structure mustn't change. Under such conditions, you're way better off using JDBC (or even better spring jdbc-template).
+Hibernate also automatically adds things like _fencing_ (to make transactions multi-threading-safe) to your code.
 
 ```xml
 <dependency>
@@ -372,11 +364,10 @@ public class Employee {
 	private String name;
 	private String role;
 	private Date insertTime;
-	
+
 	... bunch of getters and setters ...
 }
 ```
-
 
 ```xml
 <!-- name=hibernate-annotation.cfg.xml -->
@@ -384,7 +375,7 @@ public class Employee {
 <!DOCTYPE hibernate-configuration PUBLIC
 		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
 		"http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
-		
+
 <hibernate-configuration>
 	<session-factory>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
@@ -404,33 +395,32 @@ public class AppMain {
 		ServiceRegistry sr = (ServiceRegistry) new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
 		SessionFactory sf = conf.buildSessionFactory(sr);
 		Session s = sf.getCurrentSession();
-		
-		
+
+
 		Employee e = new Employee();
 		e.setName("Michael");
 		e.setRole("programmer");
 		e.setInsertTime(new Date());
-		
+
 		s.beginTransaction();
 		s.save(e);
 		s.getTransaction().commit();
-		
+
 		System.out.println("Employee id: " + e.getId());
-		
+
 		HibernateUtil.getSessionFactory().close();
 	}
 }
 ```
 
-
 Hibernate has later been generalized to **JPA**. JPA can use hibernate as backend, but might also use eclipselink or any other ORM. Unfortunately, JPA comes with a few changes compared to the hibernate syntax, not all of them for the better.
 
-See here for an example-application: 
+See here for an example-application:
 
 ```java
-EntityManagerFactory emp = Persistence.createEntityManagerFactory("employeeDB"); 
+EntityManagerFactory emp = Persistence.createEntityManagerFactory("employeeDB");
 // This is a factory-factory. Talk about over-engineering :)
-// employeeDB is the name of a persistance unit in your persistence.xml. 
+// employeeDB is the name of a persistance unit in your persistence.xml.
 // Note that the position of this xml is defined nowhere - it MUST be placed in classroot/META-INF/persistence.xml
 // and have exactly this name.
 
@@ -446,20 +436,20 @@ tx.commit();
 em.close();
 ```
 
-This class makes use of a `META-INF/persistence.xml` file. If this file is not found under this exact name in that specific location, a `"no persistence provider found"` exception is thrown. 
+This class makes use of a `META-INF/persistence.xml` file. If this file is not found under this exact name in that specific location, a `"no persistence provider found"` exception is thrown.
 
 ```xml
-<persistence 
+<persistence
     xmlns="http://java.sun.com/xml/ns/persistence"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     version="1.0">
 
     <!-- Value given to createEntityManagerFactory -->
     <persistence-unit name="employeeDB" transaction-type="RESOURCE_LOCAL">
-    
+
         <!-- All beans that you want to persist must be mentioned here -->
         <class>org.langbein.michael.Employee</class>
-        
+
         <!-- Database-driver, credentials, and JPA-settings (differ per vendor, but generally logging, create tables etc) -->
         <properties>
             <property name="openjpa.ConnectionDriverName" value="org.hsqldb.jdbcDriver" />
@@ -469,36 +459,41 @@ This class makes use of a `META-INF/persistence.xml` file. If this file is not f
             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />
         </properties>
     </persistence-unit>
-    
+
 </persistence>
 ```
 
-This is not a very convenient setup. In the spring appendix we'll describe using the spring data jpa starter as an alternative way of using jpa. There you can create a Jpa instance by just creating an interface extending the interface `JpaRepository`.  Spring boot will automatically check your classpath for any jpa-provider and use that to create the actual implementation of the interface. 
-
+This is not a very convenient setup. In the spring appendix we'll describe using the spring data jpa starter as an alternative way of using jpa. There you can create a Jpa instance by just creating an interface extending the interface `JpaRepository`. Spring boot will automatically check your classpath for any jpa-provider and use that to create the actual implementation of the interface.
 
 Relations are the most important and most difficult part of JPA.
 
-- Element-collections: `@ElementCollection private List<String> attachmentUrls;`. These are for relations with non-entities. This instruction yields a table with attachment-urls and an id.
-- One-to-many relations: In the class 'Task': `@OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL) private List<TimeSpan> activePeriods;` and in the class 'TimeSpan': `@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parentTask", referencedColumnName = "id") private Task parentTask;` This code yields a foreign-key column named 'parentTask' in the 'TimeSpan' table. (It's a good practice to have the foreign key in the 'Many' table, not the 'One' table).
-- Many-to-many relations: creates an intermediate id-mapping table.
-
+-   Element-collections: `@ElementCollection private List<String> attachmentUrls;`. These are for relations with non-entities. This instruction yields a table with attachment-urls and an id.
+-   One-to-many relations: In the class 'Task': `@OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL) private List<TimeSpan> activePeriods;` and in the class 'TimeSpan': `@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parentTask", referencedColumnName = "id") private Task parentTask;` This code yields a foreign-key column named 'parentTask' in the 'TimeSpan' table. (It's a good practice to have the foreign key in the 'Many' table, not the 'One' table).
+-   Many-to-many relations: creates an intermediate id-mapping table.
 
 # Spring(-Boot)
 
 ## Spring
+
 A backend-framework centered around dependency injection.
- - In your `pom.xml` declare `providers` to add functionality to your project
- - In your code, implement an interface exposed by that `provider` to use it in your app.
- - Common providers:
-    - `jpa` for database-access
-    - ``
+
+-   In your `pom.xml` declare `providers` to add functionality to your project
+-   In your code, implement an interface exposed by that `provider` to use it in your app.
+-   Common providers:
+
+    -   `jpa` for database-access
+    -   ``
+
+-   `ApplicationContext.xml`:
+    -   lists beans to configure dependency injection
 
 ## Spring boot
+
 All that spring stuff is just stupid. Create boilerplate online and only do the actual business logic coding.
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/spring_boot.jpg" />
 
-
 # VsCode
-- make sure you've set $JAVA_HOME
-- make sure that $JAVA_HOME matches `<properties><maven.compiler.source>`
-- make sure that $JAVA_HOME matches `Java: configure java runtime`
+
+-   make sure you've set $JAVA_HOME
+-   make sure that $JAVA_HOME matches `<properties><maven.compiler.source>`
+-   make sure that $JAVA_HOME matches `Java: configure java runtime`
