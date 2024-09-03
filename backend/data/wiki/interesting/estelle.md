@@ -66,29 +66,42 @@ Kernfragen
 -   das potential ist da
 -   verantwortung übernehme ich so, wie ich kann
 
-
-
-
 ## Heute
-- Gerade mit Estelle Schluss gemacht
-- Sie hat noch vor dem Abendessen darauf bestanden, von mir zu hören, was für Gefühle ich für sie habe
-- ich habe seit Wochen keine - jedenfalls keine, die mir auffallen würden
-- Wenn ich an sie denke, spüre ich nichts. Ein take-it-or-leave-it Gefühl
-- Warum nicht?
-    - Meine Arbeit nimmt viel Zeit ein
-    - Nicole ebenfalls
-    - Sie braucht sehr viel Sicherheit
-    - Sie ist sehr verletzlich
-- Ich habe lieber mit ihr Schluss gemacht, als sie noch länger im Unklaren zu lassen
-- Sie will, dass ich noch in mich gehe, um mir sicher zu sein, dass das das Richtige ist. 
-- Ich gehe also in 2 Wochen zum Psychologen um das herauszufinden
+
+-   Gerade mit Estelle Schluss gemacht
+-   Sie hat noch vor dem Abendessen darauf bestanden, von mir zu hören, was für Gefühle ich für sie habe
+-   ich habe seit Wochen keine - jedenfalls keine, die mir auffallen würden
+-   Wenn ich an sie denke, spüre ich nichts. Ein take-it-or-leave-it Gefühl
+-   Warum nicht?
+    -   Meine Arbeit nimmt viel Zeit ein
+    -   Nicole ebenfalls
+    -   Sie braucht sehr viel Sicherheit
+    -   Sie ist sehr verletzlich
+-   Ich habe lieber mit ihr Schluss gemacht, als sie noch länger im Unklaren zu lassen
+-   Sie will, dass ich noch in mich gehe, um mir sicher zu sein, dass das das Richtige ist.
+-   Ich gehe also in 2 Wochen zum Psychologen um das herauszufinden
+
 ## Aus Besprechung mit Susanne Lex
 
 -   Ja, ich will eine Beziehung
 -   Aber ich weiß nicht, ob ich eine mit Estelle will
 
-## Aus Besprechung mit
+## Aus Besprechung mit englischem Psychologen
 
 -   Zwei Möglichkeiten:
     -   Celebrate differences between Estelle and Hazme
     -   Or end relationship
+
+## Heute, 03.09.2024
+
+-   Habe mit Estelle Schluss gemacht, heute fühle ich mich schrecklich
+-   Ich weiß folgende Dinge:
+    -   ich habe sie sehr gerne
+    -   ich mochte unsere Zeit zusammen
+-   Folgendes weiß ich nicht:
+    -   reicht es aus, um mit ihr zusammen zu sein?
+-   Ich muss an mir arbeiten:
+    -   Verantwortung:
+        -   zuverlässig umsetzen
+        -   leichter nehmen
+-   Arbeite ich daran, während ich mit Estelle zusammen bin, oder suche ich mir jemanden, nachdem ich fertig bin?

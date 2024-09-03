@@ -135,18 +135,28 @@ Form types:
 
 Django already has a built-in user-mgmt.
 
-Setting up **user-management**:
+## Setting up user-management
 
 -   in urls.py, add `path('accounts/', include('django.contrib.auth.urls'))`
 -   create `templates/logged_out.html, login.html, password_reset_[complete|confirm|done|email|form].html`
 -   to ensure login in view functions, decorate functions with `@login_required`
 -   to ensure login in view classes, extend classes from `LoginRequiredMixin`
 
-Using **ownership**:
+## Setting up ownership
 
 -   create custom decorator: `def isOwnPostOrAdmin(fun, *args, **kwargs): `
+-   when dealing with generic view classes, apply that decorator like this: `@method_decorator(isOwnPostOrAdmin, name='dispatch')`
+-   or create a custom mixin that hooks into (=overwrites) the `dispatch` method:
+    ```python
+    class ProductExistsRequiredMixin:
+        def dispatch(self, request, *args, **kwargs):
+            if Product.objects.filter(pk=1, activate=True):
+                return super().dispatch(request, *args, **kwargs)
+            else:
+                raise PermissionDenied
+    ```
 
-Setting up **permissions**:
+## Setting up permissions
 
 -   add permissions to models using `Modelname > Meta > permissions = [(permission_key, permission_clear_text), ...]`
 -   in admin panel, associate permissions with groups
@@ -154,7 +164,7 @@ Setting up **permissions**:
 -   view functions can check permissions by decorating with `@permission_required('catalog.can_mark_returned')`
 -   view classes can check permissions by extending from `PermissionRequiredMixin` and adding a property `permission_required = ('catalog.can_mark_returned', 'catalog.change_book')`
     -   a few permissions are created automatically: `change_book, add_book, delete_book`
--   alternatively, view classes can use `@method_decorator(login_required, name='dispatch')`
+-   alternatively, view classes can use `@method_decorator([never_cache, login_required], name='dispatch')`
 
 # Common errors
 
