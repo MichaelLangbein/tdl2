@@ -1,0 +1,447 @@
+1,root,,,1667035002516,,9016,
+2,Projects,,1,1667035087919,,1040,
+3,"Face proportions",,2,1667035093857,1720599219330,23,
+4,"Learn swift",,3,1667035103101,,324,
+5,Package-management,,4,1667035109353,,8,
+6,Syntax,,4,1667035118736,,14,
+7,SwiftUI,,4,1667035127251,,7,
+8,"State mgmt",,7,1667035134982,,4,
+9,Routing,,7,1667035140424,,5,
+10,3d-scenes,,7,1667035145575,,26,
+11,"Standalone version",,3,1667035178138,,57,
+12,"Take image",,11,1667035191917,,16,
+14,"Detect landmarks",,11,1667035209873,,6,
+15,"Include mobile landmark-detection in standalone program",,14,1667035217843,,22,
+16,Tutorial,,3,1667035594811,,6,
+17,"remote sensing","null
+        Latest estimate: 2024-07-10T13:26:22.288Z 15:26:22
+            buvs: 0 days 8 hours 24 minutes
+            tdvs: 0 days 7 hours 13 minutes
+            estimated percentage: 1%
+      ",2,1720599229613,1720621914883,879,
+18,"smaller image",,17,1720599237628,1720612370259,1418,
+19,"nicer popup",,17,1720599255083,1720612045289,24,
+20,"animated barchart",,19,1720599262825,1720605730069,1074,
+21,tdl,,2,1720599316062,,904,
+22,text,,17,1720599334709,1720621176463,771,
+23,svg,,17,1720599338590,1720603893771,10,
+24,"hero animation/image",,17,1720599344776,1720604515749,12,
+25,"Weird: works better on desktop and in firefox","It seems to be the residential area on the right, under the house with the big blue pool (or maybe a blue tennis court) that the model consistently missclassifies as crop.",17,1720600553958,1720604511327,74,
+26,"laptop + firefox","not much better in firefox, it seems",25,1720600568508,1720604445272,452,
+27,"compare loaded models?",,25,1720600581585,,3310,
+28,"new animation for sources-page","null
+        Latest estimate: 2024-07-10T13:43:05.921Z 15:43:05
+            buvs: 0 days 0 hours 15 minutes
+            tdvs: 0 days 0 hours 56 minutes
+            estimated percentage: 2%
+      ",2,1720604527192,1720619577124,1605,
+29,"show/hide completed button",,21,1720604653437,,31,
+30,"hover text and highlight",,19,1720605732417,1720612035689,1213,
+31,"close window button","",17,1720612100743,1720617540855,2995,
+32,"nicer load icon",,17,1720614376601,1720616406801,629,
+33,"shift popup if far right",,17,1720614383130,1720615692385,7,
+34,deploy,,17,1720621180404,1720621911551,720,
+35,build,,34,1720621185633,,4,
+36,upload,,34,1720621190820,,6,
+37,"certificate not up to date",,2,1720621928504,1720629706463,654,
+38,"did i use an ionos managed certifcate, or manually create one with certbot?",,37,1720622578667,1720629704203,1260,
+39,video,,2,1720629711839,1720638874874,74,
+40,"get aspect ratio of existing videos","1280 x 720",39,1720629730541,1720631035780,1303,
+41,"compress video",ffmpg,39,1720631039174,1720638041828,816,
+42,"remove last frame","",39,1720638044029,1720638823660,777,
+43,"Nicoles website","Latest estimate: 2024-07-11T08:35:08.530Z 10:35:08
+            buvs: 0 days 10 hours 44 minutes
+            tdvs: 0 days 4 hours 41 minutes
+            estimated percentage: 0%
+      
+
+Latest estimate: 2024-07-11T10:57:26.969Z 12:57:26
+            buvs: 1 days 15 hours 21 minutes
+            tdvs: 0 days 9 hours 22 minutes
+            estimated percentage: 0%
+      
+        Latest estimate: 2024-07-11T12:42:55.040Z 14:42:55
+            buvs: 2 days 15 hours 9 minutes
+            tdvs: 0 days 11 hours 52 minutes
+            estimated percentage: 0%
+      
+        Latest estimate: 2024-07-13T08:54:06.979Z 10:54:06
+            buvs: 3 days 1 hours 12 minutes
+            tdvs: 0 days 16 hours 16 minutes
+            estimated percentage: 0%
+      
+        Latest estimate: 2024-07-15T11:04:26.357Z 13:04:26
+            buvs: 1 days 23 hours 4 minutes
+            tdvs: 0 days 19 hours 57 minutes
+            estimated percentage: 0%
+      
+        Latest estimate: 2024-07-27T17:14:45.503Z 7:14:45 PM
+            buvs: 2 days 12 hours 21 minutes
+            tdvs: 0 days 18 hours 48 minutes
+            estimated percentage: 1%
+      ",2,1720639147813,,932,
+44,Frontpage,"null
+        Latest estimate: 2024-07-11T12:39:45.191Z 14:39:45
+            buvs: 1 days 5 hours 53 minutes
+            tdvs: 0 days 4 hours 31 minutes
+            estimated percentage: 2%
+      
+        Latest estimate: 2024-07-11T20:35:11.372Z 22:35:11
+            buvs: 1 days 20 hours 50 minutes
+            tdvs: 0 days 9 hours 16 minutes
+            estimated percentage: 2%",43,1720639154261,1721040874985,8260,1721001600000
+46,"Squiggly separator","with top and bottom colors as input
+
+
+        Latest estimate: 2024-07-11T11:15:22.442Z 13:15:22
+            buvs: 0 days 7 hours 32 minutes
+            tdvs: 0 days 2 hours 18 minutes
+            estimated percentage: 2%
+      
+        Latest estimate: 2024-07-11T12:16:01.064Z 14:16:01
+            buvs: 0 days 6 hours 30 minutes
+            tdvs: 0 days 1 hours 51 minutes
+            estimated percentage: 16%
+      ",44,1720639170452,1720700164335,2462,
+47,"custom theme","restricted colors and fonts",44,1720639188934,1720696341996,19,
+48,"provide font",,44,1720639207083,1720696337024,5,
+49,graphics,,44,1720639212715,1720864517150,25,1720828800000
+50,setup,,43,1720686948234,1720691501664,17,
+51,docker,,50,1720686955080,1720687784695,5,
+52,"create block theme plugin",,50,1720686958458,1720691499184,1971,
+53,"save colors to theme json","null
+        Latest estimate: 2024-07-11T09:09:02.013Z 11:09:02
+            buvs: 0 days 0 hours 15 minutes
+            tdvs: 0 days 0 hours 11 minutes
+            estimated percentage: 1%
+      ",52,1720688931697,1720691493005,697,
+54,"edit text, sync with container",,50,1720689629982,1720691485384,1855,
+55,"Method 1: Mediation",,43,1720691892877,1720880508790,13,
+57,"admin interface",,46,1720696482289,1720700148412,12,
+58,preview,,57,1720696488966,1720699661543,5,
+59,"top color picker",,57,1720696492835,1720699665030,7,
+60,"bottom color picker",,57,1720696500022,1720700146090,485,
+61,"frontend view",,46,1720696508754,1720700157426,11,
+62,"show errors",,46,1720698551642,1720699654154,1102,
+63,"export squigglyblocks to template",,44,1720700179703,1720701579115,451,
+64,"save props in html",,44,1720700631716,1720701575837,223,
+65,save.js,"is useBlockProps enough?
+no, it isnt",64,1720700640254,1720701360707,707,
+66,index.js,,64,1720700644890,1720701357913,5,
+67,"template part doesnt have variable text","should probably be a pattern, not a template part",44,1720701717348,1720711023372,1521,
+68,"squiggly sections have spacing between them",,44,1720701730156,1720711027600,21,
+69,paralax,,44,1720710566579,1720730099707,238,
+70,"export patterns","required plugin ""pattern editor"" by blockify",44,1720711064592,1720711370753,295,
+71,"pattern override?",,44,1720711070880,1720714384478,3018,
+72,"make image fixed position",,69,1720714582331,1720715936165,9,
+73,"upper and lower squigglies: make transparent",,69,1720714592077,1720715932772,17,
+74,"create variants from squiggly-section pattern","not possible",73,1720714607648,1720715928125,1318,
+75,"move under surrounding squiggles","want to set z-index, but cant seem to do that",69,1720715938400,1720730097540,35,
+76,"allow user to change background image","hm, might not be possible. might have to create custom block for this.
+or just make non-synced",69,1720715958939,1720730094726,1599,
+77,"svg appearing",,49,1720728529372,1720864513084,756,
+78,"doesn't seem to recognize my cc-appearing plugin",,77,1720730839933,1720777783628,822,
+82,"CTA section",,44,1720861812809,1720871830943,1727,1720828800000
+83,Footer,,44,1720861820522,1720871826476,46,1720828800000
+84,"turn into template part",,82,1720865740720,1720871829063,17,
+85,"Turn into template part",,83,1720865768158,1720871824577,10,
+86,Logo,,44,1720865876093,1720880501919,3000,
+90,"demo page",,2,1720874546719,,37,
+91,"past works section",,90,1720874555675,,14,
+92,"nicole's page",,91,1720874564631,,14,
+93,Hero,"attributes:
+    imgSrc
+    imgWidth
+    imgHeight
+
+
+edit:",43,1721037455648,1721040870339,3408,
+94,"Linked In Campagne",,2,1721383511315,,690,
+96,Water,,94,1721383526563,1721756175489,18,
+97,Wind,,94,1721383531789,1721389893069,3,
+98,"Remote Sensing",,94,1721383534544,,20,
+99,"Fullscreen ",,97,1721383544327,1721389890327,2522,
+101,"Restart simulation on resize",,99,1721386166111,1721389886556,3720,
+102,"Why don't I need to reset water, but do neet to reset wind?",,94,1721390476914,1721756181290,247,
+103,"On Tap: bigger splash",,96,1721392673575,1721393317620,7,
+104,"Fullscreen: center",,96,1721393321977,1721756173017,462,
+105,Blender,,90,1721803835726,,10,
+106,"Training: Castle","
+      
+        Latest estimate: 2024-07-24T07:53:28.696Z 9:53:28 AM
+            buvs: 0 days 0 hours 23 minutes
+            tdvs: 0 days 0 hours 34 minutes
+            estimated percentage: 33%
+      ",105,1721803842242,,2968,
+107,"expand/collapse arrow",,21,1721804443890,,5,
+108,"repair drag'n'drop",,21,1721804450229,,20,
+109,"when estimating time, first update task's active time on server","Reason: active time is only updated to the server when the user makes an action, like changing focus. Also when changing form text, I think.",21,1721804471302,,3051,
+110,"Task service: return observables instead of immediately subscribing","Cannot solve the parent task otherwise:
+there i need to forkJoin(taskSvc.update, taskSvc.estimate)
+",109,1721807519856,,71,
+111,inneo,"",2,1721809239118,,5384,
+112,"Letztes Arbeitszeugnis",,111,1721812696018,1721813340802,9,
+113,"Referenz Torsten Riedlinger",,111,1721812704500,1722321249628,638,
+114,"XR Demo Solar system","
+        Latest estimate: 2024-07-24T12:09:55.887Z 2:09:55 PM
+            buvs: 0 days 2 hours 20 minutes
+            tdvs: 0 days 3 hours 26 minutes
+            estimated percentage: 2%
+      
+        Latest estimate: 2024-07-26T16:47:30.857Z 18:47:30
+            buvs: 0 days 17 hours 45 minutes
+            tdvs: 0 days 14 hours 2 minutes
+            estimated percentage: 1%
+      
+        Latest estimate: 2024-07-27T15:44:38.243Z 5:44:38 PM
+            buvs: 1 days 3 hours 35 minutes
+            tdvs: 0 days 22 hours 31 minutes
+            estimated percentage: 1%
+      
+        Latest estimate: 2024-07-27T17:14:51.045Z 7:14:51 PM
+            buvs: 1 days 5 hours 59 minutes
+            tdvs: 1 days 0 hours 0 minutes
+            estimated percentage: 1%
+      
+        Latest estimate: 2024-07-29T17:37:27.714Z 7:37:27 PM
+            buvs: 1 days 11 hours 29 minutes
+            tdvs: 1 days 4 hours 12 minutes
+            estimated percentage: 1%
+      ",90,1721815464187,1723488574762,12351,
+115,boilerplate,"",114,1721821069862,1721822984100,1894,
+116,reticle,,114,1721821088278,1721997767680,9,
+117,"solar system",,114,1721821094569,1722001732399,3532,
+118,"New threejs-idiomatic setup","- what does threejs do for me?
+    - do I need to create my own camera? - nope
+    - do I need to call renderer.render? - yes
+
+   ",114,1721977310836,1721997763501,20404,
+119,"wheres the reticle?","Forgot to do `reticle.matrixAutoUpdate = false`",118,1721997286928,1721997752870,35,
+120,occlusion,"null
+        Latest estimate: 2024-07-26T16:47:20.699Z 18:47:20
+            buvs: 0 days 0 hours 21 minutes
+            tdvs: 0 days 0 hours 44 minutes
+            estimated percentage: 22%
+      ",114,1722002054202,1722321161711,2172,
+122,"Not supported on my device - requires android emulator","Hm. Emulator can't seem to do WebXR.",120,1722014144278,1722321156991,11326,
+123,"Html over planets on hover","uses a html-mesh, as such is in threejs-scene
+Note that HtmlMesh uses html2canvas ... which is icky.
+
+",114,1722067370634,1722093919271,11426,
+124,"Full demo","- all nine planets plus moons
+- hud display ........................................ done
+- select on look ..................................... done
+- display selection progress around planet ........... done
+- display planet name in hud ......................... done
+- display planet info in HtmlRect around planet ...... done
+- unselect-button in hud ............................. done
+- state-mgmt to handle all these ..................... done
+- requires no collision-detection .................... done
+
+
+      
+        Latest estimate: 2024-07-27T17:42:52.548Z 7:42:52 PM
+            buvs: 0 days 3 hours 2 minutes
+            tdvs: 0 days 2 hours 32 minutes
+            estimated percentage: 50%
+      
+        Latest estimate: 2024-07-28T09:08:58.972Z 11:08:58 AM
+            buvs: 0 days 4 hours 31 minutes
+            tdvs: 0 days 3 hours 30 minutes
+            estimated percentage: 35%
+      
+        Latest estimate: 2024-07-28T10:20:28.991Z 12:20:28 PM
+            buvs: 0 days 5 hours 52 minutes
+            tdvs: 0 days 4 hours 45 minutes
+            estimated percentage: 37%
+      
+        Latest estimate: 2024-07-28T12:57:36.565Z 2:57:36 PM
+            buvs: 0 days 9 hours 44 minutes
+            tdvs: 0 days 8 hours 43 minutes
+            estimated percentage: 22%
+      ",114,1722088028413,1722171478010,7328,
+125,HUD,"",124,1722098916676,1722157682845,22,
+126,"Estimate time: parent doesn't seem to account child-time when calculating own active-time","Solved, but couldn't build",21,1722098931065,1722100668662,1540,
+127,"Sometimes gaze ""undefined""",,124,1722157690737,1722159967020,353,
+128,"High def models",,124,1722157707400,1722164627124,1825,
+129,"AR screen should not have scrollbar",,124,1722157712889,1722160191471,243,
+130,"select twirl start from 0",,124,1722157784837,1722161167073,786,
+131,"html info line-break",,124,1722157807085,1722162021973,815,
+132,"Twirl away when nothing gazed",,124,1722160971122,1722161162294,190,
+133,"rotate planets",,124,1722162418409,1722164629956,5,
+134,"light from sun","null
+        Latest estimate: 2024-07-28T11:03:55.670Z 1:03:55 PM
+            buvs: 0 days 0 hours 29 minutes
+            tdvs: 0 days 0 hours 23 minutes
+            estimated percentage: 46%
+      ",124,1722162424080,1722166537390,2633,
+135,"sun bloom","https://threejs.org/examples/?q=bloom#webgl_postprocessing_unreal_bloom_selective
+
+
+        Latest estimate: 2024-07-28T11:50:04.106Z 1:50:04 PM
+            buvs: 0 days 0 hours 17 minutes
+            tdvs: 0 days 0 hours 12 minutes
+            estimated percentage: 1%
+      ",124,1722163153467,1722169917957,3251,
+136,"Load all textures at once",,124,1722166656846,1722171304113,548,
+137,"rotate sun bloom while looking at camera",,124,1722169919996,1722170766011,845,
+138,"Integrate XR demo into Demo-page","null
+        Latest estimate: 2024-07-28T13:13:21.239Z 3:13:21 PM
+            buvs: 0 days 0 hours 17 minutes
+            tdvs: 0 days 1 hours 16 minutes
+            estimated percentage: 0%
+      ",90,1722171511728,1723488581315,3509,
+139,"raw camera access",,114,1722286151211,1722424673370,3968,1722297600000
+140,"debug physical phone","https://github.com/chinchang/screenlog.js
+https://developer.chrome.com/docs/devtools/remote-debugging/
+  on my mobile: allow dev-mode
+  allow usb debuggin
+  upon pluggin in: - click usb-loading and tap ""p2p""
+https://stackoverflow.com/questions/21925992/chrome-devtools-devices-does-not-detect-device-when-plugged-in",139,1722286162515,1722322934610,1895,
+142,"draw to top right (viewport + scissor)","kind of works without threejs, 
+but with it enabled, there's some weird interference.",139,1722321177137,1722424666866,6460,
+143,"Texture -> TF-tensor -> separate canvas",,139,1722321206507,,24,
+144,"deploy unminified",,139,1722322943379,1722324202732,1258,
+145,"Texture initially not big enough",,142,1722324788687,1722347707348,14,
+146,"Texture deleted by the time I want to connect it to the program",,142,1722324802312,1722347710644,45,
+147,"Threejs confused because its last program is no longer the active one",,142,1722324849698,1722347715181,23,
+149,"reset state",,139,1722421543226,1722423505957,17,1722384000000
+150,"opaque texture: detatch and replace on every frame",,139,1722422032354,1722423502967,1470,
+151,"custom material","",114,1722424686149,1723488573066,14401,
+152,"copy basicmeshmaterial",,114,1722505969779,1723488570370,16,
+153,"integrate depth texture",,114,1722505986596,1723488567827,13,
+154,"Fahrrad App","1. create frontend
+2. run graphhopper instance locally
+3. get construction sites from google maps API
+4. custom profile that avoids construction sites
+5. once a day, accounting for construction sites, create isochrone map to get to school
+
+
+        Latest estimate: 2024-08-13T12:21:45.440Z 2:21:45 PM
+            buvs: 0 days 21 hours 1 minutes
+            tdvs: 1 days 4 hours 11 minutes
+            estimated percentage: 7%
+      
+        Latest estimate: 2024-08-13T18:40:06.025Z 8:40:06 PM
+            buvs: 0 days 23 hours 16 minutes
+            tdvs: 1 days 2 hours 3 minutes
+            estimated percentage: 8%
+      
+        Latest estimate: 2024-08-14T15:10:21.764Z 5:10:21 PM
+            buvs: 1 days 4 hours 18 minutes
+            tdvs: 1 days 6 hours 15 minutes
+            estimated percentage: 6%
+      ",2,1723488594437,,6727,
+155,"Learn graphhopper","https://www.graphhopper.com/
+https://github.com/graphhopper/graphhopper/blob/9.x/docs/core/technical.md
+https://github.com/graphhopper/graphhopper/blob/9.x/docs/core/routing.md
+https://github.com/graphhopper/graphhopper/blob/9.x/docs/core/low-level-api.md
+
+
+
+https://www.graphhopper.com/pricing/",154,1723491424621,1723551716582,498,
+156,"Should I have a graphhopper-standalone backend or include it in a custom java-application?"," - existing implementation uses OSM as background, I want vector-tiles from local store in maplibre
+
+
+use standalone backend.
+Cannot be easily included in spring-boot without copying the input/output marshalling over from dropwizard to spring.
+Also no good reason to include it in a spring-boot backend.",154,1723491848901,1723551861279,121,
+157,"learn spring boot",,154,1723535948910,1723537998647,2020,
+158,"can I avoid obstacles?","Avoiding areas requires a custom model:
+https://docs.graphhopper.com/#section/Custom-Model
+
+Example:
+https://graphhopper.com/maps/
+pick example ""Avoid disneyland paris""
+{
+  ""priority"": [
+    {
+      ""if"": ""road_environment==FERRY"",
+      ""multiply_by"": ""0.9""
+    },
+    {
+      ""if"": ""in_area1"",
+      ""multiply_by"": ""0""
+    }
+  ],
+  ""areas"": {
+    ""type"": ""FeatureCollection"",
+    ""features"": [
+      {
+        ""id"": ""area1"",
+        ""properties"": {},
+        ""type"": ""Feature"",
+        ""geometry"": {
+          ""type"": ""Polygon"",
+          ""coordinates"": [
+            [
+              [
+                2.74773,
+                48.876539
+              ],
+              [
+                2.751936,
+                48.794903
+              ],
+              [
+                2.850813,
+                48.819775
+              ],
+              [
+                2.808754,
+                48.887642
+              ],
+              [
+                2.74773,
+                48.876539
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
+}",155,1723538060943,1723550584680,409,
+159,isochrones,https://docs.graphhopper.com/#tag/Isochrone-API,155,1723549261022,1723550594809,920,
+160,"JS client","https://www.npmjs.com/package/graphhopper-js-api-client
+",155,1723550179982,1723550597489,50,
+161,"where is graphhoppers api endpoint defined?","- web/GraphHopperApplication.java
+- uses dropwizard (which uses jersey) instead of spring-boot
+- API endpoints:
+    - navigation/NavigateResource.java doGet
+    - web-bundle/resources/RouteResource.java doPost
+
+
+If I wanted to run graph-hopper inside spring-boot, I'd probably have to translate web-bundle/resources into a spring-boot @Controller.",155,1723550600713,1723551473513,858,
+162,"Learn google maps api","null
+        Latest estimate: 2024-08-13T13:25:42.147Z 3:25:42 PM
+            buvs: 0 days 3 hours 14 minutes
+            tdvs: 0 days 4 hours 52 minutes
+            estimated percentage: 25%
+      ",154,1723551534024,1723574390476,12478,
+163,"get current construction sites","Not actually possible!",162,1723551540871,1723574387331,64,
+164,"Visualize DWD medium term predictions","
+https://www.dwd.de/DE/forschung/klima_umwelt/klimaprojektionen/klimaprojektionen_node.html
+https://cds.climate.copernicus.eu/cdsapp#!/search?type=dataset
+
+",2,1723560791977,,48,
+165,frontend,"",154,1723569002493,,15002,
+166,"Get MVT directly from Graphhopper backend","I dont think graphhoppers mvt's encode all the fields that I need for osmStyleDLR.json",165,1723620495818,1723622883846,2384,
+167,Westnetz,"
+westnetz gmbh 
+tochter e-on
+remote möglich
+37.6h (= vollzeit)
+remote anteil relativ hoch
+6 Monate
+https://www.freelancermap.de/projekt/gis-spezialist-entwicklung-m-w-d
+
+
+ESRI Enterprise: kann einarbeiten
+<-- ist wohl kein must have
+Reisekosten würden übernommen werden
+
+
+      ",2,1723648259633,,701,
+168,"Lebenslauf in Word",,167,1723648276426,1723664737367,12922,
+169,"Learn ESRI Enterprise","",167,1723651219880,,434,
