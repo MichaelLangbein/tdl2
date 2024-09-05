@@ -263,37 +263,25 @@ childrenPerLevelBu = [np.mean(i) for i in levelChildrenBu]
         - H(t) from `sksurv.linear_model.CoxPHSurvivalAnalysis.predict_cumulative_hazard_function()`
 """
 
-from sksurv.datasets import load_veterans_lung_cancer
-
-data_x, data_y = load_veterans_lung_cancer()
-data_y  # [(delta_i, y_i),...] = [(dead, time_of_death), (dead, time_of_death), (not_dead, last_spoken), ...]
-
-# %%
-import matplotlib.pyplot as plt
-from sksurv.nonparametric import kaplan_meier_estimator
-
-time, survival_prob = kaplan_meier_estimator(
-    data_y["Status"], data_y["Survival_in_days"] #, conf_type="log-log"
-)
-plt.step(time, survival_prob, where="post")
-plt.ylim(0, 1)
-plt.ylabel(r"est. probability of survival $\hat{S}(t)$")
-plt.xlabel("time $t$")
 
 
 # %%
 # @TODO: would be nice to have a `lastEditedAt` column in DB.
+import pandas as pd
+from sksurv.linear_model import CoxPHSurvivalAnalysis
+from sksurv.metrics import concordance_index_censored
+
 
 covariate_data = []
 survival_data = []
 def treeToSksurvData(tree):
     died = False if tree["completedAt"] == -1 else True
-    observationTime = tree["secondsActive"]
+    observationTime = tree["cumulativeTime"]
     survival_datum = (died, observationTime)
     covariate_datum = {
         "level_bu": tree["level_bu"],
         "level_td": tree["level_td"],
-        # "cumulativeTime": tree["cumulativeTime"],
+        # "cumulativeTime": tree["cumulativeTime"], @TODO: darf ich cumTime mit einbeziehen?
         "bodyLength": len(tree["body"]),
         "childCount": len(tree["children"])
     }
@@ -330,17 +318,25 @@ def fit_and_score_features(X, y):
 scores = fit_and_score_features(x.values, y)
 pd.Series(scores, index=x.columns).sort_values(ascending=False)
 
-"""
-    Interpretation: almost no variable has much predicting power
-    bodyLength is yet the best
-    level_bu and childCount seem to predict very little (!)
-"""
+# """
+#     Interpretation: level_bu and childCount are good covariates,
+#     bodyLength barely has predictive strength
+# """
 # %%
-testData = pd.DataFrame(covariate_data[0:3])
+testData = pd.DataFrame(covariate_data[10:13])
 surv = estimator.predict_survival_function(testData)
 plt.step(surv[0].x / (60 * 60), surv[0].y, where="post", label=f"{covariate_data[0]}")
 plt.step(surv[1].x / (60 * 60), surv[1].y, where="post", label=f"{covariate_data[1]}")
 plt.step(surv[2].x / (60 * 60), surv[2].y, where="post", label=f"{covariate_data[2]}")
-plt.legend()
+plt.legend(loc="upper right")
 
+# %%
+def plotSurvival(row):
+    testData = pd.DataFrame([row])
+    surv = estimator.predict_survival_function(testData)
+    plt.step(surv[0].x / (60 * 60), surv[0].y, where="post", label=f"{row}")
+    plt.legend(loc="upper right")
+
+plotSurvival({"level_bu": 2, "level_td": 2, "bodyLength": 100, "childCount": 2})
+plotSurvival({"level_bu": 1, "level_td": 3, "bodyLength": 100, "childCount": 2})
 # %%
