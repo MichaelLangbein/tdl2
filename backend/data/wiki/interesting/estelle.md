@@ -86,13 +86,13 @@ Kernfragen
 -   Ja, ich will eine Beziehung
 -   Aber ich weiß nicht, ob ich eine mit Estelle will
 
-## Aus Besprechung mit englischem Psychologen
+## Aus Besprechung mit Paul Dent
 
 -   Zwei Möglichkeiten:
     -   Celebrate differences between Estelle and Hazme
     -   Or end relationship
 
-## Heute, 03.09.2024
+## Heute, 03.09.2024: mit E schluss gemacht, heute bei Susanne Lex
 
 -   Habe mit Estelle Schluss gemacht, heute fühle ich mich schrecklich
 -   Ich weiß folgende Dinge:
@@ -105,3 +105,11 @@ Kernfragen
         -   zuverlässig umsetzen
         -   leichter nehmen
 -   Arbeite ich daran, während ich mit Estelle zusammen bin, oder suche ich mir jemanden, nachdem ich fertig bin?
+
+## Heute, 05.09.2024
+
+-   Mit Sabine gesprochen
+-   Sie weiß, dass ich ein Problem damit habe, mich festzulegen
+-   Ich soll ihr Estelle mal vorstellen
+-   Es ist ein Verlust, mit jemandem Schluss zu machen
+-   Ich habe nichts zu verlieren, wenn ich es mit ihr probiere

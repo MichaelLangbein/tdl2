@@ -75,7 +75,7 @@ completedTasks = [t for t in filter(lambda d: d["completedAt"] > -1, data)]
 secondsActive = [t["secondsActive"] for t in completedTasks]
 
 plt.hist(secondsActive)
-plt.set_title(f"all ({len(completedTasks)})")
+plt.title(f"all ({len(completedTasks)})")
 
 #%% exponential on all levels
 topCutoff = 3
@@ -213,11 +213,17 @@ plt.scatter(levelsBu, cumtimes)
 
 
 #%%
+timesPerLevelBu = [np.mean(i)/60 for i in levelTimesBu]
+childrenPerLevelBu = [np.mean(i) for i in levelChildrenBu]
 """
     lessons learned:
+        - Picking a model:
+            - use BU if you've already specified at least one low-level task
+            - use TD otherwise
+            - use static-structure if you're not expecting more tasks
         - task time follows exponential distribution
         - for a root task I commonly need about two hours
-        - I expect about 9 children at level 3 (bottom up from 0), 4 at level 3, 2 at level 1
+        - I expect about 9 children at level 2 (bottom up from 0), 4 at level 1, 2 at level 0
             - that is: level 3: 1 x 114 min              (high level: task,          eg "AR-app"         )
                        level 2: 1 x 9 x 18 min          (sub-task                   eg "camera access"  )
                        level 1: 1 x 9 x 4 x 48 min      (feature                    eg "bugfix"         )
@@ -227,3 +233,114 @@ plt.scatter(levelsBu, cumtimes)
             - I can do one level-3 task in 1-2weeks, which will branch out to ~80 subtasks
         - one high-level task takes on average 13h (2days), but varies (2sigma) up to a 1.5week
 """
+
+
+# %%
+"""
+- lingo:
+    - i is `censored` at t: I don't know if i has died, I only know that i had not died before t
+    - y_t: min(t, c), with
+        - c: time of censoring, i.e. last time that i was observed alive before losing contact
+        - t: time of death
+    - delta = 1 if death has occurred, delta = 0 if not
+    - covariates: predicting factors like age, occupation, habits etc.
+- survival function S(t) = prob that I'm still alive at time t
+- cuml hazard function H(t) = prob that I've died before t
+- `sksurv.nonparametric.kaplan_meier_estimator()`
+    - calculates S(t) from `[(delta_1, y_1), (delta_2, y_2), ...]`
+- sksurv.nonparametric.nelson_aalen_estimator():
+    - same, but calculates H(t)
+- neither kaplan nor nelson can take in predicting factors like age, occupation, habits etc., aka. `covariates` 
+    - `sksurv.linear_model.CoxPHSurvivalAnalysis` does do that, though.
+    - assumes `proprtional hazards`:
+        - It assumes that a baseline hazard function exists and that covariates change the “risk” (hazard) only proportionally. 
+        - In other words, it assumes that the ratio of the “risk” of experiencing an event of two patients remains constant over time.
+        - am I right in interpreting this as follows?
+            - the hazard due to a covariate may increase over time
+            - but it must increase at the same rate for all patients
+    - once CoxHP has been fitted, you can get
+        - S(t) from `sksurv.linear_model.CoxPHSurvivalAnalysis.predict_survival_function()`
+        - H(t) from `sksurv.linear_model.CoxPHSurvivalAnalysis.predict_cumulative_hazard_function()`
+"""
+
+from sksurv.datasets import load_veterans_lung_cancer
+
+data_x, data_y = load_veterans_lung_cancer()
+data_y  # [(delta_i, y_i),...] = [(dead, time_of_death), (dead, time_of_death), (not_dead, last_spoken), ...]
+
+# %%
+import matplotlib.pyplot as plt
+from sksurv.nonparametric import kaplan_meier_estimator
+
+time, survival_prob = kaplan_meier_estimator(
+    data_y["Status"], data_y["Survival_in_days"] #, conf_type="log-log"
+)
+plt.step(time, survival_prob, where="post")
+plt.ylim(0, 1)
+plt.ylabel(r"est. probability of survival $\hat{S}(t)$")
+plt.xlabel("time $t$")
+
+
+# %%
+# @TODO: would be nice to have a `lastEditedAt` column in DB.
+
+covariate_data = []
+survival_data = []
+def treeToSksurvData(tree):
+    died = False if tree["completedAt"] == -1 else True
+    observationTime = tree["secondsActive"]
+    survival_datum = (died, observationTime)
+    covariate_datum = {
+        "level_bu": tree["level_bu"],
+        "level_td": tree["level_td"],
+        # "cumulativeTime": tree["cumulativeTime"],
+        "bodyLength": len(tree["body"]),
+        "childCount": len(tree["children"])
+    }
+    survival_data.append(survival_datum)
+    covariate_data.append(covariate_datum)
+    for child in tree["children"]:
+        treeToSksurvData(child)
+
+treeToSksurvData(tree)
+
+# %%
+x = pd.DataFrame(covariate_data)
+y = np.asarray(survival_data, dtype=[('died', bool), ('time', int)])
+estimator = CoxPHSurvivalAnalysis()
+estimator.fit(x, y)
+
+# %%
+prediction = estimator.predict(x)
+result = concordance_index_censored(y["died"], y["time"], prediction)
+result[0]
+
+# %%
+
+def fit_and_score_features(X, y):
+    n_features = X.shape[1]
+    scores = np.empty(n_features)
+    m = CoxPHSurvivalAnalysis()
+    for j in range(n_features):
+        Xj = X[:, j : j + 1]
+        m.fit(Xj, y)
+        scores[j] = m.score(Xj, y)
+    return scores
+
+scores = fit_and_score_features(x.values, y)
+pd.Series(scores, index=x.columns).sort_values(ascending=False)
+
+"""
+    Interpretation: almost no variable has much predicting power
+    bodyLength is yet the best
+    level_bu and childCount seem to predict very little (!)
+"""
+# %%
+testData = pd.DataFrame(covariate_data[0:3])
+surv = estimator.predict_survival_function(testData)
+plt.step(surv[0].x / (60 * 60), surv[0].y, where="post", label=f"{covariate_data[0]}")
+plt.step(surv[1].x / (60 * 60), surv[1].y, where="post", label=f"{covariate_data[1]}")
+plt.step(surv[2].x / (60 * 60), surv[2].y, where="post", label=f"{covariate_data[2]}")
+plt.legend()
+
+# %%
