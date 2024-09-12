@@ -112,12 +112,14 @@ functions `F == [x \in S |-> expr]`
 
 `<<a, b, c>>` list (btw, lists are 1-indexed)
 
+-   with repetition, with order
 -   actually just syntactic sugar for a function mapping indices `1..n` (the domain) to values
 -   `Append(S, "a")`
 -   `Head(S)`
 -   `Tail(S)`
 -   `Len(S)`
 -   `SubSeq(S, 1, 3)`
+-   `seq1 \o seq2` concatenates two sequences
 
 ### Structures
 
