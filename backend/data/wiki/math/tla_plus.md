@@ -41,6 +41,7 @@ $$\exists x \in X: x < 5 \land Q(x)$$
 
 `{1, 2, 3}` set
 
+-   unordered, no duplicates
 -   `\union`
 -   `\intersect`
 -   `\`
@@ -100,6 +101,12 @@ functions `F == [x \in S |-> expr]`
 
 -   `f @@ g` merges two functions, preferring keys in `f`.
 -   `a :> b` is special syntax for a function with a single-value-domain ({a}) and a single-value-codomain ({b}), i.e. `[x \in {a} |-> b]`
+-   Convenient shorthand for functions:
+-   ```
+    Double == [x \in 1..10 |-> x * 2]
+    \* can also be written as
+    Double[x \in 1..10] == x * 2
+    ```
 
 ### Sequences aka lists
 
@@ -149,20 +156,68 @@ functions `F == [x \in S |-> expr]`
         ```
 
 -   `CONSTANT`: define a variable not in spec, but via UI in model-wizard
+-   `VARIABLE`: identical to PlusCal's `variable`
 -   `ASSUME`
+-   `LAMBDA`: for anonymous operators
+-   ```
+    Fizzbuzz(x) ==
+        CASE (x % 3 = 0) /\ (x % 5 = 0) -> "Fizzbuzz"
+            [] (x % 3 = 0)                -> "Fizz"
+            [] (x % 5 = 0)                -> "Buzz"
+            [] OTHER                      -> x
+    ```
 
 ### Temporal properties
 
 The following hold for within one behavior:
 
 -   always true: `[]P`
+    -   means P is true for every state in every behavior
     -   `~[]P`: "In every behavior, there is at least one state where P is false".
         -   _Doesn't mean_: "There is at least one behavior which has at least one state where P is false".
     -   `~[]~P`: in every behavior, P holds at least once ... aka `<>P`
 -   eventually true: `<>P`
     -   might become false again later
     -   `<>[]P`: P is eventually true and then stays true
--   leads to: `~>P`
+    -   `[]<>P`: For example, in an hour clock, []<>(time = midnight) is true, but <>[](time = midnight) is false.
+-   leads to: `P ~> Q`
+    -   If P is true, Q will eventually be true (in the same or a future time step)
+    -   P ~> Q is triggered every time P is true. Even if the formula was satisfied before, if P becomes true again, then Q has to become true again too.
+
+### Action properties
+
+-   `[][x' > x]_x`: it's always true (`[]`) that x only increases (`x' > x`) assuming that x has changed at all (`[...]_x`)
+    -   a reason why x might not have changed is stuttering
+-   Action properties can account for one of multiple values changing:
+-   ```
+       CounterOnlyIncreases ==
+            [][
+                \A c \in Counters:
+                    values[c]' >= values[c]
+              ]_values
+    ```
+
+### Recursion
+
+Summing a sequence:
+
+```TLA+
+RECURSIVE SumSeq(_)
+SumSeq(s) == IF s = <<>> THEN 0 ELSE
+    Head(s) + SumSeq(Tail(s))
+```
+
+Note that TLA+ does not check that a recursive expression ever terminates.
+
+Alternatively:
+
+```TLA+
+SumSeq(s) == LET
+  RECURSIVE Helper(_)
+  Helper(s_) == IF s_ = <<>> THEN 0 ELSE
+  Head(s_) + Helper(Tail(s_))
+IN Helper(s)
+```
 
 ## Pluscal syntax
 
@@ -402,10 +457,22 @@ variables
 
     Correct ==
         AllDone => counter = NumThreads
+
+    CorrectStateReachable ==
+        <>[](counter = NumThreads)
+
+
+    CounterOnlyIncreases ==
+        [][counter' >= counter]_counter
+
+
+    LockCantBeStolen ==
+        [][\A t, u \in Threads: (lock = t) => (lock' # u)]_lock
+
  end define;
 
 
-process thread \in Threads
+fair process thread \in Threads
 variables
     localCounter = 0;
 begin
@@ -439,3 +506,7 @@ Proof strategies:
 
 -   `OBVIOUS`
 -   `BY DEF`
+-   `BY IsaMT("blast", 60)`
+    -   https://proofs.tlapl.us/doc/web/content/Documentation/Tutorial/Tactics.html
+    -   M: sets the Isabelle tactic (here to "blast")
+    -   T: sets the Isabelle timeout (here to 60 seconds)
