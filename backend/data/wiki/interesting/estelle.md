@@ -113,3 +113,10 @@ Kernfragen
 -   Ich soll ihr Estelle mal vorstellen
 -   Es ist ein Verlust, mit jemandem Schluss zu machen
 -   Ich habe nichts zu verlieren, wenn ich es mit ihr probiere
+-
+
+## Minelli, 11.09.2024
+
+-   Normal, dass man in Mitte von Beziehung weniger Gefühle hat
+-   Es sei offensichtlich, dass ich sie sehr mag
+-   Ich soll es einfach probieren - habe nichts zu verlieren

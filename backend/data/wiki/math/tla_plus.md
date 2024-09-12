@@ -1,0 +1,441 @@
+# TLA+
+
+## Lingo
+
+-   Model values: values that can be changed for every model run via the model-UI. Marked as `CONSTANT` in spec.
+-   Variables: not changeable via ui, but change through course of algorithm. Their evolution is traced in the model-run UI.
+
+## Notes on logic
+
+### Be careful with \E and =>
+
+With $\exists$ you usually don't want $a \to b$ but rather $a \land b$
+$$\forall x \in X: x < 5 \to Q(x)$$
+$$\exists x \in X: x < 5 \land Q(x)$$
+
+### invariants vs intertemporals
+
+-   invariants: check that a state has a good property
+    -   eg: never have an account in overdraft
+-   intertemporals: check that transitions are correct
+    -   eg: a lock can only be released by the process that currently owns it.
+    -   eg: the algorithm eventually terminates
+-   There are two kinds of temporal properties: “safety” properties say our system doesn’t do bad things. “liveness” properties say our system always does a good thing.
+    -   “We do not violate any database constraints” is a safety property.
+    -   “All transactions either complete or roll back” is a liveness property.
+    -   All invariants are safety properties, but not all safety properties are invariants
+    -   Not all safety properties are invariants
+        -   Example: In every behavior, there is a particular server, and that server is online at all points in time.
+
+## Syntax
+
+### Basics
+
+-   `==` assignment
+-   `=` checks equality
+-   `#` checks inequality
+-   `:=` re-assigns a value
+-   `/\` land `\/` lor `~` lnot `=>` then
+
+### Sets
+
+`{1, 2, 3}` set
+
+-   `\union`
+-   `\intersect`
+-   `\`
+-   `\X` cartesian product: `{1, 2} \X {3, 4} = {<<1, 3>>, <<1, 4>>, <<2, 3>>, <<2, 4>>}
+-   `S \subseteq T`: checks if S is a subset of T
+-   `SUBSET S`: returns _all_ subsets of S
+-   `BOOLEAN = {TRUE, FALSE}`
+-   `a..b = {a, a+1, ..., b}`
+-   Mapping sets: `Squares == {x*x: x \in 1..4}`
+-   Filtering sets: `Evens == {x \in 1..4: x % 2 = 0 }`
+-   `Range` converts sequence to set: `Range(seq) == {seq[i]: i \in 1..Len(seq)}`
+-   `CHOOSE` picks the lowest element in a set that satisfies some predicate: `ToClock(seconds) == CHOOSE x \in ClockType: ToSeconds(x) = seconds`
+
+### Functions
+
+functions `F == [x \in S |-> expr]`
+
+-   `DOMAIN F`: gives the source set of the function `F`
+-   ```
+      Prod ==
+          LET S == 1..10 IN
+          [p \in S \X S |-> p[1] * p[2]]
+
+      /* Prod[<<3, 5>>] = 15   ("<<" and ">>" are optional)
+    ```
+
+-   ```
+      ProdAlt == [x, y \in S |-> x * y]
+
+      /* ProdAlt[3, 5] = 15
+    ```
+
+-   ```
+      Zip1(seq1, seq2) ==
+          LET Min(a, b) == IF a < b THEN a ELSE b
+              N == Min(Len(seq1), Len(seq2))
+          IN
+              [i \in 1..N |-> <<seq1[i], seq2[i]>>]
+    ```
+-   Create a set of functions:
+
+    -   `[S -> T]`: denotes the set of all functions whose domain is S and such that $f[x] \in T$ holds for all $x \in S$.
+    -   That means `f \in [S -> T]` is total in S, but all the functions in this set have different codomains (aka ranges).
+    -   A function set of form `[A -> B]` will have $|B|^{|A|}$ elements in it.
+    -   ```
+        Range(f) == {f[x] : x \in DOMAIN f}
+
+        CountMatching(f, val) ==
+              Cardinality({key \in DOMAIN f: f[key] = val})
+
+        Sort(seq) ==
+            CHOOSE sorted \in [DOMAIN seq -> Range(seq)]:
+                /\ \A i \in DOMAIN seq:
+                    CountMatching(seq, seq[i]) = CountMatching(sorted, seq[i])
+                /\ IsSorted(sorted)
+        ```
+
+-   `f @@ g` merges two functions, preferring keys in `f`.
+-   `a :> b` is special syntax for a function with a single-value-domain ({a}) and a single-value-codomain ({b}), i.e. `[x \in {a} |-> b]`
+
+### Sequences aka lists
+
+`<<a, b, c>>` list (btw, lists are 1-indexed)
+
+-   actually just syntactic sugar for a function mapping indices `1..n` (the domain) to values
+-   `Append(S, "a")`
+-   `Head(S)`
+-   `Tail(S)`
+-   `Len(S)`
+-   `SubSeq(S, 1, 3)`
+
+### Structures
+
+-   actually just syntactic sugar for a function mapping from some string-keys (the domain) to some values
+-   `struct == [a |-> 1, b |-> {}]`
+-   `struct["a"] = 1` or `struct.a = 1`
+-   sets of structures:
+    -   `BankTransactionType == [acct: Accounts, amnt: 1..10, type: {"deposit", "withdraw"}]`
+    -   This is the set of all structures where s.acct \in Accounts, s.amnt \in 1..10, etc.
+-   `DOMAIN`: gets all the keys of a struct
+-   `RangeStruct(struct) == {struct[key]: key \in DOMAIN struct}`: converts a struct to a set
+
+### Control structures
+
+-   `IF ... ELSE ...`
+-   `LET ... IN ...`
+
+    -   ```
+        ClockType == (0..23) \X (0..59) \X (0..59)
+
+        ToClock(seconds) ==
+            LET seconds_per_day == 86400
+            IN CHOOSE x \in ClockType: ToSeconds(x) = seconds % seconds_per_day
+        ```
+
+    -   ```
+          ToClock2(seconds) ==
+              LET
+                  h == seconds \div 3600
+                  h_left == seconds % 3600
+                  m == h_left \div 60
+                  m_left == h_left % 60
+                  s == m_left
+              IN
+                  <<h, m, s>>
+        ```
+
+-   `CONSTANT`: define a variable not in spec, but via UI in model-wizard
+-   `ASSUME`
+
+### Temporal properties
+
+The following hold for within one behavior:
+
+-   always true: `[]P`
+    -   `~[]P`: "In every behavior, there is at least one state where P is false".
+        -   _Doesn't mean_: "There is at least one behavior which has at least one state where P is false".
+    -   `~[]~P`: in every behavior, P holds at least once ... aka `<>P`
+-   eventually true: `<>P`
+    -   might become false again later
+    -   `<>[]P`: P is eventually true and then stays true
+-   leads to: `~>P`
+
+## Pluscal syntax
+
+### Variables
+
+-   `variable` at the beginning of your code, list all variables used
+    -   ```
+        variable
+            seq \in S \X S \X S \X S;
+            index = 1;
+            seen = {};
+            is_unique = TRUE;
+        ```
+    -   inside a variable block, we use a single `=` for assignment.
+    -   variables using `\in` will pick a different member for every run
+    -   I think that assignment `==` happens in TLA+ but outside of PlusCal, so all `==` that you need to make should occur before `(*--algorithm`.
+    -   all those variables will be watched in the debug-view, plus an additional `pc` variable, which contains the name of the current label.
+    -   `CONSTANT`: like a variable, but can be configured via the model ui. (Actually not pluscal, but TLA+ syntax)
+
+### Definitions
+
+-   `define ... end define;`
+    -   specify here all your operators aka predicates aka invariants:
+    -   ```
+        define
+            TypeInvariant ==
+                /\ is_unique \in BOOLEAN
+                /\ seen \subseteq S
+                /\ index \in 1..Len(seq)+1
+        end define;
+        ```
+
+### Labels
+
+Labels: an atomic unit of work. Code inside a label cannot be interrupted, but between labels it can.
+
+-   every statement must belong to a label
+-   a variable can only be assigned to once inside of one label
+    -   special case: lists
+        -   technically, you cannot update two elements of a list within one label
+        -   but there is the `simultaneous update` operator `||`
+        -   ```
+            Label:
+                seq[1] := seq[1] + 1 ||
+                seq[2] := seq[2] - 1;
+            ```
+-   labels are not really nested. Label `B` can be nested inside an `if` statement inside label `A`, but its not like label `B` then disappears once the `if` statement is done - it remains active until the control-flow reaches another label.
+-   `pc`: the program-counter; shows the name of the current label. If inside of a `process`, `pc` is indexed by the processes instance-name
+-   `await` is a restriction on when the label can run. A label can only run when all `await`s evaluate to true.
+    -   don’t use updated variables in await statements
+-   `+` appended after label: makes label "strongly fair"
+
+### Control flow
+
+-   `while ... do ... end while;`
+    -   a while loop may be interupted on every iteration
+-   `with`
+    -   `with x \in set` blocks a label from running if `set` is empty.
+-   `skip`: noop
+-   Either or: is a non-deterministic "pick one of the following":
+-   ```
+    either
+        approve_pull_request();
+    or
+        request_changes();
+    or
+        reject_request();
+    end either;
+    ```
+-   `assert someExpr`
+    -   When an assert fails, the error trace will end with the step _before_ the failed assert; whereas if an invariant fails, the error trace goes all the way up to and including the failing step.
+-   `goto L`: jumps to label L. A label must immediately follow any goto statement.
+-   `macro ... begin ...; end macro;` macros are just textual substitutions that accept parameters. Macros cannot contain labels
+
+### Processes
+
+`process processName = "instanceName" [variables ...;] begin ...; end process;`
+
+-   Note that you can have many processes and for each process many instances
+-   `instanceName`s must be comparable, so the should be integers, strings or model-values.
+-   The variable `pc` is actually indexable by `instanceName` like so: `currentProgramCounter := pc["instanceName"]`
+-   Processes can get their own instance-name with the special variable `self`
+    -   This only works if the processes instance-name comes from a set. If the instance name is instead hardcoded with a `=`, just use the hardcoded value instead.
+-   `fair process processName`: "weakly fair"; means that this process cannot crash (aka. stutter = remain in same state) _forever_
+-   `fair+`: "strongly fair"
+    -   weakly fair: if the process is always online (= never offline), it will eventually run
+    -   strongly fair: if the process is online infinitely often (even if its also offline infinitely often), it will eventually run
+    -   the `+` can also be applied to individual labels
+
+## Examples
+
+### Duplicate checker
+
+```TLA+
+EXTENDS Integers, Sequences, TLC, FiniteSets
+
+S == 1..10
+
+(*--algorithm duplicates
+
+variable seq \in S \X S \X S \X S;
+    index = 1;
+    seen = {};
+    is_unique = TRUE;
+
+define
+  TypeInvariant ==
+    /\ is_unique \in BOOLEAN
+    /\ seen \subseteq S
+    /\ index \in 1..Len(seq)+1
+
+   IsUnique(s) ==
+        \A i, j \in 1..Len(s):
+        i # j => s[i] # s[j]
+
+   IsCorrect ==
+        pc = "Done" => (IsUnique(seq) => is_unique)
+end define;
+
+begin
+
+    Iterating:
+        while index <= Len(seq) do
+            if seq[index] \in seen then
+                is_unique := FALSE;
+            else
+                seen := seen \union {seq[index]};
+            end if;
+            index := index + 1;
+        end while;
+
+
+end algorithm; *)
+```
+
+### Concurrent write and read from queue
+
+```TLA+
+EXTENDS Integers, Sequences, TLC
+
+(* --algorithm concurrent
+
+
+variables
+    queue = <<>>;
+    total = 0;
+    maxWrites = 3;
+
+
+process writer = 1
+variables
+    write = 0;
+begin
+    AddToQueue:
+        while write < maxWrites do
+            queue := Append(queue, 1);
+            write := write + 1;
+        end while;
+end process;
+
+process reader = 2
+begin
+    TakeFromQueue:
+        if queue # <<>> then
+            total := total + Head(queue);
+            queue := Tail(queue);
+        end if;
+end process;
+
+end algorithm; *)
+
+```
+
+### Showcasing a race condition
+
+-   Objective: have each thread increment the counter
+-   correctness: this algorithm should cause the counter in the end to equal the number of threads
+-   Observed race condition: because counter can become outdated after getting its current value, you can end up with a too low counter
+
+```TLA+
+----------------------------- MODULE concurrent -----------------------------
+EXTENDS Integers, Sequences, TLC
+
+
+NumThreads == 2
+Threads == 1..NumThreads
+
+
+(* --algorithm concurrent
+
+variables
+    counter = 0;
+
+ define
+    AllDone ==
+        \A t \in Threads: pc[t] = "Done"
+
+    Correct ==
+        AllDone => counter = NumThreads
+ end define;
+
+
+process thread \in Threads
+variables
+    localCounter = 0;
+begin
+    GetCounter:
+        localCounter := counter;
+    IncCounter:
+        counter := localCounter + 1;
+end process;
+
+
+end algorithm; *)
+```
+
+Fixing the race condition with a lock:
+
+```TLA+
+EXTENDS Integers, Sequences, TLC
+
+CONSTANT NULL
+
+NumThreads == 2
+Threads == 1..NumThreads
+
+
+(* --algorithm concurrent
+
+variables
+    counter = 0;
+    lock = NULL;
+
+ define
+    AllDone ==
+        \A t \in Threads: pc[t] = "Done"
+
+    Correct ==
+        AllDone => counter = NumThreads
+ end define;
+
+
+process thread \in Threads
+variables
+    localCounter = 0;
+begin
+    GetLock:
+        await lock = NULL;
+        lock := self;
+    GetCounter:
+        localCounter := counter;
+    IncCounter:
+        counter := localCounter + 1;
+    ReleaseLock:
+        lock := NULL;
+end process;
+
+
+end algorithm; *)
+```
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+# TLAPS
+
+-   https://sriramsami.com/tlaps/
+-   https://lamport.azurewebsites.net/pubs/proof.pdf
+
+Proof strategies:
+
+-   `OBVIOUS`
+-   `BY DEF`
