@@ -221,9 +221,9 @@ SumSeq(s) == LET
 IN Helper(s)
 ```
 
-## Pluscal syntax
+# Pluscal
 
-### Variables
+## Variables
 
 -   `variable` at the beginning of your code, list all variables used
     -   ```
@@ -239,7 +239,7 @@ IN Helper(s)
     -   all those variables will be watched in the debug-view, plus an additional `pc` variable, which contains the name of the current label.
     -   `CONSTANT`: like a variable, but can be configured via the model ui. (Actually not pluscal, but TLA+ syntax)
 
-### Definitions
+## Definitions
 
 -   `define ... end define;`
     -   specify here all your operators aka predicates aka invariants:
@@ -252,7 +252,7 @@ IN Helper(s)
         end define;
         ```
 
-### Labels
+## Labels
 
 Labels: an atomic unit of work. Code inside a label cannot be interrupted, but between labels it can.
 
@@ -272,7 +272,7 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
     -   don’t use updated variables in await statements
 -   `+` appended after label: makes label "strongly fair"
 
-### Control flow
+## Control flow
 
 -   `while ... do ... end while;`
     -   a while loop may be interupted on every iteration
@@ -294,7 +294,7 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
 -   `goto L`: jumps to label L. A label must immediately follow any goto statement.
 -   `macro ... begin ...; end macro;` macros are just textual substitutions that accept parameters. Macros cannot contain labels
 
-### Processes
+## Processes
 
 `process processName = "instanceName" [variables ...;] begin ...; end process;`
 
@@ -308,6 +308,13 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
     -   weakly fair: if the process is always online (= never offline), it will eventually run
     -   strongly fair: if the process is online infinitely often (even if its also offline infinitely often), it will eventually run
     -   the `+` can also be applied to individual labels
+-
+
+## Things that I'm not sure about
+
+    - I think that you can't have a `LET` statement inside an `either` statement
+    - I think that you can't have a `:=` update inside of a `define` block
+    - `await` inside an `either` block will make choosing this option impossible ... but it doesn't block other options from running
 
 ## Examples
 
@@ -498,6 +505,72 @@ end algorithm; *)
 <br/>
 <br/>
 <br/>
+
+### Die hard 3
+
+```TLA+
+EXTENDS Integers, TLC, Sequences, FiniteSets
+
+smallJugMax == 3
+largeJugMax == 5
+
+(* --algorithm diehard
+
+variables
+    smallJug = 0;
+    largeJug = 0;
+
+define
+    min(set) ==
+        CHOOSE e \in set: \A o \in set: e <= o
+
+    has4gals ==
+        smallJug = 4 \/ largeJug = 4
+
+    no4gals == ~has4gals
+
+    eventually4gals == <>has4gals
+end define;
+
+
+fair process dieHard = 1
+variables
+    freeSpaceLarge = 0;
+    freeSpaceSmall = 0;
+    transfered = 0;
+begin
+    pouring:
+        either
+            (* empty small *)
+            smallJug := 0
+        or
+            (* empty large *)
+            largeJug := 0
+        or
+            (* fill small *)
+            smallJug := smallJugMax
+        or
+            (*  fill large *)
+            largeJug := largeJugMax
+        or
+            (* pour small in large *)
+            freeSpaceLarge := largeJugMax - largeJug;
+            transfered := min({smallJug, freeSpaceLarge});
+            smallJug := smallJug - transfered;
+            largeJug := largeJug + transfered;
+        or
+            (* pour large in small *)
+            freeSpaceSmall := smallJugMax - smallJug;
+            transfered := min({largeJug, freeSpaceSmall});
+            smallJug := smallJug + transfered;
+            largeJug := largeJug - transfered;
+        end either;
+    goto pouring;
+end process;
+
+
+end algorithm; *)
+```
 
 # TLAPS
 
