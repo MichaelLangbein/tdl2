@@ -16,6 +16,9 @@
 
 ## Routing
 
+Some background: it used to be that nextjs used the `pages-router` instead of the app-router.
+Back then instead of the app-dir, there was a pages dir.
+
 -   app (this name is required)
     -   posts (any name, any nesting ... folders in (parenthesis) won't show up as part of route)
         -   page.tsx (this name is required to make this a page)
@@ -55,6 +58,7 @@ Routing functions:
 ## Forms and server-actions
 
 https://www.youtube.com/watch?v=O94ESaJtHtM
+https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#forms
 
 -   `form.action={onSubmit}` instead of `form.onSubmit(e => e.preventDefault; ...)` (JS) and instead of `form.action="someUrl"` (PHP)
 -   `onSubmit = async (formData: FormData) => { "use server"; await someServerAction(); revalidatePath("/posts"); }`
@@ -82,6 +86,79 @@ export default function Jokes() {
                 <button type="submit">OK</button>
             </form>
         </>
+    );
+}
+```
+
+### Forms, more expansive:
+
+page.tsx
+
+```tsx
+import { getJokes } from "../server/actions";
+import AddJokeForm from "./AddJokeForm";
+
+export default async function Jokes() {
+    const jokes = await getJokes();
+
+    return (
+        <>
+            <h1>Add new joke</h1>
+            <div>
+                <AddJokeForm></AddJokeForm>
+            </div>
+
+            <h1>Jokes will be listed here</h1>
+            <div>
+                <ul>
+                    {jokes.map((j) => (
+                        <li key={j.body}>{j.body}</li>
+                    ))}
+                </ul>
+            </div>
+        </>
+    );
+}
+```
+
+AddJokeForm.tsx
+
+```tsx
+import { addJoke } from "../server/actions";
+import FormSubmitButton from "./FormSubmitButton";
+
+export default function AddJokeForm() {
+    return (
+        <form action={addJoke}>
+            <input type="text" name="body" />
+            <FormSubmitButton></FormSubmitButton>
+        </form>
+    );
+}
+```
+
+FormSubmitButton.tsx
+
+```tsx
+"use client";
+import { useFormStatus } from "react-dom";
+
+/**
+ * useFormStatus is weird.
+ *
+ * It must be used in a child component of a form
+ * (*not* in the same component),
+ * and that form must use the `action` attribute,
+ * and it must be a client-component.
+ * Talk about a leaky abstraction.
+ */
+
+export default function FormSubmitButton() {
+    const status = useFormStatus();
+    return (
+        <button type="submit" aria-disabled={status.pending}>
+            {status.pending ? "... pending ..." : "OK"}
+        </button>
     );
 }
 ```
@@ -149,6 +226,9 @@ Next supports css _modules_: any css file ending in `.module.css` is going to be
 -   `useRouter` - Enables navigation between routes within client components programmatically. There are multiple methods you can use.
 
 ## Auth
+
+https://www.youtube.com/watch?v=w2h54xz6Ndw&t=427s
+https://www.youtube.com/watch?v=DJvM2lSPn6w
 
 Add authentication with six simple steps :S
 
