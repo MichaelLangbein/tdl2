@@ -5,14 +5,6 @@
 -   Model values: values that can be changed for every model run via the model-UI. Marked as `CONSTANT` in spec.
 -   Variables: not changeable via ui, but change through course of algorithm. Their evolution is traced in the model-run UI.
 
-## Notes on logic
-
-### Be careful with \E and =>
-
-With $\exists$ you usually don't want $a \to b$ but rather $a \land b$
-$$\forall x \in X: x < 5 \to Q(x)$$
-$$\exists x \in X: x < 5 \land Q(x)$$
-
 ### invariants vs intertemporals
 
 -   invariants: check that a state has a good property
@@ -43,15 +35,22 @@ $$\exists x \in X: x < 5 \land Q(x)$$
 
 -   unordered, no duplicates
 -   `\union`
+    -   aka `\cup`
 -   `\intersect`
--   `\`
+    -   aka `\cap`
+-   `\`: except
 -   `\X` cartesian product: `{1, 2} \X {3, 4} = {<<1, 3>>, <<1, 4>>, <<2, 3>>, <<2, 4>>}
 -   `S \subseteq T`: checks if S is a subset of T
--   `SUBSET S`: returns _all_ subsets of S
+-   `SUBSET S`: returns _all_ subsets of S, aka. the _power set_
+    -   these two expressions are equal: `S \subseteq T` and `S \in SUBSET T`
+-   The operator `UNION` is defined so that for any set S whose elements are sets, UNION S equals the union of all the elements of S.
+    -   Thus, these two sets are equal: `UNION {S1, S2, ... , S99}` and `S1 \cup S2 \cup  ... \cup S99`
+    -   In general, the set UNION S is the _set of all elements of elements_ of S. Kind of like `.flat()`, I think.
 -   `BOOLEAN = {TRUE, FALSE}`
 -   `a..b = {a, a+1, ..., b}`
 -   Mapping sets: `Squares == {x*x: x \in 1..4}`
 -   Filtering sets: `Evens == {x \in 1..4: x % 2 = 0 }`
+    -   `Primes == {x \in Int: \A y \in 3..(x-1): a % y # 0 }`
 -   `Range` converts sequence to set: `Range(seq) == {seq[i]: i \in 1..Len(seq)}`
 -   `CHOOSE` picks the lowest element in a set that satisfies some predicate: `ToClock(seconds) == CHOOSE x \in ClockType: ToSeconds(x) = seconds`
 
@@ -112,6 +111,7 @@ functions `F == [x \in S |-> expr]`
 
 `<<a, b, c>>` list (btw, lists are 1-indexed)
 
+-   aka tuple
 -   with repetition, with order
 -   actually just syntactic sugar for a function mapping indices `1..n` (the domain) to values
 -   `Append(S, "a")`
@@ -275,9 +275,10 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
 ## Control flow
 
 -   `while ... do ... end while;`
-    -   a while loop may be interupted on every iteration
--   `with`
+    -   a while loop may be interrupted on every iteration
+-   `with ... do ... end with;`
     -   `with x \in set` blocks a label from running if `set` is empty.
+    -   randomly picks one x from set
 -   `skip`: noop
 -   Either or: is a non-deterministic "pick one of the following":
 -   ```
@@ -317,6 +318,69 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
     - `await` inside an `either` block will make choosing this option impossible ... but it doesn't block other options from running
 
 ## Examples
+
+### Get all arrays of elements (a, b, c) of up to 5 members
+
+```TLA+
+EXTENDS Integers
+
+
+Permutations ==
+    UNION {                                     ; .flat()
+            [1..j -> {"a","b","c"}]             ; all arrays of length j with range a,b,c
+            : j \in 1..5
+        }
+```
+
+### Find max
+
+```TLA+
+EXTENDS Integers, TLC, Sequences, FiniteSets
+
+list == <<1, 2>>
+
+(* --algorithm session2
+
+    variable
+        index = 0,
+        candidate = 0,
+        currentMax = 0;
+
+    define
+        range(seq) ==
+            {seq[i]: i \in 1..Len(seq)}
+
+        indexInRange ==
+            index \in 0..(Len(list)+1)
+
+        isMax ==
+            \A x \in range(list): currentMax >= x
+
+        eventuallyIsMax ==
+            <>[]isMax
+
+        inSeq ==
+            currentMax \in range(list)
+
+        eventuallyInSeq ==
+            <>[]inSeq
+    end define;
+
+    fair process p = 1
+    begin
+        Step:
+            while index < Len(list) do
+                index := index + 1;
+                candidate := list[index];
+                if candidate > currentMax then
+                    currentMax := candidate;
+                end if;
+            end while;
+   end process;
+
+end algorithm;
+*)
+```
 
 ### Duplicate checker
 
@@ -470,10 +534,8 @@ variables
     CorrectStateReachable ==
         <>[](counter = NumThreads)
 
-
     CounterOnlyIncreases ==
         [][counter' >= counter]_counter
-
 
     LockCantBeStolen ==
         [][\A t, u \in Threads: (lock = t) => (lock' # u)]_lock
@@ -537,7 +599,7 @@ fair process dieHard = 1
 variables
     freeSpaceLarge = 0;
     freeSpaceSmall = 0;
-    transfered = 0;
+    transferred = 0;
 begin
     pouring:
         either
@@ -555,15 +617,15 @@ begin
         or
             (* pour small in large *)
             freeSpaceLarge := largeJugMax - largeJug;
-            transfered := min({smallJug, freeSpaceLarge});
-            smallJug := smallJug - transfered;
-            largeJug := largeJug + transfered;
+            transferred := min({smallJug, freeSpaceLarge});
+            smallJug := smallJug - transferred;
+            largeJug := largeJug + transferred;
         or
             (* pour large in small *)
             freeSpaceSmall := smallJugMax - smallJug;
-            transfered := min({largeJug, freeSpaceSmall});
-            smallJug := smallJug + transfered;
-            largeJug := largeJug - transfered;
+            transferred := min({largeJug, freeSpaceSmall});
+            smallJug := smallJug + transferred;
+            largeJug := largeJug - transferred;
         end either;
     goto pouring;
 end process;
@@ -571,6 +633,27 @@ end process;
 
 end algorithm; *)
 ```
+
+# Caveats
+
+## Be careful with \E and =>
+
+With $\exists$ you usually don't want $a \to b$ but rather $a \land b$
+$$\forall x \in X: x < 5 \to Q(x)$$
+$$\exists x \in X: x < 5 \land Q(x)$$
+
+## Sets defined as subsets vs constructively
+
+Let's compare these two ways of defining the set of even integers:
+
+```
+EvenInt1  ==  {n \in Int : n % 2 = 0}
+EvenInt2  ==  {2 * n  : n \in Int}
+```
+
+They define EvenInt1 and EvenInt2 to both equal the same set—the set of all integers that are multiples of 2. The first defines a subset of Int; the second builds a new set of elements from the elements of Int. I don't know of any standard names for these two ways of describing sets, so I'll call the first subsetting and the second building.
+
+While the definitions of EvenInt1 and EvenInt2 are mathematically equivalent, TLC handles them differently. In particular, TLC can evaluate the expression 42 \in EvenInt1, but not the expression 42 \in EvenInt2. To tell if a value is an element of a set described with building, TLC has to construct the entire set, which it can do only if the set is finite.
 
 # TLAPS
 
