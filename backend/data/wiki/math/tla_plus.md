@@ -1,9 +1,16 @@
 # TLA+
 
+Given a specification, TLA+: - _doesn't_ run all possible executions of that spec - but rather computes a graph of all reachable states
+
+The difference is that TLA+ can discover infinite repetitions, even cycles in that graph.
+Using that information, it can notify you when an algorithm won't ever terminate.
+
 ## Lingo
 
 -   Model values: values that can be changed for every model run via the model-UI. Marked as `CONSTANT` in spec.
 -   Variables: not changeable via ui, but change through course of algorithm. Their evolution is traced in the model-run UI.
+-   Termination is halting when we want the algorithm to halt.
+-   Deadlock is halting when we don't want it to halt.
 
 ### invariants vs intertemporals
 
@@ -159,7 +166,7 @@ functions `F == [x \in S |-> expr]`
 
 -   `CONSTANT`: define a variable not in spec, but via UI in model-wizard
 -   `VARIABLE`: identical to PlusCal's `variable`
--   `ASSUME`
+-   `ASSUME`: identical to PlusCal's `assert`. Commonly used to restrict `CONSTANT` to have certain values.
 -   `LAMBDA`: for anonymous operators
 -   ```
     Fizzbuzz(x) ==
@@ -236,7 +243,7 @@ IN Helper(s)
     -   inside a variable block, we use a single `=` for assignment.
     -   variables using `\in` will pick a different member for every run
     -   I think that assignment `==` happens in TLA+ but outside of PlusCal, so all `==` that you need to make should occur before `(*--algorithm`.
-    -   all those variables will be watched in the debug-view, plus an additional `pc` variable, which contains the name of the current label.
+    -   all those variables will be watched in the debug-view, plus an additional `pc` variable, which contains the name of the next label to be executed.
     -   `CONSTANT`: like a variable, but can be configured via the model ui. (Actually not pluscal, but TLA+ syntax)
 
 ## Definitions
@@ -267,7 +274,7 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
                 seq[2] := seq[2] - 1;
             ```
 -   labels are not really nested. Label `B` can be nested inside an `if` statement inside label `A`, but its not like label `B` then disappears once the `if` statement is done - it remains active until the control-flow reaches another label.
--   `pc`: the program-counter; shows the name of the current label. If inside of a `process`, `pc` is indexed by the processes instance-name
+-   `pc`: the program-counter; shows the name of the next label to be executed. If inside of a `process`, `pc` is indexed by the processes instance-name
 -   `await` is a restriction on when the label can run. A label can only run when all `await`s evaluate to true.
     -   don’t use updated variables in await statements
 -   `+` appended after label: makes label "strongly fair"
