@@ -127,6 +127,7 @@ functions `F == [x \in S |-> expr]`
 -   `Len(S)`
 -   `SubSeq(S, 1, 3)`
 -   `seq1 \o seq2` concatenates two sequences
+-   Seq(set) is the set of all sequences with elements in set
 
 ### Structures
 
