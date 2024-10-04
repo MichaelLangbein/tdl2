@@ -130,11 +130,22 @@ Dijkstra lists the following requirements for a lock:
 
 1. **Mutex**: $\forall p, q \in Procs: p:\text{critical} \land q:\text{critical} \to p = q$
 2. Any processes may take arbitrarily long to execute its noncritical section, and may even halt there. Other processes must be able to enter the critical section without having to wait for those processes to complete the noncritical section.
-    1. in TLA+ this means that `NonCriticalSection` must not be fair, in combination with
-    2. `everyProcessGoesCritical == \A p \in Procs: <>(pc[p] = "CriticalSection")` (I _think_ thats correct)
-    3. Maybe this can be written better with `ENABLED`?
+    - in TLA+ this means that `NonCriticalSection` must not be fair, in combination with
+    - ```
+       noWaitingOnOthers ==
+        \A p, q \in Procs:
+            <>[](pc[p] = "NonCriticalSection") /\ \lnot <>[](pc[q] = "NonCriticalSection")
+                => <>(pc[q] = "CriticalSection")
+      ```
+    - Maybe this can be written better with `ENABLED`?
 3. There exists no execution, no matter how improbable it may be, in which at some point a process is in the entry code but no process is ever in the critical section.
-    1. $\forall p \in Procs: \diamond pc[p] = \text{Enter} \to \exists q \in Procs: \diamond pc[q] = \text{CriticalSection}$
+    - $\forall p \in Procs: \diamond pc[p] = \text{Enter} \to \exists q \in Procs: \diamond pc[q] = \text{CriticalSection}$
+4. If no process remains forever in the critical section, then any process that begins executing the entry code eventually enters the critical section.
+    - ```
+        ifNotStuckCriticalThenEventuallyCritical ==
+            (\A p \in Procs: \lnot <>[](pc[p] = "CriticalSection")) =>
+                 \A p \in Procs: (pc[p] = "Entry" ~> pc[p] = "CriticalSection")
+      ```
 
 ### Example of violating Dijkstra's second condition
 

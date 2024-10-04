@@ -9,8 +9,9 @@ Using that information, it can notify you when an algorithm won't ever terminate
 
 -   Model values: values that can be changed for every model run via the model-UI. Marked as `CONSTANT` in spec.
 -   Variables: not changeable via ui, but change through course of algorithm. Their evolution is traced in the model-run UI.
--   Termination is halting when we want the algorithm to halt.
--   Deadlock is halting when we don't want it to halt.
+-   **Termination** is halting when we want the algorithm to halt.
+-   **Deadlock** is halting when we don't want it to halt.
+-   **Livelock**: The situation in which processes don't deadlock but keep taking steps without making progress
 
 ### invariants vs intertemporals
 
