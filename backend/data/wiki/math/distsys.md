@@ -95,7 +95,9 @@ end process;
 end algorithm; *)
 ```
 
-## Dijkstra conditions on mutexes
+## Dijkstra conditions on locks
+
+https://lamport.azurewebsites.net/tla/tutorial/session8.html
 
 ```TLA+
 
@@ -106,11 +108,11 @@ define
 end define;
 
 
-process Alg \in Procs
+fair process Alg \in Procs
 begin
     Loop:
         while TRUE do
-            NonCriticalSection:
+            NonCriticalSection:-    (*Note that this label is _un_fair*)
                 skip;
             Enter:
                 skip;
@@ -128,7 +130,36 @@ Dijkstra lists the following requirements for a lock:
 
 1. **Mutex**: $\forall p, q \in Procs: p:\text{critical} \land q:\text{critical} \to p = q$
 2. Any processes may take arbitrarily long to execute its noncritical section, and may even halt there. Other processes must be able to enter the critical section without having to wait for those processes to complete the noncritical section.
-    1. in TLA+ this means that `NonCriticalSection` must not be fair
+    1. in TLA+ this means that `NonCriticalSection` must not be fair, in combination with
+    2. `everyProcessGoesCritical == \A p \in Procs: <>(pc[p] = "CriticalSection")` (I _think_ thats correct)
+    3. Maybe this can be written better with `ENABLED`?
+3. There exists no execution, no matter how improbable it may be, in which at some point a process is in the entry code but no process is ever in the critical section.
+    1. $\forall p \in Procs: \diamond pc[p] = \text{Enter} \to \exists q \in Procs: \diamond pc[q] = \text{CriticalSection}$
+
+### Example of violating Dijkstra's second condition
+
+```TLA+
+turn = 1
+
+process p \in 1..N begin
+    NonCriticalSection:
+        ...
+    Enter:
+        await turn = self;
+    CriticalSection:
+        ...
+    Exit:
+        turn := turn + 1;
+end process;
+```
+
+Prove that a process can be held up from entering critical by another process stuck in non-critical:
+
+-   Let p_1, p_2 \in Procs
+-   Let turn = 1
+-   Assume p_1 hangs at NonCriticalSection
+    -   thus turn can never become 2
+    -   thus p_2 can never complete Enter
 
 # Theorems
 

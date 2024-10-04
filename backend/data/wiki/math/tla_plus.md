@@ -120,14 +120,15 @@ functions `F == [x \in S |-> expr]`
 
 -   aka tuple
 -   with repetition, with order
--   actually just syntactic sugar for a function mapping indices `1..n` (the domain) to values
+-   actually just syntactic sugar for a function mapping indices `1..n` (the domain) to values: `<<a, b, c>> = [i \in 1..3 |-> IF i = 1 THEN "a" ELSE IF i = 2 THEN "b" ELSE "c"]`
 -   `Append(S, "a")`
 -   `Head(S)`
 -   `Tail(S)`
 -   `Len(S)`
 -   `SubSeq(S, 1, 3)`
 -   `seq1 \o seq2` concatenates two sequences
--   Seq(set) is the set of all sequences with elements in set
+-   `Seq(set)` is the set of all sequences with elements in set
+-   `Range` converts sequence to set: `Range(seq) == {seq[i]: i \in 1..Len(seq)}`
 
 ### Structures
 
@@ -193,9 +194,14 @@ The following hold for within one behavior:
 -   leads to: `P ~> Q`
     -   If P is true, Q will eventually be true (in the same or a future time step)
     -   P ~> Q is triggered every time P is true. Even if the formula was satisfied before, if P becomes true again, then Q has to become true again too.
+-   `ENABLED A` is true if `A` can be true this step, ie it can describe the next step.
 
 ### Action properties
 
+-   `[statement]_vrbl`:
+    -   means $vrbl' \neq vrbl \to statement$
+-   `<<statement>>_vrbl`:
+    -   means $vrbl' \neq vrbl \land statement$
 -   `[][x' > x]_x`: it's always true (`[]`) that x only increases (`x' > x`) assuming that x has changed at all (`[...]_x`)
     -   a reason why x might not have changed is stuttering
 -   Action properties can account for one of multiple values changing:
@@ -206,6 +212,29 @@ The following hold for within one behavior:
                     values[c]' >= values[c]
               ]_values
     ```
+
+### Fairness formally
+
+-   Weak fairness
+
+    -   `WF_v(A) == <>[](ENABLED <<A>>_v) => []<><<A>>_v`
+    -   WF_v(A) (A is weakly fair): If it is eventually always true that the A action can happen (in a way that changes v), then it will eventually happen (and change v).
+    -   My informal definition: if the process is always online (= never offline), it will eventually run
+
+-   Strong fairness
+    -   `SF_v(A) == []<>(ENABLED <<A>>_v) => []<><<A>>_v`
+    -   SF_v(A) (A is strongly fair): If it is always eventually true that the A action can happen (in a way that changes v), then it will eventually happen (and change v).
+    -   My informal definition: if the process is online infinitely often (even if its also offline infinitely often), it will eventually run
+
+Syntax:
+
+-   https://d3s.mff.cuni.cz/f/teaching/nswi101/old/pluscal.pdf
+-   `fair algorithm`
+-   `fair+ algorithm`
+-   `fair process`
+-   `fair+ process`
+-   `label:+`: make label strongly fair
+-   `label:-`: make label unfair
 
 ### Recursion
 
@@ -259,6 +288,7 @@ IN Helper(s)
                 /\ index \in 1..Len(seq)+1
         end define;
         ```
+    -   the contents of define are written in TLA+, not in plusCal
 
 ## Labels
 
@@ -282,6 +312,7 @@ Labels: an atomic unit of work. Code inside a label cannot be interrupted, but b
 
 ## Control flow
 
+-   `if ... else ... end if;`
 -   `while ... do ... end while;`
     -   a while loop may be interrupted on every iteration
 -   `with ... do ... end with;`
