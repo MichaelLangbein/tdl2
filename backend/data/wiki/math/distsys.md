@@ -99,15 +99,9 @@ end algorithm; *)
 
 https://lamport.azurewebsites.net/tla/tutorial/session8.html
 
+Dijkstra defines a non-critical section (which may lag arbitrarily long), an enter-section, a critical section and an exit section.
+
 ```TLA+
-
-define
-    mutualExclusion ==
-        \A p, q \in Procs:
-            (pc[p] = "CriticalSection" /\ pc[q] = "CriticalSection") => p = q
-end define;
-
-
 fair process Alg \in Procs
 begin
     Loop:
@@ -128,23 +122,38 @@ end algorithm; *)
 
 Dijkstra lists the following requirements for a lock:
 
-1. **Mutex**: $\forall p, q \in Procs: p:\text{critical} \land q:\text{critical} \to p = q$
+1. **Mutex**:
+    - $\forall p, q \in Procs: p:\text{critical} \land q:\text{critical} \to p = q$
+    - ```TLA+
+        mutualExclusion ==
+            \A p, q \in Procs:
+                (pc[p] = "CriticalSection" /\ pc[q] = "CriticalSection") => p = q
+      ```
 2. Any processes may take arbitrarily long to execute its noncritical section, and may even halt there. Other processes must be able to enter the critical section without having to wait for those processes to complete the noncritical section.
+
     - in TLA+ this means that `NonCriticalSection` must not be fair, in combination with
-    - ```
-       noWaitingOnOthers ==
+    - $\forall p,q \in Procs: p:\text{stuck} \land \lnot q:\text{stuck} \to \diamond pc[q] = \text{CriticalSection}$
+    - In code:
+        ```
+        noWaitingOnOthers ==
         \A p, q \in Procs:
             <>[](pc[p] = "NonCriticalSection") /\ \lnot <>[](pc[q] = "NonCriticalSection")
                 => <>(pc[q] = "CriticalSection")
-      ```
+        ```
     - Maybe this can be written better with `ENABLED`?
+
 3. There exists no execution, no matter how improbable it may be, in which at some point a process is in the entry code but no process is ever in the critical section.
     - $\forall p \in Procs: \diamond pc[p] = \text{Enter} \to \exists q \in Procs: \diamond pc[q] = \text{CriticalSection}$
+    - ```TLA+
+        ifEnterThenCritical ==
+            \A p \in Procs:
+            <>(pc[p] = "EnterIntent") => \E q \in Procs: <>(pc[q] = "CriticalSection")
+      ```
 4. If no process remains forever in the critical section, then any process that begins executing the entry code eventually enters the critical section.
-    - ```
-        ifNotStuckCriticalThenEventuallyCritical ==
-            (\A p \in Procs: \lnot <>[](pc[p] = "CriticalSection")) =>
-                 \A p \in Procs: (pc[p] = "Entry" ~> pc[p] = "CriticalSection")
+    - ```TLA+
+      ifNotStuckCriticalThenEventuallyCritical ==
+          (\A p \in Procs: \lnot <>[](pc[p] = "CriticalSection")) =>
+              \A p \in Procs: pc[p] = "Entry" ~> pc[p] = "CriticalSection"
       ```
 
 ### Example of violating Dijkstra's second condition
