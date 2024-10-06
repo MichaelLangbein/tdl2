@@ -61,6 +61,7 @@ Using that information, it can notify you when an algorithm won't ever terminate
     -   `Primes == {x \in Int: \A y \in 3..(x-1): a % y # 0 }`
 -   `Range` converts sequence to set: `Range(seq) == {seq[i]: i \in 1..Len(seq)}`
 -   `CHOOSE` picks the lowest element in a set that satisfies some predicate: `ToClock(seconds) == CHOOSE x \in ClockType: ToSeconds(x) = seconds`
+-   `Cardinality(S)` returns the size of a finite set
 
 ### Functions
 
@@ -192,10 +193,11 @@ The following hold for within one behavior:
     -   might become false again later
     -   `<>[]P`: P is eventually true and then stays true
     -   `[]<>P`: For example, in an hour clock, []<>(time = midnight) is true, but <>[](time = midnight) is false.
+        -   I haven't explained what []<>P asserts about a finite behavior. An easy way to think about what a temporal formula means for finite behaviors is to pretend that a finite behavior is an infinite behavior in which the final state is repeated forever. This pretense tells us that []<>P is true for a finite behavior iff P is true of the last state of that behavior.
 -   leads to: `P ~> Q`
     -   If P is true, Q will eventually be true (in the same or a future time step)
     -   P ~> Q is triggered every time P is true. Even if the formula was satisfied before, if P becomes true again, then Q has to become true again too.
--   `ENABLED A` is true if `A` can be true this step, ie it can describe the next step.
+-   `ENABLED someLabel` is true if `someLabel` can be reached in the next step
 
 ### Action properties
 
@@ -236,6 +238,8 @@ Syntax:
 -   `fair+ process`
 -   `label:+`: make label strongly fair
 -   `label:-`: make label unfair
+
+Strong and weak fairness of a step sp are equivalent if the step cannot be disabled or enabled by a step of another process. This is usually the case if sp does not contain an await statement.
 
 ### Recursion
 
