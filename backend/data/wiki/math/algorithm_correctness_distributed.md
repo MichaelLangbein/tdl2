@@ -161,6 +161,77 @@ Prove that a process can be held up from entering critical by another process st
 
 https://lamport.azurewebsites.net/tla/tutorial/session10.html
 
+```TLA+
+EXTENDS Integers, FiniteSets
+
+CONSTANT None
+infty == 99999
+
+nodes == {"a", "b", "c", "d"}
+edges == {
+    {"a", "b"},
+    {"b", "c"},
+    {"c", "d"},
+    {"b", "d"}
+}
+root == "d"
+
+Nbrs(n)  ==  {m \in nodes : {m,n} \in edges}
+
+SetNbrs(S)  ==  UNION {Nbrs(n) : n \in S}
+
+RECURSIVE ReachableFrom(_, _)
+ReachableFrom(B, T)  ==
+    IF B = {} THEN T
+    ELSE ReachableFrom(SetNbrs(B) \ T, B \union T)
+
+ASSUME
+    /\  root \in nodes
+    /\  \A edge \in edges: edge \subseteq nodes /\ Cardinality(edge) = 2
+    /\  ReachableFrom({root}, {}) = nodes
+
+(* --algorithm routing
+
+variables
+    messages = {
+        [depth |-> 0, from |-> root, to |-> nbr]
+        : nbr \in Nbrs(root)
+    };
+
+define
+    terminated ==
+        Cardinality(messages) = 0
+
+    doesTerminate ==
+        <>terminated
+
+    onTerminationshortestPaths ==
+        terminated => shortestPath
+end define;
+
+fair process Node \in nodes
+variables
+    parent = IF self = root THEN self ELSE None,
+    depth = IF self = root THEN 0 ELSE infty;
+begin
+    Receive:
+        while TRUE do
+            with message \in {m \in messages : m.to = self} do
+                if message.depth < depth - 1 then
+                    depth := message.depth + 1;
+                    parent := message.from;
+                    messages := ( messages \ {message} )
+                                \union { [depth |-> depth, from |-> self, to |-> nbr] : nbr \in Nbrs(self) }
+                else
+                    messages := messages \ {message};
+                end if;
+            end with;
+        end while;
+end process;
+
+end algorithm; *)
+```
+
 # Replication
 
 ## Replica failover
