@@ -278,6 +278,7 @@ for medium in [strom, ch4, waerme]:
 
 - Elektro bei aktuellem EU-Strom-Mix 20% weniger GHG https://onlinelibrary.wiley.com/doi/full/10.1111/j.1530-9290.2012.00532.x
   - Beinhaltet auch Bau und Wrack
+- Batterie zwischen 40 und 80kwh, d.h. ein Auto kann einen eine-Personen-Haushalt einen halben Tag lang versorgen
 
 ## Solar
 
