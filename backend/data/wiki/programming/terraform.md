@@ -36,6 +36,12 @@
     -   default
     -   condition
 -   output
--   import
+    -   description
+    -   value
+-   import: imports an existing resource on a provider and turns it into a terrform managed resource
+    -   id
+    -   to
 -   resource <type> <name>
--
+-   module
+    -   source
+    -   version
