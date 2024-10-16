@@ -23,6 +23,13 @@
 -   playwright has a test-recorder: https://testingbot.com/support/playwright/recorder.html#introduction
 -   `npx playwright codegen wikipedia.org`
 
+## Cucumber
+
+-   Implements a language called "Gherkin": "given that ... / when I do ... / then I should get ..."
+-   running a cucumber file returns the code snippets required to create the `given`, `when` and `then` implementations
+-   since this chops our scenarios into smaller parts, we can re-assemble some of those parts if we want, saving us some coding.
+    -   we can save even more coding by adding cucumber-variables to the cucumber file, which will take on all possible values that we provide.
+
 # Comparing selenium, cypress and playwright
 
 |                                          | selenium                            | cypress                                                                                                                                                                                    | playwright                                                 |
