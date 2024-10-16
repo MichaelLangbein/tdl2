@@ -17,7 +17,7 @@ Energie-Preis Deutschland: ~ 30Ct/kWh
 = Eine Mahlzeit kochen
 = 60 h LED
 
-Ein Deutscher verbraucht etwa 120 kWh Strom am Tag.
+Ein Deutscher verbraucht etwa 120 kWh Strom am Tag (_nicht_ Primärenergie, die ist höher; mit Heizen sicherlich noch höher).
 (Indien: 20kWh, China: 75kWh, US: )
 Der durchschnittliche Stromverbrauch eines 1-Personen-Haushalts in Deutschland liegt bei 1.300 kWh im Jahr [Quelle](https://www.stromauskunft.de/stromverbrauch/wie-viel-strom-verbraucht-eine-person/).
 
