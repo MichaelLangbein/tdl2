@@ -17,6 +17,7 @@
     -   `init`
     -   `fmt`
     -   `validate`
+    -   `test`
     -   `plan`
     -   `apply`
         -   `-var`: depends on you having registered variables with `main.tf or variables.tf / variable <variable_name> {}`
@@ -31,10 +32,14 @@
 
 ## Syntax
 
+-   Terraform
+    -   required_providers
 -   variable
     -   type
     -   default
     -   condition
+-   local
+-   data <from-source> <as-name>
 -   output
     -   description
     -   value
@@ -45,3 +50,13 @@
 -   module
     -   source
     -   version
+
+## AWS
+
+-   create account
+-   create budget with alert
+-   create terraform user
+-   install aws-cli
+    -   configure cli to use terraform-user:
+        -   `export AWS_ACCESS_KEY_ID=`
+        -   `export AWS_SECRET_ACCESS_KEY=`
