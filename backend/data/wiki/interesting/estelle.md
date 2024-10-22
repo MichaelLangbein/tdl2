@@ -120,3 +120,17 @@ Kernfragen
 -   Normal, dass man in Mitte von Beziehung weniger Gefühle hat
 -   Es sei offensichtlich, dass ich sie sehr mag
 -   Ich soll es einfach probieren - habe nichts zu verlieren
+
+## Minelli
+
+-   Es gibt viele Formen von Liebe:
+    -   Liebe zu Mutter: auch nicht intensiv und Schmetterlinge, richtig?
+
+##
+
+-   Wie erkennt man Liebe?
+    -   Being in love means that you've made the decision to focus your time and energy into your chosen interest.
+        -   You most likely won't want to date anyone else,
+        -   and people you were once interested in don't matter much anymore.
+        -   It might be love if you only want to spend romantic time with your partner
+-   Warum emfinde ich nicht Liebe für Estelle?
