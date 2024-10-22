@@ -130,7 +130,56 @@ Kernfragen
 
 -   Wie erkennt man Liebe?
     -   Being in love means that you've made the decision to focus your time and energy into your chosen interest.
-        -   You most likely won't want to date anyone else,
-        -   and people you were once interested in don't matter much anymore.
-        -   It might be love if you only want to spend romantic time with your partner
+    -   https://www.youtube.com/watch?v=lL_qVu4Run8
+        -   I tick most of those boxes. Why don't I feel it?
 -   Warum emfinde ich nicht Liebe für Estelle?
+
+## Estelle's videos
+
+-   Warum wollen Männer keine Beziehung?
+    -   Männer wollen autonom sein
+    -   Frauen halten die Zwischenphase oft nicht lange aus
+    -   1. Angst, falschen Partner zu wählen; Fantasie, noch jemand besseren zu finden. Ist unumkehrbar.
+        -   Oft sehr vereinnahmende Mutter gehabt
+        -   Oft hat Mutter Kind gesagt: Ich brauche dich
+    -   2. Angst, meine Persönlichkeit in Beziehung zu verlieren
+        -   weniger Zeit für Hobbies, Arbeit, Freunde, ...
+        -   ... dabei sollte eine Beziehung uns _mehr_ zu uns selbst machen
+    -   3. Angst, verletzt zu werden.
+        -   Frühe Erfahrung von alleine zu sein
+    -   4. Angst, Versorger zu werden
+        -   Habe definitiv Angst vor Verantwortung
+-   Wie wird es etwas aus der Beziehung?
+    -   Ich habe nicht genug Gefühle
+    -   Grund: Bindungsangst.
+        -   Stelle mir Beziehung vor nur mit Leuten, die mich nicht wollen
+        -   1. Nur mit denen, die mich ablehnen, glaube ich, dass alles da ist, was ich will
+            -   Wenn mir jemand wirklich nahe kommt, reicht es mir dagegen nicht aus.
+            -   Ich bin an Unsicherheit in Beziehungen gewöhnt. Wenn ich Sicherheit bekomme, kribbelt es nicht mehr.
+            -   Das interpretiere ich als: ich habe keine Gefühle.
+            -   Dann denke ich: wenn ich jetzt schon keine habe, wie soll es erst in ein paar Monaten sein!
+        -   2. Ich denke, andere haben Erwartungen, an wie ich mich fühlen sollte
+            -   Denke, dass ich sehr starkes Gefühl haben muss, um die Erwartungen des anderen erfüllen zu können
+            -   Wenn ich mir jetzt schon unsicher bin, kann doch ncihts draus werden
+            -   Kindheit: Verluste, Eingeengt, Trennung der Eltern: habe gelernt, dass Beziehungen etwas Unsicheres sind, und etwas, wo ich nicht wirklich ich sein kann.
+            -   Bei Bedürftigkeit fühle ich mich noch mehr gestresst und gefordert.
+    -   was tun?
+        -   Akzeptieren, dass es vielleicht nicht klappt
+        -   Estelle muss sich selbst genügen, nicht mich brauchen
+        -   Estelle muss sich klar werden, ob sie mich will
+
+Wie überwindet man Beziehungsangst?
+
+-   Symptome:
+    -   ich denke, ich muss Erwartungen erfüllen
+    -   Glaube nicht, ich selbst sein zu können, wenn ich in Beziehung bin
+    -   Kann mich eine Weile anpassen, aber freue mich auf allein sein
+    -   Sollte mich nicht verantwortlich fühlen für E's schlechte Laune.
+    -   Kann schwanken von aktivem zu passiven Part.
+    -   Suche Schwächen in anderer
+    -   Fühlt sich eng an
+-   Wie beheben?
+    -   Brauche mehr selbstwertgefühl: ich bin ok wie ich bin, meine Bedürfnisse zählen
+    -   Brauche Sicherheit, dass ich in Beziehung und _gleichzeitig_ ich selbst sein kann
+    -   Beobachte und Erkenne Gefühl als Bindungsangst
+    -   Wenn Estelle weiß, dass ich gerade Bindungsangst habe, dann fühle ich mich wahrscheinlich besser

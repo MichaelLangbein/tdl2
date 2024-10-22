@@ -2,6 +2,23 @@
 
 References based on "Designing data intensive applications"
 
+# Some lingo
+
+-   DB categorization:
+    -   optimization:
+        -   for OLTP (postgres)
+        -   for OLAP (duckdb)
+    -   Concurrency
+        -   ACID transactions (postgres)
+    -   replication: upon partition, you get ...
+        -   ... strong consistency, but no availability (postgres)
+        -   ... eventuel consistency, but availability (nosql)
+-   ETL and data-warehouse
+    -   Most of your data will be in an OLTP ACID-RDMBS
+    -   You don't want analysts to run large queries on those db's
+    -   So you _extract_ data from them and _load_ it into an OLAP-db (like duckdb), known as a data-warehouse
+    -
+
 # DB indexing
 
 -   Mostly uses BTree
@@ -10,6 +27,8 @@ References based on "Designing data intensive applications"
 -   Balancing requires multiple writes
     -   That means db can crash during balancing, leaving inconsistent data on disk
     -   To prevent that: [Write-Ahead-Log](#durability) (WAL)
+-   Multiple threads may access
+    -   Thus requires concurrency control (=locks or latches)
 
 # Replication
 
@@ -46,6 +65,38 @@ sequenceDiagram
     User2->>Database: WRITE 43
 ```
 
+Testing:
+
+```python
+# Testing atomic == rollback
+
+import threading
+import boto3
+
+def longTransaction():
+    db.transaction([
+        "short db operation",
+        "long db operation"
+    ])
+
+def killDb():
+    boto3.killDb()
+
+def startDb():
+    boto3.startDb()
+
+def assertRolledBack():
+    data = db.select()
+    assert "long db operation" not in data
+        and "short db operation" not in data
+
+threading.thread(longTransaction)
+threading.thread(killDb)  # while `longTransaction` is still going on
+threading.join()
+startDb()
+assertRolledBack()
+```
+
 ## Durability
 
 -   In single-node db:
@@ -53,15 +104,28 @@ sequenceDiagram
     -   But: writes can be interrupted by crash before being complete
     -   So you need to make a temporary copy of the target-file, or use a WAL [see also here](#db-indexing)
         -   _Very relevant for offline first apps_[^1]
+    -   If app is multi-threaded, you'll also need a lock around the target file
 -   In multi-node db:
     -   means that data has been copied to $n$ nodes before transaction is considered complete
 -
 
 [^1]<small>In nodejs, `fs.writeAll` is not transactional, meaning it can be interrupted half-way through. Create a temporary copy of the file during write.</small>
 
-## Transaction concurrency control (weak isolation levels)
+## Isolation
 
-p. 233
+-   as already stated in [atomic](#atomic), isolation means that one thread never sees the intermediate states of another thread's operations
+
+### Isolation level: read committed
+
+### Isolation level: snapshot isolation
+
+### Isolation level: serializable
+
+-   Approach 1: simple be single threaded
+    -   VoltDB, Redis.
+    -   A single thread will be blocked though if you allow long OLAP workloads on it!
+-   Approach 2: two-phase-locking (2PL)
+-   Approach 3: serializable snapshot isolation (SSI)
 
 # Cache invalidation
 
