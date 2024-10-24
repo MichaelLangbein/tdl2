@@ -32,9 +32,24 @@ References based on "Designing data intensive applications"
 
 # Replication
 
-## Replica failover
+-   Common pattern:
+    -   1 sync follower (we want few sync followers, because one failing follower stops the whole master until timeout has occurred)
+    -   many async followers
+    -   failover:
+        -   promote the single sync follower to leader
+        -   turn one async follower into the new sync follower
+-   Common issues:
+    -   choosing correct timeout to detect leader down
+    -   split brain
 
-p. 156
+## Read after write consistency
+
+1. update (goes to leader)
+2. refresh page (fetches data from an async follower)
+3. updated data should be present
+
+-   Read-after-write consistency happens at the application-level, not the db-level
+-   Note that it makes no promises about _other_ users' experience with data that another user has updated
 
 ## Replication lag
 
@@ -50,6 +65,7 @@ p. 161
     -   In ACID this same thing is known as _Isolation_
 -   In ACID:
     -   if error part-way through transaction, then rollback
+    -   commonly implemented with Write-Ahead-Log
 
 ```mermaid
 sequenceDiagram
@@ -107,7 +123,17 @@ assertRolledBack()
     -   If app is multi-threaded, you'll also need a lock around the target file
 -   In multi-node db:
     -   means that data has been copied to $n$ nodes before transaction is considered complete
--
+
+Testing:
+
+```python
+threading.thread(largeWriteQueryIndx1)
+threading.thread(killDb)
+threading.join()
+assert walPresentOnDb()
+startDb()
+assert noDataAtIndx1()
+```
 
 [^1]<small>In nodejs, `fs.writeAll` is not transactional, meaning it can be interrupted half-way through. Create a temporary copy of the file during write.</small>
 
@@ -117,7 +143,44 @@ assertRolledBack()
 
 ### Isolation level: read committed
 
+-   Reads only committed data (no dirty reads)
+    -   Implemented like this: new values only swapped into place after commit
+-   Overwrites only committed data (no dirty writes)
+    -   Commonly implemented using row-level locks.
+-   Default mode in Postgres, SQLServer, ...
+
+Testing:
+
+```python
+db.execute("insert into table `old-val` where idx=2")
+
+def longWrite():
+    db.execute("""
+        START TRANSACTION;
+        insert into table ("small val") where idx=1;
+        insert into table ("large val") where idx=2;
+        END TRANSACTION;
+    """)
+
+intermedVal = ""
+def interruptingRead():
+    intermedVal = db.execute("""
+        select * from table where idx=2;
+    """)
+
+threading.thread(longWrite)
+threading.thread(interruptingRead)
+threading.join()
+assert intermedVal == `old-val`
+```
+
 ### Isolation level: snapshot isolation
+
+Read-committed is good enough if you only look at a few individual rows. But you might want to make sure that the whole db doesn't change while you run a query.
+Examples:
+
+-   during backup
+-   during long OLAP query
 
 ### Isolation level: serializable
 
