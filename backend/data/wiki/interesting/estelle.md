@@ -183,3 +183,18 @@ Wie überwindet man Beziehungsangst?
     -   Brauche Sicherheit, dass ich in Beziehung und _gleichzeitig_ ich selbst sein kann
     -   Beobachte und Erkenne Gefühl als Bindungsangst
     -   Wenn Estelle weiß, dass ich gerade Bindungsangst habe, dann fühle ich mich wahrscheinlich besser
+
+# Estelles Ängste
+
+-   Angst nicht genug zeit zu haben bei 40h Arbeit für auch noch Bezieheung
+-   Hat Angst, Erwartungen erfüllen zu müssen:
+    -   Dass sie immer verfügbar sein muss
+    -   Dass sie nie eine eigene Depression haben kannst
+    -   Dass sie immer funktionieren muss
+    -   Dass sie in allem gut sein muss: dass sie nicht in jogging hose
+    -   E hält viel aus und übernimmt viel Verantwortung: bekommt dardurch die Rolle, dass sie immer weiß was tichtig ist, dass sie anführt
+-   War immer die Rolle des starken Parts, bis sie nciht mehr konnte
+-   Man muss sie aushalten können,
+-   Sie hat in den letzten Tagen schon viel ventiliert
+    -   Hat mich, M, damit auch ziemlich an meine Grenzen gebracht, aber ich finde es besser so als nicht zu reden
+    -
