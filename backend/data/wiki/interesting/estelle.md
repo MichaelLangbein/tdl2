@@ -104,6 +104,7 @@ Kernfragen
     -   Verantwortung:
         -   zuverlässig umsetzen
         -   leichter nehmen
+        -   Verantwortung und commitment sollten sich so leicht und spaßig anfühlen, wie Django zu lernen
 -   Arbeite ich daran, während ich mit Estelle zusammen bin, oder suche ich mir jemanden, nachdem ich fertig bin?
 
 ## Heute, 05.09.2024

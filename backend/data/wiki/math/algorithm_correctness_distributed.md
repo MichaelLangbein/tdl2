@@ -12,7 +12,7 @@ References based on "Designing data intensive applications"
         -   ACID transactions (postgres)
     -   replication: upon partition, you get ...
         -   ... strong consistency, but no availability (postgres)
-        -   ... eventuel consistency, but availability (nosql)
+        -   ... eventual consistency, but availability (nosql)
 -   ETL and data-warehouse
     -   Most of your data will be in an OLTP ACID-RDMBS
     -   You don't want analysts to run large queries on those db's
@@ -65,7 +65,8 @@ p. 161
     -   In ACID this same thing is known as _Isolation_
 -   In ACID:
     -   if error part-way through transaction, then rollback
-    -   commonly implemented with Write-Ahead-Log
+    -   commonly implemented with Write-Ahead-Log (WAL)
+    -   most common algorithm: two-phase commit (2PC) (which relies on a WAL)
 
 ```mermaid
 sequenceDiagram
@@ -113,29 +114,9 @@ startDb()
 assertRolledBack()
 ```
 
-## Durability
+## Consistency
 
--   In single-node db:
-    -   Means that data is persisted to disk
-    -   But: writes can be interrupted by crash before being complete
-    -   So you need to make a temporary copy of the target-file, or use a WAL [see also here](#db-indexing)
-        -   _Very relevant for offline first apps_[^1]
-    -   If app is multi-threaded, you'll also need a lock around the target file
--   In multi-node db:
-    -   means that data has been copied to $n$ nodes before transaction is considered complete
-
-Testing:
-
-```python
-threading.thread(largeWriteQueryIndx1)
-threading.thread(killDb)
-threading.join()
-assert walPresentOnDb()
-startDb()
-assert noDataAtIndx1()
-```
-
-[^1]<small>In nodejs, `fs.writeAll` is not transactional, meaning it can be interrupted half-way through. Create a temporary copy of the file during write.</small>
+In terms of ACID transactions, consistency is an application-level statement about the db being in a logically good state (like expenses summing to income). This is the developers reasonability, not the db's. For consistency as defined for multi-threading, see [consistency](#consistency).
 
 ## Isolation
 
@@ -184,11 +165,65 @@ Examples:
 
 ### Isolation level: serializable
 
--   Approach 1: simple be single threaded
+Definition: (from https://www.youtube.com/watch?v=YFXABIEXO04)
+
+-   Consider two transactions: `begin; op1; op2; end;` and `begin; op3; op4; end`.
+-   If they were run on a single-threaded machine, they'd be run as either `op1, op2, op3, op4` or as `op3, op4, op1, op2`.
+    -   We'll name those _truly serial_ orders
+-   But since we are on a multi-threaded machine, the order will be interleaved and might be any one of those:
+    -   `op1, op2, op3, op4`
+    -   `op1, op3, op2, op4`
+    -   `op1, op3, op4, op2`
+    -   `op3, op4, op1, op2`
+    -   ...
+-   An interleaved order is considered _serializable_ if it leaves the database in a state that is equal to one state after the _truly serial_ orders
+-   In math:
+-   $$S \in \text{Interleaved}: \text{serializable} \iff \exists Q \in \text{Serial}: \text{state}_S = \text{state}_Q$$
+
+This is actually quite hard to prove. A stricter but simpler criterion is called _conflict serializability_ ... but that definition is not immediately important here.
+
+Methods of ensuring serializability:
+
+-   Approach 1: just be single threaded
     -   VoltDB, Redis.
     -   A single thread will be blocked though if you allow long OLAP workloads on it!
 -   Approach 2: two-phase-locking (2PL)
+    -   While a read is going on, don't allow any writes
+    -   While a write is going on, don't allow any reads
 -   Approach 3: serializable snapshot isolation (SSI)
+
+## Durability
+
+-   In single-node db:
+    -   Means that data is persisted to disk
+    -   But: writes can be interrupted by crash before being complete
+    -   So you need to make a temporary copy of the target-file, or use a WAL [see also here](#db-indexing)
+        -   _Very relevant for offline first apps_[^1]
+    -   If app is multi-threaded, you'll also need a lock around the target file
+-   In multi-node db:
+    -   means that data has been copied to $n$ nodes before transaction is considered complete
+    -   this is implemented with [consensus](#consensus)
+
+Testing:
+
+```python
+threading.thread(largeWriteQueryIndx1)
+threading.thread(killDb)
+threading.join()
+assert walPresentOnDb()
+startDb()
+assert noDataAtIndx1()
+```
+
+[^1]<small>In nodejs, `fs.writeAll` is not transactional, meaning it can be interrupted half-way through. Create a temporary copy of the file during write.</small>
+
+# System models
+
+|                                                       | synchronous | partially asynchronous | asynchronous                                                      |
+| ----------------------------------------------------- | ----------- | ---------------------- | ----------------------------------------------------------------- |
+| network:<br> - delay<br> - loss                       | bounded     | usually bounded        | unbounded                                                         |
+| clock:<br> - can be offset                            | bounded     | usually bounded        | unbounded                                                         |
+| node failure:<br> - can die<br> - can die and restart |             |                        | According to FLP, <br>consensus is impossible<br>under this model |
 
 # Cache invalidation
 
@@ -205,7 +240,31 @@ Examples:
 -   Prove that exactly-once-delivery is impossible in a faulty network
 -   https://blog.bulloak.io/post/20200917-the-impossibility-of-exactly-once/
 
-# Multi-threading
+# Temporal ordering
+
+-   relying on synced time:
+    -   not guaranteed to be correct
+    -   may lose data
+    -   used by cassandra and spanner (last-write-wins)
+-   relying on logical counter:
+    -   on a single node: trivial
+    -   on distributed system:
+        -   either all writes through a single master
+        -   or (only approximately correct): twitter's snowflake
+
+# Ensuring there's only one of a thing
+
+-   Using **locks**
+-   Using **leases**
+    -   a lock plus a time for how long the lock is valid
+    -   used for example for db-master: master now can see how long the followers will unquestioningly consider him the master (after that needs to request a new lease)
+-   Using **fencing tokens**
+    -   a lock plus a logical, incrementing counter
+    -   services only respond to a fencing token if its counter is at least as high as the last token they've received
+    -   must be implemented on each service, though
+    -   as done by zookeeper
+
+# Consensus
 
 ## Linearizability
 
