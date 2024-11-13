@@ -17,8 +17,6 @@ References based on "Designing data intensive applications"
     -   Most of your data will be in an OLTP ACID-RDMBS
     -   You don't want analysts to run large queries on those db's
     -   So you _extract_ data from them and _load_ it into an OLAP-db (like duckdb), known as a data-warehouse
-    
-
 
 # Consensus
 
@@ -26,23 +24,23 @@ References based on "Designing data intensive applications"
 
 Consensus is proven to be impossible in strictly asynchronous model.
 Thus we assume:
-- partially asynchronous (= non always async)
-- crash-recovering nodes (= non-byzantine)
+
+-   partially asynchronous (= non always async)
+-   crash-recovering nodes (= non-byzantine)
 
 |                                                                              | synchronous | partially asynchronous                                                                                                                                                             | asynchronous                                                      |
-|------------------------------------------------------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| ---------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | network:<br> - delay<br> - loss                                              | bounded     | usually bounded                                                                                                                                                                    | unbounded                                                         |
 | clock:<br> - can be offset                                                   | bounded     | usually bounded                                                                                                                                                                    | unbounded                                                         |
 | node failure:<br> - can die<br> - can die and restart<br> - can be byzantine |             | Most consensus algorithms are here: assume that nodes can crash and recover. <br><small>Note that blockchain allows consensus in partially async even with byzantine nodes</small> | According to FLP, <br>consensus is impossible<br>under this model |
 
-
-
 ## Algorithms
 
-- Paxos
-- Zab (Zookeeper atomic broadcast)
-- Raft
+-   Paxos
+-   Zab (Zookeeper atomic broadcast)
+-   Raft
 
+Consensus algorithms are usually linearizable.
 
 # Replication
 
@@ -59,7 +57,8 @@ Thus we assume:
 ## Types of replication-guarantees
 
 ### Eventual consistency
-Very weak. 
+
+Very weak.
 
 ### Read after write consistency
 
@@ -75,6 +74,7 @@ Very weak.
 p. 161
 
 ### Linearizability
+
 Very strong.
 Definition:
 
@@ -89,18 +89,32 @@ A:set(x, 1)_{t_1 ... t_2} \to &\exists t_0: t_1 \leq t_0 \leq t_2: \forall B, C 
 \end{aligned}
 $$
 
+In the CAP theorem, consistency really means linearizability (p. 336). So CAP states that upon a network-disconnect, your db has to choose between availability and linearizability.
+
 ## Means to do replication
 
 ## Quorum based replication
-- each write must be acknowledged by a majority of nodes
-- each read must go to a majority of nodes and will accept the most recently updated value
-    - read repair: to achieve linearizability, reads can also do read repair: if they find an outdated value when reading, they send a set call to the latest known value to all outdated queried nodes and to all not queried nodes.
-- requires consensus to ...
 
+-   each write must be acknowledged by a majority of nodes
+-   each read must go to a majority of nodes and will accept the most recently updated value
+    -   read repair: to achieve linearizability, reads can also do read repair: if they find an outdated value when reading, they send a set call to the latest known value to all outdated queried nodes and to all not queried nodes.
+-   requires consensus to ...
+-   not guaranteed to be linearizable, even if $w + r > n$. Reasons:
+    -   usually uses last-write-wins, which may fail because of faulty time-of-day clocks
+    -   sloppy quorums (p. 183)
+-   But: linearizability can be provided by implementing read-repair (p. 335)
 
 ## Leader based replication
-- requires consensus to pick leader
 
+-   requires consensus to pick leader
+-   might be linearizable
+    -   In postgres:
+        -   enable synchronous replication
+        -   enable WAL streaming
+
+## Multi leader replication
+
+-   not linearizable
 
 # Transactions
 
@@ -269,7 +283,6 @@ assert noDataAtIndx1()
 
 [^1]<small>In nodejs, `fs.writeAll` is not transactional, meaning it can be interrupted half-way through. Create a temporary copy of the file during write.</small>
 
-
 # Cache invalidation
 
 -   Most common strategy: "cache aside"
@@ -309,8 +322,6 @@ assert noDataAtIndx1()
     -   must be implemented on each service, though
     -   as done by zookeeper
 
-
-
 # DB indexing
 
 -   Mostly uses BTree
@@ -321,4 +332,3 @@ assert noDataAtIndx1()
     -   To prevent that: [Write-Ahead-Log](#durability) (WAL)
 -   Multiple threads may access
     -   Thus requires concurrency control (=locks or latches)
-
