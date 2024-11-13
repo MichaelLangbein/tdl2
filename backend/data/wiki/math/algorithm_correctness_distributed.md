@@ -42,6 +42,11 @@ Thus we assume:
 
 Consensus algorithms are usually linearizable.
 
+## Common pre-requisite: total-order broadcast
+
+-   no messages are lost
+-   messages are delivered to all nodes in same order
+
 # Replication
 
 -   Common pattern:
@@ -88,6 +93,8 @@ A:set(x, 1)_{t_1 ... t_2} \to &\exists t_0: t_1 \leq t_0 \leq t_2: \forall B, C 
                               & B:get(x)_{t_1 ... t_0} = 0 \land C:get(x)_{t_0 ... t_2} = 1
 \end{aligned}
 $$
+
+> Note that linearizability implies that all operations are **totally ordered**: each operation is either before or after any other operation.
 
 In the CAP theorem, consistency really means linearizability (p. 336). So CAP states that upon a network-disconnect, your db has to choose between availability and linearizability.
 
