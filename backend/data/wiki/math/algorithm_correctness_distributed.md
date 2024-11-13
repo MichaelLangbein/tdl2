@@ -17,18 +17,32 @@ References based on "Designing data intensive applications"
     -   Most of your data will be in an OLTP ACID-RDMBS
     -   You don't want analysts to run large queries on those db's
     -   So you _extract_ data from them and _load_ it into an OLAP-db (like duckdb), known as a data-warehouse
-    -
+    
 
-# DB indexing
 
--   Mostly uses BTree
-    -   Is a general form of binary tree: has $n$ instead of 2 children
-    -   After balancing: all leaves are equally far from root
--   Balancing requires multiple writes
-    -   That means db can crash during balancing, leaving inconsistent data on disk
-    -   To prevent that: [Write-Ahead-Log](#durability) (WAL)
--   Multiple threads may access
-    -   Thus requires concurrency control (=locks or latches)
+# Consensus
+
+## Assumed system model
+
+Consensus is proven to be impossible in strictly asynchronous model.
+Thus we assume:
+- partially asynchronous (= non always async)
+- crash-recovering nodes (= non-byzantine)
+
+|                                                                              | synchronous | partially asynchronous                                                                                                                                                             | asynchronous                                                      |
+|------------------------------------------------------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| network:<br> - delay<br> - loss                                              | bounded     | usually bounded                                                                                                                                                                    | unbounded                                                         |
+| clock:<br> - can be offset                                                   | bounded     | usually bounded                                                                                                                                                                    | unbounded                                                         |
+| node failure:<br> - can die<br> - can die and restart<br> - can be byzantine |             | Most consensus algorithms are here: assume that nodes can crash and recover. <br><small>Note that blockchain allows consensus in partially async even with byzantine nodes</small> | According to FLP, <br>consensus is impossible<br>under this model |
+
+
+
+## Algorithms
+
+- Paxos
+- Zab (Zookeeper atomic broadcast)
+- Raft
+
 
 # Replication
 
@@ -42,7 +56,12 @@ References based on "Designing data intensive applications"
     -   choosing correct timeout to detect leader down
     -   split brain
 
-## Read after write consistency
+## Types of replication-guarantees
+
+### Eventual consistency
+Very weak. 
+
+### Read after write consistency
 
 1. update (goes to leader)
 2. refresh page (fetches data from an async follower)
@@ -51,9 +70,37 @@ References based on "Designing data intensive applications"
 -   Read-after-write consistency happens at the application-level, not the db-level
 -   Note that it makes no promises about _other_ users' experience with data that another user has updated
 
-## Replication lag
+### Replication lag
 
 p. 161
+
+### Linearizability
+Very strong.
+Definition:
+
+Assume some leader/follower architecture stores value $x=0$.
+There are clients $A, B, C, ...$.
+The architecture is linearizable iff:
+
+$$
+\begin{aligned}
+A:set(x, 1)_{t_1 ... t_2} \to &\exists t_0: t_1 \leq t_0 \leq t_2: \forall B, C \in \text{Clients}: \\
+                              & B:get(x)_{t_1 ... t_0} = 0 \land C:get(x)_{t_0 ... t_2} = 1
+\end{aligned}
+$$
+
+## Means to do replication
+
+## Quorum based replication
+- each write must be acknowledged by a majority of nodes
+- each read must go to a majority of nodes and will accept the most recently updated value
+    - read repair: to achieve linearizability, reads can also do read repair: if they find an outdated value when reading, they send a set call to the latest known value to all outdated queried nodes and to all not queried nodes.
+- requires consensus to ...
+
+
+## Leader based replication
+- requires consensus to pick leader
+
 
 # Transactions
 
@@ -222,13 +269,6 @@ assert noDataAtIndx1()
 
 [^1]<small>In nodejs, `fs.writeAll` is not transactional, meaning it can be interrupted half-way through. Create a temporary copy of the file during write.</small>
 
-# System models
-
-|                                                       | synchronous | partially asynchronous | asynchronous                                                      |
-| ----------------------------------------------------- | ----------- | ---------------------- | ----------------------------------------------------------------- |
-| network:<br> - delay<br> - loss                       | bounded     | usually bounded        | unbounded                                                         |
-| clock:<br> - can be offset                            | bounded     | usually bounded        | unbounded                                                         |
-| node failure:<br> - can die<br> - can die and restart |             |                        | According to FLP, <br>consensus is impossible<br>under this model |
 
 # Cache invalidation
 
@@ -269,9 +309,16 @@ assert noDataAtIndx1()
     -   must be implemented on each service, though
     -   as done by zookeeper
 
-# Consensus
 
-## Linearizability
 
--   Aka. atomic
--
+# DB indexing
+
+-   Mostly uses BTree
+    -   Is a general form of binary tree: has $n$ instead of 2 children
+    -   After balancing: all leaves are equally far from root
+-   Balancing requires multiple writes
+    -   That means db can crash during balancing, leaving inconsistent data on disk
+    -   To prevent that: [Write-Ahead-Log](#durability) (WAL)
+-   Multiple threads may access
+    -   Thus requires concurrency control (=locks or latches)
+
