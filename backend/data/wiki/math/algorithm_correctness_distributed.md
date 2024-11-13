@@ -155,6 +155,8 @@ threading.join()
 assert intermedVal == `old-val`
 ```
 
+Important examples of what read-commit doesn't cover: p. 247
+
 ### Isolation level: snapshot isolation
 
 Read-committed is good enough if you only look at a few individual rows. But you might want to make sure that the whole db doesn't change while you run a query.
@@ -162,6 +164,8 @@ Examples:
 
 -   during backup
 -   during long OLAP query
+
+Important examples of what snapshot doesn't cover: p. 247
 
 ### Isolation level: serializable
 
@@ -190,6 +194,7 @@ Methods of ensuring serializability:
 -   Approach 2: two-phase-locking (2PL)
     -   While a read is going on, don't allow any writes
     -   While a write is going on, don't allow any reads
+    -   Useful: 2PL usually also guarantees [linearizability](#linearizability)
 -   Approach 3: serializable snapshot isolation (SSI)
 
 ## Durability
