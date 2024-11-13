@@ -42,7 +42,12 @@ References based on "Designing data intensive applications"
     -   choosing correct timeout to detect leader down
     -   split brain
 
-## Read after write consistency
+## Types of replication-guarantees
+
+### Eventual consistency
+Very weak. 
+
+### Read after write consistency
 
 1. update (goes to leader)
 2. refresh page (fetches data from an async follower)
@@ -51,9 +56,26 @@ References based on "Designing data intensive applications"
 -   Read-after-write consistency happens at the application-level, not the db-level
 -   Note that it makes no promises about _other_ users' experience with data that another user has updated
 
-## Replication lag
+### Replication lag
 
 p. 161
+
+### Linearizability
+Very strong.
+Definition:
+
+Assume some leader/follower architecture stores value $x=0$.
+There are clients $A, B, C$.
+The architecture is linearizable iff:
+
+$$A:set(x, 1)_{t_1 ... t_2} \to \exists t_0: t_1 \leq t_0 \leq t_1: B:get(x)_{t_1 ... t_0} = 0 \land C:get(x)_{t_0 ... t_2} = 1$$
+
+## Means to do replication
+
+### Consensus
+
+### Quorum
+
 
 # Transactions
 
@@ -220,7 +242,7 @@ assert noDataAtIndx1()
 # System models
 
 |                                                       | synchronous | partially asynchronous | asynchronous                                                      |
-| ----------------------------------------------------- | ----------- | ---------------------- | ----------------------------------------------------------------- |
+|-------------------------------------------------------|-------------|------------------------|-------------------------------------------------------------------|
 | network:<br> - delay<br> - loss                       | bounded     | usually bounded        | unbounded                                                         |
 | clock:<br> - can be offset                            | bounded     | usually bounded        | unbounded                                                         |
 | node failure:<br> - can die<br> - can die and restart |             |                        | According to FLP, <br>consensus is impossible<br>under this model |
