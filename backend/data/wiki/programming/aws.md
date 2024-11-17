@@ -102,4 +102,21 @@ If one session lasts 100sec, uses 1GB of data and involves 100 requests, this ge
 
 # Localstack
 
+-   intro: https://www.youtube.com/watch?v=SYCeM-Q6nRs
+
 Simulates most AWS services locally
+
+Capabilities: https://docs.localstack.cloud/user-guide/aws/feature-coverage/
+
+| Service             | Free tier | Pro      | Notes                |
+| ------------------- | --------- | -------- | -------------------- |
+| DynamoDB            | emulated  |          | NoSql key/value      |
+| DynamoDBStreams     | emulated  |          |                      |
+| Relational DB (RDS) |           | emulated | Postgres             |
+| Redshift            |           | emulated | OLAP                 |
+| EC2                 | API       | emulated | as docker image      |
+| lambda              | emulated  |          |                      |
+| Step functions      | emulated  |          | workflows of lambdas |
+| S3                  | emulated  |          |                      |
+| SQS                 | emulated  |          |                      |
+| Elastic search      | emulated  |          |                      |

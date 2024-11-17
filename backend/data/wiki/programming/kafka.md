@@ -44,7 +44,7 @@ https://news.ycombinator.com/item?id=35160555
     -   for each partition, one broker is made the leader
     -   reads and writes (almost) always go to the leader
     -   **bootstrap**: the first broker a client connects to. Passes to the client a list of metadata, including all other brokers
-        -   LISTENERS: where should this bootstrap-broker listen for incomming connections? <ARBITRARY_NAME>://:<port>
+        -   LISTENERS: where should this bootstrap-broker listen for incoming connections? <ARBITRARY_NAME>://:<port>
         -   ADVERTISED_LISTENERS: how are the above interfaces resolvable from a client? <ARBITRARY_NAME>://<domain>:<port>
 -   **cluster**: multiple machines
 -   **producer**:
