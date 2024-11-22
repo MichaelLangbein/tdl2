@@ -2,7 +2,7 @@
 
 ## venv
 - python -m venv ./venv  # creates a venv in the dir ./venv
-- source ./venv/Scrips/activate
+- source ./venv/bin/activate
 - pip install <some-package>
 - deactivate
 - pip freeze > requirements.txt
@@ -12,7 +12,7 @@
 ## wheels
 Python packages on Pypi come in *source-distributions*. 
 Those contain both python source-files and c-source-files for any extensions.
-Wheels are variantes of a package with pre-compiled binaries, ready made for specific distros.
+Wheels are variants of a package with pre-compiled binaries, ready made for specific distro's.
 When you see a message `Building wheels for collected packages:`, that means that a package is only available as a source-dist for your platform and binaries must be compiled locally.
 For this to work, compilers like `g++` and dev-packages like `python-dev` (contains `*.h`s and `*.a`s) need to be present on your local machine.
 
