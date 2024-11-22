@@ -29,6 +29,9 @@
     -   `output`
         -   depends on you having registered outputs with `main.tf or outputs.tf / output <output_name> {}`
     -   `destroy`
+    - `taint google_cloudfunctions_function.watch_data`: marks for re-creation
+    - `state list`
+    - `state rm google_cloudfunctions_function.watch_data`: tells terraform that this resource no longer exists
 
 ## Syntax
 
