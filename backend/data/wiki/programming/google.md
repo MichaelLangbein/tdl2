@@ -59,7 +59,10 @@ https://cloud.google.com/
         -   submit
     -   `deploy`
 -   **bq** (_separate cli specifically for big-query_)
-    -   query "...some sql ..."
+    - Find public dataset: `bq ls --project_id=bigquery-public-data -n 10000 | grep ecmwf`
+    - List tables inside dataset: `bq ls bigquery-public-data:ecmwf_era5_reanalysis`
+    - Show schema of table: `bq show --format=prettyjson bigquery-public-data:ecmwf_era5_reanalysis.ar-era5-v0`
+    - Execute sql on table: `bq query --use_legacy_sql=false 'select * from `bigquery-public-data.ecmwf_era5_reanalysis.ar-era5-v0` limit 10'`
 -   **gsutil** (_separate cli specifically for buckets_)
 
 # Concepts
@@ -90,7 +93,7 @@ https://cloud.google.com/
 # Services and pricing
 
 | Service                           | Description                                           | Pricing    |
-| --------------------------------- | ----------------------------------------------------- | ---------- |
+|-----------------------------------|-------------------------------------------------------|------------|
 | Cloud compute                     | long running VMs, <br> docker container               | ~25€/month |
 | Kubernetes                        | More control over scaling than app-engine             |            |
 | App engine                        | Like firebase, but custom backend coding              |            |
@@ -107,7 +110,7 @@ https://cloud.google.com/storage/docs/public-datasets?hl=de
 # Local emulator
 
 | Service         | Note                                                               |
-| --------------- | ------------------------------------------------------------------ |
+|-----------------|--------------------------------------------------------------------|
 | pub/sub         | like kafka                                                         |
 | spanner         | OLTP: like cockroach: distributed sql (transactions, linearizable) |
 | big query       | OLAP: data-warehouse, columnar                                     |
