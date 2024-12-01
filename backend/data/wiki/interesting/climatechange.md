@@ -282,3 +282,18 @@ for medium in [strom, ch4, waerme]:
 ## Solar
 
 -   LCA: https://www.mdpi.com/2071-1050/11/9/2539
+
+## Plastik
+
+-   Plastics:
+    -   2 - 6 kg CO2_eq / kg
+        -   2 kg CO2_eq / kg Plastik (https://www.sciencemediacenter.de/alle-angebote/research-in-context/details/news/plastikproduktion-verursacht-enorme-treibhausgas-emissionen)
+        -   6: https://timeforchange.org/plastic-bags-and-plastic-bottles-co2-emissions-during-their-lifetime/
+    -   Amount: 410 Mio Ton / a, world (https://www.statista.com/statistics/282732/global-production-of-plastics-since-1950/)
+        -   thus about 1_000 Mio Ton CO2_eq / a
+        -   Compare to aviation: 280 Mio Ton CO2_eq / a (https://www.bing.com/search?q=global+air+traffic+CO2+equivalent+annual+production&toWww=1&redig=115191D6D7A74AEE82600863521A9782)
+    -   Ends up as ... (https://www.oecd.org/en/about/news/press-releases/2022/02/plastic-pollution-is-growing-relentlessly-as-waste-management-and-recycling-fall-short.html)
+        -   recycled: 10%
+        -   incinerated: 20%
+        -   landfills: 50%
+        -   lost to environment: 20%
