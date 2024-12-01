@@ -252,7 +252,7 @@ resource "google_cloud_scheduler_job" "clock" {
   time_zone = "Europe/Berlin"
   pubsub_target {
     topic_name = google_pubsub_topic.heartbeat_topic.id
-    data       = base64encode("{'body': 'tick tock'}")
+    data       = base64encode("{ \"body\": \"tick tock\" }")
   }
   # NB: a scheduler can also use a HTTP_target to directly post to a service,
   # circumventing a pubsub queue.
@@ -356,6 +356,8 @@ resource "google_pubsub_subscription" "push_to_cloudrun" {
   push_config {
     # This has pubsub post it's messages to our cloudrun instance
     push_endpoint = "${google_cloud_run_service.processor_service.status[0].url}/echo"
+    # giving the subscription the same user as the cloudrun instance
+    # ... not sure if this is actually required
     oidc_token {
       service_account_email = google_service_account.pubsub_cloudrun_sa.email
     }
