@@ -1,59 +1,59 @@
 # Python
 
 ## venv
-- python -m venv ./venv  # creates a venv in the dir ./venv
-- source ./venv/bin/activate
-- pip install <some-package>
-- deactivate
-- pip freeze > requirements.txt
-- pip install -r requirements.txt
 
+-   python -m venv ./venv # creates a venv in the dir ./venv
+-   source ./venv/bin/activate
+-   deactivate
+-   pip install <some-package>
+-   deactivate
+-   pip freeze > requirements.txt
+-   pip install -r requirements.txt
 
 ## wheels
-Python packages on Pypi come in *source-distributions*. 
+
+Python packages on Pypi come in _source-distributions_.
 Those contain both python source-files and c-source-files for any extensions.
 Wheels are variants of a package with pre-compiled binaries, ready made for specific distro's.
 When you see a message `Building wheels for collected packages:`, that means that a package is only available as a source-dist for your platform and binaries must be compiled locally.
 For this to work, compilers like `g++` and dev-packages like `python-dev` (contains `*.h`s and `*.a`s) need to be present on your local machine.
 
-
 ## conda
+
 Better than venv because:
-- allows non-python binaries (like gdal, tensorflow, libblas, yfinance, ...)
-- not bound to local python-version
+
+-   allows non-python binaries (like gdal, tensorflow, libblas, yfinance, ...)
+-   not bound to local python-version
 
 Cheat-sheet:
-- conda
-  - config
-    - --add channels conda-forge
-    - --remove channels defaults
-    - --set 
-      - channel_priority strict
-      - auto_activate_base false
-    - --show channels
-    - Or just alter `.condarc`
-  - create 
-    - --name <new-env-name>
-  - activate <env-name>
-  - env 
-    - list
-    - export --no-builds | grep -v "prefix" > environment.yml
-    - remove --name <env-name>
-    - create --name <new-env-name> --file path/to/environment.yml  (weirdly, `conda create --name xx --file yy.yml` does not work sometimes, but `conda env create --name xx --file yy.yml`.)
-Conda to pip:
-  - pip list --format=freeze > requirements.txt
 
-
-
+-   conda
+    -   config
+        -   `--add channels conda-forge`
+        -   `--remove channels defaults`
+        -   `--set `
+            -   channel_priority strict
+            -   auto_activate_base false
+        -   `--show channels`
+        -   Or just alter `.condarc`
+    -   create
+        -   `--name <new-env-name>`
+    -   activate <env-name>
+    -   env
+        -   `list`
+        -   `export --no-builds | grep -v "prefix" > environment.yml`
+        -   `remove --name <env-name>`
+        -   `create --name <new-env-name> --file path/to/environment.yml` (weirdly, `conda create --name xx --file yy.yml` does not work sometimes, but `conda env create --name xx --file yy.yml`.)
+            Conda to pip:
+    -   pip list --format=freeze > requirements.txt
 
 # Matplotlib
 
-
 ## Basics
 
-- Figure: canvas on which plots are created. Contains one or more axes
-- Axis: 
-- Artist: Text, Line, Circle, ...
+-   Figure: canvas on which plots are created. Contains one or more axes
+-   Axis:
+-   Artist: Text, Line, Circle, ...
 
 ```python
 fig = plt.figure(figsize=5,4)
@@ -76,6 +76,7 @@ plt.tight_layout()
 ```
 
 ## Plotting raster and polygon data
+
 ```python
 def _plotRasterAndVector(raster: np.ndarray, geometries: shapely.geometry[]):
     fig = plt.figure(figsize=(10,8))

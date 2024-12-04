@@ -64,7 +64,10 @@ https://cloud.google.com/
     -   Find public dataset: `bq ls --project_id=bigquery-public-data -n 10000 | grep ecmwf`
     -   List tables inside dataset: `bq ls bigquery-public-data:ecmwf_era5_reanalysis`
     -   Show schema of table: `bq show --format=prettyjson bigquery-public-data:ecmwf_era5_reanalysis.ar-era5-v0`
-    -   Execute sql on table: `bq query --use_legacy_sql=false 'select * from `bigquery-public-data.ecmwf_era5_reanalysis.ar-era5-v0` limit 10'`
+    -   Execute sql on table: `bq query --use_legacy_sql=false 'select * from 'bigquery-public-data.ecmwf_era5_reanalysis.ar-era5-v0' limit 10'`
+    -   Google will sometimes refer you to bigquery data like this:
+        -   `https://bigquery.cloud.google.com/table/bigquery-public-data:cloud_storage_geo_index.landsat_index`
+        -   this reads as follows: `https://bigquery.cloud.google.com/table/<Project-ID>:<Dataset-ID>.<Table-ID>`
 -   **gsutil** (_separate cli specifically for buckets_)
 
 # Concepts
