@@ -6,19 +6,19 @@ It's not all that easy to find good media about the remote sensing field. I do h
 
 Elevation
 
-- DSM: Digital surface model - includes buildings and trees. Commonly from LIDAR.
-- DEM: Digital elevation model - ground level; from DSM, with buildings and trees removed, or Radar or photogrammetry.
-- DTM: Digital terrain models - either synonym to DEM or a vectorized DEM with additional features where buildings and trees are
-- TIN: Triangular irregular network
+-   DSM: Digital surface model - includes buildings and trees. Commonly from LIDAR.
+-   DEM: Digital elevation model - ground level; from DSM, with buildings and trees removed, or Radar or photogrammetry.
+-   DTM: Digital terrain models - either synonym to DEM or a vectorized DEM with additional features where buildings and trees are
+-   TIN: Triangular irregular network
 
 ## Electromagnetic radiation
 
 Satellites all work the same way: they are flying machines that carry a camera. The camera has one or more sensors, each of which can observe some part of the electromagnetic spectrum.
 Radar satellites have their own 'light' source: they actively send out radio-radiation and collect the reflection.
 
-- Optical
-- Radar: not hindered by clouds. Good for flood-detection
-- Microwave: good for atmospheric observation
+-   Optical
+-   Radar: not hindered by clouds. Good for flood-detection
+-   Microwave: good for atmospheric observation
 
 _Frequencies capable of penetrating the atmosphere_
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/rs_atmospheric_absorption.png" />
@@ -42,10 +42,10 @@ Usually, these take into account seasonal effects, water vapor, and also a ranki
 Note that not all satellites can change their focus. Sentinel-5P, for example, does _sweep broom staring_, i.e. always looks down at exactly the same angle and swath width.
 Consequently, there are no acquisition plans for Sentinel-5P.
 
-- Lower earth orbit: 160-1000 km above sea level. ISS is at 600 km, OCO2 at 700 km. ~15.000 km/h for OCO.
-  - A-track: a.k.a. the afternoon track. Passes equator from south at 14:00.
-- Geo-stationary: 30.000 km above sea level. For communication- and relay-satellites. ~ 10.000 km/h.
-- Moon: 300.000 km
+-   Lower earth orbit: 160-1000 km above sea level. ISS is at 600 km, OCO2 at 700 km. ~15.000 km/h for OCO.
+    -   A-track: a.k.a. the afternoon track. Passes equator from south at 14:00.
+-   Geo-stationary: 30.000 km above sea level. For communication- and relay-satellites. ~ 10.000 km/h.
+-   Moon: 300.000 km
 
 ## Radar
 
@@ -54,11 +54,11 @@ The earth does not emit any radar-radiation (naturally, only a few pulsars do). 
 On the bright side (haha) that means that SAR can be used at night. Also, with radio waves being longer than optical waves, they can penetrate clouds.
 SAR-satellites often only carry a single antenna. This means that the band-centered strategies of PCA and max-llh-classification don't work there, since there is only one band.
 
-- Earth does not emit any radar (in fact, only lightning and some pulsars do emit radar naturally). So, radar must be an active sensor. Advantage: works at night.
-- The higher the wavelength, the better the penetration power: L\&P bands go through foliage and into the topsoil.
-- The lower the wavelength, the better the resolution.
-- Two data-products: amplitude and phase.
-- Side-facing. This way water can specularly reflect radar and appear perfectly black in image.
+-   Earth does not emit any radar (in fact, only lightning and some pulsars do emit radar naturally). So, radar must be an active sensor. Advantage: works at night.
+-   The higher the wavelength, the better the penetration power: L\&P bands go through foliage and into the topsoil.
+-   The lower the wavelength, the better the resolution.
+-   Two data-products: amplitude and phase.
+-   Side-facing. This way water can specularly reflect radar and appear perfectly black in image.
 
 Radar has some really weird properties.
 
@@ -77,22 +77,33 @@ $$r = \tau c / (2 \sin(\theta) )$$
 
 Thus:
 
-- The resolution is only a function of the incidence angle $\theta$ and the pulse duration $\tau$ - not of the platform altitude. A satellite gets an equally good resolution as an aircraft does.
-- Resolution gets _better_ the higher the incidence angle $\theta$. This is why radar is always side-facing. There is no spatial resolution directly under the platform. Opposite to optical sensors, resolution gets better the further out the observation.
-- **Polarization**: EM waves have a plane. In fact, there is a plane for the electrical wave and a perpendicular one for the magnetic field.
-  If a horizontally polarized light beam hits my eye, I'd only see a horizontal line. Non-polarized light consists of many waves with all possible angles. If they hit my eye, I's see a circle, not a line.
-  A radar antenna emits electric waves either vertically (V) or horizontally (H). The scattered signal \*might} have changed that polarization. Some antennas can pick up both V and H and differentiate between the two.
-  Antenna designs:
+-   The resolution is only a function of the incidence angle $\theta$ and the pulse duration $\tau$ - not of the platform altitude. A satellite gets an equally good resolution as an aircraft does.
+-   Resolution gets _better_ the higher the incidence angle $\theta$. This is why radar is always side-facing. There is no spatial resolution directly under the platform. Opposite to optical sensors, resolution gets better the further out the observation.
+-   **Polarization**: EM waves have a plane. In fact, there is a plane for the electrical wave and a perpendicular one for the magnetic field.
+    If a horizontally polarized light beam hits my eye, I'd only see a horizontal line. Non-polarized light consists of many waves with all possible angles. If they hit my eye, I's see a circle, not a line.
+    A radar antenna emits electric waves either vertically (V) or horizontally (H). The scattered signal \*might} have changed that polarization. Some antennas can pick up both V and H and differentiate between the two.
+    Antenna designs:
 
-- receive H, Transmit H: HH. Strong signal from horizontal, non-voluminous surfaces. Streets.
-- receive H, Transmit V: HV. Strong signal from horizontal, voluminous surfaces. Rough fields, low shrubbery
-- VH. Strong signal from vertical, voluminous surfaces. High trees
-- VV. Strong signal from vertical, non-voluminous surfaces. Walls.
+-   receive H, Transmit H: HH. Strong signal from horizontal, non-voluminous surfaces. Streets.
+-   receive H, Transmit V: HV. Strong signal from horizontal, voluminous surfaces. Rough fields, low shrubbery
+-   VH. Strong signal from vertical, voluminous surfaces. High trees
+-   VV. Strong signal from vertical, non-voluminous surfaces. Walls.
 
 Note that direct sunlight is unpolarized - the sun sends out waves in all possible orientations.
 But light can fall on objects that align polarization. Pretty much any time light reflects from something, it gets (at least partially, that is, elliptically) polarized.
 The more refraction, the more likely a change in polarization. Consequently, polarization change happens much when there is volume-scattering (branches, dry soil, ...)
 The direction of polarization is often parallel to the surface.
+
+### Radar to RGB
+
+-   The band math used depends on the units of your input SAR data.
+    -   If your input SAR data is in decibels, the band combination must be VV for red, VH for green, and VV-VH for blue.
+    -   If your input SAR data is in linear units, use VV for red, VH for green, and VV/VH for blue.
+-   The color composite shows
+    -   water bodies (ocean, rivers, and flooded areas) in blue and purple tones,
+    -   vegetated and forested regions in green,
+    -   urban structures in yellow.
+    -   Pink can be optimally oriented urban structures (oriented orthogonally to the radar look direction), debris in the water, or flooded vegetation.
 
 ## Important satellites
 
@@ -126,8 +137,8 @@ Copernicus delivers _thematic_ maps that do _not_ show the underlying satellite 
 This may well be the most valuable source of data for remote-sensing based products.
 Some good examples include:
 
-- [CO2 timeseries](https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-carbon-dioxide?tab=overview)
-- ...
+-   [CO2 timeseries](https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-carbon-dioxide?tab=overview)
+-   ...
 
 **Sentinelhub** [homepage](https://www.sentinel-hub.com/), [eo-browser](https://www.sentinel-hub.com/explore/eobrowser/) is intended as a more user-oriented tool.
 It facilitates Google-Earth-esque processing in the backend, having you only download the end-product. Nice features include: 3d-view, creation of timeseries-gifs, pins that can be aggregated to a story.
@@ -157,19 +168,19 @@ For some reason, people have decided that S3-L2-W should be hosted on another pa
 
 **Amazon S3** keeps a lot of satellite data as COGs.
 
-- Sentinel 1 from [here](https://registry.opendata.aws/sentinel-1/)
-  - The above page does not seem to conform to STAC 1.0. Maybe [the US-specific data](https://raw.githubusercontent.com/scottyhq/sentinel1-rtc-stac/main/13SBD/catalog.json) is a bit better.
-- Sentinel 2 from [here](https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif)
-- Sentinel3 data from [here](https://github.com/Sentinel-5P/data-on-s3/blob/master/DocsForAws/Sentinel3Description.md)
-- Landsat from [here](https://landsat-pds.s3.amazonaws.com/c1/L8/139/045/LC08_L1TP_139045_20170304_20170316_01_T1/LC08_L1TP_139045_20170304_20170316_01_T1)
+-   Sentinel 1 from [here](https://registry.opendata.aws/sentinel-1/)
+    -   The above page does not seem to conform to STAC 1.0. Maybe [the US-specific data](https://raw.githubusercontent.com/scottyhq/sentinel1-rtc-stac/main/13SBD/catalog.json) is a bit better.
+-   Sentinel 2 from [here](https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif)
+-   Sentinel3 data from [here](https://github.com/Sentinel-5P/data-on-s3/blob/master/DocsForAws/Sentinel3Description.md)
+-   Landsat from [here](https://landsat-pds.s3.amazonaws.com/c1/L8/139/045/LC08_L1TP_139045_20170304_20170316_01_T1/LC08_L1TP_139045_20170304_20170316_01_T1)
 
 The coverage is still pretty inconsistent and spotty. It makes sense to fall back to updated, curated lists like [this one](https://github.com/Fernerkundung/awesome-sentinel).
 
 **PLANET** is a large US firm which has acquired ...
 
-- VanderSat: a dutch agricultural satellite company which creates [soil-moisture and land-surface-temperature data](https://docs.vandersat.com/VanderSat_Data_Products.html#land-surface-temperature-lst-teff) from the microwave-satellites AMSR-2 (owned by JAXA) and -E (owned by NASA, on Aqua) ...which is weird, because usually you do thermal from infra-red, not microwave.
-- Synergise: Slovenian company that created Sentinelhub
-- Rapid Eye: one of first private constellations, optical, Berlin
+-   VanderSat: a dutch agricultural satellite company which creates [soil-moisture and land-surface-temperature data](https://docs.vandersat.com/VanderSat_Data_Products.html#land-surface-temperature-lst-teff) from the microwave-satellites AMSR-2 (owned by JAXA) and -E (owned by NASA, on Aqua) ...which is weird, because usually you do thermal from infra-red, not microwave.
+-   Synergise: Slovenian company that created Sentinelhub
+-   Rapid Eye: one of first private constellations, optical, Berlin
 
 ## Obtaining data
 
@@ -489,30 +500,30 @@ sentinelsat \\
  * and a link = "previous".
  */
 interface Item extends GeoJSON.Feature {
-  stac_version: number;
-  stac_extensions: Extension[];
-  links: Link[];
-  assets: Asset[];
-  collection: string;
+    stac_version: number;
+    stac_extensions: Extension[];
+    links: Link[];
+    assets: Asset[];
+    collection: string;
 }
 
 interface Catalog {
-  stac_version: number;
-  stac_extensions?: Extension[];
-  id: string;
-  type: 'Catalog';
-  description: string;
-  links: Link[];
-  title?: string;
+    stac_version: number;
+    stac_extensions?: Extension[];
+    id: string;
+    type: "Catalog";
+    description: string;
+    links: Link[];
+    title?: string;
 }
 
 interface Collection extends Catalog {
-  license: string;
-  extent: { spatial; temporal };
-  providers: Privider[];
-  keywords: string[];
-  assets: Asset[];
-  summaries?: Summary[];
+    license: string;
+    extent: { spatial; temporal };
+    providers: Privider[];
+    keywords: string[];
+    assets: Asset[];
+    summaries?: Summary[];
 }
 ```
 
@@ -559,53 +570,53 @@ https://medium.com/planet-stories/a-handy-introduction-to-cloud-optimized-geotif
 
 **TIFF**
 
-- head
-  - first 2 bytes: byte order
-    - 49 49 == little endian
-  - next 2 bytes: the number 42; to indicate that this is a tiff
-    - 2a 00 == 42 in little endian
-  - next 4 bytes: offset to first IFD
-- IFD: Image file directory
-  - tiffs are divided up into pages, which are individual images within a tiff.
-  - consists of:
-    - first 2 bytes: nr of tags
-    - next 12 bytes \* nr of tags: tag-data
-    - next 4 bytes: offset to next IFD or 0 if no more IFDs.
-- Tag:
-  - consists of:
-    - fist 2 bytes: tag id
-    - next 2 bytes: tag datatype
-    - next 4 bytes: nr of values
-    - then: tag-data or pointer to data
-- Important tags:
-  - TileWidth
-  - TileLength
-  - TileOffsets
-  - TileByteCounts
+-   head
+    -   first 2 bytes: byte order
+        -   49 49 == little endian
+    -   next 2 bytes: the number 42; to indicate that this is a tiff
+        -   2a 00 == 42 in little endian
+    -   next 4 bytes: offset to first IFD
+-   IFD: Image file directory
+    -   tiffs are divided up into pages, which are individual images within a tiff.
+    -   consists of:
+        -   first 2 bytes: nr of tags
+        -   next 12 bytes \* nr of tags: tag-data
+        -   next 4 bytes: offset to next IFD or 0 if no more IFDs.
+-   Tag:
+    -   consists of:
+        -   fist 2 bytes: tag id
+        -   next 2 bytes: tag datatype
+        -   next 4 bytes: nr of values
+        -   then: tag-data or pointer to data
+-   Important tags:
+    -   TileWidth
+    -   TileLength
+    -   TileOffsets
+    -   TileByteCounts
 
 **GeoTIFF**
 
-- Additional tags:
-  - for geo-referencing
+-   Additional tags:
+    -   for geo-referencing
 
 **COG**
 
-- A GeoTiff
-- With guarantees that the following file structure is maintained:
-- first TIFF header
-- then all IFDs (1, 2, 3, ..., last)
-- then image data for the IFDs (last, ..., 3, 2, 1)
-  This way we know from the header and ifd's which range in the file to request for a given tile.
-  Requests are made with a HTTP `Range` header on a GET request.
-  I guess that image 1 contains images 2,3,4,5; image 2 contains images 6,7,8,9; etc.
+-   A GeoTiff
+-   With guarantees that the following file structure is maintained:
+-   first TIFF header
+-   then all IFDs (1, 2, 3, ..., last)
+-   then image data for the IFDs (last, ..., 3, 2, 1)
+    This way we know from the header and ifd's which range in the file to request for a given tile.
+    Requests are made with a HTTP `Range` header on a GET request.
+    I guess that image 1 contains images 2,3,4,5; image 2 contains images 6,7,8,9; etc.
 
 ```js
-import './style.css';
-import { fromUrl } from 'geotiff';
+import "./style.css";
+import { fromUrl } from "geotiff";
 
 // https://github.com/geotiffjs/geotiff.js/
 
-const cogUrl = 'https://oin-hotosm.s3.amazonaws.com/56f9b5a963ebf4bc00074e70/0/56f9c2d42b67227a79b4faec.tif';
+const cogUrl = "https://oin-hotosm.s3.amazonaws.com/56f9b5a963ebf4bc00074e70/0/56f9c2d42b67227a79b4faec.tif";
 
 // makes a Range-request for bytes 0-65.536 to get the header (range is just a guess; but surely the header fits in that many bytes.)
 const tif = await fromUrl(cogUrl);
@@ -913,8 +924,8 @@ valPreds = model.predict(validGen)
 
 Nasa has very good documentation for this on [their website](https://earthdata.nasa.gov/learn/pathfinders/water-quality-data-pathfinder).
 
-- Salinity: measured by SMOS (ESA) and Aquarius (NASA)
-- Ocean current. Shine _really_ long wave radar on the ocean - several kilometers (thats LF, VLF and ULF radio waves, btw). At this range, waves cancel out and you get the medium height of the water to a few centimeters exact. Using Navier-Stokes, water height is related to current. Unfortunately, this really only works for surface currents.
+-   Salinity: measured by SMOS (ESA) and Aquarius (NASA)
+-   Ocean current. Shine _really_ long wave radar on the ocean - several kilometers (thats LF, VLF and ULF radio waves, btw). At this range, waves cancel out and you get the medium height of the water to a few centimeters exact. Using Navier-Stokes, water height is related to current. Unfortunately, this really only works for surface currents.
 
 ## Remote sensing for floods
 
@@ -1499,31 +1510,31 @@ Sentinel-1, for example, only offers L2 data over open ocean.
 
 ### Optical
 
-- OWT: optical water type. Nice with sentinel 2 and 3.
-  - GLASS-6C-Normalized: 6 spectral signatures of lake-waters: clear/low-chloro, peat/high-humic, chloro-med, chloro-high, bright/sediment-med, bright/sediment-high
+-   OWT: optical water type. Nice with sentinel 2 and 3.
+    -   GLASS-6C-Normalized: 6 spectral signatures of lake-waters: clear/low-chloro, peat/high-humic, chloro-med, chloro-high, bright/sediment-med, bright/sediment-high
 
 ### SAR
 
 SAR-preprocessing:
 
-- TOPSAR-Split:
-- Orbit-files: updated orbit-info is available a couple of weeks after acquisition.
-- Co-registration
-- Coherence: removes base-noise (some objects on the ground do send off a tiny bit of radar on their own.)
-- TOPSAR-deburst: moving-window averaging
-- Multilook: Smoothing out speckle by looking at a location through multiple images.
-- Terrain-Correction: radar is side-looking; has foreshortening etc.
+-   TOPSAR-Split:
+-   Orbit-files: updated orbit-info is available a couple of weeks after acquisition.
+-   Co-registration
+-   Coherence: removes base-noise (some objects on the ground do send off a tiny bit of radar on their own.)
+-   TOPSAR-deburst: moving-window averaging
+-   Multilook: Smoothing out speckle by looking at a location through multiple images.
+-   Terrain-Correction: radar is side-looking; has foreshortening etc.
 
 SAR-analysis
 
-- Radar vegetation index
-- SAR/Urban areas/Speckle divergence
+-   Radar vegetation index
+-   SAR/Urban areas/Speckle divergence
 
 ### General
 
 Classification:
 
-- raster/classification/supervised/Random-forrest
+-   raster/classification/supervised/Random-forrest
 
 ### Automation
 
