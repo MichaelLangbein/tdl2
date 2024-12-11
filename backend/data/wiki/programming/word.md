@@ -6,9 +6,9 @@
 -   Variables that are inserted at different places in the document
 -   https://www.youtube.com/watch?v=yO8vszeccQE
 
-## Designs and Styles
+## Themes and Styles
 
--   Design: a collection of styles: Heading, sub-heading, paragraph, ...
+-   Theme: a collection of styles: Heading, sub-heading, paragraph, ...
 -   Style: a combination of font, color, spacing, ...
 -   Managed from the "Design" tab
 -   https://www.youtube.com/watch?v=w2lES-5Ynbk
