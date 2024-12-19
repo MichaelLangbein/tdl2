@@ -202,3 +202,26 @@ https://microsoftlearning.github.io/dp-080-Transact-SQL/Instructions/Labs/13-imp
     
  COMMIT TRANSACTION;
 ```
+
+
+## Query planning
+
+https://www.youtube.com/watch?v=VcA92fe1Erw
+
+```sql
+set showplan_all on;
+go
+
+-- some statement
+go
+
+set showplan_all off;
+go
+```
+
+Rules of thumb:
+- where, join, order on indexed columns
+- but too many indices slow down inserts, updates and deletes
+- prefer joins over subqueries
+- prefer set-based operations over loops
+- transactions are blocking, so only use them where required
