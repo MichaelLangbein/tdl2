@@ -11,11 +11,10 @@ Requires windows
 
 ArcGIS itself is free for 3 weeks
 
-# Geoprocessing
+# Concepts
 
--   building geoprocessing tools in python:
-    -   Intro: https://www.youtube.com/watch?v=iTZytnBcagQ
-    -   Testing, debugging, etc: https://www.youtube.com/watch?v=y84onLbW-_M
+-   feature class: data
+-   feature layer: display styling of a feature class
 
 # Experience builder
 
@@ -33,13 +32,36 @@ ArcGIS itself is free for 3 weeks
     -   then some of its fields have reduced domains
     -   then they're automatically styled differently
 -   Group values aka contingent values:
-    -   you _could_ create a separate domain for each subtype
-        -   Example:
-            -   subtype "main_character" (field "character"), field "camera_angles" has domain "ANGLES_MAIN" = (close, half, threequarter)
-            -   subtype "side_character" (field "character"), field "camera_angles" has domain "ANGLES_SIDE" = (threequarter, background)
-    -   but it's easier to:
-        -   Just have one domain "ANGLES" = (close, half, threequarter, background)
-        -   Create contingent values that restrict ANGLES as a function of subtype "character"
+    -   given field A has some value, reduce the allowed values for field B
+
+# Scripting
+
+## Get current tool's python command:
+
+-   https://www.youtube.com/watch?v=sCkVI4VHdXo
+-   (after running tool) history (might have to enable first) > tool > right click > copy python
+
+## Create custom tool
+
+-   Videos:
+    -   3 Minutes: https://www.youtube.com/watch?v=nPUkTyDaIhg
+    -   Intro: https://www.youtube.com/watch?v=iTZytnBcagQ
+    -   Testing, debugging, etc: https://www.youtube.com/watch?v=y84onLbW-_M
+-   catalog > tools > right click > new python toolbox
+-   select tool > edit
+-   (code)
+    -   `getParameterInfo`
+        -   `return [arcpy.Parameter(displayName="Input layer", datatype="GPFeatureLayer", direction="Input")]`
+            -   datatype: DEFeatureClass, GPFeatureLayer, Field, Double, ...
+                -   DE: DataElement
+                -   GP: GeoProcessing
+    -   `execute`
+-   refresh toobox
+
+## R binding
+
+-   https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started
+-   https://github.com/R-ArcGIS/r-bridge
 
 # Vertigis Studio
 
