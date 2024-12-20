@@ -9,25 +9,31 @@
     -   Physiological Impact: Currents as low as 10 milliamperes (mA) can cause painful shocks, while 100 mA can be fatal, potentially leading to heart fibrillation or stopping the heart.
 
 -   Voltage:
-    -   Potential for Danger: High voltage can cause severe burns and increase the likelihood of electric shock.
-    -   However, it’s the current that passes through the body that poses the actual danger.
+    -   It's the current, not the voltage, that passes through the body that poses the actual danger.
     -   High voltage meant that electrons really want to flow ... even through air.
 
-# Trivia
+> Effects of current:
+>
+> -   1mA: tingling
+> -   10mA: spasm, potentially hard to let go of wire
+> -   50mA: potentially lethal through fibrillation
+>
+> AC is more likely to cause fibrilation than DC.
+>
+> Body resistance:
+>
+> -   dry skin: $500.000 - 1.000.000 \Omega$
+> -   wet skin: $1.000 - 100.000 \Omega$
+> -   tongue: $1.000 - 20.000 \Omega$
+> -   **But**: [at > 500V, human skin resistance breaks down to $500 \Omega$](https://pmc.ncbi.nlm.nih.gov/articles/PMC2763825/#:~:text=At%20500%20V%20or%20more%2C%20high%20resistance%20in%20the%20outer,of%20the%20skin%20breaks%20down.&text=This%20lowers%20the%20body's%20resistance,that%20can%20be%20easily%20overlooked.)
+>     -   at this voltage the skin ionizes and becomes conductive
 
--   EU grid:
-    -   frequency 50 Hz
-    -   230 V at consumer
-    -   110.000 V in transmission
-
-## Intro to wind power issues
-
-https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
-
--   turning variable turbine speed into grid's 50 Hz
-    -   AC to DC **rectifiers**
-    -   DC to AC **inverter** with target frequency
--   strong demand for power can make grid-frequency drop
+> > Example: touching outlet with dry or wet skin
+> >
+> > -   dry skin: 0.23 mA ... barely noticable
+> > -   wet skin: 230 mA ... **deadly**.
+> >     -   **worse yet**: 230 mA will not yet trip your breaker!
+> >     -   They start at 16 A. So the breaker will not save you.
 
 # Physics
 
@@ -36,43 +42,74 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
 
 ## Basics
 
--   Current $I$ [Amp] = electrons per second
+-
+-   Resistance $R$ [Ohm]. $R = \rho L[m] / A[m^2]$
+    -   $rho$: resistivity: $\rho_{copper} \approx 1.77 \cdot 10^{-8} \Omega m$
+-   Charge $Q$ [Coulomb]. $1 C \approx 6.2 \cdot 10^{18}$ electron charges
+-   Current $I$ [Amp] = electrons per second $I = Q/t$
 -   Voltage $V$ [Volt] = the pull that electrons feel
--   Power $P$ [Watt]
--   Resistence $R$ [Ohm]
+    -   Ohm's law: $V = I R$
+-   Power $P$ [Watt]: $P = I V$
+    -   Applying Ohm's law: $P = I^2 R$
 
-Ohm's law:
-$$V = I R$$
+> **Example**: Südlink current
+>
+> Given:
+>
+> -   15cm diameter copper cable
+> -   700km long
+> -   525 kV voltage
+>
+> Resistence $R = \rho L / A \approx 0.7 \Omega$
+>
+> $I = V / R \approx 750 kA$
 
-Power:
-$$P = I V$$
-Applying Ohm's law:
-$$P = I^2 R$$
+## Electro magnetism
 
-Transmission losses:
-$$\Delta V \tilde l$$
+Relevant for building antenna's etc.
 
-## AC vs DC
+Faraday's law:
+$$\nabla E = - \frac{dB}{dt}$$
+Ampere's law:
+$$\nabla B = a - b \frac{dE}{dt}$$
+
+## Unexpected phenomena
+
+### AC vs DC
 
 -   Edison wanted DC, Tesla AC
 -   AC makes it easy to step up or down voltage using transformers
 -   DC is more lossy for long cables
 
-## Frequency drops in grids under heavy load
+### Frequency drops in grids under heavy load
 
-## Three phase transmission has very low losses
+### Three phase transmission has very low losses
 
-## Components
+# Components
 
-### Fuses
+## Grids
+
+-   EU grid:
+    -   frequency 50 Hz
+    -   230 V at consumer
+    -   about 110.000 V in transmission
+-   US grid:
+    -   frequency 60 Hz
+    -   120 V
+
+## Fuses
 
 Piece of wire that physically burns away when current exceeds a threshold
 
-### Circuit breaker
+## Circuit breaker
 
 A reusable fuse: instead of burning out, pushes away a connection by charging a capacitor or some such.
 
-### Transformers
+## Grounds
+
+...
+
+## Transformers
 
 Increase voltage, reduce current ... or vice versa.
 
@@ -83,17 +120,15 @@ Increase voltage, reduce current ... or vice versa.
 
 Requires AC. DC doesn't change, so no magnetic field, so no induction.
 
-### Rectifiers
+## Rectifiers
 
 Convert AC to DC
 
-### Inverters
+## Inverters
 
 Convert DC to AC
 
 ### Antenna
-
-# Hardware
 
 ## Power transmission lines
 
@@ -107,6 +142,15 @@ https://www.youtube.com/watch?v=qjY31x0m3d8
 -   Towers transmit electricity in **three phases**, with much space between the three lines
 -   Additionally, there is a fourth line on top
     -   doesn't carry any current, but protects from lightning
+
+## Wind power
+
+https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
+
+-   turning variable turbine speed into grid's 50 Hz
+    -   AC to DC **rectifiers**
+    -   DC to AC **inverter** with target frequency
+-   strong demand for power can make grid-frequency drop
 
 # Südlink
 
