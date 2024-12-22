@@ -63,6 +63,16 @@
 > Resistence $R = \rho L / A \approx 0.7 \Omega$
 >
 > $I = V / R \approx 750 kA$
+>
+> > Note that Südlink voltage is very comparable to ordinary over-ground cables. The only difference is in the distance it needs to cover ... which is why it uses such a big diameter. Other than that its a perfectly ordinary cable.
+>
+> > Cables lose energy during transmission. The lost power is $P = I^2 R$.
+> >
+> > -   We've already reduced $R$ by increasing the diameter
+> > -   We further reduce it by reducing $I$ (while using higher $V$) through a transformer. Power lines in general have relatively low current, but very high voltage.
+
+Reason why power lines use very high voltage:
+https://www.youtube.com/watch?v=jcY4QN7awEc
 
 ## Electro magnetism
 
@@ -74,12 +84,6 @@ Ampere's law:
 $$\nabla B = a - b \frac{dE}{dt}$$
 
 ## Unexpected phenomena
-
-### AC vs DC
-
--   Edison wanted DC, Tesla AC
--   AC makes it easy to step up or down voltage using transformers
--   DC is more lossy for long cables
 
 ### Frequency drops in grids under heavy load
 
@@ -120,13 +124,50 @@ Increase voltage, reduce current ... or vice versa.
 
 Requires AC. DC doesn't change, so no magnetic field, so no induction.
 
+## Capacitor
+
+Used for smoothing.
+
+## Diodes
+
+-   Allow power to pass in one direction but not the other.
+-   LEDs are light emitting diodes.
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/Diode.png">
+
+## Transistors
+
+Three types:
+
+-   MOSFET
+-   BJT
+-   IGBT
+
+Like a switch, but not opend/closed manually, but based on whether or not current goes in through the control wire.
+
 ## Rectifiers
 
 Convert AC to DC
 
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/circuit_rectifier.png">
+
+https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgA3WuW4w7qtjw0o4btSqToCNgBMQhGlTooQGNCGwbVshgDMAhgFcANgBc5IPDxVqNWqjv3HzljJBEIaIxcq0gnQ1MLeXdPbysbf0CXCwB3AU1hBSVaf0g2BKVlPki-VQywPAgwSAR+IRFS8t5+QTBsaAdsd2wwQiwML2QqMA0YEQG2AGMrRU1sfjxxhD7aKFgkRsxCOAw6FsgUBvoYOAgMhPVBDWmRbEmoTLUPCgizijnDsfPL6ork54fZ1Xfaq4A9moUqIlKQJNA8KJVORsGwgA
+
+Capacitor is there only for smoothing out.
+
 ## Inverters
 
 Convert DC to AC
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/circuit_inverter.png">
+
+https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgA3EQmqvGvN14gMkGlAnCkVGdARsA7kKqjxpFCLFRFIdZrXENOQtqV68cXYZD9BkHeYFWNxMBvtnrevWEgITHs7I-srBATo8VL4hkTZO9gDOQcZBFjLgIABmAIYANgkMbEnebkF66Tn5hZ4atuA0wnWBeqrgYNgmrYGsHfptvSnd7Z38-SZ4YOFKPeOTY7qlQ70+w2Gm89EmPn5T8xMmbti1c90NfE5gZzYnOpeNc+0ogvvaSTMive8YoxV5BUXzVwad7lDKVf5gCbgFBHa4HI7PE4gbC4WCEbCsMgoM78ci+KJoKDQcQwGhsAD2IBQGh4kkgpGoMDsVKpGmwFNZQjpDOkxIyGmpyLYQA
+
+-   Phase 1: open switches TL and BR, close switches TR and BL
+-   Phase 2: open switches TR and BL, close switches TL and BR
+
+The faster you do this, the higher the frequency.
+Switching is usually done with electronically controlled switches (so called transistors), not manually.
 
 ### Antenna
 
@@ -167,7 +208,7 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
 -   700km lang
 -   Scheint 3-phasen zu verwenden? Oder vielleicht nur 2?
     -   2 Kabelsysteme in parallel, bestehend aus jeweils:
-        -   2x525V
+        -   2x525 kV
         -   1x Notfallkabel
 -   Norden: Tennet, Süden: EnBW?
 -   Phasen: https://www.youtube.com/watch?v=6TEQFOr79IQ
