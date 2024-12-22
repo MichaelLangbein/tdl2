@@ -133,23 +133,28 @@ Used for smoothing.
 -   Allow power to pass in one direction but not the other.
 -   LEDs are light emitting diodes.
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/Diode.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/Diode.png">
 
 ## Transistors
 
-Three types:
+Like a switch, but not opened/closed manually, but based on whether or not current goes in through the control wire.
 
--   MOSFET
--   BJT
--   IGBT
+Two types:
 
-Like a switch, but not opend/closed manually, but based on whether or not current goes in through the control wire.
+-   PNP
+-   NPN
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_npn_transistor.svg">
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_transistor.png">
+
+https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxABZIQkLsaBTAWjDACgB3EPOS7FEITx4+AyJ0HDRkkQgyEoEobPkgMeCjVXiuGlQuIVNchTpCHNdAXn7TxAN0EYBKKmo0hX1ahDQ0oATAIbABOgggKmAKEESDYQgEIZjGRzk4ubmbqml7umvEi4mB4ENlaCnrlARTF0IRgxPwIFMSQKHgYFEhgvGB+MJoDbI4WVaNWgZTU-YHQwQAu3GAK2B4lChM+UNAYkNj7HUY9KD0I9DDyKAitFBjEhHRGmj3UACYMAGYAhgCuADbzCRlApLFYeZJSCYpOIJcQADyWxE88XAuHIKGwSOeIgAagwQgBPAA6AGcOAwvgBrUkAQQAwqSABQIHEASlJ0E5pIARj95qSSfMQgB7AB2AHNSQxRcKfuKABak+bC0lfADG8wAlvYvvMGEqQl9RSTNYLhSE2AjiDZKCVwPUsR5sSA8YSBUKxZKSdzdXq3STGWg2Ryud6+aS1UbSWK-sSSQAHH4kxVk+XSiOakJqn6a-kksCqjXa3UMEkGo0ms0Wq0dSgUEQ9DC0BAQHKaOmZ7O50koS3cPxoTStERochtkAdrM5vPsYXmQSDKakTw+OoBARI7BsIA
 
 ## Rectifiers
 
 Convert AC to DC
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/circuit_rectifier.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_rectifier.png">
 
 https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgA3WuW4w7qtjw0o4btSqToCNgBMQhGlTooQGNCGwbVshgDMAhgFcANgBc5IPDxVqNWqjv3HzljJBEIaIxcq0gnQ1MLeXdPbysbf0CXCwB3AU1hBSVaf0g2BKVlPki-VQywPAgwSAR+IRFS8t5+QTBsaAdsd2wwQiwML2QqMA0YEQG2AGMrRU1sfjxxhD7aKFgkRsxCOAw6FsgUBvoYOAgMhPVBDWmRbEmoTLUPCgizijnDsfPL6ork54fZ1Xfaq4A9moUqIlKQJNA8KJVORsGwgA
 
@@ -159,7 +164,7 @@ Capacitor is there only for smoothing out.
 
 Convert DC to AC
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/circuit_inverter.png">
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_inverter.png">
 
 https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgA3EQmqvGvN14gMkGlAnCkVGdARsA7kKqjxpFCLFRFIdZrXENOQtqV68cXYZD9BkHeYFWNxMBvtnrevWEgITHs7I-srBATo8VL4hkTZO9gDOQcZBFjLgIABmAIYANgkMbEnebkF66Tn5hZ4atuA0wnWBeqrgYNgmrYGsHfptvSnd7Z38-SZ4YOFKPeOTY7qlQ70+w2Gm89EmPn5T8xMmbti1c90NfE5gZzYnOpeNc+0ogvvaSTMive8YoxV5BUXzVwad7lDKVf5gCbgFBHa4HI7PE4gbC4WCEbCsMgoM78ci+KJoKDQcQwGhsAD2IBQGh4kkgpGoMDsVKpGmwFNZQjpDOkxIyGmpyLYQA
 
@@ -195,8 +200,10 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
 
 # Südlink
 
--   Kabel ungefähr 15cm Durchmesser Kupfer (ohne Mantel gerechnet)
--   4.000.000 V (40fache einer normalen Leitung)
+-   Unter Grund
+    -   Darum muss DC sein (während die meisten Mittelstrecken-Türme AC verwenden)
+    -   Sehr großer diameter: Kabel ungefähr 15cm Durchmesser Kupfer (ohne Mantel gerechnet)
+        -   So etwas nur sinnvoll mit DC (AC würde sich vom Kern wegdrücken (Corona effekt), damit wäre höherer Wiederstand)
 -   Versorgt ca 10 Mio Haushalte
 -   Kostet wegen Eingraben 4-5 mal so viel wie oberirdische Leitungen
     -   10 Milliarden €
@@ -211,7 +218,7 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
         -   2x525 kV
         -   1x Notfallkabel
 -   Norden: Tennet, Süden: EnBW?
--   Phasen: https://www.youtube.com/watch?v=6TEQFOr79IQ
+-   Bauphasen: https://www.youtube.com/watch?v=6TEQFOr79IQ
     -   Baugrunduntersuchung
         -   Kontaktaufnahme Landwirt
         -   Bestandsaufnahme
