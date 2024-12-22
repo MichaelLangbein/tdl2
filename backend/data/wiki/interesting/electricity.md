@@ -144,7 +144,7 @@ Two types:
 -   PNP
 -   NPN
 
-<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_npn_transistor.svg">
+<img width="50%" src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_npn_transistor.svg">
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_transistor.png">
 
