@@ -74,6 +74,15 @@
 Reason why power lines use very high voltage:
 https://www.youtube.com/watch?v=jcY4QN7awEc
 
+## Kirchoff laws
+
+-   Consider the number 8 on a digital clock
+    -   it has 2 nodes and 3 loops
+-   **Node-law** (current): at every node, $\sum_{i \in In} A_i = \sum_{j \in Out} A_j$
+-   **Loop-law** (voltage): for every node, $\sum_{i \in Loop} V_i = 0$
+
+Exercises: https://raeng.org.uk/media/wlelusmo/8-kirchhoffs-laws.pdf
+
 ## Electro magnetism
 
 Relevant for building antenna's etc.
@@ -82,12 +91,6 @@ Faraday's law:
 $$\nabla E = - \frac{dB}{dt}$$
 Ampere's law:
 $$\nabla B = a - b \frac{dE}{dt}$$
-
-## Unexpected phenomena
-
-### Frequency drops in grids under heavy load
-
-### Three phase transmission has very low losses
 
 # Components
 
@@ -137,7 +140,10 @@ Used for smoothing.
 
 ## Transistors
 
-Like a switch, but not opened/closed manually, but based on whether or not current goes in through the control wire.
+https://www.youtube.com/watch?v=-qRNJhU1OLM&t=18s
+
+-   Like a switch, but not opened/closed manually, but based on whether or not current goes in through the control wire.
+-   Basically: needs a tiny push from the top (=base) to allow a large flow through the body
 
 Two types:
 
@@ -173,6 +179,38 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 
 The faster you do this, the higher the frequency.
 Switching is usually done with electronically controlled switches (so called transistors), not manually.
+
+## Effects of different sources and sinks
+
+**Load** [W]: sum of all consumers' power-demands.
+
+-   in a circuit, load should equal provided power
+    -   batteries provide power on demand,
+    -   but wind-turbines provide power based on wind, not on demand.
+
+|     | Battery or coal power | Wind turbine | Lamp (=consumer) |
+| --- | --------------------- | ------------ | ---------------- |
+| $V$ | fixed                 | fixed        |                  |
+| $P$ |                       |              | fixed            |
+| $I$ | $f(consumers)$        | $f(wind)$    |                  |
+
+-   Battery:
+    -   delivers fixed $V$
+    -   delivers as much $I$ to satisfy the consumer's $P$
+-   Wind
+    -   delivers fixed $V$
+    -   delivers variable $I$, but _not_ as function of consumers, but as function of wind strength
+-   thus, to satisfy consumers:
+    -   if much wind, much current
+        -   thus reduce other power plants so that output doesn't exceed load
+    -   if low wind, low current
+        -   thus increase other power plants
+
+### If too little power is provided:
+
+    - capacitors unload
+    - frequency can drop
+      - if that happens, electric devices can be damaged
 
 ### Antenna
 
@@ -226,3 +264,17 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
         -   Schadensaufnahme: Dokumentieren aller Schäden, Wirtschaftlichkeitsreduzierung
         -   Entschädigung
             -   Einmalzahlung auf Basis höchster Ertragszahlen
+
+# Interesting phenomena
+
+## Frequency drops in grids under heavy load
+
+Texas power outage: https://www.youtube.com/watch?v=08mwXICY4JM
+
+-   Too much load on generators _bogs them down_, making them spin slower, reducing network frequency
+-   every generator in the grid is magnetically coupled
+-   if some generators get out of sync, they can take heavy damage
+    -   to protect the equipment, their breakers fire, isolating them ...
+    -   ... but that means even less power is provided to the grid
+
+## Three phase transmission has very low losses
