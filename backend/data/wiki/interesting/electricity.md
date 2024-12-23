@@ -42,15 +42,16 @@
 
 ## Basics
 
--
--   Resistance $R$ [Ohm]. $R = \rho L[m] / A[m^2]$
+-   **Resistance** $R$ [Ohm]. $R = \rho L[m] / A[m^2]$
     -   $rho$: resistivity: $\rho_{copper} \approx 1.77 \cdot 10^{-8} \Omega m$
--   Charge $Q$ [Coulomb]. $1 C \approx 6.2 \cdot 10^{18}$ electron charges
--   Current $I$ [Amp] = electrons per second $I = Q/t$
--   Voltage $V$ [Volt] = the pull that electrons feel
+-   **Charge** $Q$ [Coulomb]. $1 C \approx 6.2 \cdot 10^{18}$ electron charges
+-   **Current** $I$ [Amp] = electrons per second $I = Q/t$
+-   **Voltage** $V$ [Volt] = the pull that electrons feel
     -   Ohm's law: $V = I R$
--   Power $P$ [Watt]: $P = I V$
+-   **Power** $P$ [Watt]: $P = I V$
     -   Applying Ohm's law: $P = I^2 R$
+-   **Technical (aka conventional) current** is the flow of positive charges. Physical current is the flow of electrons, and opposite to technical current.
+    -   Arrows in diagrams (like for a diode) point in the direction of _technical_ current.
 
 > **Example**: Südlink current
 >
@@ -140,6 +141,8 @@ Used for smoothing.
 
 ## Transistors
 
+### NPN
+
 https://www.youtube.com/watch?v=-qRNJhU1OLM&t=18s
 
 -   Like a switch, but not opened/closed manually, but based on whether or not current goes in through the control wire.
@@ -156,6 +159,32 @@ Two types:
 
 https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxABZIQkLsaBTAWjDACgB3EPOS7FEITx4+AyJ0HDRkkQgyEoEobPkgMeCjVXiuGlQuIVNchTpCHNdAXn7TxAN0EYBKKmo0hX1ahDQ0oATAIbABOgggKmAKEESDYQgEIZjGRzk4ubmbqml7umvEi4mB4ENlaCnrlARTF0IRgxPwIFMSQKHgYFEhgvGB+MJoDbI4WVaNWgZTU-YHQwQAu3GAK2B4lChM+UNAYkNj7HUY9KD0I9DDyKAitFBjEhHRGmj3UACYMAGYAhgCuADbzCRlApLFYeZJSCYpOIJcQADyWxE88XAuHIKGwSOeIgAagwQgBPAA6AGcOAwvgBrUkAQQAwqSABQIHEASlJ0E5pIARj95qSSfMQgB7AB2AHNSQxRcKfuKABak+bC0lfADG8wAlvYvvMGEqQl9RSTNYLhSE2AjiDZKCVwPUsR5sSA8YSBUKxZKSdzdXq3STGWg2Ryud6+aS1UbSWK-sSSQAHH4kxVk+XSiOakJqn6a-kksCqjXa3UMEkGo0ms0Wq0dSgUEQ9DC0BAQHKaOmZ7O50koS3cPxoTStERochtkAdrM5vPsYXmQSDKakTw+OoBARI7BsIA
 
+### MOSFET
+
+-   Like a NPN ... but doesn't require _current_ to go through base, but only voltage to be felt at it
+-   Much easier to make circuits from. Good for H-bridge inverters, for example
+-   https://www.youtube.com/watch?v=AwRJsze_9m4
+-
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_mosfet.png">
+
+https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxABZykLsQEBTAWjDACgAzejQkbNEIQwo+A-uGhIYkFGwDug4X0gVFIlAl6R5akBt544ezVB1CRtEeb7YtbAE4hDkSuOuWo4NgDdKR-i4UxLwBnoEuUmGSbADOlMGiESh4iZ4QHACGADYxDDoIyakIPKnaCkEhAhWuItqO1R4URh4uYHA6TYHinaU+Ts3izsZank16LhNQ0QAeesQQRHS05ES8qiiqAMIA9gB2AC7221kAOjEAxgCW9ucArpf7bLPJxHp4r7S8KMQW4CkA6gwMgBrM7eY77DIAcwYZwAFAgAGoASiegmw63wIAweC+rEoelUAAV7JcALYZewATzOVxu90eswQ2DoGJchDEtAJYBS5z2uwY532lz2aMIGL0GmQhHWhVUPJAAGVDnsofC0CiADRnABGt32Zz2WRpMXst12MTOlw4ZwAsgB5RUAMQAogAVXUZXJnDJCy7eDL7BgAEzY208MtGkFI4ymtT0nmwbCAA
+
+-   N channel mosfet:
+    -   power-supply on drain-side
+    -   if voltage between gate and source ...
+    -   ... then conventional current flows from drain to source
+    -   Thus: conventional current goes in through drain, only if voltage between gate and drain
+        -   opened by ingoing voltage
+-   P channel mosfet:
+    -   power-supply on source-side
+    -   if _no_ voltage between gate and source ...
+    -   ... then conventional current flows from source to drain
+    -   Thus: conventional current goes in through source, but is blocked if voltage between gate and source
+        -   closed by ingoing voltage
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit-mosfets.png">
+
 ## Rectifiers
 
 Convert AC to DC
@@ -168,7 +197,10 @@ Capacitor is there only for smoothing out.
 
 ## Inverters
 
-Convert DC to AC
+-   Convert DC to AC.
+-   Ciruit below is known as **H-bridge** inverter
+    -   https://www.youtube.com/watch?v=3N_4VpzmKY0&pp=ygURSCBicmlkZ2UgaW52ZXJ0ZXI%3D
+    -   Personally, I like to think that current flows through the H first in the shape of a $S$, then in the shape of a $2$
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_inverter.png">
 
@@ -179,6 +211,19 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 
 The faster you do this, the higher the frequency.
 Switching is usually done with electronically controlled switches (so called transistors), not manually.
+
+Instructions:
+
+-   using a single transistor: https://www.youtube.com/watch?v=XrJ_zLWFGFw&list=PLlBVuTSjOrclb0iCMSRpS_H1lSrlSVeEm&index=16&t=35s&pp=iAQB
+-   controlling an h-bridge: https://www.youtube.com/watch?v=YU17L650k3s&list=PLlBVuTSjOrclb0iCMSRpS_H1lSrlSVeEm&index=17&t=3s&pp=iAQB
+
+<br/>
+
+There is a somewhat simpler setup, which only requires two transistors. But it seems to have an inconsistent frequency:
+
+<img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_inverter2.png">
+
+https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORIRkISJ9ApgLRhgBQAbjUar-xyR+RPlHG1w6cXRgIOYHKRCpFNVHSEiNE8FGjIEWSGGSKwpLAmS0wWEC0xC4OPGhxHDw-ZGQmcaOh+vjhgqGb2MOQcAC4g6FjSyDj8yakp8XowcEQJYJBYprjCnsj6ZgiQfMlg6KGQ1jbgcCAAJkwAZgCGAK4ANjGx8Yn06On8CGMoeiww+KRaucj4JsSG+liWCKQIAWFERlio1Pl07d39gwDuIFrqmt541JAcN3dEandj-C9v3t8oDIA36A-gAtIoSZQV63R7oagQp7Qm6I+Gg+iiZHotAIjKiH4wiH49EIWpYoliYnEkEJJIZWoTTEvABOUkZJymSLopxBDNuaNRzxhtNG-HYdIJrPF6OlwOacBhstQ43iyuhYQgqhwNDUWvu4l2pGgRCONnQpGIBAI8qksmN+iIHAA9uBlFQJJByCpudBtXRpBYUBwgA
 
 ## Effects of different sources and sinks
 
