@@ -145,8 +145,9 @@ Used for smoothing.
 
 https://www.youtube.com/watch?v=-qRNJhU1OLM&t=18s
 
--   Like a switch, but not opened/closed manually, but based on whether or not current goes in through the control wire.
--   Basically: needs a tiny push from the top (=base) to allow a large flow through the body
+-   Like a switch, but not opened/closed manually, but based on whether or not current goes in through the control wire (base) to the emitter.
+-   Basically: needs a tiny stream of current from the top (=base) to emitter ...
+-   ... which then allows a large current from collector to emitter.
 
 Two types:
 
@@ -162,7 +163,8 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 ### MOSFET
 
 -   Like a NPN ... but doesn't require _current_ to go through base, but only voltage to be felt at it
--   Much easier to make circuits from. Good for H-bridge inverters, for example
+-   Much easier to make circuits from. Good for H-bridge inverters, for example.
+-   Can be activated without being put in line of main-curcuit (contrary to NPN): attaching an arduino's output _without inlining_ is already enough to activate.
 -   https://www.youtube.com/watch?v=AwRJsze_9m4
 -
 
@@ -170,13 +172,13 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 
 https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxABZykLsQEBTAWjDACgAzejQkbNEIQwo+A-uGhIYkFGwDug4X0gVFIlAl6R5akBt544ezVB1CRtEeb7YtbAE4hDkSuOuWo4NgDdKR-i4UxLwBnoEuUmGSbADOlMGiESh4iZ4QHACGADYxDDoIyakIPKnaCkEhAhWuItqO1R4URh4uYHA6TYHinaU+Ts3izsZank16LhNQ0QAeesQQRHS05ES8qiiqAMIA9gB2AC7221kAOjEAxgCW9ucArpf7bLPJxHp4r7S8KMQW4CkA6gwMgBrM7eY77DIAcwYZwAFAgAGoASiegmw63wIAweC+rEoelUAAV7JcALYZewATzOVxu90eswQ2DoGJchDEtAJYBS5z2uwY532lz2aMIGL0GmQhHWhVUPJAAGVDnsofC0CiADRnABGt32Zz2WRpMXst12MTOlw4ZwAsgB5RUAMQAogAVXUZXJnDJCy7eDL7BgAEzY208MtGkFI4ymtT0nmwbCAA
 
--   N channel mosfet:
+-   N channel MOSFET:
     -   power-supply on drain-side
     -   if voltage between gate and source ...
     -   ... then conventional current flows from drain to source
     -   Thus: conventional current goes in through drain, only if voltage between gate and drain
         -   opened by ingoing voltage
--   P channel mosfet:
+-   P channel MOSFET:
     -   power-supply on source-side
     -   if _no_ voltage between gate and source ...
     -   ... then conventional current flows from source to drain
