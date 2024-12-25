@@ -128,11 +128,16 @@ Increase voltage, reduce current ... or vice versa.
 
 Requires AC. DC doesn't change, so no magnetic field, so no induction.
 
-## Capacitor
+## Capacitors and inductors
 
-Used for smoothing.
+|          | capacitor                                                    | inductor                                                    |
+| -------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
+| function | store and release energy                                     |  store and release energy                                   |
+| physics  | two separated plates, being charged up with load             | a coil building up a magnetic field                         |
+| DC       | block current after a while                                  | allow current to pass after a while                         |
+| AC       |  cause phase shift where current leads voltage by 90 degrees | cause phase shift where voltage leads current by 90 degrees |
 
-## Diodes
+    ## Diodes
 
 -   Allow power to pass in one direction but not the other.
 -   LEDs are light emitting diodes.
@@ -298,10 +303,9 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
     -   Wo möglich durch Bergwerke
     -   https://www.youtube.com/watch?v=-hwuPgkGC04
 -   700km lang
--   Scheint 3-phasen zu verwenden? Oder vielleicht nur 2?
-    -   2 Kabelsysteme in parallel, bestehend aus jeweils:
-        -   2x525 kV
-        -   1x Notfallkabel
+-   2 Kabelsysteme in parallel, bestehend aus jeweils:
+    -   2x525 kV (ein postitives Kabel und ein negatives)
+    -   1x Notfallkabel
 -   Norden: Tennet, Süden: EnBW?
 -   Bauphasen: https://www.youtube.com/watch?v=6TEQFOr79IQ
     -   Baugrunduntersuchung
