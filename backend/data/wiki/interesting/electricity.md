@@ -231,6 +231,11 @@ Using resistors is pretty important to make sure mosfets are usually off.
 
 https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgA3W4wkbNbrzA0aUMTSpIq06AjYB3QeBFL+UBapS0wvNZA25RawyEKj9ik-yrZCePgIvbdWmjtPmDkUWGJaTKBLqim5Cfs4ggdJePuHYtuDhTth4sa7uvlr6YHgQ8WH+qYlZfJBgsAhgmEQ0eJCYQnDgjtDmrTEgPKVpwd2RGP7eDtEh7tUR1r2hnbzTmeoAZpEIvHV9a-HgslCwKGxLKaJr0xv05VK7+8u8KCt9ty5bF-VXtvYPER9q5zsvlkUbOwgNZOKLAqgfEEdNRfLIaSEQu5mdQAJ2uDnRyKoYHgySBGwQWihlnxNiBWIMQOMQz0bDRbwxDKxyHgBkJ4OUPgwvCc02MVLhijBa3cxImAhoXUm+jRHzld2lLLg8IVAisjkp9kmfI19KBXwF0iVePedxQeHsEmiaIyhGxqyNOLpnMiQWEXJ5yGdYzdLkdMpdVsiFtoTWxoLNd3c0s44BubpUYOxoeoRpgckUtvtrpGgaa7pz6gAHpFSIk+GAkChXK6QAAFNgliTESJUGi3SL0USBeuN4P+SWllvYdnd0QAOT7bjyNFm5r4g7HIEnJcoLbQLYQWEiVVotbrAHt5AwUX2WJVXWdXbNawAlAAWAE8AC73gC2AB0AM4AYwAliiP4AK5-s+bAHsgHjiJAZYoNsqBiFoOJ8GwQA
 
+The rhythm circuit can be done several ways:
+
+-   https://www.youtube.com/watch?v=UZzHGHWUAYs&list=PLI2e9uYepNRmrnZXpWdW5nd_fUnmAsvwD&index=5
+-   https://www.youtube.com/watch?v=zASxHFxf6oY&t=618s
+
 There is a somewhat simpler setup, which only requires two transistors. But it seems to have an inconsistent frequency:
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_inverter2.png">
