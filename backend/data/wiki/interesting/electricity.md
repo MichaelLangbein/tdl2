@@ -107,7 +107,7 @@ $$\nabla B = a - b \frac{dE}{dt}$$
 
 # Components
 
-## Grids
+## Grid base parameters
 
 -   EU grid:
     -   frequency 50 Hz
@@ -213,6 +213,28 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 https://www.youtube.com/watch?v=oZzjmAbyyIQ
 (PS: exists in falstad)
 
+# Circuits
+
+## Conventions
+
+Many circuits require a secondary (usually very low) external power supply.
+Very commonly these are drawn in a diagram with:
+
+-   a single-pole voltage provided from the top
+-   a ground at the bottom
+-   This is understood to mean a secondary small power supply which isnt too interesting for this diagram.
+-   On a breadboard, all those grounds would be connected on one end of the board, and all the sources on the other.
+-
+
+The [transistor inverter](#signal-inverter-aka-transistor-inverter) is a good example of this.
+
+## Signal inverter aka transistor inverter
+
+-   Takes a signal on one side and outputs the anti-signal on other side
+    -   requires an external power supply
+-   Not to be confused with DC-to-AC inverter
+-   https://www.youtube.com/watch?v=8c8NLfAP4oY
+
 ## Rectifiers
 
 Convert AC to DC
@@ -311,6 +333,8 @@ This video is an excellent explanation and very practical: https://www.youtube.c
 
 ### Antenna
 
+# Infrastructures
+
 ## Power transmission lines
 
 https://www.youtube.com/watch?v=qjY31x0m3d8
@@ -334,7 +358,7 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
     -   DC to AC **inverter** with target frequency
 -   strong demand for power can make grid-frequency drop
 
-# Südlink
+## Südlink
 
 -   Unter Grund
     -   Darum muss DC sein (während die meisten Mittelstrecken-Türme AC verwenden)
