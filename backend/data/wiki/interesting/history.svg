@@ -7,7 +7,7 @@
    viewBox="0 0 6182.8379 22758.42"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
    sodipodi:docname="history.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,96 +24,141 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.19441511"
-     inkscape:cx="5328.8039"
-     inkscape:cy="11946.088"
-     inkscape:window-width="1920"
-     inkscape:window-height="1021"
+     inkscape:zoom="0.1784075"
+     inkscape:cx="3276.2075"
+     inkscape:cy="11669.913"
+     inkscape:window-width="1792"
+     inkscape:window-height="1120"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#d1d1d1">
     <sodipodi:guide
        position="6434.8188,9913.8251"
        orientation="0,-1"
-       id="guide97433" />
+       id="guide97433"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="6387.6693,7202.0229"
        orientation="0,-1"
-       id="guide70807" />
+       id="guide70807"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="4806.6926,8582.4176"
        orientation="0,-1"
-       id="guide277079" />
+       id="guide277079"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="5855.1745,4873.6862"
        orientation="0,-1"
-       id="guide313502" />
+       id="guide313502"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="292.87396,11302.322"
        orientation="0,-1"
-       id="guide44825" />
+       id="guide44825"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="2381.6759,12360.892"
        orientation="0,-1"
-       id="guide75621" />
+       id="guide75621"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="4657.6865,13866.908"
        orientation="0,-1"
-       id="guide55242" />
+       id="guide55242"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="820.50452,14983.312"
        orientation="0,-1"
-       id="guide55244" />
+       id="guide55244"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="813.66698,15920.054"
        orientation="0,-1"
-       id="guide55246" />
+       id="guide55246"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="670.07869,16679.021"
        orientation="0,-1"
-       id="guide55248" />
+       id="guide55248"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="1107.6811,17458.5"
        orientation="0,-1"
-       id="guide55250" />
+       id="guide55250"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="1032.4682,18237.98"
        orientation="0,-1"
-       id="guide55252" />
+       id="guide55252"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="1073.4934,18990.109"
        orientation="0,-1"
-       id="guide55254" />
+       id="guide55254"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="923.06759,19967.877"
        orientation="0,-1"
-       id="guide55256" />
+       id="guide55256"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="885.50932,20831.558"
        orientation="0,-1"
-       id="guide108386" />
+       id="guide108386"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="3299.0238,21733.816"
        orientation="0,-1"
-       id="guide108388" />
+       id="guide108388"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="3066.9632,22749.865"
        orientation="0,-1"
-       id="guide108390" />
+       id="guide108390"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="3469.7009,13199.105"
        orientation="0,-1"
-       id="guide265852" />
+       id="guide265852"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="1425.7424,2063.3327"
        orientation="0,-1"
-       id="guide65312" />
+       id="guide65312"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <defs
      id="defs2">
+    <rect
+       x="2914.6756"
+       y="10134.103"
+       width="431.59619"
+       height="274.65212"
+       id="rect1176" />
+    <rect
+       x="3407.9284"
+       y="15997.085"
+       width="442.80648"
+       height="117.70806"
+       id="rect1170" />
+    <rect
+       x="1797.429"
+       y="17519.431"
+       width="506.21471"
+       height="161.40179"
+       id="rect1006" />
+    <rect
+       x="5585.9856"
+       y="14813.663"
+       width="514.36331"
+       height="205.74533"
+       id="rect950" />
     <linearGradient
        inkscape:collect="always"
        id="linearGradient90270">
@@ -2713,5 +2758,86 @@
          x="1317.0374"
          y="-1277.0441"
          style="stroke-width:3.0318">1525: Peasant wars</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="translate(-3030.7444,-13096.589)"
+       id="text948"
+       style="font-size:21.3333px;font-family:sans-serif;-inkscape-font-specification:sans-serif;white-space:pre;shape-inside:url(#rect950);fill:#808080;stroke-width:2.26772"><tspan
+         x="5585.9863"
+         y="14833.127"
+         id="tspan1737"><tspan
+           style="-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan1735">Peter the Great's daughter Elisabeth faught the </tspan></tspan><tspan
+         x="5585.9863"
+         y="14859.794"
+         id="tspan1741"><tspan
+           style="-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan1739">7 years war with Austria (under Empress Maria </tspan></tspan><tspan
+         x="5585.9863"
+         y="14886.461"
+         id="tspan1745"><tspan
+           style="-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan1743">Theresia). His grand-son, Peter the 3rd, ended </tspan></tspan><tspan
+         x="5585.9863"
+         y="14913.128"
+         id="tspan1749"><tspan
+           style="-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan1747">the war, but rained only for one year before </tspan></tspan><tspan
+         x="5585.9863"
+         y="14939.795"
+         id="tspan1753"><tspan
+           style="-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan1751">being deposed by Catherine the Great.</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="translate(-3030.7444,-13096.589)"
+       id="text1004"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect1006);fill:#808080;stroke-width:2.26772"><tspan
+         x="1797.4297"
+         y="17558.358"
+         id="tspan1757"><tspan
+           style="fill:#000000"
+           id="tspan1755">1876: General Custers </tspan></tspan><tspan
+         x="1797.4297"
+         y="17611.692"
+         id="tspan1761"><tspan
+           style="fill:#000000"
+           id="tspan1759">last stand at Little Big </tspan></tspan><tspan
+         x="1797.4297"
+         y="17665.026"
+         id="tspan1765"><tspan
+           style="fill:#000000"
+           id="tspan1763">Horn</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="translate(-3030.7444,-13096.589)"
+       id="text1168"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect1170);fill:#000000;stroke-width:2.26772"><tspan
+         x="3407.9277"
+         y="16036.012"
+         id="tspan1767">1824: Byron dies in </tspan><tspan
+         x="3407.9277"
+         y="16089.345"
+         id="tspan1769">Greece</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="translate(-3030.7444,-13096.589)"
+       id="text1174"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect1176);fill:#000000;stroke-width:2.26772"><tspan
+         x="2914.6758"
+         y="10173.028"
+         id="tspan1771">Between Lancasters </tspan><tspan
+         x="2914.6758"
+         y="10226.361"
+         id="tspan1773">and Yorks. Ended </tspan><tspan
+         x="2914.6758"
+         y="10279.694"
+         id="tspan1775">with marriage of </tspan><tspan
+         x="2914.6758"
+         y="10333.027"
+         id="tspan1777">both families, </tspan><tspan
+         x="2914.6758"
+         y="10386.36"
+         id="tspan1779">founding the Tudors</tspan></text>
   </g>
 </svg>
