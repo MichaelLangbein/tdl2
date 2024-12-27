@@ -304,6 +304,7 @@ This video is an excellent explanation and very practical: https://www.youtube.c
 **Load** [W]: sum of all consumers' power-demands.
 
 -   in a circuit, load should equal provided power
+    -   (capacitors can dampen this a little bit)
     -   batteries provide power on demand,
     -   but wind-turbines provide power based on wind, not on demand.
 
@@ -327,9 +328,9 @@ This video is an excellent explanation and very practical: https://www.youtube.c
 
 ### If too little power is provided:
 
-    - capacitors unload
-    - frequency can drop
-      - if that happens, electric devices can be damaged
+-   capacitors unload
+-   frequency can drop
+    -   if that happens, electric devices can be damaged
 
 ### Antenna
 
