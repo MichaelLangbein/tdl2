@@ -140,14 +140,18 @@ Increase voltage, reduce current ... or vice versa.
 
 Requires AC. DC doesn't change, so no magnetic field, so no induction.
 
+Build your own: https://www.youtube.com/watch?v=2cxcP5lY7K4
+
+-   Coils are magnets
+
 ## Capacitors and inductors
 
-|          | capacitor                                                    | inductor                                                    |
-| -------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
-| function | store and release energy                                     |  store and release energy                                   |
-| physics  | two separated plates, being charged up with load             | a coil building up a magnetic field                         |
-| DC       | block current after a while                                  | allow current to pass after a while                         |
-| AC       |  cause phase shift where current leads voltage by 90 degrees | cause phase shift where voltage leads current by 90 degrees |
+|          | capacitor                                                   | inductor                                                    |
+| -------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| function | store and release energy                                    | store and release energy                                    |
+| physics  | two separated plates, being charged up with load            | a coil building up a magnetic field                         |
+| DC       | block current after a while                                 | allow current to pass after a while                         |
+| AC       | cause phase shift where current leads voltage by 90 degrees | cause phase shift where voltage leads current by 90 degrees |
 
     ## Diodes
 
@@ -204,6 +208,11 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit-mosfets.png">
 
+## 555-timer IC
+
+https://www.youtube.com/watch?v=oZzjmAbyyIQ
+(PS: exists in falstad)
+
 ## Rectifiers
 
 Convert AC to DC
@@ -217,6 +226,9 @@ Capacitor is there only for smoothing out.
 ## Inverters
 
 -   Convert DC to AC.
+
+### H-bridge design
+
 -   Ciruit below is known as **H-bridge** inverter
     -   https://www.youtube.com/watch?v=3N_4VpzmKY0&pp=ygURSCBicmlkZ2UgaW52ZXJ0ZXI%3D
     -   Personally, I like to think that current flows through the H first in the shape of a $S$, then in the shape of a $2$
@@ -248,11 +260,22 @@ The rhythm circuit can be done several ways:
 -   https://www.youtube.com/watch?v=UZzHGHWUAYs&list=PLI2e9uYepNRmrnZXpWdW5nd_fUnmAsvwD&index=5
 -   https://www.youtube.com/watch?v=zASxHFxf6oY&t=618s
 
-There is a somewhat simpler setup, which only requires two transistors. But it seems to have an inconsistent frequency:
+### Alternative setup (simpler)
+
+There is a somewhat simpler setup, which only requires two transistors.
+
+#### Variant without clock:
+
+This variant has no external clock ... but it seems to have an inconsistent frequency:
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_inverter2.png">
 
 https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORIRkISJ9ApgLRhgBQAbjUar-xyR+RPlHG1w6cXRgIOYHKRCpFNVHSEiNE8FGjIEWSGGSKwpLAmS0wWEC0xC4OPGhxHDw-ZGQmcaOh+vjhgqGb2MOQcAC4g6FjSyDj8yakp8XowcEQJYJBYprjCnsj6ZgiQfMlg6KGQ1jbgcCAAJkwAZgCGAK4ANjGx8Yn06On8CGMoeiww+KRaucj4JsSG+liWCKQIAWFERlio1Pl07d39gwDuIFrqmt541JAcN3dEandj-C9v3t8oDIA36A-gAtIoSZQV63R7oagQp7Qm6I+Gg+iiZHotAIjKiH4wiH49EIWpYoliYnEkEJJIZWoTTEvABOUkZJymSLopxBDNuaNRzxhtNG-HYdIJrPF6OlwOacBhstQ43iyuhYQgqhwNDUWvu4l2pGgRCONnQpGIBAI8qksmN+iIHAA9uBlFQJJByCpudBtXRpBYUBwgA
+
+#### Variant with clock:
+
+This variant does use a clock (an 555-IC).
+This video is an excellent explanation and very practical: https://www.youtube.com/watch?v=kMU8xiGCpd0
 
 ## Effects of different sources and sinks
 
@@ -298,6 +321,7 @@ https://www.youtube.com/watch?v=qjY31x0m3d8
     -   But insulating lines isn't cost efficient
     -   So lines are simply spaced very far apart: that's why they are on those big towers
 -   Towers transmit electricity in **three phases**, with much space between the three lines
+    -   which requires AC, of course
 -   Additionally, there is a fourth line on top
     -   doesn't carry any current, but protects from lightning
 
@@ -316,6 +340,7 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
     -   Darum muss DC sein (während die meisten Mittelstrecken-Türme AC verwenden)
     -   Sehr großer diameter: Kabel ungefähr 15cm Durchmesser Kupfer (ohne Mantel gerechnet)
         -   So etwas nur sinnvoll mit DC (AC würde sich vom Kern wegdrücken (Corona effekt), damit wäre höherer Wiederstand)
+    -   Weil DC: keine 3-phase transmission möglich
 -   Versorgt ca 10 Mio Haushalte
 -   Kostet wegen Eingraben 4-5 mal so viel wie oberirdische Leitungen
     -   10 Milliarden €
