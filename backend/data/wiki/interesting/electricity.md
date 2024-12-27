@@ -35,6 +35,18 @@
 > >     -   **worse yet**: 230 mA will not yet trip your breaker!
 > >     -   They start at 16 A. So the breaker will not save you.
 
+## Why birds can sit on power lines
+
+Ive seen a video of a worker working on a high power transmission line. He was wearing a faraday-suit.
+He was dropped from a helicopter onto the wire. The worker touches two wires at the same time while working.
+
+Lets say the worker has a 0 voltage relative to ground initially.
+Upon touching the wire, his faraday suit takes on the several thousand volts of the cable ...
+but since the voltage has no where to go, after the initial change in voltage no current flows through the worker.
+If however the worker were to touch the metal towers holding the wires,
+which are grounded and therefore have 0 voltage relative to ground, while still standing on the wires,
+then current would flow through him.
+
 # Physics
 
 -   Stanford lecture slides: https://web.stanford.edu/class/archive/engr/engr40m.1178/slides.html
