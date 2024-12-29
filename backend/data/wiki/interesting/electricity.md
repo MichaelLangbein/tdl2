@@ -64,6 +64,7 @@ then current would flow through him.
     - $V$ here refers to the voltage drop over the consumer. 
         - Say for example there is a 10W lamp in a circuit that conducts 0.85A. This means that between the start and the end of the lamp's fitting, 11.76V of voltage will be dropped. 
     -   Applying Ohm's law: $P = I^2 R$
+    - Power has the same unit as mechanical work on purpose. The work put into a system by me turning a dynamo must equal the work taken from the system through resistance-losses and consumer-appliances.
 -   **Technical (aka conventional) current** is the flow of positive charges. Physical current is the flow of electrons, and opposite to technical current.
     -   Arrows in diagrams (like for a diode) point in the direction of _technical_ current.
 
