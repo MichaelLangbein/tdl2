@@ -61,6 +61,8 @@ then current would flow through him.
 -   **Voltage** $V$ [Volt] = the pull that electrons feel
     -   Ohm's law: $V = I R$
 -   **Power** $P$ [Watt]: $P = I V$
+    - $V$ here refers to the voltage drop over the consumer. 
+        - Say for example there is a 10W lamp in a circuit that conducts 0.85A. This means that between the start and the end of the lamp's fitting, 11.76V of voltage will be dropped. 
     -   Applying Ohm's law: $P = I^2 R$
 -   **Technical (aka conventional) current** is the flow of positive charges. Physical current is the flow of electrons, and opposite to technical current.
     -   Arrows in diagrams (like for a diode) point in the direction of _technical_ current.
@@ -138,7 +140,12 @@ Increase voltage, reduce current ... or vice versa.
 -   (ring is optional, but makes induction stronger)
 -   one coil induces current in other
 
-Requires AC. DC doesn't change, so no magnetic field, so no induction.
+Important to know:
+- Requires AC. DC doesn't change, so no magnetic field, so no induction.
+- Imagine a transformer, battery on left loop and load on right loop. The load on the right means that there is a voltage drop over the left (and right) side of the transformer. 
+
+$$\frac{V_1}{V_2} = \frac{N_1}{N_2}$$
+$$\frac{I_1}{I_2} = \frac{N_2}{N_1}$$
 
 Build your own: https://www.youtube.com/watch?v=2cxcP5lY7K4
 
