@@ -212,6 +212,8 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2AT
 
 https://www.youtube.com/watch?v=oZzjmAbyyIQ
 (PS: exists in falstad)
+https://www.youtube.com/watch?v=qfWIjb48mjE
+https://www.youtube.com/watch?v=APghHcA-MOI
 
 # Circuits
 
