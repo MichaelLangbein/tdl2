@@ -1,5 +1,22 @@
 # Umweltplanung
 
+## Aktoren
+
+-   Bundesnetzagentur
+    -   Bundesnetzentwicklungspläne (NEPs)
+-   four **TSO**'s (transmission system operators):
+    -   Tennet (Hamburg bis München, früher E.on)
+    -   TransnetBW (BaWü, früher EnBW)
+    -   Amprion (Westen und bayerisch-Schwaben, früher RWE)
+    -   50Herz (Osten, früher Vattenfall)
+
+Netzentwicklungspläne (NEPs)
+
+-   Von Übertragungsnetzbetreibern entwickelt
+-   Setzt Vorgaben des NABeG um
+-   In Abstimmumg mit Bundesnetzagentur
+-   Beihnhaltet die Planung und Umsetzung von SüdLink
+
 ## Planung
 
 Planfeststellungsverfahren (PFV)

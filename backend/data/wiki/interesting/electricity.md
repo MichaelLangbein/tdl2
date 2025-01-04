@@ -61,10 +61,13 @@ then current would flow through him.
 -   **Voltage** $V$ [Volt] = the pull that electrons feel
     -   Ohm's law: $V = I R$
 -   **Power** $P$ [Watt]: $P = I V$
-    - $V$ here refers to the voltage drop over the consumer. 
-        - Say for example there is a 10W lamp in a circuit that conducts 0.85A. This means that between the start and the end of the lamp's fitting, 11.76V of voltage will be dropped. 
+    -   $V$ here refers to the voltage drop over the consumer.
+        -   Say for example there is a 10W lamp in a circuit that conducts 0.85A. This means that between the start and the end of the lamp's fitting, 11.76V of voltage will be dropped.
     -   Applying Ohm's law: $P = I^2 R$
-    - Power has the same unit as mechanical work on purpose. The work put into a system by me turning a dynamo must equal the work taken from the system through resistance-losses and consumer-appliances.
+    -   Power has the same unit as mechanical work on purpose. The work put into a system by me turning a dynamo must equal the work taken from the system through resistance-losses and consumer-appliances.
+        -   Relation to mechanical terms:
+            -   Energy $E [J] = F x$
+            -   Power $P [W] = E/t$
 -   **Technical (aka conventional) current** is the flow of positive charges. Physical current is the flow of electrons, and opposite to technical current.
     -   Arrows in diagrams (like for a diode) point in the direction of _technical_ current.
 
@@ -108,6 +111,16 @@ $$\nabla E = - \frac{dB}{dt}$$
 Ampere's law:
 $$\nabla B = a - b \frac{dE}{dt}$$
 
+## Active, apparent, reactive power
+
+-   Apparent power $P = U I$
+-   Some power is _stored_ in inductors and capacitors without causing work: https://www.youtube.com/watch?v=ZwkNTwWJP5k
+    -   Active power / Wirkungsleistung [W]
+    -   Reactive power / Bindungsleistung [VA]
+        -   In AC circuits with inductors and capacitors, there is an ongoing loss of reactive power, while in DC systems there is only an initial loss while capacitors charge and inductors induct.
+        -   Too much reactive power implies not only more power drawn, but also a voltage drop
+    -   Power factor = active power / apparent power
+
 # Components
 
 ## Grid base parameters
@@ -119,6 +132,11 @@ $$\nabla B = a - b \frac{dE}{dt}$$
 -   US grid:
     -   frequency 60 Hz
     -   120 V
+
+## Switch
+
+There is not much to know about the humble switch ... except one thing: switches in DC circuits are _much_ more prone to arc-ing!
+https://www.youtube.com/watch?v=Zez2r1RPpWY
 
 ## Fuses
 
@@ -142,8 +160,9 @@ Increase voltage, reduce current ... or vice versa.
 -   one coil induces current in other
 
 Important to know:
-- Requires AC. DC doesn't change, so no magnetic field, so no induction.
-- Imagine a transformer, battery on left loop and load on right loop. The load on the right means that there is a voltage drop over the left (and right) side of the transformer. 
+
+-   Requires AC. DC doesn't change, so no magnetic field, so no induction.
+-   Imagine a transformer, battery on left loop and load on right loop. The load on the right means that there is a voltage drop over the left (and right) side of the transformer.
 
 $$\frac{V_1}{V_2} = \frac{N_1}{N_2}$$
 $$\frac{I_1}{I_2} = \frac{N_2}{N_1}$$
@@ -155,7 +174,7 @@ Build your own: https://www.youtube.com/watch?v=2cxcP5lY7K4
 ## Capacitors and inductors
 
 |          | capacitor                                                   | inductor                                                    |
-|----------|-------------------------------------------------------------|-------------------------------------------------------------|
+| -------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
 | function | store and release energy                                    | store and release energy                                    |
 | physics  | two separated plates, being charged up with load            | a coil building up a magnetic field                         |
 | DC       | block current after a while                                 | allow current to pass after a while                         |
@@ -292,7 +311,6 @@ The rhythm circuit can be done several ways:
 -   https://www.youtube.com/watch?v=UZzHGHWUAYs&list=PLI2e9uYepNRmrnZXpWdW5nd_fUnmAsvwD&index=5
 -   https://www.youtube.com/watch?v=zASxHFxf6oY&t=618s
 
-
 http://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWK0CcAWAHAdiwZgRrgGz4YIBMRIauIWICkDApgLRhgBQA7uGOeBQCOA8uTRQefUePBYqYiZE4BjaSEXryGDNRC429XNCJE04rOQSmsaMPKow4EZQHMtO9bkhLJAJ3UwIXUzKHB4eCkREFDxJlDlACUQiQx43yY0JjAmXOQETjAiJHsqFCoggXKY5HhiEh1IcpQEPFx5KTiYiW8JBKle7v0fcG1JXnxhIiZBotyBinBp-UXcAWUAyf0pmfXwyN457aXs4OVD-kEdq-GTm9Kbtw1LDWtn0Rf5gDM6cmzltL-XbgaBIJzkKRZIHUTB3c7UOB3LZHeGWaFooaov5DdA9dacH6444oYJrY5gUG1CG8QEgaoYWHVeG0+mIsnMxGs7JoJRSEkCRnBJl8oVlMbCmmIh60zTKMAYCAM3TVITKxzDLAmQgIIJEElYDAoSC0HLZbEwJTQNAiqZ04KsWEcpiafkaWTw10O3QcBkgL23H0Sf2B6i6eEhzQh6LKABufF90RDjrCWQYYVyoJtdLKwTAPNursj8oksqzLtz8gL9thtP9Tr9NcR814ZnR2JRnAALjDdOwqDqBH2whBWChUCSSKQ5uRiPQnHB6rgUAryq1yCS0BVEQATZhfACGAFcADadqQDhu6C+sdmQ2FHVtwqKXULROvPwewtZMd8-PAVKhaSKclKXBAk6TGI5XSOMkKTBWBqQYS5-SIWR33cC8mAvbQw1uXBfX9a9HU4TZsX9fCg2TU14R5XQyVov1gI2HtjgYlF9nhVDKN0f8lluLjLwg71lmUAAPcAyG2WhcFwPEqBLCQABUAEsAFtmD8AAdABnFRlL8FRD2Us9xJ5QcSBieU-WWBSQAAZWU1wADt92PHTlKcmMNM7DTOHEwheyIegcnzVhQlsgAJVgACE-GU7dXGYdzPO83yAHsNBQTEERJNMYD2UQstwTggA
 
 ### Alternative setup including a transformer
@@ -312,23 +330,19 @@ https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACz
 This variant does use a clock (an 555-IC).
 This video is an excellent explanation and very practical: https://www.youtube.com/watch?v=kMU8xiGCpd0
 
-
 ## Example: wind turbine -> HVDC -> Lamp
 
 ### Variant 1: with H-bridge inverter
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_windturbine_H.png">
 
-
 http://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcAOaAmA7MgnGB-kA2MAFgwTRAGYMRaFIQEBTAWjDACgB3cMSsNgH8QaNCSg8+lMRLAZCo8ZIDG0pXJFpkyEBMKx4R45DBtaBhNgzZCJEmkIYwySAkUw4ESJwDm67V0OSipICUYfACd1QWFKOyhwEylgkATxRgSfACV1BNc08MSSRjAIxJgETjBCJHlFW3AhEEaG6GxsSCoKFwRumiEpDMLqMJGfXlD9CSnwbUlJinBCRlmaiKlugRXqJapKKN2Q7dWDpPgUnf3l0uaJmOb1poPL24EFZ8l-TBl3UQwZACKpwAGZ0NClHauSGncDQJCeNBSEowvQkII7e4om5HHH3AGognjKREhLYezUF5g8kzSgdY6UuEI2BI3jQlqKZDojkLEDsxrs673fmcuDgCn3el6XRSxqS5qNIQyjxSdn1Pli2SSFwQLnKlrzOXUUiwGokBAKDphOxyMX8CLQcKOqRSmotZqsbnCzXKKVa+WUT1BFwSIO8jhcjR8SOpAM810Sl3NLURiT+pMyX2PD5xsPssPexh5sUbXh2QkQvGcAAuaN07EUCBEDcS3mgtXECjc2CbFpIVDbhGQ8gUA4YkGwyCoOHOIAAJswQQBDACuABtq1Im4HuduQKwhcjuU9y1XeKkEqkCylm9z9kWvaC6FRFG61YprmB4VAWU+lTjXSuARv0RLdb10QhlGvfw90YPdAmBSZIzDPdr2ie99zvZCvXOLE70oex6zdQ5CMZUinlKC4yyg7kMBfZZeUg0NuX-CjOAADxQJB9ioagqFpRQ0wkAAVABLABbZhIgAHQAZxUUTIhUFdRM3Tj7EDQheOIesdiEkAAGVRN8AA7Jc1zk0STIANyk6spI4vlp33JwkgpVgEn0gAJVgACFIlEudfGYSybLshzrIYz1j0UVgKF0Uo9Eoiofyqc9YviqM4vmHxhKyzKqHo6KEr0H80CQVhPEQIcBzAF8wkCGpeIPaBCrEXBkBsEh5B6Kg2Dqn8OmwTg5z0RpPTFfsdwKSgF2XddN1GqbMIKEhxvcRhZsXVcNxGpgdiDRg1oynYtvm3alvG7ENpWzb522hbkXWnZahO0sxti7FXswkspG+uKoTdAH3v+7Epx3X7JiKzKbsO3lCs+7llrhnxOKbIsrAgFZsH3BAdFK5RsmYFRq1EkFRIczi4tDfBeJIDKGAJiQABEAE8zPEgB7ThoiB0itWKxIGBvbDg0jR9zxDaVwH2XQJZlj5Ujqj4Jve1MYhoV8RHuOr5mPWXccxVUgZu3X6xu4VrlVhXPt+zjSGbNAB3FYd9zEOXRAkLyADVmYAYU4NRQbFf6bqdNx93kWBrGnQhrABGoMDGDYqYhWg4bi5qyFofSAHUrLnOTqxXSIACMrOYRzCEg3HsF4sooKsI7PZAFRObCyJSZM3wi85uT-bkkFOZk2Tq0iJcTNkgAHYe1PAchdn0bpdhzlu25MsfObXNcrJ72Tp+YZhC9kzmQTknzS4CoKQv37hVJUAALZhZMcg9IFoRwJCT0RXO84yH7kioJcU8lwKWrKzOSrAAB8ck1yc24IPSIzAACOK5mAmRUKzV+5ofpIH7BVEoBEW5+3brZTuu9e5yQfv-OS1kt7ViXMFQew8i7j0njPTunBOaiBxlkJKHQmA-iKDIHGVBOBAA
-
 
 ### Variant 2: with transformer inverter
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_windturbine_T.png">
 
 http://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEAmaCDsBOSBmHnMx0xMdIA2ckBTEdayagUwFowwAoAd3DGXEz92-ZMgAsUbrxHjw6KqImQOAY2kpZwlAA5tICeVjxjJyGFb0x0MHBzl2YHOnQIxemHAjKA5uuS71MiVJACd1EiE+EHJgmxMpLRiUMUYk5QAldSTtVODGFPBGIqg0DjByJCIqTCoIkBrokvgUgkwEPhIYwUcpcVyQIOilKUGkwb53EYQhckZx2ckeHGnwBeX+HH5lMPWBmbmtwvgEtf2BLYSouvLGOuUeG-O5WsFJX2R0EQQFT5Rfoo4ADM6MhbgscmCDuA0E1kFIUpD9G5VgCeAiUQMVo97iAIfUqHjNotcXB8STbmJhjw8VVyRoqXSWMi8aihojPojlAAXJF6NhUdr8flQcAgFiYaCtBDaAjoMQYT7yJpwMRxSDTZBgBA4Nya5C1UkAEyYgIAhgBXAA2XKkgrFyLtLCJOMpekeMU5l34SS0TMmDyifr2jCDymB6Dsqzp5T20KQHjhPEdyPIslDHF8dsYdv87mJOG0EiDycmO1B9r0BaLyNuxzRyKJrrFMe2vNjTexRxxqeregjtSoygAHuBtEhNjgBjq9lQJLIACoASwAtkwQgAdADOKkXIRU5sXNpHlKF5En9j5CznEgAyovvAA7U2WreLh8ANzXXLXHHfUaZyIxiw0x5hABQ2CKRSlA8VDAf49JiiBkjzghcGVpGAF5ko0DIEgLAeGYgiEG4bjsGI5CFtqYoeEQRDTAQ7TkbMBBbJKBAcIa+gNEypJiESfqMPwxpmlaNqcXxQpuPk3HfIJIDCRa1ocdQCwCVxsGySg8kmopYnqfapKaWpQk6aJ8IyQsFQaQsLrceiVkGayDnAeCQGad23yObi-HojieAafBRlSfmGFNhJFYAiO7QhjQEDMYhATXiA6RMCoXKLoCi4-iOwFFggVHkYhCD5MkIAACIAJ5PsuAD2HBhEBTaKPaNYMFImCUmKPqbJeDKOEqTpCE4sG+VIMqwUS-UTRcDw9V1EiOPBLmstobkLItfLuWNPmklNXnDuAqpCsgOAQGApFiqIehJQAEgAamVADCqjRJ5PGpG9mnYeq1HQHYlIVJg2j4IIrjoNo9CRZdkD0GpwGTkyzj6KVADqb6GluXLmiEABGb5MBwI6UEKNCTjYaY0CVsgqDVH5fm+3iYzVW5PVugI1Rum5ciEpoPpuAAOHNHnI46uNEyyYpYpU0w+3M1ZaloM1uAtMEwGObjVgJbjdLA4yEi6Gt4TDK1wh4qAAFkwm6E2KZD0PqEjoIJ5BS7IN33ubW4qKa-OmjuXIVVuLAAHxbpaNVcGzIRMAAjuaTAPioFU20yeEpEgfFp5A-BJY9tOfiE6UPozXPM5u5se1u77y1yppG2zHOYzzfOC4XZTkLQ7CQAt8EdT3WElLhv1wMx2oQ9qZg2DQw9wJqWCUiQEyUkD51ND2+DFe0RBO+U7hsWNpJBoWfI1mNOQIXizU4n3Qy4si6Y8DfEy4ufV9lKtvDd7fXf9yKZA0adaKyAiJjiOOAcsMBsJiHap1FgSQb4NBxONMkeJEFjW4kSZBaCRxtCQKCMmuE9CglnKVAAknTQua4tymy5J7LmzdNzsxCKuEINsagQHEENSM4gM6lRSoac0O5i5VxrnXY2jDG7blppuc0LCOA1ToAYYILRaAwC1KmeMsA+Dxi0nKAY8jxa33yJAAgKAYSQNFN6ScOAOBAA
-
 
 <img src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/science/circuit_windturbine_calculated.jpg">
 
@@ -342,7 +356,7 @@ http://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEAmaCDsBOSBmHnMx0xMd
     -   but wind-turbines provide power based on wind, not on demand.
 
 |     | Battery or coal power | Wind turbine | Lamp (=consumer) |
-|-----|-----------------------|--------------|------------------|
+| --- | --------------------- | ------------ | ---------------- |
 | $V$ | fixed                 | fixed        |                  |
 | $P$ |                       |              | fixed            |
 | $I$ | $f(consumers)$        | $f(wind)$    |                  |
@@ -383,6 +397,33 @@ https://www.youtube.com/watch?v=qjY31x0m3d8
 -   Additionally, there is a fourth line on top
     -   doesn't carry any current, but protects from lightning
 
+Organisation:
+
+-   Bundesnetzagentur
+    -   Bundesnetzentwicklungspläne (NEPs)
+-   four **TSO**'s (transmission system operators):
+    -   Tennet (Hamburg bis München, früher E.on)
+    -   TransnetBW (BaWü, früher EnBW)
+    -   Amprion (Westen und bayerisch-Schwaben, früher RWE)
+    -   50Herz (Osten, früher Vattenfall)
+
+Grid data:
+
+-   Transmission grid:
+    -   Fully owned by the big 4 TSOs
+    -   Extra high voltage: 275 kV - 765 kV
+        -   About 36.000 km
+        -   still mostly overhead AC, some few HVDC
+    -   High voltage: 110 kV - 274 kV
+        -   About 96.000 km
+-   Distribution grid
+    -   About 900 DSOs, but the big 4 TSO's also own large part of this
+    -   This is where wind and solar feed in, not the transmission grid!
+    -   Medium volrage:
+        -   About 520.000 km
+    -   Low voltage:
+        -   About 1.120.000 km
+
 ## Wind power
 
 https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
@@ -396,8 +437,9 @@ https://www.youtube.com/watch?v=LklUVkMPl8g&t=60s
 
 -   Unter Grund
     -   Darum muss DC sein (während die meisten Mittelstrecken-Türme AC verwenden)
-    -   Sehr großer diameter: Kabel ungefähr 15cm Durchmesser Kupfer (ohne Mantel gerechnet)
+    -   Sehr großer diameter: Kabel ungefähr 15cm Durchmesser Kupfer (mit Mantel gerechnet)
         -   So etwas nur sinnvoll mit DC (AC würde sich vom Kern wegdrücken (Corona effekt), damit wäre höherer Wiederstand)
+        -   0.006 Ohm/km
     -   Weil DC: keine 3-phase transmission möglich
 -   Versorgt ca 10 Mio Haushalte
 -   Kostet wegen Eingraben 4-5 mal so viel wie oberirdische Leitungen
