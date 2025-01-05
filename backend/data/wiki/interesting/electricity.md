@@ -242,6 +242,12 @@ https://www.youtube.com/watch?v=oZzjmAbyyIQ
 https://www.youtube.com/watch?v=qfWIjb48mjE
 https://www.youtube.com/watch?v=APghHcA-MOI
 
+## Boost converter
+
+Its easy to change AC voltage (with a [transformer](#transformers)), but not that straight-forward to do the same with DC.
+
+-   https://www.youtube.com/watch?v=QnUhjnbZ0T8
+
 # Circuits
 
 ## Conventions

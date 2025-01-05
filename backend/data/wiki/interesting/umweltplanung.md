@@ -1,6 +1,6 @@
 # Umweltplanung
 
-## Aktoren
+## Akteure
 
 -   Bundesnetzagentur
     -   Bundesnetzentwicklungspläne (NEPs)
@@ -9,13 +9,6 @@
     -   TransnetBW (BaWü, früher EnBW)
     -   Amprion (Westen und bayerisch-Schwaben, früher RWE)
     -   50Herz (Osten, früher Vattenfall)
-
-Netzentwicklungspläne (NEPs)
-
--   Von Übertragungsnetzbetreibern entwickelt
--   Setzt Vorgaben des NABeG um
--   In Abstimmumg mit Bundesnetzagentur
--   Beihnhaltet die Planung und Umsetzung von SüdLink
 
 ## Planung
 
@@ -29,7 +22,17 @@ Planfeststellungsverfahren (PFV)
 https://www.youtube.com/watch?v=7jHyPByJJ-A
 https://www.youtube.com/watch?v=ewO7_o5qFnA
 
-1. **Bundesfachplanung**
+1. **Szenarienrahmen** (Scenario Framework)
+    - Es beschreibt die verschiedenen Szenarien und Annahmen, die für die zukünftige Entwicklung der Energieinfrastruktur berücksichtigt werden.
+2. **Netzentwicklungsplan** (NEP) (Grid Development Plan)
+    - Umfasst Maßnahmen zur Optimierung, Erweiterung und Modernisierung des Übertragungsnetzes.
+    - Von Übertragungsnetzbetreibern entwickelt
+    - Setzt Vorgaben des NABeG um
+    - In Abstimmumg mit Bundesnetzagentur
+    - Beihnhaltet die Planung und Umsetzung von SüdLink
+3. **Bundesbedarfsplan** (Federal Requirements Plan)
+    - Identifiziert die notwendigen Projekte zur Erweiterung der Übertragungsnetze.
+4. **Bundesfachplanung** (Federal Sectoral Planning)
     - Genehmigung des groben Korridors (1000m breit)
     - Grobe Umweltprüfung
     - Antragskonferenz
@@ -38,7 +41,10 @@ https://www.youtube.com/watch?v=ewO7_o5qFnA
         - Betreiber
         - Verbände
         - Bürger
-2. **Planfeststellung**
+5. **Planfeststellung**
+    - Dient dazu ...
+        - ... Bürger, Firmen, Behörden mit einzubringen
+        - ... die Fachplanung anhand der Raumordnungspläne etc. zu konkretisieren
     1. Konkreter Verlauf innerhalb des Korridors
         - Technische Planung
             - plus Alternativen
@@ -54,7 +60,7 @@ https://www.youtube.com/watch?v=ewO7_o5qFnA
             - Betroffene können jetzt Stellung nehmen
     4. Umweltprüfung
     - Beispiel-Antrag: https://www.netzausbau.de/Vorhaben/ansicht/abschnitt.html?cms_nummer=3&cms_gruppe=bbplg&cms_status=pfv&cms_abschnitt=Abschnitt+E2
-3. **Planfeststellungs-Beschluss**:
+6. **Planfeststellungs-Beschluss**:
     - Beschluss: https://www.netzausbau.de/SharedDocs/Downloads/DE/Vorhaben/BBPlG/03/E2/24/BekanntmachungErlass.pdf?__blob=publicationFile
 
 > > Für SüdLink ist die Bundesfachplanung abgeschlossen,
