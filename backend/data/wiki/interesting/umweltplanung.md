@@ -159,3 +159,26 @@ Dieses Buch enthält Regelungen zur Bauleitplanung, einschließlich Flächennutz
 ### Landesgesetze
 
 Zusätzlich zu den Bundesgesetzen gibt es auch Landesgesetze, die spezifische Anforderungen und Regelungen enthalten können.
+
+
+## Bauprozess
+
+Bauprozesse haben ihre eigene Lingo. Hier beschreiben wir diese und wie sie sich im PFV verortet.
+
+### Genehmigungsplanung
+
+Dient dem Zusammentragen der Dokumente um Baugenehmigungen von Behörden zu erhalten.
+
+- Grundrisse
+- Nachweise
+
+Einordnung: Liefert Dokumente bis einschließlich der Bundesfachplanung.
+  
+### Ausführungsplanung (AFP)
+
+Dient dem Zusammentragen der Dokumente die für die technische Umsetzung notwendig sind.
+
+- Detaillierte Zeichungen
+- Technische Details
+
+Einordnung: Liefert Dokumente ab der Planfeststellung
