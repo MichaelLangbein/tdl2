@@ -185,6 +185,7 @@ Wie überwindet man Beziehungsangst?
     -   Beobachte und Erkenne Gefühl als Bindungsangst
     -   Wenn Estelle weiß, dass ich gerade Bindungsangst habe, dann fühle ich mich wahrscheinlich besser
 
+
 # Estelles Ängste
 
 -   Angst nicht genug zeit zu haben bei 40h Arbeit für auch noch Bezieheung
@@ -199,3 +200,29 @@ Wie überwindet man Beziehungsangst?
 -   Sie hat in den letzten Tagen schon viel ventiliert
     -   Hat mich, M, damit auch ziemlich an meine Grenzen gebracht, aber ich finde es besser so als nicht zu reden
     -
+
+
+# 25.01.2025: Estelle in Würzburg, keine Gefühle, schon wieder auseinander
+
+- Ich mag sie sehr
+    - WWF
+    - Wie sie mit Emil umgeht
+    - Musik
+    - Umwelt
+    - Französisch
+- Kann mich nicht dazu bringen, ihr zu sagen, dass ich mit ihr zusammen sein will
+    - Finde ich eine bessere? Wohl kaum. 
+        - Vielleicht nicht sehr attraktiv, aber ein sehr guter Mensch, und so viel gemeinsam.
+    - Fühle ich genug für sie?
+        - Ich vermisse sie nicht sehr
+        - Kann mich nicht dazu bringen, zu sagen dass ich sie liebe
+            - woran erkenne ich, dass ich sie liebe?
+                - sollte ich sie mehr vermissen
+                - oder sollte sie sich wie meine beste Freundin anfühlen?
+        - Ich weiß, dass ich sie als Freundin mag
+        - vielleicht will ich aber nur eine Beziehung, egal mit wem
+        - vielleicht will ich einfach nicht allein sein
+- Ich will nicht mit ihren Gefühlen spielen
+    - will nicht leichtfertig sagen, dass ich mit ihr zusammen sein will
+
+
