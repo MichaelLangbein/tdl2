@@ -498,7 +498,8 @@ const posterior = net.conditionalProbDist([bp], { [eq.name]: 5 }); // distributi
 
 ## Hidden-state models
 
-Hidden Markov state model
+### Hidden Markov state model (HMM)
+
 <img  src="https://raw.githubusercontent.com/MichaelLangbein/tdl2/main/backend/data/assets/programming/hidden_markov_states.jpg" />
 
 Imagine a model as in the image above.
@@ -585,6 +586,23 @@ $$
         prob_St_Yt = update(states, emission, emission_prob, prob_St1_Yt)
         prob_St1_Yt = prediction(states, transition_prob, prob_St_Yt)
 ```
+
+### Kalman filter
+The Kalman filter is a special type of hidden state model. It differs from a hidden Markov model (HMM) in the following:
+
+- State space: 
+  - Kalman filter: continuous
+  - HMM: discrete
+- State transitions:
+  - Kalman filter: linear
+  - HMM: non-linear
+- Noise:
+  - Kalman filter: Gaussian
+  - HMM: not neccessarily Gaussian
+
+### Simultaneous localization and mapping (SLAM) 
+ 
+A family of algorithms that can make use of either Kalman filters or Hidden Markov models. 
 
 ## Tests
 
