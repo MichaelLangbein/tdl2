@@ -225,4 +225,11 @@ Wie überwindet man Beziehungsangst?
 - Ich will nicht mit ihren Gefühlen spielen
     - will nicht leichtfertig sagen, dass ich mit ihr zusammen sein will
 
+- Ich will vor Diskussionen mit ihr immer fliehen
+    - Sie ist gnadenlos dabei, nachzubohren bis sie Antworten bekommt
+    - Während Diskussionen mit ihr fühle ich sehr wenig Zuneigung zu ihr
+    - Ich hätte am Freitag wissen sollen, dass sie nur beruhigt werden wollte
+    - Ich habe schon lange Stress ... das sollte keine Ausrede mehr sein, um Diskussionen aus dem Weg zu gehen
+    - Sie will immer noch mit mir zusammen sein
+
 
