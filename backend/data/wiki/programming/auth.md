@@ -2,7 +2,7 @@
 
 Standards:
 
-OAuth stack: allowing someone to act on your behalve
+OAuth stack: allowing someone to act on your behalf
 
 -   **Oauth**: authorization-protocol
     -   Oauth2: current version
