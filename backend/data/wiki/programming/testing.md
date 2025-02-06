@@ -47,3 +47,39 @@
 # Storybook
 
 -   The UI component explorer. Develop, document, & test for React, Vue, Angular, Ember, Web Components, & more!
+
+
+# JMeter
+
+## Setup
+
+- plugins
+  - download
+  - copy contained jar into jmeter/lib or jmeter/lib/ext
+
+## components
+  - thread-group = users
+    - request
+      - observer
+    - timer
+    - http-cookie-manager
+  - HTTPS test-script recorder
+  
+
+## cli
+- `jmeter.bat -n -t .\my_script.jmx -l .\my_log.jtl -e -o .\my_dashboard`
+
+## Recorder
+
+HTTPS test-script recorder
+    - target controller: HTTPS test-script recorder
+    - browser: configure to use JMeter's proxy
+    - browser: point it to JMeter's TLS-certificate
+
+Alternative:
+- Chrome BlazeMeter plugin -> exports recording straight to a jmx
+
+
+After recording:
+- at root request, click "retrieve all embedded resources". 
+- copy-paste requests from recorder into thread-group
