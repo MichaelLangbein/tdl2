@@ -44,28 +44,36 @@ Web-layer:
 
 Types:
 
-- WMS = Map service
-  - Images drawn on demand. Multiple layers on same image.
+- **WMS** = Map service (aka. "Map image" in portal)
+  - Images drawn on demand, though cached. Multiple layers on same image.
   - WMS-T = Map service with time-config
-- WMTS = Tile service
+  - Identify supported.
+  - Renders multiple layers into a single image. Toggling one layer leads to another request.
+- **WMTS** = Tiled map service
   - Images drawn in advance.
-- WCS = Image service
-- WFS = Feature service
-- WPS = Web-geoprocessing-tool
+  - No identify.
+  - Renders multiple layers into a single image. No toggling allowed.
+- **WCS** = Raster service (aka "Imagery layer" in portal)
+- **WFS** = Feature service
+  - rendered client-side. Data transferred as protobuffer.
+  - Identify naturally supported.
+- **WPS** = Web-geoprocessing-tool
 - Also:
   - vector-tiles
+    - renders multiple layers into the same tile.
+    - No identify, no legend, no querying.
   - 3D-tiles
 
 Web-map:
     - a json-file referencing one or many web-layers
 
-|                           | legend | identify | popups | queries | editing | grouping | live-db |
-|---------------------------|--------|----------|--------|---------|---------|----------|---------|
-| hosted vector-tiles       | x      | x        | x      | x       | x       | x        | x       |
-| hosted image-tiles        | ✓      | ✓        | x      | x       | x       | x        | x       |
-| hosted feature-service    | ✓      | ✓        | ✓      | ✓       | ✓       | x        | x       |
-| federated image-service   | ✓      | ✓        | ✓      | ✓       | x       | ✓        | ✓       |
-| federated feature-service | ✓      | ✓        | ✓      | ✓       | ✓       | ✓        | ✓       |
+|                           | legend | identify | popups | queries | editing | live-db | drawing |
+|---------------------------|--------|----------|--------|---------|---------|---------|---------|
+| hosted vector-tiles       | x      | x        | x      | x       | x       | x       | client  |
+| hosted image-tiles        | ✓      | ✓        | x      | x       | x       | x       | server  |
+| hosted feature-service    | ✓      | ✓        | ✓      | ✓       | ✓       | x       | client  |
+| federated map-service     | ✓      | ✓        | ✓      | ✓       | x       | ✓       | server  |
+| federated feature-service | ✓      | ✓        | ✓      | ✓       | ✓       | ✓       | client  |
 
 # Scripting
 
