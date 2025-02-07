@@ -4,65 +4,98 @@
 
 Requires windows
 
--   on linux: virutalbox
-    -   windows doesn't actually require a license!
--   on mac:
-    -   using parallels: free for 2 weeks
+- on linux: virutalbox
+  - windows doesn't actually require a license!
+- on mac:
+  - using parallels: free for 2 weeks
 
 ArcGIS itself is free for 3 weeks
 
-# Concepts
-
--   feature class: data
--   feature layer: display styling of a feature class
-
 # Experience builder
 
--   https://learn.arcgis.com/de/projects/get-started-with-arcgis-experience-builder/
--   Easily extended: based on react/typescript:
-    -   https://developers.arcgis.com/experience-builder/guide/getting-started-widget/
+- <https://learn.arcgis.com/de/projects/get-started-with-arcgis-experience-builder/>
+- Easily extended: based on react/typescript:
+  - <https://developers.arcgis.com/experience-builder/guide/getting-started-widget/>
 
 # Databases
 
--   Domains: allowed values per field
-    -   per subtype a domain can have different domains and defaults
--   Subtypes:
-    -   based on a single `long integer` field
-    -   If a row belongs to a subtype,
-    -   then some of its fields have reduced domains
-    -   then they're automatically styled differently
--   Group values aka contingent values:
-    -   given field A has some value, reduce the allowed values for field B
+- Feature class = Table with geometry
+- Feature set = Dataframe in pandas
+- Feature dataset = collection of feature classes sharing a CRS
+  - e.g. for topology, networks etc.
+- Domains: allowed values per field
+  - per subtype a domain can have different domains and defaults
+- Subtypes:
+  - based on a single `long integer` field
+  - If a row belongs to a subtype, ...
+    - ... then some of its fields have reduced domains
+    - ... then they're automatically styled differently
+- Group values aka contingent values:
+  - given field A has some value, reduce the allowed values for field B
+
+# Services
+
+Web-layer:
+    - provides data
+    - defines symbology, popups, permissions
+    - "hosted" or "referenced"
+      - hosted: data saved on arcgis-portal
+      - referenced aka federated: data in a file-gdb, a database, or another server
+
+Types:
+
+- WMS = Map service
+  - Images drawn on demand. Multiple layers on same image.
+  - WMS-T = Map service with time-config
+- WMTS = Tile service
+  - Images drawn in advance.
+- WCS = Image service
+- WFS = Feature service
+- WPS = Web-geoprocessing-tool
+- Also:
+  - vector-tiles
+  - 3D-tiles
+
+Web-map:
+    - a json-file referencing one or many web-layers
+
+|                           | legend | identify | popups | queries | editing | grouping | live-db |
+|---------------------------|--------|----------|--------|---------|---------|----------|---------|
+| hosted vector-tiles       | x      | x        | x      | x       | x       | x        | x       |
+| hosted image-tiles        | ✓      | ✓        | x      | x       | x       | x        | x       |
+| hosted feature-service    | ✓      | ✓        | ✓      | ✓       | ✓       | x        | x       |
+| federated image-service   | ✓      | ✓        | ✓      | ✓       | x       | ✓        | ✓       |
+| federated feature-service | ✓      | ✓        | ✓      | ✓       | ✓       | ✓        | ✓       |
 
 # Scripting
 
-## Get current tool's python command:
+## Get current tool's python command
 
--   https://www.youtube.com/watch?v=sCkVI4VHdXo
--   (after running tool) history (might have to enable first) > tool > right click > copy python
+- <https://www.youtube.com/watch?v=sCkVI4VHdXo>
+- (after running tool) history (might have to enable first) > tool > right click > copy python
 
 ## Create custom tool
 
--   Videos:
-    -   3 Minutes: https://www.youtube.com/watch?v=nPUkTyDaIhg
-    -   Intro: https://www.youtube.com/watch?v=iTZytnBcagQ
-    -   Testing, debugging, etc: https://www.youtube.com/watch?v=y84onLbW-_M
--   catalog > tools > right click > new python toolbox
--   select tool > edit
--   (code)
-    -   `getParameterInfo`
-        -   `return [arcpy.Parameter(displayName="Input layer", datatype="GPFeatureLayer", direction="Input")]`
-            -   datatype: DEFeatureClass, GPFeatureLayer, Field, Double, ...
-                -   DE: DataElement
-                -   GP: GeoProcessing
-    -   `execute`
--   refresh toobox
+- Videos:
+  - 3 Minutes: <https://www.youtube.com/watch?v=nPUkTyDaIhg>
+  - Intro: <https://www.youtube.com/watch?v=iTZytnBcagQ>
+  - Testing, debugging, etc: <https://www.youtube.com/watch?v=y84onLbW-_M>
+- catalog > tools > right click > new python toolbox
+- select tool > edit
+- (code)
+  - `getParameterInfo`
+    - `return [arcpy.Parameter(displayName="Input layer", datatype="GPFeatureLayer", direction="Input")]`
+      - datatype: DEFeatureClass, GPFeatureLayer, Field, Double, ...
+        - DE: DataElement
+        - GP: GeoProcessing
+  - `execute`
+- refresh toobox
 
 ## R binding
 
--   https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started
--   https://github.com/R-ArcGIS/r-bridge
+- <https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started>
+- <https://github.com/R-ArcGIS/r-bridge>
 
 # Vertigis Studio
 
--   Seems to be a bunch of custom widgets on top of experience builder
+- Seems to be a bunch of custom widgets on top of experience builder
