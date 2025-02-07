@@ -11,13 +11,25 @@ Requires windows
 
 ArcGIS itself is free for 3 weeks
 
+# Infrastructure
+
+- 1 portal
+  - 4 servers:
+    - 1 hosting server
+      - all data copied locally as "data-store"
+      - faster than map server, but data isn't "live", because not drawn from db
+    - 2 map servers
+      - accessing federated data from an enterprise-gdb
+    - 1 image server
+      - optimized for raster data
+
 # Experience builder
 
 - <https://learn.arcgis.com/de/projects/get-started-with-arcgis-experience-builder/>
 - Easily extended: based on react/typescript:
   - <https://developers.arcgis.com/experience-builder/guide/getting-started-widget/>
 
-# Databases
+# Database
 
 - Feature class = Table with geometry
 - Feature set = Dataframe in pandas
