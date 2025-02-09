@@ -1,17 +1,17 @@
 # Testing
 
--   https://stackoverflow.com/questions/47281710/difference-between-cypress-and-a-bdd-framework-like-cucumber
--   https://trends.stackoverflow.co/?tags=selenium,playwright,cypress
--   https://npmtrends.com/cypress-vs-playwright-vs-selenium-webdriver
--   https://2023.stateofjs.com/en-US/libraries/
--   https://entwickler.de/javascript/cypress-playwright-e2etesting
+- <https://stackoverflow.com/questions/47281710/difference-between-cypress-and-a-bdd-framework-like-cucumber>
+- <https://trends.stackoverflow.co/?tags=selenium,playwright,cypress>
+- <https://npmtrends.com/cypress-vs-playwright-vs-selenium-webdriver>
+- <https://2023.stateofjs.com/en-US/libraries/>
+- <https://entwickler.de/javascript/cypress-playwright-e2etesting>
 
 # Tactics
 
--   TDD
-    -   Write tests before coding
--   BDD
-    -   Write user behavior, expect UI to respond correctly
+- TDD
+  - Write tests before coding
+- BDD
+  - Write user behavior, expect UI to respond correctly
 
 # Selenium
 
@@ -19,16 +19,16 @@
 
 # Playwright
 
--   Formally puppeteer (back then by google, now microsoft)
--   playwright has a test-recorder: https://testingbot.com/support/playwright/recorder.html#introduction
--   `npx playwright codegen wikipedia.org`
+- Formally puppeteer (back then by google, now microsoft)
+- playwright has a test-recorder: <https://testingbot.com/support/playwright/recorder.html#introduction>
+- `npx playwright codegen wikipedia.org`
 
 ## Cucumber
 
--   Implements a language called "Gherkin": "given that ... / when I do ... / then I should get ..."
--   running a cucumber file returns the code snippets required to create the `given`, `when` and `then` implementations
--   since this chops our scenarios into smaller parts, we can re-assemble some of those parts if we want, saving us some coding.
-    -   we can save even more coding by adding cucumber-variables to the cucumber file, which will take on all possible values that we provide.
+- Implements a language called "Gherkin": "given that ... / when I do ... / then I should get ..."
+- running a cucumber file returns the code snippets required to create the `given`, `when` and `then` implementations
+- since this chops our scenarios into smaller parts, we can re-assemble some of those parts if we want, saving us some coding.
+  - we can save even more coding by adding cucumber-variables to the cucumber file, which will take on all possible values that we provide.
 
 # Comparing selenium, cypress and playwright
 
@@ -46,8 +46,7 @@
 
 # Storybook
 
--   The UI component explorer. Develop, document, & test for React, Vue, Angular, Ember, Web Components, & more!
-
+- The UI component explorer. Develop, document, & test for React, Vue, Angular, Ember, Web Components, & more!
 
 # JMeter
 
@@ -58,16 +57,39 @@
   - copy contained jar into jmeter/lib or jmeter/lib/ext
 
 ## components
-  - thread-group = users
-    - request
-      - observer
-    - timer
-    - http-cookie-manager
-  - HTTPS test-script recorder
-  
 
+- thread-group = users
+  - request(s)
+  - observer = display results once done. Ignored when called from the CLI.
+  - timer
+  - http-cookie-manager
+- HTTPS test-script recorder
+  - you can usually delete this once you have moved all your required requests from the recorder to the thread-group
+  
 ## cli
+
 - `jmeter.bat -n -t .\my_script.jmx -l .\my_log.jtl -e -o .\my_dashboard`
+
+### Passing arguments from the cli
+https://stackoverflow.com/questions/63236382/configurable-number-of-threads-in-jmeter-threadgroup 
+
+Modify your JMeter script to use a property for the thread count:
+
+- Open your .jmx file in JMeter GUI.
+- Set the number of threads to `${__P(threadCount,1)}` in the Thread Group. This tells JMeter to use the threadCount property, with a default value of 1 if the property is not set.
+
+Run JMeter from the command line with the `-J` option to pass the thread count:
+
+- Use the following command to run your test with a specified thread count: `jmeter -n -t your_script.jmx -JthreadCount=20`
+- Replace 20 with the desired number of threads.
+- Automate the process to run the test with different thread counts: You can use a simple shell script or batch file to loop through the desired thread counts and run the JMeter test for each count. Here's an example in a bash script:
+
+  ```bash
+  for i in {1..20}
+  do
+    jmeter -n -t your_script.jmx -JthreadCount=$i
+  done
+  ```
 
 ## Recorder
 
@@ -77,9 +99,10 @@ HTTPS test-script recorder
     - browser: point it to JMeter's TLS-certificate
 
 Alternative:
+
 - Chrome BlazeMeter plugin -> exports recording straight to a jmx
 
-
 After recording:
-- at root request, click "retrieve all embedded resources". 
+
+- at root request, click "retrieve all embedded resources".
 - copy-paste requests from recorder into thread-group
