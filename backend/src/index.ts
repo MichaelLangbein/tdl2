@@ -15,17 +15,21 @@ async function main() {
   const fileService = new FileService('./data/files');
   await fileService.init();
 
-  const authenticationData = {
-    userName: process.env.USERNAME,
-    saltedHashedPassword: process.env.SALTED_HASHED_PASSWORD,
-    sessionSecret: process.env.SESSION_SECRET,
-    requireHttps: process.env.REQUIRE_HTTPS === 'true',
-  };
+  const useAuthentication = process.env.USE_AUTHENTICATION === 'true';
+  let authenticationData = undefined;
+  if (useAuthentication) {
+    authenticationData = {
+      userName: process.env.USERNAME,
+      saltedHashedPassword: process.env.SALTED_HASHED_PASSWORD,
+      sessionSecret: process.env.SESSION_SECRET,
+      requireHttps: process.env.REQUIRE_HTTPS === 'true',
+    };
+  }
 
   const corsOrigin = process.env.CORS_ORIGIN;
 
   const app = appFactory(taskService, fileService, cardService, {
-    withAuthentication: authenticationData,
+    withAuthentication: useAuthentication ? authenticationData : undefined,
     cors: { origin: corsOrigin },
   });
 
