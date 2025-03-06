@@ -19,7 +19,7 @@ async function main() {
   let authenticationData = undefined;
   if (useAuthentication) {
     authenticationData = {
-      userName: process.env.USERNAME,
+      userName: process.env.TDL2_USERNAME,
       saltedHashedPassword: process.env.SALTED_HASHED_PASSWORD,
       sessionSecret: process.env.SESSION_SECRET,
       requireHttps: process.env.REQUIRE_HTTPS === 'true',
