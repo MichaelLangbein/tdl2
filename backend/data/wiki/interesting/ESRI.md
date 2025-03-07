@@ -9,7 +9,11 @@ Requires windows
 - on mac:
   - using parallels: free for 2 weeks
 
-ArcGIS itself is free for 3 weeks
+ArcGIS itself is free for 3 weeks.
+
+# Licensing
+
+ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), it will telemetry to its license server to make sure that you are allowed to use it.
 
 # Infrastructure
 
@@ -165,6 +169,7 @@ for field in roads_fields:
     print(f"Field: {field.name}, Type: {field.type}")
 
 # SearchCursor: read only. Alternatively: UpdateCursor, InsertCursor
+# Always use `with` for cursors ... otherwise you might not delete locks on the table
 with ap.da.SearchCursor("Roads", [field.name for field in roads_fields]) as cursor:
     for row in cursor:
         print(row)
@@ -242,6 +247,53 @@ print(results.getAllMessages())
 
 - <https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started>
 - <https://github.com/R-ArcGIS/r-bridge>
+
+# Deployment through python
+
+1. authenticate
+2. publish my custom views from the test-db to the prod-db
+3. update my services to use the prod-db instead of the test-db, and make them available in the prod-portal instead of the test-portal
+4. update my map to use the prod-services instead of the test-services, and make it available in the prod-portal instead of the test-portal
+
+## 1. Authentication
+
+### Using OAuth2
+
+```python
+#%% 
+from arcgis.gis import GIS
+
+"""
+First create an empty app in your portal like described in the documentation:
+https://developers.arcgis.com/python/latest/guide/working-with-different-authentication-schemes/#user-authentication-with-oauth-20
+In the app's details-page, look for and copy the "App ID". 
+""" 
+
+portal_url = "https://gistest.suedlink.com/portal"
+client_id = "ZIbfACnBPCbEHLkK"  # <-- this is the "App ID" of your new empty app
+
+try:
+    portalEndpoint = GIS(portal_url, client_id=client_id , use_gen_token=True, verify_cert=False)
+    print(f"Successfully logged in as: {portalEndpoint.properties.user.username} on {portalEndpoint.properties.name} with token: {portalEndpoint.session.auth.token}")
+ 
+except Exception as e:
+        print(f"Failed to log in: {e}")
+
+```
+
+### Using LDAP or ActiveDirectory
+
+```python
+from arcgis.gis import GIS
+
+# using ActiveDirectory
+usernameAD = "SOMEDOMAIN\username"  # Windows NT LAN Manager (NTLM) format
+portalAd = GIS("https://gistest.suedlink.com/portal", username=usernameAD, password="MyPassword")
+
+# using LDAP
+usernameLdap = "username@domain.com"  # Distinguished Name (DN) format
+portalLdap = GIS("https://gistest.suedlink.com/portal", username=usernameLdap, password="MyPassword")
+```
 
 # Vertigis Studio
 
