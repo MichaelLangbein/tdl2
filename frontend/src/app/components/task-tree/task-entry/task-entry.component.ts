@@ -11,6 +11,7 @@ export class TaskEntryComponent implements OnInit {
   public currentTime = new Date().getTime();
   @Input() ownTask: TaskTree | null = null;
   @Input() activeTask: TaskTree | null = null;
+  public isExpanded = true;
 
   constructor(
     private taskSvc: TaskService
@@ -22,6 +23,9 @@ export class TaskEntryComponent implements OnInit {
     if (this.ownTask) this.taskSvc.loadAndSwitch(this.ownTask.id);
   }
 
+  public toggleExpanded() {
+    this.isExpanded = !this.isExpanded;
+  }
   
   public allowDrop(ev: DragEvent) {
     if (!this.ownTask) return;

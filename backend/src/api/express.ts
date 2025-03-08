@@ -255,7 +255,7 @@ export function appFactory(
    **********************************************************************/
 
   app.get('/subtree/:taskId/:depth', async (req, res) => {
-    const subTree = await taskService.getSubtree(+req.params.taskId, +req.params.depth);
+    const subTree = await taskService.getSubtree(+req.params.taskId, +req.params.depth, true);
     res.send(subTree);
   });
 

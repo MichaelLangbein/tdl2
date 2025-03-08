@@ -1,5 +1,8 @@
 <div [class]="{'entry': true}" *ngIf="ownTask && activeTask">
 
+  <div style="display: flex; gap: 0.5rem;">
+    <span (click)="toggleExpanded()">{{ isExpanded ? "v" : ">" }}</span>
+
     <div
       [class]="{
         'active':   ownTask.id === activeTask.id, 
@@ -16,8 +19,13 @@
       >
         {{ ownTask.title }}
     </div>
+  </div>
 
-    <div class="children">
+
+    <div [class]="{
+      'children': true,
+      'collapsed': !isExpanded
+    }">
         <app-task-entry 
           *ngFor="let child of ownTask.children"
           [ownTask]="child" [activeTask]="activeTask"></app-task-entry>
