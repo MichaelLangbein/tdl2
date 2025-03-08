@@ -83,6 +83,19 @@ export class TaskService {
                 )
             `);
         }
+        const historyTable = await this.db.get(`
+            select name from sqlite_master where type='table' and name='history';
+        `);
+        if (!historyTable) {
+            await this.db.exec(`
+                create table history (
+                    timestamp Date,
+                    taskId integer,
+                    secondsActive integer,
+                    foreign key (taskId) references tasks (id)
+                );
+            `);
+        }
     }
     
     public async getTask(taskId: number) {
@@ -140,6 +153,7 @@ export class TaskService {
     
     public async updateTask(task: TaskRow) {
 
+        await this.updateHistory(task);
         await this.db.run(`
             update tasks
             set title = $title,
@@ -171,6 +185,20 @@ export class TaskService {
         });
     }
 
+    private async updateHistory(task: TaskRow) {
+        const lastKnownState = await this.getTask(task.id);
+        const secondsInBetween = task.secondsActive - lastKnownState.secondsActive;
+        if (secondsInBetween <= 10) return;
+        const now = new Date().getTime();
+        await this.db.run(`
+            insert into history (timestamp, taskId, secondsActive)
+            values ($timestamp, $taskId, $secondsActive);
+            `, {
+                '$timestamp': now,
+                '$taskId': task.id,
+                '$secondsActive': secondsInBetween
+            });
+    }
 
     public async getFileAttachment(fileId: number): Promise<FileRow> {
         const out = await this.db.get(`
