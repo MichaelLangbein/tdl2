@@ -1,3 +1,11 @@
+cd ./backend/data
+$datetime = Get-Date -Format "yyyy_MM_dd_HH_mm"
+$sourceFile = "tdl.db"
+$destinationFile = "../../../db_backups/tdl__$datetime_bak.db"
+Copy-Item -Path $sourceFile -Destination $destinationFile
+cd ../../
+
+
 cd ./backend
 npm run build
 start powershell {node --env-file=.env ./dist/index.js; Read-Host}
