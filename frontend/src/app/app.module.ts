@@ -1,4 +1,3 @@
-import { NgxFileDropModule } from "ngx-file-drop";
 import { MarkdownModule } from "ngx-markdown";
 
 import { HttpClientModule } from "@angular/common/http";
@@ -58,7 +57,6 @@ import { LoginButtonComponent } from './components/login-button/login-button.com
     HttpClientModule,
     ReactiveFormsModule,
     MarkdownModule.forRoot(),
-    NgxFileDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

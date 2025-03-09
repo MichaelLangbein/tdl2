@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { NgxFileDropEntry } from 'ngx-file-drop';
 import { TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -10,27 +9,26 @@ import { TaskService } from 'src/app/services/task.service';
 })
 export class FormDragListComponent {
 
-  public files: NgxFileDropEntry[] = [];
+  public files: any[] = [];
 
   constructor(private taskSvc: TaskService) {}
 
+  public async openFileSelector() {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker
+    // @ts-ignore
+    const fileHandles = await window.showOpenFilePicker();
+    this.upload(fileHandles);
+    this.files = fileHandles;
+  }
 
-  public dropped(files: NgxFileDropEntry[]) {
-    this.files = files;
-    for (const droppedFile of files) {
 
+  private async upload(fileHandles: FileSystemFileHandle[]) {
+    for (const fileHandle of fileHandles) {
       // Is it a file?
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          // Here you can access the real file
-          console.log(droppedFile.relativePath, file);
-          this.taskSvc.addFileToCurrent(file, droppedFile.relativePath);
-        });
-      } else {
-        // It was a directory (empty directories are added, otherwise only files)
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-        console.log(droppedFile.relativePath, fileEntry);
+      if (fileHandle.kind === "file") {
+        const file = await fileHandle.getFile();
+        // Here you can access the real file
+        this.taskSvc.addFileToCurrent(file, file.name);
       }
     }
   }
