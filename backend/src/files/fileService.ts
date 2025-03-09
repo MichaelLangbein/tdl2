@@ -1,5 +1,5 @@
 import { UploadedFile } from 'express-fileupload';
-import { createDirIfNotExists, getPathTo, deleteFile, writeBinaryFile, pathJoin } from './files';
+import { createDirIfNotExists, getPathTo, getPathToDir, deleteFile, writeBinaryFile, pathJoin } from './files';
 
 
 
@@ -8,7 +8,7 @@ export class FileService {
     private filePath: string;
 
     constructor(filePath: string) {
-        this.filePath = getPathTo(filePath);
+        this.filePath = getPathToDir(filePath);
     }
 
     public async init() {

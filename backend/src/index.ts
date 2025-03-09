@@ -12,7 +12,7 @@ async function main() {
   await taskService.init();
   const cardService = new CardService(database);
   await cardService.init();
-  const fileService = new FileService('./data/files');
+  const fileService = new FileService('./data/files/');
   await fileService.init();
 
   const useAuthentication = process.env.USE_AUTHENTICATION === 'true';

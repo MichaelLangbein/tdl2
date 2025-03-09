@@ -8,7 +8,16 @@ export function pathJoin(segments: string[]): string {
 }
 
 
-export function getPathTo(filePath: string) {
+export function getPathToDir(filePath: string): string {
+    if (fileExists(filePath)) {
+        if (isDir(filePath)) return path.resolve(filePath);
+        return path.resolve(path.dirname(filePath));
+    } else {
+        return path.resolve(filePath);
+    }
+}
+
+export function getPathTo(filePath: string, alwaysInterpretAsDir?: boolean): string {
     if (fileExists(filePath)) {
         if (isDir(filePath)) return path.resolve(filePath);
         return path.resolve(path.dirname(filePath));
