@@ -221,6 +221,71 @@ print(results.getAllMessages())
 
 ```
 
+## Updating projects per script
+
+```python
+import arcpy
+import os
+
+
+def createProdMap(projectPath, sourceDb, targetDb):
+
+    # Get a hold of the ArcGIS Pro project
+    print("loading project ...")
+    arcpy.env.overwriteOutput = True
+    project = arcpy.mp.ArcGISProject(projectPath)
+
+    # add gdb to project database
+    print("Checking project databases ...")
+    databases = project.databases
+    if not any([sourceDb in d["databasePath"] for d in databases]):
+        raise Exception(f"Database {sourceDb} not found in project.")
+    if not any([targetDb in d["databasePath"] for d in databases]):
+        raise Exception(f"Database {targetDb} not found in project.")
+
+    # copy map
+    print("copying map ...")
+    map = project.listMaps()[0]
+    newMapName = map.name + "_PROD"
+    if any([m.name == newMapName for m in project.listMaps()]):
+        raise Exception(f"Map {newMapName} already exists in project.")
+    
+    copiedMap = project.copyItem(map, newMapName)
+    copiedMap.updateConnectionProperties(sourceDb, targetDb)
+
+    # Note: 
+    # target gdb must already be registered in project
+    # and must contain FC
+    # *won't* throw an error if either of the above isn't true
+    # On layer by layer basis: known bug https://community.esri.com/t5/arcgis-pro-questions/using-updateconnectionproperties-to-update-a/td-p/1371637
+
+    print("saving project ...")
+    project.save()
+
+
+if __name__ == "__main__":
+    sourceDb = input("Enter the name of the source database: ")
+    targetDb = input("Enter the name of the target database: ")
+    startDir = input("Enter the path to the directory containing the projects: ")
+    if not os.path.isdir(startDir):
+        raise FileNotFoundError("The directory does not exist.")
+    
+    for projectDir in os.listdir(startDir):
+        projectPath = os.path.join(startDir, projectDir)
+        if not os.path.isdir(projectPath):
+            continue
+        aprxFiles = [f for f in os.listdir(projectPath) if f.endswith(".aprx")]
+        if len(aprxFiles) <= 0:
+            continue
+        projectPath = os.path.join(projectPath, aprxFiles[0])
+        if not os.path.isfile(projectPath):
+            continue
+
+        createProdMap(projectPath, sourceDb, targetDb)
+
+print("Done.")
+```
+
 ## Get current tool's python command
 
 - <https://www.youtube.com/watch?v=sCkVI4VHdXo>
