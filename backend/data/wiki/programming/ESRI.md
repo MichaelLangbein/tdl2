@@ -365,7 +365,7 @@ print("Done.")
 ### Using OAuth2
 
 ```python
-#%% 
+#%%
 from arcgis.gis import GIS
 
 """
@@ -375,15 +375,15 @@ In the app's details-page, look for and copy the "App ID".
 """ 
 
 portal_url = "https://gistest.suedlink.com/portal"
-client_id = "ZIbfACnBPCbEHLkK"  # <-- this is the "App ID" of your new empty app
+client_id = "ABC123"  # <-- this is the "App ID" of your new empty app
 
-try:
-    portalEndpoint = GIS(portal_url, client_id=client_id , use_gen_token=True, verify_cert=False)
-    print(f"Successfully logged in as: {portalEndpoint.properties.user.username} on {portalEndpoint.properties.name} with token: {portalEndpoint.session.auth.token}")
- 
-except Exception as e:
-        print(f"Failed to log in: {e}")
+portalEndpoint = GIS(portal_url, client_id=client_id , use_gen_token=True, verify_cert=False)
+print(f"Successfully logged in as: {portalEndpoint.properties.user.username} on {portalEndpoint.properties.name} with token: {portalEndpoint.session.auth.token}")
 
+webMaps = portalEndpoint.content.search(query ="", item_type = "Web Map")
+
+for webMap of webMaps:
+    print(webMap.name)
 ```
 
 ### Using LDAP or ActiveDirectory
