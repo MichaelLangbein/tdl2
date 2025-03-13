@@ -224,6 +224,46 @@ print(results.getAllMessages())
 ## Updating projects per script
 
 ```python
+project = arcpy.mu.ArcGISProject("CURRENT")
+map = project.listMaps("_PREPROD")[0]
+
+for layer in map.listLayers():
+    if layer.supports("DATASOURCE") and layer.connectionProperties is not None and "connection_info" in layer.connectionProperties:
+        print(f"updating layer {layer.name}...")
+        oldProps = layer.connectionProperties
+        newProps = oldProps.copy()
+        newProps["connection_info"]["db_connection_properties"] = newProps["connection_info"]["db_connection_properties"].replace("prod.xxxxx", "test.xxxxx")
+        newProps["connection_info"]["instance"] = newProps["connection_info"]["instance"].replace("prod.xxxxx", "test.xxxxx")
+        newProps["connection_info"]["server"] = newProps["connection_info"]["server"].replace("prod.xxxxx", "test.xxxxx")
+        layer.updateConnectionProperties(oldProps, newProps)
+    else:
+        print(f"No source data for layer {layer.name}")
+```
+
+Using the CIM: <https://pro.arcgis.com/en/pro-app/latest/arcpy/mapping/python-cim-access.htm>
+
+```python
+# Reference a project, map, and layer using arcpy.mp
+p = arcpy.mp.ArcGISProject('current')
+m = p.listMaps('Map')[0]
+l = m.listLayers('GreatLakes')[0]
+
+# Return the layer's CIM definition
+l_cim = l.getDefinition('V3')
+
+# Modify a few boolean properties
+l_cim.showMapTips = True  #Turn on map tips for bubble tips to appear
+l_cim.selectable = False  #Set the layer to not be selectable
+l_cim.expanded = True     #Expand the Layer in the Contents pane
+
+# Push the changes back to the layer object
+l.setDefinition(l_cim)
+
+# Save changes
+p.save()
+```
+
+```python
 import arcpy
 import os
 
