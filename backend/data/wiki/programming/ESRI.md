@@ -375,15 +375,24 @@ In the app's details-page, look for and copy the "App ID".
 """ 
 
 portal_url = "https://gistest.suedlink.com/portal"
-client_id = "ABC123"  # <-- this is the "App ID" of your new empty app
+client_id = "ZIbfACnBPCbEHLkK"  # <-- this is the "App ID" of your new empty app
+
 
 portalEndpoint = GIS(portal_url, client_id=client_id , use_gen_token=True, verify_cert=False)
 print(f"Successfully logged in as: {portalEndpoint.properties.user.username} on {portalEndpoint.properties.name} with token: {portalEndpoint.session.auth.token}")
 
-webMaps = portalEndpoint.content.search(query ="", item_type = "Web Map")
+webMapItems = portalEndpoint.content.search(query ="", item_type = "Web Map")
 
-for webMap of webMaps:
-    print(webMap.name)
+for webMapItem in webMapItems:
+    webMapData = webMapItem.get_data()
+
+    for layerInfo in webMapData["operationalLayers"]:
+        if layerInfo["layerType"] in ["ArcGISFeatureLayer", "ArcGISImageLayer"]:
+            layerItem = portalEndpoint.content.get(layerInfo["itemId"])  # id, url, name, owner, spatial ref, ...
+            if layerItem:
+                layerData = layerItem.get_data()  # popup settings, visibility, sublayers, ...
+
+
 ```
 
 ### Using LDAP or ActiveDirectory
