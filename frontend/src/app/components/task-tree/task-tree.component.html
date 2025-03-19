@@ -1,3 +1,4 @@
 <div class="treeList">
     <app-task-entry [ownTask]="tree$ | async" [activeTask]="activeTask$ | async"></app-task-entry>
+    <button (click)="toggleShowCompletedTasks()">Show completed tasks: {{ showCompletedTasks$ | async }}</button>
 </div>

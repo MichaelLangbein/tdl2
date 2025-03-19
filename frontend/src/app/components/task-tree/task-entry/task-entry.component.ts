@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { map } from 'rxjs';
 import { TaskTree, TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -25,6 +26,12 @@ export class TaskEntryComponent implements OnInit {
 
   public toggleExpanded() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  public shouldBeHidden() {
+    return this.taskSvc.watchShowCompletedTasks().pipe(
+      map(showCompletedTasks => !showCompletedTasks && this.ownTask?.completed)
+    );
   }
   
   public allowDrop(ev: DragEvent) {

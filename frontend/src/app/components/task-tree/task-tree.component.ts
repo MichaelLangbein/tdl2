@@ -10,13 +10,19 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
 export class TaskTreeComponent implements OnInit {
   tree$: Observable<TaskTree | null>;
   activeTask$: Observable<TaskTree | null>;
+  showCompletedTasks$: Observable<boolean>;
 
   constructor(private taskSvc: TaskService) {
     this.tree$ = this.taskSvc.watchTree();
     this.activeTask$ = this.taskSvc.watchCurrentTask();
+    this.showCompletedTasks$ = this.taskSvc.watchShowCompletedTasks();
   }
 
   ngOnInit(): void {
+  }
+
+  public toggleShowCompletedTasks() {
+    this.taskSvc.toggleShowCompletedTasks();
   }
 
 }

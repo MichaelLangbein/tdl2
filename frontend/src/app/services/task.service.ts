@@ -49,10 +49,21 @@ export class TaskService {
   private currentTask$: BehaviorSubject<TaskTree | null>;
   private fullTree$: BehaviorSubject<TaskTree | null>;
   private lastSwitch = new Date();
+  private showCompletedTasks$: BehaviorSubject<boolean>;
 
   constructor(private api: ApiService) {
     this.currentTask$ = new BehaviorSubject<TaskTree | null>(null);
     this.fullTree$ = new BehaviorSubject<TaskTree | null>(null);
+    this.showCompletedTasks$ = new BehaviorSubject<boolean>(true);
+  }
+
+  public toggleShowCompletedTasks() {
+    const currentState = this.showCompletedTasks$.value;
+    this.showCompletedTasks$.next(!currentState);
+  }
+
+  public watchShowCompletedTasks(): Observable<boolean> {
+    return this.showCompletedTasks$; 
   }
 
   public watchTree(): Observable<TaskTree | null> {

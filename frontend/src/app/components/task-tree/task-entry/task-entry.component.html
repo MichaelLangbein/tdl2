@@ -1,4 +1,7 @@
-<div [class]="{'entry': true}" *ngIf="ownTask && activeTask">
+<div [class]="{
+  'entry': true,
+  'hidden':   shouldBeHidden() | async
+  }" *ngIf="ownTask && activeTask">
 
   <div style="display: flex; gap: 0.5rem;">
     <span (click)="toggleExpanded()">{{ isExpanded ? "v" : ">" }}</span>
