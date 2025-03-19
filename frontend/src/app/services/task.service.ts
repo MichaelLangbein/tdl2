@@ -49,6 +49,7 @@ export class TaskService {
   private currentTask$: BehaviorSubject<TaskTree | null>;
   private fullTree$: BehaviorSubject<TaskTree | null>;
   private lastSwitch = new Date();
+  // @TODO: maybe this should not come out of this service, but a `UIStateService`
   private showCompletedTasks$: BehaviorSubject<boolean>;
 
   constructor(private api: ApiService) {
