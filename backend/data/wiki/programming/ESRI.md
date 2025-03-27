@@ -374,7 +374,7 @@ https://developers.arcgis.com/python/latest/guide/working-with-different-authent
 In the app's details-page, look for and copy the "App ID". 
 """ 
 
-portal_url = "https://gistest.suedlink.com/portal"
+portal_url = "https://yourportal.com/portal"
 client_id = "ZIbfACnBPCbEHLkK"  # <-- this is the "App ID" of your new empty app
 
 
@@ -402,11 +402,11 @@ from arcgis.gis import GIS
 
 # using ActiveDirectory
 usernameAD = "SOMEDOMAIN\username"  # Windows NT LAN Manager (NTLM) format
-portalAd = GIS("https://gistest.suedlink.com/portal", username=usernameAD, password="MyPassword")
+portalAd = GIS("https://yourportal.com/portal", username=usernameAD, password="MyPassword")
 
 # using LDAP
 usernameLdap = "username@domain.com"  # Distinguished Name (DN) format
-portalLdap = GIS("https://gistest.suedlink.com/portal", username=usernameLdap, password="MyPassword")
+portalLdap = GIS("https://yourportal.com/portal", username=usernameLdap, password="MyPassword")
 ```
 
 # Vertigis Studio
