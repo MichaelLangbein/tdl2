@@ -2,3 +2,4 @@
 node_modules
 .env
 buildDeploy.sh
+runLocally.ps1

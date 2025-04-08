@@ -49,6 +49,16 @@ ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), 
 - Group values aka contingent values:
   - given field A has some value, reduce the allowed values for field B
 
+## Metadata
+
+Feature-classes have some associated metadata that does not neatly fit into ms sql server tables.
+These are stored in the `sde` database:
+
+```sql
+--select * from sde.gdb_items as i;
+select * from sde.SDE_layers as i;
+```
+
 # Services
 
 Web-layer:
@@ -352,6 +362,12 @@ print("Done.")
 
 - <https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started>
 - <https://github.com/R-ArcGIS/r-bridge>
+
+# Exporting
+
+## Portal-Group: EPX
+
+## ArcGIS Pro Project: PPKX
 
 # Deployment through python
 
