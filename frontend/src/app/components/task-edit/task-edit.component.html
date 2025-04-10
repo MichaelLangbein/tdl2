@@ -11,9 +11,7 @@
         <label for="deadline">Deadline:</label>
         <input type="date" name="deadline" id="deadline" formControlName="deadline">
     </div>
-    <div class="formElement">
-        <app-form-drag-list></app-form-drag-list>
-    </div>
+    
 </form>
 
 <div class="infobox" *ngIf="currentTask$ | async as currentTask">
@@ -21,14 +19,18 @@
 
     <app-timeline *ngIf="estimate" [estimate]="estimate" [active]="recursiveTimeActive(currentTask)"></app-timeline>
 
-    <ul>
-        <li *ngFor="let attachment of currentTask.attachments">
-            <a [href]="attachment.path" target="_blank">
-                {{ attachment.path.slice(-20) }}
-            </a> || 
-            <a (click)="removeAttachment(attachment.id)">Remove</a>
-        </li>
-    </ul>
+
+    <div style="margin: 15px 0 15px 0;">
+        <app-form-drag-list></app-form-drag-list>
+        <ul>
+            <li *ngFor="let attachment of currentTask.attachments">
+                <a [href]="attachment.path" target="_blank">
+                    {{ attachment.path.slice(-20) }}
+                </a> || 
+                <a (click)="removeAttachment(attachment.id)">Remove</a>
+            </li>
+        </ul>
+    </div>
 
     <p *ngIf="!currentTask.completed">
         <button (click)="completeTask()">Complete</button>

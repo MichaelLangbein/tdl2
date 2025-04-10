@@ -428,3 +428,8 @@ portalLdap = GIS("https://yourportal.com/portal", username=usernameLdap, passwor
 # Vertigis Studio
 
 - Seems to be a bunch of custom widgets on top of experience builder
+
+# Contera
+
+- Offers FME
+- offers [map.apps](https://www.conterra.de/mapapps-etl), which is FME integrated into a web-gis app

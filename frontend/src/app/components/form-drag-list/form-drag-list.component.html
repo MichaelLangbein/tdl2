@@ -1,4 +1,7 @@
-<ul>
-  <li *ngFor="let item of files; let i=index">{{ item.relativePath }}</li>
-</ul>
-<button type="button" (click)="openFileSelector()">Browse Files</button>
+<div class="dropZone" 
+  (dragover)="allowDrop($event)"
+  (drop)="onDrop($event)"
+>
+  ... drag files here ...
+  <button style="float:right;"  type="button" (click)="openFileSelector()">Browse Files</button>
+</div>

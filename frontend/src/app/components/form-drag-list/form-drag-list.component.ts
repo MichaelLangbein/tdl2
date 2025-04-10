@@ -9,20 +9,28 @@ import { TaskService } from 'src/app/services/task.service';
 })
 export class FormDragListComponent {
 
-  public files: any[] = [];
-
   constructor(private taskSvc: TaskService) {}
 
   public async openFileSelector() {
     // https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker
     // @ts-ignore
     const fileHandles = await window.showOpenFilePicker();
-    this.upload(fileHandles);
-    this.files = fileHandles;
+    this.uploadFileHandles(fileHandles);
+  }
+
+  public allowDrop(ev: DragEvent) {
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+
+  public onDrop(ev: DragEvent) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.uploadFileList(ev.dataTransfer?.files);
   }
 
 
-  private async upload(fileHandles: FileSystemFileHandle[]) {
+  private async uploadFileHandles(fileHandles: FileSystemFileHandle[]) {
     for (const fileHandle of fileHandles) {
       // Is it a file?
       if (fileHandle.kind === "file") {
@@ -33,5 +41,12 @@ export class FormDragListComponent {
     }
   }
 
+  private uploadFileList(fileList: FileList | undefined) {
+    if (!fileList) return;
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      this.taskSvc.addFileToCurrent(file, file.name);
+    }
+  }
 
 }
