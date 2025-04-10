@@ -210,7 +210,7 @@ export function appFactory(
   app.post('/tasks/:id/addFile', checkAuthenticated, async (req, res) => {
     const taskId = +req.params.id;
     if (req.files) {
-      saveOneOrMoreFiles(taskId, req.files);
+      await saveOneOrMoreFiles(taskId, req.files);
     }
     const tree = await taskService.getSubtree(taskId, 1);
     res.send(tree);
