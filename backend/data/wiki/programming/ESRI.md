@@ -17,6 +17,27 @@ ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), 
 
 # Infrastructure
 
+Types of servers:
+
+- ArcGIS Pro (=QGIS)
+- GDB (=PostGIS)
+- ArcGIS Server (=Geoserver)
+- Portal (=Geonode,Openlayers with a lot of extras)
+
+It should be noted that just like in OSS, Pro, Server and Portal have completely different api's.
+
+- Pro: `arcpy`
+  - can publish services to server
+- Server: REST
+  - knows the PRO-projects used for services
+- Portal: `arcgis.GIS`
+  - can migrate portal-items between portals
+  - knows what services are referenced in a web-map
+  - cannot migrate services
+  - doesn't know what PRO-project has created a service
+
+A common setup:
+
 - 1 portal
   - 4 servers:
     - 1 hosting server
@@ -384,7 +405,6 @@ import time
 from datetime import datetime
 from pprint import pprint
 from arcgis.gis import GIS
-from arcgis.gis.server import Server
 
 
 
@@ -435,18 +455,17 @@ def simpleCloneItems(sourcePortal, targetPortal, queryString, itemType):
         itemType:
         search_existing_items:
             Most items have a `typeKeyword` property.
-            Cloned items have one formatted like `souce-<itemId>`
+            Cloned items have one formatted like `source-<itemId>`
         copy_data:
-            If False, then FeatureSerivce-Def will be moved to target, but actual Feature-Data will remain on Source.
+            If False, then FeatureService-Def will be moved to target, but actual Feature-Data will remain on Source.
         search_existing_items:
-            If this doesn't work, try the item_mapping paramter.
+            If this doesn't work, try the item_mapping parameter.
     """
     
     items = sourcePortal.content.search(query=queryString, item_type=itemType)
     clonedItems = targetPortal.content.clone_items(items,
                                                    copy_data=True, copy_global_ids=True, search_existing_items=True)
     return items, clonedItems
-
 
 
 
@@ -459,7 +478,7 @@ def groupMigrate(source, target, sourceGroupName, targetGroupName):
     group = source.groups.search(sourceGroupName)[0]
     groupMig = group.migration
     epkItem = groupMig.create(future=False)
-    # groupMig.insepct(epk)["results"]
+    # groupMig.inspect(epk)["results"]
     
     dateString = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
     fileName = f"{groupName}_{dateString}.epk"
@@ -480,7 +499,7 @@ def groupMigrate(source, target, sourceGroupName, targetGroupName):
     else:
         targetGroup = targetGroupSearchResults[0]
     targetGroupMig = targetGroup.migration
-    targeEpkFile = targetGroupMig.load(epk_item=targetEpkItem, future=False)
+    migrationResult = targetGroupMig.load(epk_item=targetEpkItem, future=False)
 
 
 
