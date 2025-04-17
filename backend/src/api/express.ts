@@ -13,6 +13,7 @@ import { DbAction, TaskRow, TaskService } from "../model/task.service";
 import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
 import { createSchedule, estimateUpcomingTasks } from "../stats/schedule";
+import { basename } from "path";
 
 
 export interface AppConfig {
@@ -208,14 +209,6 @@ export function appFactory(
     }
   }
 
-  app.post('/tasks/:id/addFile', checkAuthenticated, async (req, res) => {
-    const taskId = +req.params.id;
-    if (req.files) {
-      await saveOneOrMoreFiles(taskId, req.files);
-    }
-    const tree = await taskService.getSubtree(taskId, 1);
-    res.send(tree);
-  });
 
   // cruD - Delete
   app.delete('/tasks/delete/:id', checkAuthenticated, async (req, res) => {
@@ -223,16 +216,6 @@ export function appFactory(
     const parent = await taskService.getParent(id);
     await taskService.deleteTree(id, true);
     res.send(parent);
-  });
-
-  app.delete('/tasks/:taskId/removeFile/:fileId', checkAuthenticated, async (req, res) => {
-    const taskId = +req.params.taskId;
-    const fileId = +req.params.fileId;
-    const fileRow = await taskService.getFileAttachment(fileId);
-    await fileService.removeFile(fileRow.path);
-    await taskService.deleteFileAttachment(fileId);
-    const tree = await taskService.getSubtree(taskId, 1);
-    res.send(tree);
   });
 
   app.get('/tasks/:id/estimate', checkAuthenticated, async (req, res) => {
@@ -249,6 +232,42 @@ export function appFactory(
   app.get('/tasks/upcoming', async (req, res) => {
     const list = await taskService.upcoming();
     res.send(list);
+  });
+
+
+  
+  /***********************************************************************
+   * Files
+   **********************************************************************/
+
+  app.post('/tasks/:id/addFile', checkAuthenticated, async (req, res) => {
+    const taskId = +req.params.id;
+    if (req.files) {
+      await saveOneOrMoreFiles(taskId, req.files);
+    }
+    const tree = await taskService.getSubtree(taskId, 1);
+    res.send(tree);
+  });
+
+  app.delete('/tasks/:taskId/removeFile/:fileId', checkAuthenticated, async (req, res) => {
+    const taskId = +req.params.taskId;
+    const fileId = +req.params.fileId;
+    const fileRow = await taskService.getFileAttachment(fileId);
+    await fileService.removeFile(fileRow.path);
+    await taskService.deleteFileAttachment(fileId);
+    const tree = await taskService.getSubtree(taskId, 1);
+    res.send(tree);
+  });
+
+  app.get('/tasks/:taskId/getFile/:fileId', checkAuthenticated, async (req, res) => {
+    const taskId = +req.params.taskId;
+    const fileId = +req.params.fileId;
+    const fileRow = await taskService.getFileAttachment(fileId);
+    // const {contentType, file} = await fileService.getFile(fileRow.path);
+    const {contentType, fileStream} = fileService.getFileStream(fileRow.path);
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${basename(fileRow.path)}"`);
+    fileStream.pipe(res);
   });
 
   /***********************************************************************

@@ -39,6 +39,7 @@ export interface TaskRow {
   providedIn: 'root',
 })
 export class TaskService {
+
   /**
    * - Interface between frontend and backend
    * - Maps UI-actions to REST-calls
@@ -228,6 +229,12 @@ export class TaskService {
       .subscribe((updatedTask) => {
         this.currentTask$.next(updatedTask);
       });
+  }
+
+  public downloadAttachmentFromCurrentTask(attachmentId: number) {
+    const currentTask = this.currentTask$.value;
+    if (!currentTask) return;
+    this.api.open(`/tasks/${currentTask.id}/getFile/${attachmentId}`);
   }
 
   public loadAndSwitch(targetTaskId: number) {

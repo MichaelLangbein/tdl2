@@ -55,6 +55,10 @@ export class ApiService {
     });
   }
 
+  public open(path: string) {
+    window.open(`${this.backendUrl}${path}`, '_blank', 'noopener,noreferrer');
+  }
+
   public post<T>(path: string, body: any) {
     return this.http.post<T>(`${this.backendUrl}${path}`, body, {
       withCredentials: true,
