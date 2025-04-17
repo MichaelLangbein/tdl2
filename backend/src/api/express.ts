@@ -12,6 +12,7 @@ import { CardService } from "../model/card.service";
 import { DbAction, TaskRow, TaskService } from "../model/task.service";
 import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
+import { createSchedule, EstimatedTask } from "../stats/schedule";
 
 
 export interface AppConfig {
@@ -291,6 +292,20 @@ export function appFactory(
     const estimatedUnfinishedTree = filterTree(estimatedTree, (node) => !node.completed);
 
     res.send(estimatedUnfinishedTree);
+  });
+
+  app.get('/schedule', async (req, res) => {
+    const upcoming = await taskService.upcoming();
+    const fullTree = await taskService.getSubtree(1, 30, true);
+    if (!fullTree) return res.send([]);
+    const upcomingEstimated: EstimatedTask[] = upcoming.map((task) => {
+      const allEstimates = estimateTime(task.id, fullTree);
+      const meanEstimateSeconds = (allEstimates.buvs + allEstimates.tdvs) / 2;
+      const meanEstimateHours = Math.round(meanEstimateSeconds / 3600);
+      return {task, estimate: meanEstimateHours};
+    });
+    const schedule = createSchedule(upcomingEstimated);
+    res.send(schedule);
   });
 
   /***********************************************************************

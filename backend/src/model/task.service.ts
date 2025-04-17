@@ -98,6 +98,7 @@ export class TaskService {
         }
     }
     
+
     public async getTask(taskId: number) {
         const result = await this.db.get<TaskRow>(`
             select * from tasks 
