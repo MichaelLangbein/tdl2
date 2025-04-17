@@ -1,20 +1,21 @@
-import { TaskRow } from "../model/task.service";
+import { TaskRow, TaskService, TaskTree } from "../model/task.service";
+import { estimateTime } from "./estimates";
 import { Workdays } from "./weekdays";
 
 
 export interface EstimatedTask {
     task: TaskRow;
-    estimate: number;
+    estimatedHours: number;
 }
 
 function createPermutations(tasks: EstimatedTask[]) {
     const sequences: number[][] = [];
     for (const task of tasks) {
-        if (task.estimate > 0) {
+        if (task.estimatedHours > 0) {
             const baseSequence = [task.task.id];
-            task.estimate -= 1;
+            task.estimatedHours -= 1;
             const childSequences = createPermutations(tasks);
-            task.estimate += 1;
+            task.estimatedHours += 1;
             if (childSequences.length === 0) {
                 sequences.push(baseSequence);
             } else {
@@ -34,7 +35,7 @@ function calculateLoss(sequence: number[], tasks: EstimatedTask[]) {
 
     // for each task, calculate work done and time left
     for (const task of tasks) {
-        let remainingWorkHours = task.estimate;
+        let remainingWorkHours = task.estimatedHours;
         const deadline = task.task.deadline;
         // @TODO: account for non-working hours
         const workingHoursToDeadline = Math.round(Workdays.getWorkingHoursUntil(deadline));
@@ -92,4 +93,61 @@ export function createSchedule(upcomingEstimated: EstimatedTask[]) {
         sequence: bestSolutionDated,
         loss: bestSolution.loss,
     };
+}
+
+
+function fullTime(node: TaskTree) {
+    let time = node.secondsActive;
+    for (const child of node.children) {
+        time += fullTime(child);
+    }
+    return time;
+}
+
+
+function findTaskSubtree(task: TaskRow, fullTree: TaskTree): TaskTree {
+    if (fullTree.id === task.id) return fullTree;
+    for (const child of fullTree.children) {
+        const found = findTaskSubtree(task, child);
+        if (found) return found;
+    }
+    return null;
+}
+
+function isInTree(taskId: number, tree: TaskTree) {
+    if (tree.id === taskId) return true;
+    for (const child of tree.children) {
+        if (isInTree(taskId, child)) return true;
+    }
+    return false;
+}
+
+
+export async function estimateUpcomingTasks(taskService: TaskService): Promise<EstimatedTask[]> {
+    const upcoming = await taskService.upcoming();
+    const fullTree = await taskService.getSubtree(1, 30, true);
+    if (!fullTree) return [];
+
+    const upcomingEstimated: EstimatedTask[] = upcoming.map((task) => {
+        const taskTree = findTaskSubtree(task, fullTree);
+        const totalActiveSeconds = fullTime(taskTree);
+        const totalActiveHours = Math.round(totalActiveSeconds / 3600);
+        const allEstimates = estimateTime(task.id, fullTree);
+        const meanEstimateSeconds = (allEstimates.buvs + allEstimates.tdvs) / 2;
+        const meanEstimateHours = Math.round(meanEstimateSeconds / 3600);
+        return {task, estimatedHours: meanEstimateHours - totalActiveHours};
+    });
+
+    // removing doubly counted time from task-children
+    for (const task of upcomingEstimated) {
+        const taskTree = findTaskSubtree(task.task, fullTree);
+        for (const otherTask of upcomingEstimated) {
+            if (task.task.id === otherTask.task.id) continue;
+            if (isInTree(otherTask.task.id, taskTree)) {
+                task.estimatedHours -= otherTask.estimatedHours;
+            }
+        }
+    }
+
+    return upcomingEstimated;
 }

@@ -6,13 +6,13 @@ describe('schedule', () => {
 
         const testTasks: EstimatedTask[] = [{
             task: { id: 1, deadline: Date.now() + 5*60*60*1000, secondsActive: 0, title: "", description: "", completed: undefined, created: undefined, parent: undefined },
-            estimate: 3,
+            estimatedHours: 3,
         }, {
             task: { id: 2, deadline: Date.now() + 7*60*60*1000, secondsActive: 0, title: "", description: "", completed: undefined, created: undefined, parent: undefined },
-            estimate: 2,
+            estimatedHours: 2,
         }, {
             task: { id: 3, deadline: Date.now() + 2*60*60*1000, secondsActive: 0, title: "", description: "", completed: undefined, created: undefined, parent: undefined },
-            estimate: 2
+            estimatedHours: 2
         }];
         const schedule = createSchedule(testTasks);
         const scheduleTaskSequence = schedule.sequence.map(i => i.taskId);
