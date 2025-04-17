@@ -37,7 +37,7 @@ function calculateLoss(sequence: number[], tasks: EstimatedTask[]) {
         let remainingWorkHours = task.estimate;
         const deadline = task.task.deadline;
         // @TODO: account for non-working hours
-        const workingHoursToDeadline = Workdays.getWorkingHoursUntil(deadline);
+        const workingHoursToDeadline = Math.round(Workdays.getWorkingHoursUntil(deadline));
         let taskFinishedAtHour = -1;
         for (let i = 0; i < sequence.length; i++) {
             const taskId = sequence[i];
@@ -88,6 +88,8 @@ export function createSchedule(upcomingEstimated: EstimatedTask[]) {
         bestSolutionDated.push({taskId, date});
     }
     
-    bestSolution.sequence = bestSolutionDated;
-    return bestSolution;
+    return {
+        sequence: bestSolutionDated,
+        loss: bestSolution.loss,
+    };
 }
