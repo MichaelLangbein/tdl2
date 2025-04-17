@@ -1,19 +1,4 @@
 #%%
-import itertools
-
-
-
-def uniquePermutations(sequence):
-    allePerms = itertools.permutations(sequence)
-    uniquePerms = set(allePerms)
-    return [list(seq) for seq in uniquePerms]
-
-
-def find(lst, predicate):
-    for item in lst:
-        if predicate(item):
-            return item
-    return None
 
 
 def calcLoss(seq, tasks):
@@ -42,15 +27,10 @@ def calcLoss(seq, tasks):
     return totalLoss
         
 
-def clone(tasks):
-    return [dict(task) for task in tasks]
-
-  
-
 def createPermutations(tasks):
     sequences = []
     for task in tasks:
-        if task["work"] > 1:
+        if task["work"] > 0:
             baseSequence = [task["id"]]
             task["work"] -= 1
             childSequences = createPermutations(tasks)
@@ -63,10 +43,10 @@ def createPermutations(tasks):
     return sequences
 
 
-# print(createSequences([{"id": 1, "work": 1}]))
-# print(createSequences([{"id": 1, "work": 2}]))
-# print(createSequences([{"id": 1, "work": 1}, {"id": 2, "work": 1}]))
-# print(createSequences([{"id": 1, "work": 1}, {"id": 2, "work": 2}]))
+print(createPermutations([{"id": 1, "work": 1}]))
+print(createPermutations([{"id": 1, "work": 2}]))
+print(createPermutations([{"id": 1, "work": 1}, {"id": 2, "work": 1}]))
+print(createPermutations([{"id": 1, "work": 1}, {"id": 2, "work": 2}]))
 
 
 tasks = [{
