@@ -75,7 +75,7 @@ export class TaskEntryComponent implements OnInit {
         const file = files[i];
         if (file.name.endsWith('.eml')) {
           console.log('Email dropped: ', file.name);
-          this.taskSvc.addEmailChildToCurrent(file);
+          this.taskSvc.addEmailChildTo(file, this.ownTask.id);
         }
       }
     }

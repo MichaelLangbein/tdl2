@@ -116,20 +116,19 @@ export class TaskService {
       });
   }
 
-  public addEmailChildToCurrent(file: File) {
-    const currentTask = this.currentTask$.value;
-    if (!currentTask) return;
+  public addEmailChildTo(file: File, parentId: number) {
     this.api.uploadFormData<TaskRow>(
       `/tasks/create/emailtask/`, {
-        parent: currentTask.id + "",
+        parent: parentId + "",
         file: file,
       }).subscribe((response: TaskRow) => {
-      const newTask = {...response, attachments: [], children: [] };
-      if (this.fullTree$.value) {
-        const newTree = addChildToTree(this.fullTree$.value, newTask);
-        this.fullTree$.next(newTree);
-      }
-      this.switchCurrent(newTask);
+        console.log("Email task added: ", response);
+        if (this.fullTree$.value) {
+          const newTask = {... response, children: [], attachments: (response as any).attachments || []};
+          const newTree = addChildToTree(this.fullTree$.value, newTask);
+          this.fullTree$.next(newTree);
+          this.switchCurrent(newTree);
+        }
     });
   }
 

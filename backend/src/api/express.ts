@@ -247,18 +247,27 @@ export function appFactory(
     const files = req.files;
     if (files) {
       await fileArrayEach(req.files, async (file) => {
-          const mailObject = simpleParser(file.data);
+
+        // parsing
+          const mailObject = await simpleParser(file.data);
           const title = mailObject.subject;
           const description = mailObject.text || mailObject.html || 'No description available.';
-          // const from = mailObject.from?.text || 'Unknown sender';
+
+          // create task
           const task = await taskService.createTask(title, parentId, new Date().getTime());
-          task.description = description;
-          task.metadata = JSON.stringify({"email": {}});
-          await taskService.updateTask(task);
+
+          // attachment
           const localFilePath = await fileService.storeFile(file);
           await taskService.addFileAttachment(task.id, localFilePath);
           const tree = await taskService.getSubtree(task.id, 1);
-          res.send(tree);
+
+          // update task with description and metadata
+          task.description = description;
+          task.metadata = JSON.stringify({"email": {attachmentId: tree.attachments[0].id}});
+          const updatedTask = await taskService.updateTask(task);
+
+          // return
+          res.send(updatedTask);
           return false; // stop after first file.
       });
     }
