@@ -116,6 +116,23 @@ export class TaskService {
       });
   }
 
+  public addEmailChildToCurrent(file: File) {
+    const currentTask = this.currentTask$.value;
+    if (!currentTask) return;
+    this.api.uploadFormData<TaskRow>(
+      `/tasks/create/emailtask/`, {
+        parent: currentTask.id + "",
+        file: file,
+      }).subscribe((response: TaskRow) => {
+      const newTask = {...response, attachments: [], children: [] };
+      if (this.fullTree$.value) {
+        const newTree = addChildToTree(this.fullTree$.value, newTask);
+        this.fullTree$.next(newTree);
+      }
+      this.switchCurrent(newTask);
+    });
+  }
+
   public addSiblingToCurrent(title: string, description: string) {
     const currentTask = this.currentTask$.value;
     if (!currentTask) return;
@@ -193,6 +210,7 @@ export class TaskService {
       const parent = this.getTask(parentId);
       if (!parent) return;
       this.switchCurrent(parent, false);
+      // @TODO: if task was an email-task, download the email
     });
   }
 

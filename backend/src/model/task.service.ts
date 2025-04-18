@@ -22,7 +22,8 @@ export interface TaskRow {
     created: number,
     completed: number | null,
     secondsActive: number,
-    deadline: number | null
+    deadline: number | null,
+    metadata: string | null
 }
 
 export interface FileRow {
@@ -64,11 +65,13 @@ export class TaskService {
                     created         Date,
                     completed       Date,
                     secondsActive   integer,
-                    deadline        Date
+                    deadline        Date,
+                    metadata        text
                 );
                 create index parent_task on tasks(parent);
             `);
             await this.createTask('root');
+            // @TODO: metadata is temporary. We might instead have a separate table for email-metadata, one for msteams-metadata, etc.
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';

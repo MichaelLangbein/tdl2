@@ -1,10 +1,12 @@
 import cors from "cors";
 import { scryptSync, timingSafeEqual } from "crypto";
 import express, { NextFunction, Request, Response } from "express";
-import fileUpload, { FileArray } from "express-fileupload";
+import fileUpload, { FileArray, UploadedFile } from "express-fileupload";
 import session from "express-session";
 import passport, { Request as PassportRequest } from "passport";
 import { Strategy } from "passport-local";
+import { basename } from "path";
+import { simpleParser } from "mailparser";
 
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from "../files/files";
 import { FileService } from "../files/fileService";
@@ -13,7 +15,8 @@ import { DbAction, TaskRow, TaskService } from "../model/task.service";
 import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
 import { createSchedule, estimateUpcomingTasks } from "../stats/schedule";
-import { basename } from "path";
+import { createReadStream } from "fs";
+
 
 
 export interface AppConfig {
@@ -194,21 +197,20 @@ export function appFactory(
     res.send(updatedTask);
   });
 
-  async function saveOneOrMoreFiles(taskId: number, fileArray: FileArray) {
+  async function fileArrayEach(fileArray: FileArray, callback: (file: UploadedFile) => Promise<void | boolean>) {
     for (const key in fileArray) {
       const files = fileArray[key];
       if (Array.isArray(files)) {
         for (const file of files) {
-          const localFilePath = await fileService.storeFile(file);
-          await taskService.addFileAttachment(taskId, localFilePath);
+          const response = await callback(file);
+          if (response === false) return false; // early stopping
         }
       } else {
-        const localFilePath = await fileService.storeFile(files);
-        await taskService.addFileAttachment(taskId, localFilePath);
+        const response = await callback(files);
+        if (response === false) return false;  // early stopping
       }
     }
-  }
-
+  };
 
   // cruD - Delete
   app.delete('/tasks/delete/:id', checkAuthenticated, async (req, res) => {
@@ -234,7 +236,33 @@ export function appFactory(
     res.send(list);
   });
 
+  
+  /***********************************************************************
+   * Email tasks
+   **********************************************************************/
 
+  app.post('/tasks/create/emailtask/', checkAuthenticated, async (req, res) => {
+    const formData = req.body;
+    const parentId = +formData.parent;
+    const files = req.files;
+    if (files) {
+      await fileArrayEach(req.files, async (file) => {
+          const mailObject = simpleParser(file.data);
+          const title = mailObject.subject;
+          const description = mailObject.text || mailObject.html || 'No description available.';
+          // const from = mailObject.from?.text || 'Unknown sender';
+          const task = await taskService.createTask(title, parentId, new Date().getTime());
+          task.description = description;
+          task.metadata = JSON.stringify({"email": {}});
+          await taskService.updateTask(task);
+          const localFilePath = await fileService.storeFile(file);
+          await taskService.addFileAttachment(task.id, localFilePath);
+          const tree = await taskService.getSubtree(task.id, 1);
+          res.send(tree);
+          return false; // stop after first file.
+      });
+    }
+  });
   
   /***********************************************************************
    * Files
@@ -243,7 +271,11 @@ export function appFactory(
   app.post('/tasks/:id/addFile', checkAuthenticated, async (req, res) => {
     const taskId = +req.params.id;
     if (req.files) {
-      await saveOneOrMoreFiles(taskId, req.files);
+      await fileArrayEach(req.files, async (file) => {
+        const localFilePath = await fileService.storeFile(file);
+        await taskService.addFileAttachment(taskId, localFilePath);
+      });
+      
     }
     const tree = await taskService.getSubtree(taskId, 1);
     res.send(tree);
@@ -299,7 +331,11 @@ export function appFactory(
         case 'delete':
           await taskService.deleteTask(action.args.id);
         case 'addFile':
-          await saveOneOrMoreFiles(action.args.id, action.args.files);
+          await fileArrayEach(action.args.files, async (file) => {
+            const taskId = action.args.id;
+            const localFilePath = await fileService.storeFile(file);
+            await taskService.addFileAttachment(taskId, localFilePath);
+          });
         default:
           console.error(`No such DbAction: ${action.type}`);
       }
@@ -314,12 +350,8 @@ export function appFactory(
   });
 
   app.get('/schedule', async (req, res) => {
-    console.log("Creating schedule ...");
-    console.log("... estimating upcomming tasks ...");
     const upcomingEstimated = await estimateUpcomingTasks(taskService);
-    console.log("... finding optimal schedule ...");
     const schedule = createSchedule(upcomingEstimated);
-    console.log("... done.");
     res.send(schedule);
   });
 

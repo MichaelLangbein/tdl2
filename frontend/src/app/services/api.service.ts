@@ -76,4 +76,12 @@ export class ApiService {
       withCredentials: true,
     });
   }
+
+  public uploadFormData<T>(path: string, data: {[key: string]: string | Blob}) {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+      formData.append(key, value);
+    }
+    return this.post<T>(path, formData);
+  }
 }
