@@ -165,7 +165,8 @@ export class TaskService {
                 parent = $parent,
                 secondsActive = $secondsActive,
                 completed = $completed,
-                deadline = $deadline
+                deadline = $deadline,
+                metadata = $metadata
             where id = $id;
         `, {
             '$id': task.id,
@@ -174,7 +175,8 @@ export class TaskService {
             '$parent': task.parent,
             '$secondsActive': task.secondsActive,
             '$completed': task.completed,
-            '$deadline': task.deadline
+            '$deadline': task.deadline,
+            "$metadata": task.metadata
         });
         const updatedTask = await this.getTask(task.id);
         return updatedTask!;

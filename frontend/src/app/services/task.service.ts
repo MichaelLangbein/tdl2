@@ -22,6 +22,7 @@ export interface TaskTree {
   attachments: Attachment[];
   children: TaskTree[];
   deadline: number | null;
+  metadata: string | null;
 }
 
 export interface TaskRow {
@@ -33,6 +34,7 @@ export interface TaskRow {
   completed: number | null;
   secondsActive: number;
   deadline: number | null;
+  metadata: string | null;
 }
 
 @Injectable({
@@ -122,7 +124,6 @@ export class TaskService {
         parent: parentId + "",
         file: file,
       }).subscribe((response: TaskRow) => {
-        console.log("Email task added: ", response);
         if (this.fullTree$.value) {
           const newTask = {... response, children: [], attachments: (response as any).attachments || []};
           const newTree = addChildToTree(this.fullTree$.value, newTask);
@@ -209,7 +210,13 @@ export class TaskService {
       const parent = this.getTask(parentId);
       if (!parent) return;
       this.switchCurrent(parent, false);
-      // @TODO: if task was an email-task, download the email
+      
+      // if task was an email-task, download the email
+      if (currentTask.metadata?.includes("email")) {
+        const emailMetaData = JSON.parse(currentTask.metadata); 
+        const emailId = +(emailMetaData.email.attachmentId);
+        if (emailId) this.downloadAttachmentFromCurrentTask(emailId);
+      }
     });
   }
 
@@ -250,6 +257,7 @@ export class TaskService {
 
   public downloadAttachmentFromCurrentTask(attachmentId: number) {
     const currentTask = this.currentTask$.value;
+    console.log("downloading attachment for ", currentTask);
     if (!currentTask) return;
     this.api.open(`/tasks/${currentTask.id}/getFile/${attachmentId}`);
   }
