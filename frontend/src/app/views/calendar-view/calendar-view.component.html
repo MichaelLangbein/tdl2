@@ -1,1 +1,23 @@
-<p>calendar-view works!</p>
+
+<button (click)="doSchedule()">Schedule</button>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Task ID</th>
+                <th>Parent title</th>
+                <th>Title</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="schedule$ | async as schedule">
+            <tr *ngFor="let event of schedule">
+                <td>{{ event.taskId }}</td>
+                <td>{{ event.parentTitle }}</td>
+                <td><div (click)="jumpToTask(event.taskId)" style="color: blue;">{{ event.title }}</div></td>
+                <td>{{ event.date | date: 'dd.MM - HH:00' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

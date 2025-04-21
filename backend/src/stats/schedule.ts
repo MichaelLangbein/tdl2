@@ -70,7 +70,11 @@ function calculateLoss(sequence: number[], tasks: EstimatedTask[]) {
 }
 
 
-export function createSchedule(upcomingEstimated: EstimatedTask[]) {
+/**
+ * Go through all possible permutations of tasks and find the one with the least loss.
+ * This is a brute-force solution and is not optimal for large number of tasks.
+ */
+export function getOptimalSchedule(upcomingEstimated: EstimatedTask[]) {
     const bestSolution: {sequence: number[], loss: number} = { sequence: [], loss: Infinity };
     const sequences = createPermutations(upcomingEstimated);
     for (const sequence of sequences) {
@@ -95,6 +99,31 @@ export function createSchedule(upcomingEstimated: EstimatedTask[]) {
     };
 }
 
+
+
+/**
+ * Estimate the optimal schedule for upcoming tasks based on their deadlines and active time.
+ * This is a greedy solution using least-slack-time-first approach.
+ */
+export function estimateOptimalSchedule(upcomingEstimated: EstimatedTask[]) {
+    const now = new Date().getTime();
+    const upcomingEstimatedWithSlackTime = upcomingEstimated.map((task) => {
+        const slack = task.task.deadline - now - task.task.secondsActive * 1000;
+        return {...task, slackTime: slack};
+    });
+    const sortedTasks = upcomingEstimatedWithSlackTime.sort((a, b) => a.slackTime - b.slackTime);
+
+    const bestSolutionDated = [];
+    let hour = 0;
+    for (const task of sortedTasks) {
+        for (let i = 0; i < Math.round(task.estimatedHours); i++) {
+            hour += 1;
+            const date = Workdays.getWorkingDateNHoursFromNow(hour);
+            bestSolutionDated.push({taskId: task.task.id, date});
+        }
+    }
+    return bestSolutionDated;
+}
 
 function fullTime(node: TaskTree) {
     let time = node.secondsActive;

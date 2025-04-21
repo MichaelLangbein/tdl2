@@ -14,8 +14,7 @@ import { CardService } from "../model/card.service";
 import { DbAction, TaskRow, TaskService } from "../model/task.service";
 import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
-import { createSchedule, estimateUpcomingTasks } from "../stats/schedule";
-import { createReadStream } from "fs";
+import { estimateOptimalSchedule, estimateUpcomingTasks } from "../stats/schedule";
 
 
 
@@ -360,7 +359,8 @@ export function appFactory(
 
   app.get('/schedule', async (req, res) => {
     const upcomingEstimated = await estimateUpcomingTasks(taskService);
-    const schedule = createSchedule(upcomingEstimated);
+    // const schedule = getOptimalSchedule(upcomingEstimated); <-- too expensive
+    const schedule = estimateOptimalSchedule(upcomingEstimated);
     res.send(schedule);
   });
 
