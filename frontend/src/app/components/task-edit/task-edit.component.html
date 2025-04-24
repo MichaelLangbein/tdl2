@@ -37,12 +37,12 @@
     </div>
 
     <p *ngIf="!currentTask.completed">
-        <button (click)="completeTask()">Complete</button>
         <button (click)="addChildTask()">Add child</button>
         <button (click)="addSiblingTask()">Add sibling</button>
         <button (click)="estimateTime()">Estimate time</button>
         <button (click)="template()">Template</button>
-        <button (click)="showDeleteModal = true" style="background-color: red; float: right;">Delete task</button>
+        <button (click)="completeTask()" class="completeButton">Complete</button>
+        <button (click)="showDeleteModal = true" class="deleteButton">Delete task</button>
     </p>
     <p *ngIf="currentTask.completed">
         <button (click)="reactivateTask()">Reactivate</button>

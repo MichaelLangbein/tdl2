@@ -49,3 +49,13 @@ form {
     background-color: var(--color-white);
     padding: 0.5rem;
 }
+
+.completeButton {
+    background-color: var(--color-secondary-1-1);
+    margin-left: 5rem;
+}
+
+.deleteButton {
+    background-color: red; 
+    float: right;
+}

@@ -359,6 +359,87 @@ if __name__ == "__main__":
 print("Done.")
 ```
 
+### Sampling raster-dataset at points
+
+```python
+import arcpy
+import os
+
+project = arcpy.mp.ArcGISProject("current")
+map = project.listMaps()[0]
+layers = map.listLayers()
+samplePointsLayer = layers[0]
+srtmLayer = layers[4]
+srtmRaster = arcpy.Raster(srtmLayer.name)
+
+
+# Get raster properties
+lower_left_x = srtmRaster.extent.XMin
+lower_left_y = srtmRaster.extent.YMin
+cell_size_x = srtmRaster.meanCellWidth
+cell_size_y = srtmRaster.meanCellHeight
+upper_left_x = srtmRaster.extent.XMin
+upper_left_y = srtmRaster.extent.YMax # YMax is the top of the raster extent
+# Get spatial reference of the raster
+raster_sr = srtmRaster.spatialReference
+
+
+field_names = [f.name for f in arcpy.ListFields(samplePointsLayer)]
+if "height" not in field_names:
+    arcpy.AddField_management(samplePointsLayer, "height", "LONG")
+
+
+# Use an UpdateCursor to iterate through points and update the height field
+# We need the shape token to get the point's geometry
+with arcpy.da.UpdateCursor(samplePointsLayer, "*", "", raster_sr) as cursor:
+    for row in cursor:
+        point_x, point_y = row[1] # Get the X, Y coordinates of the point
+        
+        if point_x is None:
+            continue
+
+        # Calculate raster column and row from point coordinates
+        # Column = (X - XMin) / CellSizeX
+        # Row = (YMax - Y) / CellSizeY (since rows are indexed from the top)
+        col = int((point_x - upper_left_x) / cell_size_x)
+        row_index = int((upper_left_y - point_y) / cell_size_y)
+
+        # Get the pixel value at the calculated row and column
+        # Need to handle potential index errors if point is outside raster extent
+        try:
+            # Access the pixel value - this requires reading the raster
+            # using the indexing [row_index, col]
+            # Note: This method can be slow for large numbers of points
+            elevation_value = srtmRaster[row_index, col]
+            print(elevation_value)
+
+            # Handle potential NoData values
+            if elevation_value is not None:
+                # Update the height field
+                row[-1] = elevation_value
+                cursor.updateRow(row)
+            else:
+                # Set height to None or a specific value for NoData
+                row[-1] = None # Or some indicator for NoData, e.g., -9999
+                cursor.updateRow(row)
+                print(f"Warning: NoData value at point ({point_x}, {point_y})")
+
+        except IndexError:
+            # Point is outside the raster extent
+            row[-1] = None # Or some indicator
+            cursor.updateRow(row)
+            print(f"Warning: Point ({point_x}, {point_y}) is outside raster extent.")
+        except Exception as cell_error:
+            print(f"Error getting raster value for point ({point_x}, {point_y}): {cell_error}")
+            row[-1] = None # Or some indicator
+            cursor.updateRow(row)
+
+
+    print("Elevation values extracted and updated successfully.")
+
+
+```
+
 ## Get current tool's python command
 
 - <https://www.youtube.com/watch?v=sCkVI4VHdXo>
