@@ -19,9 +19,19 @@
 
 # Playwright
 
-- Formally puppeteer (back then by google, now microsoft)
-- playwright has a test-recorder: <https://testingbot.com/support/playwright/recorder.html#introduction>
-- `npx playwright codegen wikipedia.org`
+<https://www.youtube.com/watch?v=Ea4aZB0Zlsw&list=PLhW3qG5bs-L9sJKoT1LC5grGT77sfW0Z8&index=6>
+
+- Formerly puppeteer (back then by google, now microsoft)
+- Start a project:
+  - `npm init playwright@latest`
+- Record a test:
+  - `npx playwright codegen wikipedia.org`
+  - <https://testingbot.com/support/playwright/recorder.html#introduction>
+- Run a specific test:
+  - `npx playwright test ./tests/ttg_bau.spec.ts --headed (--project chromium) (--trace on-first-retry)`
+- Show trace-replay of failed test:
+  - `npx playwright show-report`
+  - or `npx playwright show-trace ./test-results/somepath/result.zip`
 
 ## Cucumber
 
@@ -71,7 +81,8 @@
 - `jmeter.bat -n -t .\my_script.jmx -l .\my_log.jtl -e -o .\my_dashboard`
 
 ### Passing arguments from the cli
-https://stackoverflow.com/questions/63236382/configurable-number-of-threads-in-jmeter-threadgroup 
+
+<https://stackoverflow.com/questions/63236382/configurable-number-of-threads-in-jmeter-threadgroup>
 
 Modify your JMeter script to use a property for the thread count:
 
