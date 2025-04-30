@@ -22,9 +22,9 @@ Types of servers:
 - ArcGIS Pro (=QGIS)
 - GDB (=PostGIS)
 - ArcGIS Server (=Geoserver)
-- Portal (=Geonode,Openlayers with a lot of extras)
+- Portal (=Geonode, Openlayers with a lot of extras)
 
-It should be noted that just like in OSS, Pro, Server and Portal have completely different api's.
+It should be noted that just like in OSS, Pro, Server and Portal have completely different api's. In fact, historically there was only ArcGIS Server with different data-sources. Portal came later, so its no wonder arcgis server doesn't know about portal.
 
 - Pro: `arcpy`
   - can publish services to server
@@ -71,6 +71,9 @@ A common setup:
     - ... then they're automatically styled differently
 - **Group values** aka **contingent values**:
   - given field A has some value, reduce the allowed values for field B
+- **Attribute rules**:
+  - like a trigger in ms-sql-server (and probably implemented as such), but defined in arcade
+  - define an arcade expression that is triggered on every insert or update and validates that some input-combination is allowed.
 
 ## Metadata
 
