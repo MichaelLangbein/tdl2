@@ -85,6 +85,39 @@ These are stored in the `sde` database:
 select * from sde.SDE_layers as i;
 ```
 
+### Looking up domains in db
+
+A common example of data that ESRI stores in another table is domains. Here's how you can query that second domain table using sql:
+
+```sql
+WITH DomainLookup AS (
+    SELECT
+        items.Name AS DomainName,
+        Codes.code.value('(Code)[1]', 'VARCHAR(50)') AS Code,
+        Codes.code.value('(Name)[1]', 'VARCHAR(255)') AS Description
+    FROM
+        sde.GDB_ITEMS items
+    INNER JOIN
+        sde.GDB_ITEMTYPES itemtypes ON items.Type = itemtypes.UUID
+    CROSS APPLY
+        items.Definition.nodes('/GPCodedValueDomain2/CodedValues/CodedValue') AS Codes(code)
+    WHERE
+        itemtypes.Name = 'Coded Value Domain'
+)
+SELECT
+    fc.*, -- Select all columns from your feature class
+    DomainLookup1.Description AS YourDomainField1_Description, -- Description for the first domain-enabled field
+    DomainLookup2.Description AS YourDomainField2_Description -- Description for the second domain-enabled field
+    -- Add more lines here for additional domain-enabled fields
+FROM
+    YourFeatureClassTable fc
+LEFT JOIN
+    DomainLookup AS DomainLookup1 ON fc.YourDomainField1 = DomainLookup1.Code AND DomainLookup1.DomainName = 'YourDomainName1' -- Join for the first domain-enabled field
+LEFT JOIN
+    DomainLookup AS DomainLookup2 ON fc.YourDomainField2 = DomainLookup2.Code AND DomainLookup2.DomainName = 'YourDomainName2'; -- Join for the second domain-enabled field
+    -- Add more LEFT JOIN clauses here for additional domain-enabled fields
+```
+
 # Services
 
 Web-layer:

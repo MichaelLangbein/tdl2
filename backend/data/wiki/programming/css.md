@@ -14,10 +14,10 @@
   - **note**: sticky will only work if:
     - the parent has an absolute height
       - except if the parent is the window
-    - and the parent has overflow: visible (https://css-tricks.com/dealing-with-overflow-and-position-sticky/)
+    - and the parent has overflow: visible (<https://css-tricks.com/dealing-with-overflow-and-position-sticky/>)
       - a sticky element “sticks” to its nearest ancestor that has a “scrolling mechanism” (created when overflow is hidden, scroll, auto, or overlay), even if that ancestor isn’t the nearest actually scrolling ancestor. This effectively inhibits any “sticky” behavior. (From MDN Web Docs)
-      - great script to check why sticky is not working: https://element.how/css-debugging-position-sticky-not-working/#:~:text=are%20expected%20to.-,Why%20isn't%20position%3Asticky%20working%3F,same%20height%20as%20its%20parent.
-    - if the parent is a flex-box, the sticky item should have `align-self: flex-start` (https://stackoverflow.com/questions/44446671/my-position-sticky-element-isnt-sticky-when-using-flexbox)
+      - great script to check why sticky is not working: <https://element.how/css-debugging-position-sticky-not-working/#:~:text=are%20expected%20to.-,Why%20isn't%20position%3Asticky%20working%3F,same%20height%20as%20its%20parent>.
+    - if the parent is a flex-box, the sticky item should have `align-self: flex-start` (<https://stackoverflow.com/questions/44446671/my-position-sticky-element-isnt-sticky-when-using-flexbox>)
 
 # Display
 
@@ -39,6 +39,19 @@ Per default, div's are displayed in block-style, while spans are displayed inlin
 - _flex_ Element is displayed block-level with inner content in flexbox layout.
   - width inside of flex-algorithm is more of a suggestion
 - _contents_: create no box for this element, just paste the children in
+
+## Position vs display
+
+While display and position control different aspects of layout, they can interact:
+
+- Setting an element's position to `absolute` or `fixed` will cause it to behave as a block-level element regardless of its original display value, in terms of how it interacts with width and height.
+  - However, its interaction with other elements in the flow is dictated by its positioning.
+- `display: none;` will hide an element regardless of its position value.
+
+In summary:
+
+- `display` controls the type of box an element creates and how it participates in the normal document flow.
+- `position` controls the placement of an element, potentially taking it out of the normal document flow and allowing for offsetting based on containing elements or the viewport.
 
 # Resize
 
@@ -189,6 +202,7 @@ CSS animations:
 - animation: for multi-step animations
 
   - `animation: <custom name> <duration> <ease | linear>`
+
   - ````@keyframes <custom name> {
        0% {
 
@@ -308,7 +322,7 @@ Some info [by google](https://developers.google.com/web/fundamentals/performance
 
 ## Phases
 
-1.  Style computation: Assigns value to every css property.
+1. Style computation: Assigns value to every css property.
     1. accounts for selector-specificity
     2. accounts for inheritance
        1. text- & font-props are inherited
@@ -318,15 +332,15 @@ Some info [by google](https://developers.google.com/web/fundamentals/performance
     4. absolutize values
        1. converts vw, em, % into pixel values
        2. converts colors to sRGB
-2.  Box construction for each (pseudo-)element
+2. Box construction for each (pseudo-)element
     1. Almost all elements get a box,
     2. ... except display:none and display:contents, which get no box
     3. ... except tables and list-items, which get two boxes
-3.  Layout
+3. Layout
     1. calculates `x,y,width,height` for each box
-4.  Painting
+4. Painting
 
-## Stacking context: z-ordering, pos:abs, pos:sticky, dialogs, ...
+## Stacking context: z-ordering, pos:abs, pos:sticky, dialogs,
 
 - new context created when:
   - position:sticky
@@ -339,6 +353,6 @@ Some info [by google](https://developers.google.com/web/fundamentals/performance
 
 # Tools
 
-https://www.sessions.edu/color-calculator/
-https://coolors.co/598072
-https://colors.dopely.top/color-harmony-finder/Double-complementary/dc4b96
+<https://www.sessions.edu/color-calculator/>
+<https://coolors.co/598072>
+<https://colors.dopely.top/color-harmony-finder/Double-complementary/dc4b96>
