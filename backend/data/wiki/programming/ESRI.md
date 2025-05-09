@@ -129,28 +129,29 @@ Web-layer:
 
 ## Types
 
-- **WMS** = Map service (aka. "Map image" in portal)
+- *Map service* (aka. "Map image" in portal) (analog WMS)
   - Images drawn on demand, though cached. Multiple layers on same image.
   - WMS-T = Map service with time-config
   - Identify supported. In fact, allows a `query` request, which allows even WFS-like querying and filtering (`https://<your-image-service-url>/ImageServer/query?where=POP2000 > 350000
   &outFields=POP2000,NAME&f=json
 `)
   - Renders multiple layers into a single image. Toggling one layer leads to another request.
-- **WMTS** = Tiled map service
+- *Tiled map service* (analog WMTS)
   - Images drawn in advance.
   - No identify.
   - Renders multiple layers into a single image. No toggling allowed.
-- **WCS** = Raster service (aka "Imagery layer" in portal)
-- **WFS** = Feature service
+- *Raster service* (aka "Imagery layer" in portal) (analog WCS)
+- *Feature service* (analog WFS)
   - rendered client-side. Data transferred as protobuffer.
   - Identify naturally supported.
   - Querying is a bit more comfortable than in a WFS, because the query language doesn't use XML.
-- **WPS** = Web-geoprocessing-tool
-- Also:
-  - vector-tiles
-    - renders multiple layers into the same tile.
-    - No identify, no legend, no querying.
-  - 3D-tiles
+- *Web-geoprocessing-tool* (analog WPS)
+- vector-tiles
+  - renders multiple layers into the same tile.
+  - No identify, no legend, no querying.
+- 3D-tiles
+- hosted table
+  - 
 
 Web-map:
     - a json-file referencing one or many web-layers
