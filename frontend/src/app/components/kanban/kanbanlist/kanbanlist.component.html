@@ -1,0 +1,3 @@
+<div class="kanbanBoardList" *ngIf="(boardItems$ | async) as boardItems">
+    <div class="kanbanBoardItem" *ngFor="let item of boardItems">{{ item.title }}</div>
+</div>
