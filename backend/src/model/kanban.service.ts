@@ -1,5 +1,5 @@
 import { Database } from "sqlite";
-import { TaskService } from "./task.service";
+import { TaskRow, TaskService } from "./task.service";
 
 export class KanbanService {
 
@@ -56,6 +56,13 @@ export class KanbanService {
     }
 
 
+    public async listBoards() {
+        return this.db.all(`
+            select b.title, b.parentTaskId from kanbanBoards
+        `);
+    }
+
+
     public async createBoard(parentId: number, title: string, creationTime: number = new Date().getTime(), columnNames: string[] = ["backlog", "busy", "waiting", "done"]) {
         await this.db.run(`
             insert into kanbanBoards (parentTaskId, title, created)
@@ -82,26 +89,158 @@ export class KanbanService {
     }
 
 
-    public async getBoard(boardId: number) {
-        const boardRow = await this.db.get(`
-            select * from kanbanBoards
-            where id = $boardId;
+    public async getBoard(boardId: number): Promise<KanbanBoard> {
+        const boardRows = await this.db.all(`
+            select b.parentTaskId, b.id as boardId, b.created, b.completed, c.columnName, d.taskId
+            from kanbanBoards as b
+            join kanbanColumns as c on c.boardId = b.id
+            join kanbanColumnContents as d on d.columnId = c.id
+            where b.id = $boardId;
         `, {
             '$boardId': boardId
         });
-        const columnRows = await this.db.get(`
-            select * from kanbanColumns
-            where boardId = $boardId;    
-        `, {
-            "$boardId": boardId
-        });
-        const taskIds = await this.db.get(`
-            select * from kanbanColumnContents
-            where 
-        `);
+        
+        if (boardRows.length <= 0) throw Error(`No such Kanban-board with id ${boardId}`);
 
-        return out;
+        const title = boardRows[0].title;
+        const parentTaskId = boardRows[0].parentTaskId;
+        const created = boardRows[0].created;
+        const completed = boardRows[0].completed;
+        const columnIds = unique(boardRows.map(br => br.columnId));
+
+        const taskIds = boardRows.map(r => r.taskId);
+        taskIds.push(parentTaskId);
+        const taskRows = await this.taskSvc.getTasks(taskIds);
+        const board: KanbanBoard = {
+            boardId, title, completed, created,
+            parentTask: taskRows.find(tr => tr.id === parentTaskId),
+            columns: []
+        }
+
+        for (const columnId of columnIds) {
+            board.columns.push({
+                id: columnId, name: "", tasks: []
+            })
+        }
+
+        for (const boardRow of boardRows) {
+            const columnId = boardRow.columnId;
+            const columnName = boardRow.columnName;
+            const taskId = boardRow.taskId;
+            const taskRow = taskRows.find(tr => tr.id === taskId);
+            
+            const boardColumnData = board.columns.find(c => c.id = columnId);
+            boardColumnData.name = columnName;
+            boardColumnData.tasks.push(taskRow);
+        }
+
+        return board;
     }
 
 
+    public async moveTaskToColumn(boardId: number, taskId: number, sourceColumnId: number, targetColumnId: number): Promise<KanbanBoard> {
+        await this.db.run(`
+                update kanbanColumnContents 
+                set columnId = $targetColumnId
+                where columnId = $sourceColumnId and taskId = $taskId
+            `, {
+                "$taskId": taskId,
+                "$sourceColumnId": sourceColumnId,
+                "$targetColumnId": targetColumnId
+            });
+        return this.getBoard(boardId);
+    }
+
+
+    public async completeBoard(boardId: number, completedTimestamp: number) {
+        await this.db.run(`
+            update kanbanBoards
+            set completed = $completed
+            where boardId = $boardId
+        `, {
+            "$boardId": boardId,
+            "$completed": completedTimestamp
+        });
+        return this.getBoard(boardId);
+    }
+
+
+    public async addTask(boardId: number, columnId: number, taskId: number) {
+        await this.db.run(`
+            insert into kanbanColumnContents (columnId, taskId)
+            values ($columnId, $taskId);
+        `, {
+            "$columnId": columnId,
+            "$taskId": taskId,
+        });
+        return this.getBoard(boardId);
+    }
+
+
+    public async removeTask(boardId: number, taskId: number, columnId: number) {
+        await this.db.run(`
+            delete from kanbanColumnContents
+            where columnId = $columnId and taskId = $taskId;
+        `, {
+            "$columnId": columnId,
+            "$taskId": taskId
+        });
+        return this.getBoard(boardId);
+    }
+
+    public async addColumn(boardId: number, columnName: string) {
+        await this.db.run(`
+            insert into kanbanColumns (boardId, columnName)
+            values ($boardId, $columnName)
+        `, {
+            "$boardId": boardId, 
+            "$columnName": columnName
+        });
+        return this.getBoard(boardId);
+    }
+
+
+    public async renameColumn(boardId: number, columnId: number, newName: string) {
+        await this.db.run(`
+            update kanbanColumns
+            set name = $newName
+            where columnId = $columnId
+        `, {
+            "$columnId": columnId,
+            "$newName": newName
+        });
+        return this.getBoard(boardId);
+    }
+
+
+    public async removeColumn(boardId: number, columnId: number) {
+        await this.db.run(`
+            delete from kanbanColumns
+            where columnId = $columnId
+        `, {
+            "$columnId": columnId
+        });
+        return this.getBoard(boardId);
+    }
+}
+
+export interface KanbanBoard {
+    boardId: number,
+    title: string,
+    created: Date,
+    completed: Date,
+    parentTask: TaskRow,
+    columns: KanbanColumn[]
+}
+
+export interface KanbanColumn {
+    id: number,
+    name: string,
+    tasks: TaskRow[]
+}
+
+
+function unique<T>(lst: T[]): T[] {
+    const set = new Set(lst);
+    return [... set];
 }

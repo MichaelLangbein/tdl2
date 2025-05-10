@@ -2,6 +2,7 @@ import { appFactory } from "./api/express";
 import { createDatabase } from "./db/db";
 import { FileService } from "./files/fileService";
 import { CardService } from "./model/card.service";
+import { KanbanService } from "./model/kanban.service";
 import { TaskService } from "./model/task.service";
 
 
@@ -14,6 +15,8 @@ async function main() {
   await cardService.init();
   const fileService = new FileService('./data/files/');
   await fileService.init();
+  const kanbanService = new KanbanService(database, taskService);
+  await kanbanService.init();
 
   const useAuthentication = process.env.USE_AUTHENTICATION === 'true';
   let authenticationData = undefined;
@@ -28,7 +31,7 @@ async function main() {
 
   const corsOrigin = process.env.CORS_ORIGIN;
 
-  const app = appFactory(taskService, fileService, cardService, {
+  const app = appFactory(taskService, fileService, cardService, kanbanService, {
     withAuthentication: useAuthentication ? authenticationData : undefined,
     cors: { origin: corsOrigin },
   });

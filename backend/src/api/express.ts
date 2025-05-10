@@ -15,6 +15,7 @@ import { DbAction, TaskRow, TaskService } from "../model/task.service";
 import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
 import { estimateOptimalSchedule, estimateUpcomingTasks } from "../stats/schedule";
+import { KanbanService } from "../model/kanban.service";
 
 
 
@@ -27,6 +28,7 @@ export function appFactory(
   taskService: TaskService,
   fileService: FileService,
   cardService: CardService,
+  kanbanService: KanbanService,
   appConfig: AppConfig
 ) {
   const app = express();
@@ -437,6 +439,71 @@ export function appFactory(
     );
     res.send(updated);
   });
+
+  /***********************************************************************
+   * Kanban boards
+   **********************************************************************/
+
+  app.get('/kanban/', async (req, res) => {
+    const boards = await kanbanService.listBoards();
+    res.send(boards);
+  })
+
+  app.get('/kanban/:boardId', async (req, res) => {
+    const boardId = +req.params.boardId;
+    const board = await kanbanService.getBoard(boardId);
+    res.send(board);
+  });
+
+  app.post('/kanban/create', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.createBoard(body.parentId, body.title, body.created, body.columnNames);
+    res.send(board);
+  });
+
+  app.patch('/kanban/completeBoard/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.completeBoard(body.boardId, body.completed);
+    res.send(board);
+  });
+
+  app.patch('/kanban/addColumn/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.addColumn(body.boardId, body.columnName);
+    res.send(board);
+  });
+
+  app.patch('/kanban/renameColumn/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.renameColumn(body.boardId, body.columnId, body.newName);
+    res.send(board);
+  });
+
+  app.patch('/kanban/removeColumn/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.removeColumn(body.bardId, body.columnId);
+    res.send(board);
+  });
+
+  app.patch('/kanban/addTask/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.addTask(body.boardId, body.columnId, body.taskId);
+    res.send(board);
+  });
+
+  app.patch('/kanban/moveTask/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.moveTaskToColumn(body.boardId, body.taskId, body.sourceColumnId, body.targetColumnId);
+    res.send(board);
+  });
+
+  app.patch('/kanban/removeTask/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.removeTask(body.boardId, body.taskId, body.columnId);
+    res.send(board);
+  });
+
+
 
   return app;
 }
