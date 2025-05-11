@@ -1,1 +1,19 @@
-<p>kanban-create works!</p>
+<div *ngIf="!showCreateBoardForm">
+    <button (click)="showCreateBoardForm = true">Create board</button>
+</div>
+
+<div *ngIf="showCreateBoardForm">
+    <form [formGroup]="createBoardForm">
+        <h3>Create board</h3>
+        <div class="formElement">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" formControlName="title">
+        </div>
+        <div class="formElement">
+            <label for="title">Columns: (coma-separated list)</label>
+            <input type="text" name="columns" id="columns" formControlName="columns">
+        </div>
+        <button type="submit" (click)="createBoard()" [disabled]="!createBoardForm.valid">Create</button>
+    </form>
+    <button (click)="showCreateBoardForm = false">Cancel</button>
+</div>

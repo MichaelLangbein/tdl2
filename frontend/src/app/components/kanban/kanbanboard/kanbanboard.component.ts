@@ -9,9 +9,6 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
     styleUrls: ['./kanbanboard.component.css'],
 })
 export class KanbanboardComponent {
-edit(arg0: number) {
-throw new Error('Method not implemented.');
-}
 
     currentBoard$: BehaviorSubject<KanbanBoard | null> = new BehaviorSubject<KanbanBoard | null>(null);
     currentTask$: BehaviorSubject<TaskTree | null> = new BehaviorSubject<TaskTree | null>(null);
@@ -51,5 +48,9 @@ throw new Error('Method not implemented.');
     focusOn(taskId: number) {
         if (this.currentTask$.value?.id === taskId) this.showEditModal$.next(taskId);
         else this.taskSvc.loadAndSwitch(taskId);
+    }
+
+    hideModal() {
+      this.showEditModal$.next(-1);
     }
 }

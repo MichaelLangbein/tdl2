@@ -10,7 +10,7 @@ import { KanbanBoard, KanbanService } from 'src/app/services/kanban.service';
 export class KanbanlistComponent {
   
   public boardItems$: Observable<{boardId: number, title: string}[]>;
-  currentBoard$: Observable<KanbanBoard>;
+  public currentBoard$: Observable<KanbanBoard | null>;
 
   constructor(private kanbanSvc: KanbanService) {
     this.boardItems$ = this.kanbanSvc.getBoards();

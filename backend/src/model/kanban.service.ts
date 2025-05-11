@@ -56,7 +56,7 @@ export class KanbanService {
 
     public async listBoards() {
         return this.db.all(`
-            select b.id, b.title from kanbanBoards
+            select b.id, b.title from kanbanBoards as b
         `);
     }
 
@@ -88,10 +88,10 @@ export class KanbanService {
 
     public async getBoard(boardId: number): Promise<KanbanBoard> {
         const boardRows = await this.db.all(`
-            select b.id as boardId, b.created, b.completed, c.columnName, d.taskId
+            select b.id as boardId, b.title, b.created, b.completed, c.id as columnId, c.columnName, d.taskId
             from kanbanBoards as b
-            join kanbanColumns as c on c.boardId = b.id
-            join kanbanColumnContents as d on d.columnId = c.id
+            left join kanbanColumns as c on c.boardId = b.id
+            left join kanbanColumnContents as d on d.columnId = c.id
             where b.id = $boardId;
         `, {
             '$boardId': boardId
@@ -104,7 +104,7 @@ export class KanbanService {
         const completed = boardRows[0].completed;
         const columnIds = unique(boardRows.map(br => br.columnId));
 
-        const taskIds = boardRows.map(r => r.taskId);
+        const taskIds = boardRows.map(r => r.taskId).filter(d => !!d);
         const taskRows = await this.taskSvc.getTasks(taskIds);
         const board: KanbanBoard = {
             boardId, title, completed, created,
@@ -122,6 +122,7 @@ export class KanbanService {
             const columnName = boardRow.columnName;
             const taskId = boardRow.taskId;
             const taskRow = taskRows.find(tr => tr.id === taskId);
+            if (!taskRow) continue;
             
             const boardColumnData = board.columns.find(c => c.id = columnId);
             boardColumnData.name = columnName;

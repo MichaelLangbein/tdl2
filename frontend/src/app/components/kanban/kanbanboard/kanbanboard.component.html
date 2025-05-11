@@ -18,7 +18,11 @@
     </div>
 </div>
 
-<div *ngIf="(showEditModal$ | async) !== -1" class="modal">
+<div 
+    *ngIf="(showEditModal$ | async) !== -1" 
+    class="modal"
+    (click)="hideModal()"
+    >
     <div class="modalContent">
         <app-task-edit></app-task-edit>
     </div>
