@@ -11,7 +11,7 @@ export class KanbanService {
 
   constructor(private apiSvc: ApiService) { }
 
-  getBoards(): Observable<{boardId: number, title: string}[]> {
+  getBoards(): Observable<{id: number, title: string}[]> {
     return this.apiSvc.get("/kanban");
   }
 
@@ -20,7 +20,7 @@ export class KanbanService {
   }
 
   setCurrentBoard(boardId: number) {
-    this.apiSvc.get<KanbanBoard>(`/kanban/${boardId}`).subscribe(board => this.currentBoard$.next(board));
+    this.apiSvc.get<KanbanBoard>(`/kanban/${boardId}`).subscribe(this.currentBoard$);
   }
 
   createBoard(title: string, columns: string[]) {

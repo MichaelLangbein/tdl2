@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { KanbanBoard, KanbanService } from 'src/app/services/kanban.service';
 
 @Component({
@@ -9,12 +9,12 @@ import { KanbanBoard, KanbanService } from 'src/app/services/kanban.service';
 })
 export class KanbanlistComponent {
   
-  public boardItems$: Observable<{boardId: number, title: string}[]>;
-  public currentBoard$: Observable<KanbanBoard | null>;
+  public boardItems$: Observable<{id: number, title: string}[]>;
+  public currentBoardId$: BehaviorSubject<number> = new BehaviorSubject(-1);
 
   constructor(private kanbanSvc: KanbanService) {
     this.boardItems$ = this.kanbanSvc.getBoards();
-    this.currentBoard$ = this.kanbanSvc.getCurrentBoard();
+    this.kanbanSvc.getCurrentBoard().pipe(map(b => b?.boardId || -1)).subscribe(this.currentBoardId$);
   }
 
   activate(boardId: number) {
