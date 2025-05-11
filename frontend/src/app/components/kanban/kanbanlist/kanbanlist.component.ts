@@ -18,6 +18,6 @@ export class KanbanlistComponent {
   }
 
   activate(boardId: number) {
-    this.kanbanSvc.activate(boardId);
+    this.kanbanSvc.setCurrentBoard(boardId);
   }
 }

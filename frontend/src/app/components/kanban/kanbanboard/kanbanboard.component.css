@@ -22,3 +22,7 @@
     box-shadow: 0px 2px 2px var(--color-light-grey);
 }
 
+.active {
+    outline: 2px solid var(--color-secondary-1-1);
+}
+

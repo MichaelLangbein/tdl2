@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KanbanService {
 
-  constructor() { }
+  constructor(private apiSvc: ApiService) { }
 
   getBoards(): Observable<{boardId: number, title: string}[]> {
     return of([{boardId: 1, title: "fdsa"}, {boardId: 2, title: "fdsafds"}]);
@@ -98,8 +99,17 @@ export class KanbanService {
     return of(board);
   }
 
-  activate(boardId: number) {
+  setCurrentBoard(boardId: number) {
     throw new Error('Method not implemented.');
+  }
+
+  moveTaskFromColumnIntoColumn(boardId: number, taskId: number, sourceColumnId: number, targetColumnId: number) {
+    this.apiSvc.patch("/kanban/moveTask", {
+      boardId,
+      taskId, 
+      sourceColumnId, 
+      targetColumnId
+    })
   }
 }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { KanbanBoard, KanbanService } from 'src/app/services/kanban.service';
 import { TaskService, TaskTree } from 'src/app/services/task.service';
 
@@ -9,28 +9,22 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
     styleUrls: ['./kanbanboard.component.css'],
 })
 export class KanbanboardComponent {
+edit(arg0: number) {
+throw new Error('Method not implemented.');
+}
 
-    currentBoard$: Observable<KanbanBoard>;
-    tree$: Observable<TaskTree | null>;
+    currentBoard$: BehaviorSubject<KanbanBoard | null> = new BehaviorSubject<KanbanBoard | null>(null);
+    currentTask$: BehaviorSubject<TaskTree | null> = new BehaviorSubject<TaskTree | null>(null);
+    showEditModal$ = new BehaviorSubject<number>(-1);
 
     constructor(private taskSvc: TaskService, private kanbanSvc: KanbanService) {
-        this.currentBoard$ = this.kanbanSvc.getCurrentBoard();
-        this.tree$ = this.taskSvc.watchTree();
+        this.kanbanSvc.getCurrentBoard().subscribe(this.currentBoard$);
+        this.taskSvc.watchCurrentTask().subscribe(this.currentTask$);
     }
 
     allowDrop($event: DragEvent) {
       $event.preventDefault();
       $event.stopPropagation();
-      const stringData = $event.dataTransfer?.getData('text');
-      let taskId = undefined;
-      if (stringData) {
-        const data = JSON.parse(stringData);
-        if (data.kanbanDraggedTask) {
-          taskId = data.kanbanDraggedTask;
-        }
-      }
-      if (!taskId) return false;
-      return undefined;
     }
 
     onDrop($event: DragEvent, columnId: number) {
@@ -40,18 +34,21 @@ export class KanbanboardComponent {
       if (stringData) {
         const data = JSON.parse(stringData);
         if (data.kanbanDraggedTask) {
+          const boardId = this.currentBoard$.value?.boardId;
           const taskId = data.kanbanDraggedTask;
-          console.log(`dragged ${taskId} into column ${columnId}`);
+          const sourceColumn = data.kanbanDragSourceColumn;
+          const targetColumn = columnId;
+          if (!boardId) return;
+          this.kanbanSvc.moveTaskFromColumnIntoColumn(boardId, taskId, sourceColumn, targetColumn);
         }
       }
     }
 
-    onDragStart($event: DragEvent, taskId: number) {
-        $event.dataTransfer?.setData('text', JSON.stringify({ 'kanbanDraggedTask': taskId }));
-        console.log(`started dragging ${taskId}`);
+    onDragStart($event: DragEvent, taskId: number, columnId: number) {
+        $event.dataTransfer?.setData('text', JSON.stringify({ 'kanbanDraggedTask': taskId, 'kanbanDragSourceColumn': columnId }));
     }
 
     focusOn(taskId: number) {
-        console.log(`focussing on ${taskId}`)
+        // this.taskSvc.loadAndSwitch(taskId).subscribe(tree => this.showEditModal$.next(taskId));
     }
 }
