@@ -1,3 +1,11 @@
-<div class="kanbanBoardList" *ngIf="(boardItems$ | async) as boardItems">
-    <div class="kanbanBoardItem" *ngFor="let item of boardItems">{{ item.title }}</div>
+<div *ngIf="(currentBoard$ | async) as currentBoard">
+    <div 
+        class="kanbanBoardList" 
+        *ngIf="(boardItems$ | async) as boardItems">
+        <div 
+            [class]="{kanbanBoardItem: true, active: item.boardId === currentBoard.boardId}" 
+            *ngFor="let item of boardItems"
+            (click)="activate(item.boardId)"
+        >{{ item.title }}</div>
+    </div>
 </div>

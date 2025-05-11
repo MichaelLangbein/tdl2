@@ -1,0 +1,20 @@
+<div class="board" *ngIf="currentBoard$ | async as currentBoard">
+    <div 
+    class="column" 
+    *ngFor="let column of currentBoard.columns"
+
+    (dragover)="allowDrop($event)"
+    (drop)="onDrop($event, column.id)"
+    >
+        <p class="columnTitle">{{ column.name }}</p>
+        <div 
+        class="entry" 
+        *ngFor="let task of column.tasks"
+        (click)="focusOn(task.id)"
+        draggable="true"
+        (dragstart)="onDragStart($event, task.id)"
+        >
+            <p>{{ task.title }}</p>
+        </div>
+    </div>
+</div>

@@ -4,9 +4,9 @@
 }
 
 .kanbanBoardItem {
+}
 
-
-    .active {
-        
-    }
+.active {
+    background-color: var(--color-secondary-1-1);
+    color: var(--color-white);       
 }

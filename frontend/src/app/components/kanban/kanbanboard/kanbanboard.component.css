@@ -1,0 +1,24 @@
+.board {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.column {
+    flex: 1 0 auto;
+    outline: 1px solid var(--color-light-grey);
+}
+
+.columnTitle {
+    width: 100%;
+    background-color: var(--color-light-grey);
+}
+
+.entry {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    outline: 1px solid var(--color-light-grey);
+    border-radius: 0.5rem;
+    box-shadow: 0px 2px 2px var(--color-light-grey);
+}
+

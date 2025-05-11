@@ -29,6 +29,7 @@ import { WikiViewComponent } from "./views/wiki-view/wiki-view.component";
 import { LoginButtonComponent } from './components/login-button/login-button.component';
 import { KanbanViewComponent } from './views/kanban-view/kanban-view.component';
 import { KanbanlistComponent } from './components/kanban/kanbanlist/kanbanlist.component';
+import { KanbanboardComponent } from './components/kanban/kanbanboard/kanbanboard.component';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import { KanbanlistComponent } from './components/kanban/kanbanlist/kanbanlist.c
     LoginButtonComponent,
     KanbanViewComponent,
     KanbanlistComponent,
+    KanbanboardComponent
   ],
   imports: [
     BrowserModule,
