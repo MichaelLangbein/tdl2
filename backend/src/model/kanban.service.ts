@@ -90,7 +90,7 @@ export class KanbanService {
         if (!boardRow) return undefined;
         const columnRows = await this.db.all(`select * from kanbanColumns as c where c.boardId = $boardId`, {"$boardId": boardId});
         const columnIds = columnRows.map(r => r.id);
-        const columnContents = await this.db.all(`select * from kanbanColumnContents as d where d.columnId in ($columnIds)`, {"$columnIds": columnIds});
+        const columnContents = await this.db.all(`select * from kanbanColumnContents as d where d.columnId in (${columnIds.map(_ => "?").join(",")})`, columnIds);
         const taskIds = columnContents.map(tr => tr.taskId);
         const taskRows = await this.taskSvc.getTasks(taskIds);
 

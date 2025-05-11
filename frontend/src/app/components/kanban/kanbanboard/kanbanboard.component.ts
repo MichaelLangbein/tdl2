@@ -53,8 +53,4 @@ export class KanbanboardComponent {
     hideModal() {
       this.showEditModal$.next(-1);
     }
-
-    addTaskMenu(targetColumnId: number) {
-      throw new Error('Method not implemented.');
-    }
 }

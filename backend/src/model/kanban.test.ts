@@ -23,9 +23,9 @@ afterAll(async () => {
 });
 
 
-describe("Kanban service", () => {
+describe.only("Kanban service", () => {
 
-    test("Kanban create board", async () => {
+    test.only("Kanban create board", async () => {
         const title = "testboard";
         const date = new Date().getTime();
         const columns = ["column1", "column2"];

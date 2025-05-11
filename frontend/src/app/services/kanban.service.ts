@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -31,12 +31,16 @@ export class KanbanService {
   }
 
   moveTaskFromColumnIntoColumn(boardId: number, taskId: number, sourceColumnId: number, targetColumnId: number) {
-    this.apiSvc.patch("/kanban/moveTask", {
+    return this.apiSvc.patch<KanbanBoard>("/kanban/moveTask", {
       boardId,
       taskId, 
       sourceColumnId, 
       targetColumnId
-    })
+    }).pipe(map(board => this.currentBoard$.next(board)));
+  }
+
+  addTaskToColumn(boardId: number, columnId: number, taskId: number) {
+    return this.apiSvc.patch<KanbanBoard>("/kanban/addTask/", {boardId, columnId, taskId}).pipe(map(board => this.currentBoard$.next(board)));
   }
 }
 

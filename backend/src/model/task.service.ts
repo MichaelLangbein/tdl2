@@ -113,12 +113,12 @@ export class TaskService {
     }
 
     public async getTasks(taskIds: number[]) {
+        // querying with unnamed substitutions
+        const placeholders = taskIds.map(_ => "?").join(",");
         const result = await this.db.all<TaskRow[]>(`
             select * from tasks 
-                where id in ($ids);
-        `, { 
-            '$ids': taskIds
-        });
+                where id in (${placeholders});
+        `, taskIds);
         return result;
     }
 

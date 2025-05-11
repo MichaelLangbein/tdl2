@@ -31,6 +31,7 @@ import { KanbanViewComponent } from './views/kanban-view/kanban-view.component';
 import { KanbanlistComponent } from './components/kanban/kanbanlist/kanbanlist.component';
 import { KanbanboardComponent } from './components/kanban/kanbanboard/kanbanboard.component';
 import { KanbanCreateComponent } from './components/kanban/kanban-create/kanban-create.component';
+import { KanbanAddTaskComponent } from './components/kanban/kanban-add-task/kanban-add-task.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { KanbanCreateComponent } from './components/kanban/kanban-create/kanban-
     KanbanViewComponent,
     KanbanlistComponent,
     KanbanboardComponent,
-    KanbanCreateComponent
+    KanbanCreateComponent,
+    KanbanAddTaskComponent
   ],
   imports: [
     BrowserModule,

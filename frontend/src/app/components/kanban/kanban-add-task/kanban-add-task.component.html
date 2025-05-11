@@ -1,0 +1,25 @@
+<div *ngIf="currentBoard$ | async as currentBoard" style="margin-bottom: 1rem;">
+    <div *ngIf="currentBoard !== null">
+        <div *ngIf="!showAddView">
+            <button (click)="showAddView = true">Add task</button>
+        </div>
+        
+        <div *ngIf="showAddView">
+            <div *ngIf="currentTask$ | async as currentTask">
+                <p>Current task: {{ currentTask.title }}</p>
+                <div>
+                    <button 
+                        *ngFor="let column of currentBoard.columns"
+                        (click)="addTaskToColumn(currentBoard.boardId, currentTask.id, column.id)"
+                    >Add current task to "{{column.name}}"</button>
+                    <button (click)="showAddView = false">Cancel</button>
+                </div>
+            </div>
+
+            <div>
+                <app-task-tree></app-task-tree>
+            </div>
+        </div>
+    </div>
+</div>
+
