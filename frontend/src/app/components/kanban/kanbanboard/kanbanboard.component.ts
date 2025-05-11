@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { KanbanBoard, KanbanService } from 'src/app/services/kanban.service';
 import { TaskService, TaskTree } from 'src/app/services/task.service';
 
@@ -49,6 +49,7 @@ throw new Error('Method not implemented.');
     }
 
     focusOn(taskId: number) {
-        // this.taskSvc.loadAndSwitch(taskId).subscribe(tree => this.showEditModal$.next(taskId));
+        if (this.currentTask$.value?.id === taskId) this.showEditModal$.next(taskId);
+        else this.taskSvc.loadAndSwitch(taskId);
     }
 }

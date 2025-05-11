@@ -30,6 +30,7 @@ import { LoginButtonComponent } from './components/login-button/login-button.com
 import { KanbanViewComponent } from './views/kanban-view/kanban-view.component';
 import { KanbanlistComponent } from './components/kanban/kanbanlist/kanbanlist.component';
 import { KanbanboardComponent } from './components/kanban/kanbanboard/kanbanboard.component';
+import { KanbanCreateComponent } from './components/kanban/kanban-create/kanban-create.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { KanbanboardComponent } from './components/kanban/kanbanboard/kanbanboar
     LoginButtonComponent,
     KanbanViewComponent,
     KanbanlistComponent,
-    KanbanboardComponent
+    KanbanboardComponent,
+    KanbanCreateComponent
   ],
   imports: [
     BrowserModule,

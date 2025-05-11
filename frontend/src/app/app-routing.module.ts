@@ -14,8 +14,7 @@ import { KanbanViewComponent } from "./views/kanban-view/kanban-view.component";
 const routes: Routes = [
   {
     path: '',
-    // redirectTo: '/task',
-    redirectTo: 'kanban',
+    redirectTo: '/task',
     pathMatch: 'full',
   },
   {
@@ -43,7 +42,7 @@ const routes: Routes = [
   {
     path: 'kanban',
     component: KanbanViewComponent,
-    // canActivate: [loggedInGuard],
+    canActivate: [loggedInGuard],
   },
   {
     path: 'login',

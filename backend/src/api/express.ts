@@ -457,7 +457,7 @@ export function appFactory(
 
   app.post('/kanban/create', async (req, res) => {
     const body = req.body;
-    const board = await kanbanService.createBoard(body.parentId, body.title, body.created, body.columnNames);
+    const board = await kanbanService.createBoard(body.title, body.created, body.columnNames);
     res.send(board);
   });
 

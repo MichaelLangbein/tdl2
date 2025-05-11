@@ -15,11 +15,9 @@ export class KanbanService {
             await this.db.exec(`
                 create table kanbanBoards (
                     id              integer primary key autoincrement,
-                    parentTaskId    integer not null,
                     title           text    not null,
                     created         Date,
-                    completed       Date,
-                    foreign key (parentTaskId) references tasks (id)
+                    completed       Date
                 );
             `);
         }
@@ -58,17 +56,16 @@ export class KanbanService {
 
     public async listBoards() {
         return this.db.all(`
-            select b.title, b.parentTaskId from kanbanBoards
+            select b.id, b.title from kanbanBoards
         `);
     }
 
 
-    public async createBoard(parentId: number, title: string, creationTime: number = new Date().getTime(), columnNames: string[] = ["backlog", "busy", "waiting", "done"]) {
+    public async createBoard(title: string, creationTime: number = new Date().getTime(), columnNames: string[] = ["backlog", "busy", "waiting", "done"]) {
         await this.db.run(`
-            insert into kanbanBoards (parentTaskId, title, created)
-            values ($parentTaskId, $title, $created);
+            insert into kanbanBoards (title, created)
+            values ($title, $created);
         `, {
-            "$parentTaskId": parentId,
             "$title": title,
             "$created": creationTime
         });
@@ -91,7 +88,7 @@ export class KanbanService {
 
     public async getBoard(boardId: number): Promise<KanbanBoard> {
         const boardRows = await this.db.all(`
-            select b.parentTaskId, b.id as boardId, b.created, b.completed, c.columnName, d.taskId
+            select b.id as boardId, b.created, b.completed, c.columnName, d.taskId
             from kanbanBoards as b
             join kanbanColumns as c on c.boardId = b.id
             join kanbanColumnContents as d on d.columnId = c.id
@@ -103,17 +100,14 @@ export class KanbanService {
         if (boardRows.length <= 0) throw Error(`No such Kanban-board with id ${boardId}`);
 
         const title = boardRows[0].title;
-        const parentTaskId = boardRows[0].parentTaskId;
         const created = boardRows[0].created;
         const completed = boardRows[0].completed;
         const columnIds = unique(boardRows.map(br => br.columnId));
 
         const taskIds = boardRows.map(r => r.taskId);
-        taskIds.push(parentTaskId);
         const taskRows = await this.taskSvc.getTasks(taskIds);
         const board: KanbanBoard = {
             boardId, title, completed, created,
-            parentTask: taskRows.find(tr => tr.id === parentTaskId),
             columns: []
         }
 
@@ -229,7 +223,6 @@ export interface KanbanBoard {
     title: string,
     created: Date,
     completed: Date,
-    parentTask: TaskRow,
     columns: KanbanColumn[]
 }
 
