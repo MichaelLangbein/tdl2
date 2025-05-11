@@ -20,14 +20,14 @@ export class KanbanService {
   }
 
   setCurrentBoard(boardId: number) {
-    this.apiSvc.get<KanbanBoard>(`/kanban/${boardId}`).subscribe(this.currentBoard$);
+    this.apiSvc.get<KanbanBoard>(`/kanban/${boardId}`).subscribe(board => this.currentBoard$.next(board));
   }
 
-  createBoard(title: string, columns: string[]) {
+  createBoard(title: string, columnNames: string[]) {
     const created = new Date()
     this.apiSvc.post<KanbanBoard>("/kanban/create", {
-      title, created, columns
-    }).subscribe(this.currentBoard$);
+      title, created, columnNames
+    }).subscribe(board => this.currentBoard$.next(board));
   }
 
   moveTaskFromColumnIntoColumn(boardId: number, taskId: number, sourceColumnId: number, targetColumnId: number) {

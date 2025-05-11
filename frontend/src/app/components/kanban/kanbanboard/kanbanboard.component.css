@@ -27,6 +27,13 @@
 }
 
 
+.buttonEntry {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    float: right;
+}
+
+
 
 .modal {
     position: absolute;

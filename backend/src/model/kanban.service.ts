@@ -61,7 +61,7 @@ export class KanbanService {
     }
 
 
-    public async createBoard(title: string, creationTime: number = new Date().getTime(), columnNames: string[] = ["backlog", "busy", "waiting", "done"]) {
+    public async createBoard(title: string, creationTime: number = new Date().getTime(), columnNames: string[]) {
         await this.db.run(`
             insert into kanbanBoards (title, created)
             values ($title, $created);
