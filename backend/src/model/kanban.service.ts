@@ -85,48 +85,36 @@ export class KanbanService {
         return board;
     }
 
-
-    public async getBoard(boardId: number): Promise<KanbanBoard> {
-        const boardRows = await this.db.all(`
-            select b.id as boardId, b.title, b.created, b.completed, c.id as columnId, c.columnName, d.taskId
-            from kanbanBoards as b
-            left join kanbanColumns as c on c.boardId = b.id
-            left join kanbanColumnContents as d on d.columnId = c.id
-            where b.id = $boardId;
-        `, {
-            '$boardId': boardId
-        });
-        
-        if (boardRows.length <= 0) throw Error(`No such Kanban-board with id ${boardId}`);
-
-        const title = boardRows[0].title;
-        const created = boardRows[0].created;
-        const completed = boardRows[0].completed;
-        const columnIds = unique(boardRows.map(br => br.columnId));
-
-        const taskIds = boardRows.map(r => r.taskId).filter(d => !!d);
+    public async getBoard(boardId: number): Promise<KanbanBoard | undefined> {
+        const boardRow = await this.db.get(`select * from kanbanBoards as b where b.id = $boardId`, {"$boardId": boardId});
+        if (!boardRow) return undefined;
+        const columnRows = await this.db.all(`select * from kanbanColumns as c where c.boardId = $boardId`, {"$boardId": boardId});
+        const columnIds = columnRows.map(r => r.id);
+        const columnContents = await this.db.all(`select * from kanbanColumnContents as d where d.columnId in ($columnIds)`, {"$columnIds": columnIds});
+        const taskIds = columnContents.map(tr => tr.taskId);
         const taskRows = await this.taskSvc.getTasks(taskIds);
+
         const board: KanbanBoard = {
-            boardId, title, completed, created,
+            boardId: boardRow.id,
+            title: boardRow.title,
+            created: boardRow.created,
+            completed: boardRow.completed,
             columns: []
         }
 
-        for (const columnId of columnIds) {
-            board.columns.push({
-                id: columnId, name: "", tasks: []
-            })
+        for (const columnRow of columnRows) {
+            const columnData: KanbanColumn = {
+                id: columnRow.id,
+                name: columnRow.columnName,
+                tasks: []
+            };
+            board.columns.push(columnData);
         }
 
-        for (const boardRow of boardRows) {
-            const columnId = boardRow.columnId;
-            const columnName = boardRow.columnName;
-            const taskId = boardRow.taskId;
-            const taskRow = taskRows.find(tr => tr.id === taskId);
-            if (!taskRow) continue;
-            
-            const boardColumnData = board.columns.find(c => c.id = columnId);
-            boardColumnData.name = columnName;
-            boardColumnData.tasks.push(taskRow);
+        for (const columnContent of columnContents) {
+            const column = board.columns.find(c => c.id === columnContent.columnId);
+            const task = taskRows.find(tr => tr.id === columnContent.taskId);
+            column.tasks.push(task);
         }
 
         return board;
@@ -222,8 +210,8 @@ export class KanbanService {
 export interface KanbanBoard {
     boardId: number,
     title: string,
-    created: Date,
-    completed: Date,
+    created: number,
+    completed?: number,
     columns: KanbanColumn[]
 }
 
