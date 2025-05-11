@@ -12,7 +12,7 @@ export class KanbanboardComponent {
 
     currentBoard$: BehaviorSubject<KanbanBoard | null> = new BehaviorSubject<KanbanBoard | null>(null);
     currentTask$: BehaviorSubject<TaskTree | null> = new BehaviorSubject<TaskTree | null>(null);
-    showEditModal$ = new BehaviorSubject<number>(-1);
+    showEditModal = false;
 
     constructor(private taskSvc: TaskService, private kanbanSvc: KanbanService) {
         this.kanbanSvc.getCurrentBoard().subscribe(this.currentBoard$);
@@ -36,7 +36,7 @@ export class KanbanboardComponent {
           const sourceColumn = data.kanbanDragSourceColumn;
           const targetColumn = columnId;
           if (!boardId) return;
-          this.kanbanSvc.moveTaskFromColumnIntoColumn(boardId, taskId, sourceColumn, targetColumn);
+          this.kanbanSvc.moveTaskFromColumnIntoColumn(boardId, taskId, sourceColumn, targetColumn).subscribe();
         }
       }
     }
@@ -46,11 +46,7 @@ export class KanbanboardComponent {
     }
 
     focusOn(taskId: number) {
-        if (this.currentTask$.value?.id === taskId) this.showEditModal$.next(taskId);
+        if (this.currentTask$.value?.id === taskId) this.showEditModal = true;
         else this.taskSvc.loadAndSwitch(taskId);
-    }
-
-    hideModal() {
-      this.showEditModal$.next(-1);
     }
 }
