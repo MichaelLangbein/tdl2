@@ -67,7 +67,7 @@ $\frac{\partial c(L|K_0)}{\partial q}$ is called the _marginal cost_ (MC). We se
 
 Independent of the marginal cost, a firm might chose not to produce anything at all in a round. That would be the case when profit would be less than the costs of producing nothing:
 $$ pq -c(q | K_0) \leq - c(0 | K_0) $$
-This is equivalent to 
+This is equivalent to
 $$ p \leq \frac{c(q|K_0) - c(0|K_0)}{q} = AVC$$
 where $AVC$ stands for average variable cost.
 
@@ -496,6 +496,26 @@ $$ \forall i: x_i^{opt} = \frac{bgt \cdot \alpha_i}{p_i} $$
 <br/>
 <br/>
 
+# Macro economics: basic theories
+
+- Classical vs Keynesian:
+  - <https://www.youtube.com/watch?v=hPkh8kOldU4>
+  - Classical: in the long run, the economy reaches equilibrium at the potential GDP.
+    - In the long run, supply is vertical (= prices increase with more demand, because I'll need to hire more people and machines)
+    - Only way to increase GDP is by increasing supply (= rebuild farms after a natural disaster, for example)
+  - Keynesian: the above, plus:
+    - in the short run, ...
+      - prices and wages are too sticky to reach equilibrium
+      - fiscal policy is required to milden business cycle
+      - supply is horizontal (= prices wont increase with more demand, because my factory still has spare capacity)
+      - Only way to increase GDP is by increasing demand
+
+In a crisis:
+
+- When production-utilization is very low (like in great depression), Keynesian (= fiscal) policy (=stimulate demand) makes sense.
+- When production-utilization is very high (like after a storm sinking shrimp-boats), classical policy (=stimulate production) makes sense.
+- But governments tend to always want to do Keynesian: its easier and more popular.
+
 # Macro economics: static neo-classical model
 
 We will build an equilibrium model of macro-economics.
@@ -554,8 +574,8 @@ Combining the two household-budgets with the government budget-equation, we obta
 $$C_f = (Y - C - G)(1+r) + Y_f - G_f - \frac{(1+r)r_{nom}M}{(1 + r_{nom})P}$$
 
 <small>
-We've combined today's household-budget with the future household-budget, and with today's and the future government-budget. 
-This implies that households account not only for current taxes, but also for future taxes, 
+We've combined today's household-budget with the future household-budget, and with today's and the future government-budget.
+This implies that households account not only for current taxes, but also for future taxes,
 and even that households know that the government will raise taxes in the future if it has high spending today.
 This is a strong assumption, known as the [Ricardo-Barro-effect](https://en.wikipedia.org/wiki/Ricardian_equivalence),
 but if it does hold, that means that whether the government finances extra-spending by new taxes, new debt or money-printing has no effect on consumption.
@@ -581,9 +601,9 @@ While the money-demand is downward-sloping as a function of the interest rate ($
 
 ### Market for loanable funds
 
-Crowding out: https://www.youtube.com/watch?v=J_-55Y1eU0s, https://www.youtube.com/watch?v=4lBmOfNtYLE&pp=ygUiY3Jvd2Rpbmcgb3V0IGVmZmVjdCBtYWNyb2Vjb25vbWljcw%3D%3D
+Crowding out: <https://www.youtube.com/watch?v=J_-55Y1eU0s>, <https://www.youtube.com/watch?v=4lBmOfNtYLE&pp=ygUiY3Jvd2Rpbmcgb3V0IGVmZmVjdCBtYWNyb2Vjb25vbWljcw%3D%3D>
 
-Inflation: https://www.youtube.com/watch?v=FdtBj1juEQs
+Inflation: <https://www.youtube.com/watch?v=FdtBj1juEQs>
 
 ### Fiscal policy
 
@@ -1157,7 +1177,7 @@ This is the **central bank policy**.
 
 ## Implementation
 
-https://macrosimulation.org/a_new_keynesian_3_equation_model
+<https://macrosimulation.org/a_new_keynesian_3_equation_model>
 
 ```python
 #%%
@@ -1245,7 +1265,7 @@ Strongly pessimistic expectations regarding future economic conditions, aggregat
 
 # Macro economics - agent based models
 
-https://www.researchgate.net/profile/Edoardo-Gaffeo/publication/23536238_Adaptive_Microfoundations_for_Emergent_Macroeconomics/links/0912f513f4f7e3e7d3000000/Adaptive-Microfoundations-for-Emergent-Macroeconomics.pdf
+<https://www.researchgate.net/profile/Edoardo-Gaffeo/publication/23536238_Adaptive_Microfoundations_for_Emergent_Macroeconomics/links/0912f513f4f7e3e7d3000000/Adaptive-Microfoundations-for-Emergent-Macroeconomics.pdf>
 
 <br/>
 <br/>
