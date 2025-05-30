@@ -23,22 +23,26 @@
     <div style="margin: 15px 0 15px 0;">
         <app-form-drag-list></app-form-drag-list>
         <ul>
+            Direct link: 
             <li *ngFor="let attachment of currentTask.attachments">
+                <!-- long term, we might remove direct links for safety reasons -->
+                Direct link: 
                 <a [href]="attachment.path" target="_blank">
                     {{ attachment.path.slice(-20) }}
-                </a> || 
-                <a (click)="removeAttachment(attachment.id)">Remove</a>
+                </a> 
+                || <a (click)="getAttachment(attachment.id)">Deep link {{attachment.id}}</a>
+                ||  <a (click)="removeAttachment(attachment.id)">Remove</a>
             </li>
         </ul>
     </div>
 
     <p *ngIf="!currentTask.completed">
-        <button (click)="completeTask()">Complete</button>
         <button (click)="addChildTask()">Add child</button>
         <button (click)="addSiblingTask()">Add sibling</button>
         <button (click)="estimateTime()">Estimate time</button>
         <button (click)="template()">Template</button>
-        <button (click)="showDeleteModal = true" style="background-color: red; float: right;">Delete task</button>
+        <button (click)="completeTask()" class="completeButton">Complete</button>
+        <button (click)="showDeleteModal = true" class="deleteButton">Delete task</button>
     </p>
     <p *ngIf="currentTask.completed">
         <button (click)="reactivateTask()">Reactivate</button>

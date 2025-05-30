@@ -1,0 +1,29 @@
+<div class="board" *ngIf="currentBoard$ | async as currentBoard">
+    <div 
+    *ngFor="let column of currentBoard.columns"
+    class="column" 
+    (dragover)="allowDrop($event)"
+    (drop)="onDrop($event, column.id)"
+    >
+        <p class="columnTitle">{{ column.name }}</p>
+        <div 
+        *ngFor="let task of column.tasks"
+        [ngClass]="{entry: true, active: currentTask$.value?.id === task.id}"
+        draggable="true"
+        (dragstart)="onDragStart($event, task.id, column.id)"
+        (click)="focusOn(task.id)"
+        >
+            <p>{{ task.title }}</p>
+        </div>
+    </div>
+</div>
+
+<div 
+    *ngIf="showEditModal" 
+    class="modal"
+    >
+    <div class="modalContent">
+            <div (click)="showEditModal = false" style="width: 100%; float: right; margin: 0.25rem;">x</div>
+        <app-task-edit></app-task-edit>
+    </div>
+</div>

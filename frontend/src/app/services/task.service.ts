@@ -22,6 +22,7 @@ export interface TaskTree {
   attachments: Attachment[];
   children: TaskTree[];
   deadline: number | null;
+  metadata: string | null;
 }
 
 export interface TaskRow {
@@ -33,12 +34,14 @@ export interface TaskRow {
   completed: number | null;
   secondsActive: number;
   deadline: number | null;
+  metadata: string | null;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
+
   /**
    * - Interface between frontend and backend
    * - Maps UI-actions to REST-calls
@@ -113,6 +116,21 @@ export class TaskService {
         }
         this.switchCurrent(newTask);
       });
+  }
+
+  public addEmailChildTo(file: File, parentId: number) {
+    this.api.uploadFormData<TaskRow>(
+      `/tasks/create/emailtask/`, {
+        parent: parentId + "",
+        file: file,
+      }).subscribe((response: TaskRow) => {
+        if (this.fullTree$.value) {
+          const newTask = {... response, children: [], attachments: (response as any).attachments || []};
+          const newTree = addChildToTree(this.fullTree$.value, newTask);
+          this.fullTree$.next(newTree);
+          this.switchCurrent(newTree);
+        }
+    });
   }
 
   public addSiblingToCurrent(title: string, description: string) {
@@ -192,6 +210,13 @@ export class TaskService {
       const parent = this.getTask(parentId);
       if (!parent) return;
       this.switchCurrent(parent, false);
+      
+      // if task was an email-task, download the email
+      if (currentTask.metadata?.includes("email")) {
+        const emailMetaData = JSON.parse(currentTask.metadata); 
+        const emailId = +(emailMetaData.email.attachmentId);
+        if (emailId) this.downloadAttachmentFromCurrentTask(emailId);
+      }
     });
   }
 
@@ -228,6 +253,13 @@ export class TaskService {
       .subscribe((updatedTask) => {
         this.currentTask$.next(updatedTask);
       });
+  }
+
+  public downloadAttachmentFromCurrentTask(attachmentId: number) {
+    const currentTask = this.currentTask$.value;
+    console.log("downloading attachment for ", currentTask);
+    if (!currentTask) return;
+    this.api.open(`/tasks/${currentTask.id}/getFile/${attachmentId}`);
   }
 
   public loadAndSwitch(targetTaskId: number) {

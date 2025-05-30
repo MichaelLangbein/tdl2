@@ -17,11 +17,34 @@ ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), 
 
 # Infrastructure
 
+Types of servers:
+
+- ArcGIS Pro (=QGIS)
+- GDB (=PostGIS)
+- ArcGIS Server (=Geoserver)
+- Portal (=Geonode, Openlayers with a lot of extras)
+
+It should be noted that just like in OSS, Pro, Server and Portal have completely different api's. In fact, historically there was only ArcGIS Server with different data-sources. Portal came later, so its no wonder arcgis server doesn't know about portal.
+
+- Pro: `arcpy`
+  - can publish services to server
+- Server: REST
+  - knows the PRO-projects used for services
+- Portal: `arcgis.GIS`
+  - can migrate portal-items between portals
+  - knows what services are referenced in a web-map
+  - cannot migrate services
+  - doesn't know what PRO-project has created a service
+
+A common setup:
+
 - 1 portal
   - 4 servers:
     - 1 hosting server
-      - all data copied locally into an optimized, local postgres-database
-      - faster than map server, but data isn't "live", because not drawn from the live enterprise-db
+      - if feature service: into an optimized, local postgres-database
+        - faster than map server, but data isn't "live", because not drawn from the live enterprise-db
+      - if map-image service: as file-gdb into AFS
+        - tends to be very slow
     - 2 map servers
       - accessing federated data from an enterprise-gdb
     - 1 image server
@@ -35,28 +58,64 @@ ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), 
 
 # Database
 
-- Feature class = Table with geometry
-- Feature set = Dataframe in pandas
-- Feature dataset = collection of feature classes sharing a CRS
+- **Feature class** = Table with geometry (plus second table in `sde.SDE_layers` and `sde.gdb_items` for metadata, like extent, crs etc)
+- **Feature set** = Dataframe in pandas
+- **Feature dataset** = collection of feature classes sharing a CRS
   - e.g. for topology, networks etc.
-- Domains: allowed values per field
+- **Domains**: allowed values per field
   - per subtype a domain can have different domains and defaults
-- Subtypes:
+- **Subtypes**:
   - based on a single `long integer` field
   - If a row belongs to a subtype, ...
     - ... then some of its fields have reduced domains
     - ... then they're automatically styled differently
-- Group values aka contingent values:
+- **Group values** aka **contingent values**:
   - given field A has some value, reduce the allowed values for field B
+- **Attribute rules**:
+  - like a trigger in ms-sql-server (and probably implemented as such), but defined in arcade
+  - define an arcade expression that is triggered on every insert or update and validates that some input-combination is allowed.
 
 ## Metadata
 
-Feature-classes have some associated metadata that does not neatly fit into ms sql server tables.
+Feature-classes have some associated metadata that does not neatly fit into ms sql server tables: extent, crs, description etc.
 These are stored in the `sde` database:
 
 ```sql
 --select * from sde.gdb_items as i;
 select * from sde.SDE_layers as i;
+```
+
+### Looking up domains in db
+
+A common example of data that ESRI stores in another table is domains. Here's how you can query that second domain table using sql:
+
+```sql
+WITH DomainLookup AS (
+    SELECT
+        items.Name AS DomainName,
+        Codes.code.value('(Code)[1]', 'VARCHAR(50)') AS Code,
+        Codes.code.value('(Name)[1]', 'VARCHAR(255)') AS Description
+    FROM
+        sde.GDB_ITEMS items
+    INNER JOIN
+        sde.GDB_ITEMTYPES itemtypes ON items.Type = itemtypes.UUID
+    CROSS APPLY
+        items.Definition.nodes('/GPCodedValueDomain2/CodedValues/CodedValue') AS Codes(code)
+    WHERE
+        itemtypes.Name = 'Coded Value Domain'
+)
+SELECT
+    fc.*, -- Select all columns from your feature class
+    DomainLookup1.Description AS YourDomainField1_Description, -- Description for the first domain-enabled field
+    DomainLookup2.Description AS YourDomainField2_Description -- Description for the second domain-enabled field
+    -- Add more lines here for additional domain-enabled fields
+FROM
+    YourFeatureClassTable fc
+LEFT JOIN
+    DomainLookup AS DomainLookup1 ON fc.YourDomainField1 = DomainLookup1.Code AND DomainLookup1.DomainName = 'YourDomainName1' -- Join for the first domain-enabled field
+LEFT JOIN
+    DomainLookup AS DomainLookup2 ON fc.YourDomainField2 = DomainLookup2.Code AND DomainLookup2.DomainName = 'YourDomainName2'; -- Join for the second domain-enabled field
+    -- Add more LEFT JOIN clauses here for additional domain-enabled fields
 ```
 
 # Services
@@ -65,33 +124,34 @@ Web-layer:
     - provides data
     - defines symbology, popups, permissions
     - "hosted" or "referenced"
-      - hosted: data saved on arcgis-portal
+      - hosted: data saved on a hosting-server
       - referenced aka federated: data in a file-gdb, a database, or another server
 
 ## Types
 
-- **WMS** = Map service (aka. "Map image" in portal)
+- *Map service* (aka. "Map image" in portal) (analog WMS)
   - Images drawn on demand, though cached. Multiple layers on same image.
   - WMS-T = Map service with time-config
   - Identify supported. In fact, allows a `query` request, which allows even WFS-like querying and filtering (`https://<your-image-service-url>/ImageServer/query?where=POP2000 > 350000
   &outFields=POP2000,NAME&f=json
 `)
   - Renders multiple layers into a single image. Toggling one layer leads to another request.
-- **WMTS** = Tiled map service
+- *Tiled map service* (analog WMTS)
   - Images drawn in advance.
   - No identify.
   - Renders multiple layers into a single image. No toggling allowed.
-- **WCS** = Raster service (aka "Imagery layer" in portal)
-- **WFS** = Feature service
+- *Raster service* (aka "Imagery layer" in portal) (analog WCS)
+- *Feature service* (analog WFS)
   - rendered client-side. Data transferred as protobuffer.
   - Identify naturally supported.
-  - Querying is a bit more comfortable than in a WFS, because the query language doesnt use XML.
-- **WPS** = Web-geoprocessing-tool
-- Also:
-  - vector-tiles
-    - renders multiple layers into the same tile.
-    - No identify, no legend, no querying.
-  - 3D-tiles
+  - Querying is a bit more comfortable than in a WFS, because the query language doesn't use XML.
+- *Web-geoprocessing-tool* (analog WPS)
+- vector-tiles
+  - renders multiple layers into the same tile.
+  - No identify, no legend, no querying.
+- 3D-tiles
+- hosted table
+  - 
 
 Web-map:
     - a json-file referencing one or many web-layers
@@ -336,6 +396,87 @@ if __name__ == "__main__":
 print("Done.")
 ```
 
+### Sampling raster-dataset at points
+
+```python
+import arcpy
+import os
+
+project = arcpy.mp.ArcGISProject("current")
+map = project.listMaps()[0]
+layers = map.listLayers()
+samplePointsLayer = layers[0]
+srtmLayer = layers[4]
+srtmRaster = arcpy.Raster(srtmLayer.name)
+
+
+# Get raster properties
+lower_left_x = srtmRaster.extent.XMin
+lower_left_y = srtmRaster.extent.YMin
+cell_size_x = srtmRaster.meanCellWidth
+cell_size_y = srtmRaster.meanCellHeight
+upper_left_x = srtmRaster.extent.XMin
+upper_left_y = srtmRaster.extent.YMax # YMax is the top of the raster extent
+# Get spatial reference of the raster
+raster_sr = srtmRaster.spatialReference
+
+
+field_names = [f.name for f in arcpy.ListFields(samplePointsLayer)]
+if "height" not in field_names:
+    arcpy.AddField_management(samplePointsLayer, "height", "LONG")
+
+
+# Use an UpdateCursor to iterate through points and update the height field
+# We need the shape token to get the point's geometry
+with arcpy.da.UpdateCursor(samplePointsLayer, "*", "", raster_sr) as cursor:
+    for row in cursor:
+        point_x, point_y = row[1] # Get the X, Y coordinates of the point
+        
+        if point_x is None:
+            continue
+
+        # Calculate raster column and row from point coordinates
+        # Column = (X - XMin) / CellSizeX
+        # Row = (YMax - Y) / CellSizeY (since rows are indexed from the top)
+        col = int((point_x - upper_left_x) / cell_size_x)
+        row_index = int((upper_left_y - point_y) / cell_size_y)
+
+        # Get the pixel value at the calculated row and column
+        # Need to handle potential index errors if point is outside raster extent
+        try:
+            # Access the pixel value - this requires reading the raster
+            # using the indexing [row_index, col]
+            # Note: This method can be slow for large numbers of points
+            elevation_value = srtmRaster[row_index, col]
+            print(elevation_value)
+
+            # Handle potential NoData values
+            if elevation_value is not None:
+                # Update the height field
+                row[-1] = elevation_value
+                cursor.updateRow(row)
+            else:
+                # Set height to None or a specific value for NoData
+                row[-1] = None # Or some indicator for NoData, e.g., -9999
+                cursor.updateRow(row)
+                print(f"Warning: NoData value at point ({point_x}, {point_y})")
+
+        except IndexError:
+            # Point is outside the raster extent
+            row[-1] = None # Or some indicator
+            cursor.updateRow(row)
+            print(f"Warning: Point ({point_x}, {point_y}) is outside raster extent.")
+        except Exception as cell_error:
+            print(f"Error getting raster value for point ({point_x}, {point_y}): {cell_error}")
+            row[-1] = None # Or some indicator
+            cursor.updateRow(row)
+
+
+    print("Elevation values extracted and updated successfully.")
+
+
+```
+
 ## Get current tool's python command
 
 - <https://www.youtube.com/watch?v=sCkVI4VHdXo>
@@ -376,39 +517,126 @@ print("Done.")
 3. update my services to use the prod-db instead of the test-db, and make them available in the prod-portal instead of the test-portal
 4. update my map to use the prod-services instead of the test-services, and make it available in the prod-portal instead of the test-portal
 
-## 1. Authentication
-
-### Using OAuth2
-
 ```python
-#%%
+import json
+import time
+from datetime import datetime
+from pprint import pprint
 from arcgis.gis import GIS
 
+
+
+
 """
-First create an empty app in your portal like described in the documentation:
-https://developers.arcgis.com/python/latest/guide/working-with-different-authentication-schemes/#user-authentication-with-oauth-20
-In the app's details-page, look for and copy the "App ID". 
-""" 
+https://www.youtube.com/watch?v=c2jFQbjNmkc
 
-portal_url = "https://yourportal.com/portal"
-client_id = "ZIbfACnBPCbEHLkK"  # <-- this is the "App ID" of your new empty app
+Q&A:
 
+why some items dont clone over:
+    developers / "Cloning and Troubleshooting Complex Items"
+    dashboards, storymaps dont allow easy cloning
+    how about non-hosted services?
 
-portalEndpoint = GIS(portal_url, client_id=client_id , use_gen_token=True, verify_cert=False)
-print(f"Successfully logged in as: {portalEndpoint.properties.user.username} on {portalEndpoint.properties.name} with token: {portalEndpoint.session.auth.token}")
+backup-method vs clone-items-method:
+    backup-method persists data on executing machine.
 
-webMapItems = portalEndpoint.content.search(query ="", item_type = "Web Map")
+image-services:
+    don't clone.
+    need to be re-published.
+    maybe through agio assistant?
 
-for webMapItem in webMapItems:
-    webMapData = webMapItem.get_data()
-
-    for layerInfo in webMapData["operationalLayers"]:
-        if layerInfo["layerType"] in ["ArcGISFeatureLayer", "ArcGISImageLayer"]:
-            layerItem = portalEndpoint.content.get(layerInfo["itemId"])  # id, url, name, owner, spatial ref, ...
-            if layerItem:
-                layerData = layerItem.get_data()  # popup settings, visibility, sublayers, ...
+referenced feature-layers:
+    
+"""
 
 
+def portalLogin(
+        portal_url,
+        client_id   # <-- this is the "App ID" of your new empty app
+    ):
+    """
+    First create an empty app in your portal like described in the documentation:
+    https://developers.arcgis.com/python/latest/guide/working-with-different-authentication-schemes/#user-authentication-with-oauth-20
+    In the app's details-page, look for and copy the "App ID". 
+    """ 
+
+    portalEndpoint = GIS(portal_url, client_id=client_id , use_gen_token=True, verify_cert=False)
+
+    return portalEndpoint
+
+
+
+
+def simpleCloneItems(sourcePortal, targetPortal, queryString, itemType):
+    """
+        queryString: f"title: * Power Plants AND owner:{sourcePortal.users.me.username}"
+        itemType:
+        search_existing_items:
+            Most items have a `typeKeyword` property.
+            Cloned items have one formatted like `source-<itemId>`
+        copy_data:
+            If False, then FeatureService-Def will be moved to target, but actual Feature-Data will remain on Source.
+        search_existing_items:
+            If this doesn't work, try the item_mapping parameter.
+    """
+    
+    items = sourcePortal.content.search(query=queryString, item_type=itemType)
+    clonedItems = targetPortal.content.clone_items(items,
+                                                   copy_data=True, copy_global_ids=True, search_existing_items=True)
+    return items, clonedItems
+
+
+
+
+def groupMigrate(source, target, sourceGroupName, targetGroupName):
+    """
+        preserves item-ids
+    """
+    
+    group = source.groups.search(sourceGroupName)[0]
+    groupMig = group.migration
+    epkItem = groupMig.create(future=False)
+    # groupMig.inspect(epk)["results"]
+    
+    dateString = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    fileName = f"{groupName}_{dateString}.epk"
+    epkFile = epkItem.download(save_path=r".\tmp", file_name=fileName)
+
+    targetEpkItem = target.content.add(
+        item_properties={
+            "title": fileName,
+            "tags": "CI/CD, auto-deploy",
+            "type": "Export Package"
+        },
+        data=epkFile
+    )
+
+    targetGroupSearchResults = target.groups.search(targetGroupName)
+    if len(targetGroupSearchResults) == 0:
+        targetGroup = target.groups.create(title=groupName, tags="Deployment", access="org")
+    else:
+        targetGroup = targetGroupSearchResults[0]
+    targetGroupMig = targetGroup.migration
+    migrationResult = targetGroupMig.load(epk_item=targetEpkItem, future=False)
+
+
+
+sourcePortalUrl = "..."
+sourcePortalCID = "..."
+targetPortalUrl = "..."
+targetPortalCID = "..."
+
+sp = portalLogin(sourcePortalUrl, sourcePortalCID)
+tp = portalLogin(targetPortalUrl, targetPortalCID)
+
+groupMigrate(sp, tp, "MigrateMe", "MigrateMe")
+
+
+# TODO: prove that you can copy a feature layer
+#    create a demo feature layer
+# TODO: prove that you can copy a map
+#    create a demo map
+# TODO: verify that ids, groups, and map-feature-layer relations are preserved
 ```
 
 ### Using LDAP or ActiveDirectory

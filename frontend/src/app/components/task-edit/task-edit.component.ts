@@ -11,6 +11,7 @@ import { TaskService, TaskTree } from 'src/app/services/task.service';
     styleUrls: ['./task-edit.component.css'],
 })
 export class TaskEditComponent implements OnInit {
+
     showDeleteModal = false;
     currentTask$ = new BehaviorSubject<TaskTree | null>(null);
     form: FormGroup;
@@ -129,6 +130,11 @@ export class TaskEditComponent implements OnInit {
 
     removeAttachment(attachmentId: number) {
         this.taskSvc.removeAttachmentFromCurrent(attachmentId);
+    }
+
+    getAttachment(attachmentId: number) {
+        console.log("getting attachment", attachmentId);
+        this.taskSvc.downloadAttachmentFromCurrentTask(attachmentId);
     }
 
     private appendToDescription(textToAppend: string) {

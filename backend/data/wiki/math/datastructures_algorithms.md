@@ -23,7 +23,7 @@ $$ f \in o(g) \iff \forall k: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(
 - What is meant: $f$'s rate of growth is a factor smaller than $g$
 - Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
 
-## Comparision $O$ and $o$:
+## Comparision $O$ and $o$
 
 - True for big-oh, false for little-oh:
   - $x^2 \in O(x^2)$
@@ -34,7 +34,7 @@ $$ f \in o(g) \iff \forall k: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(
   - $x^2 \in o(x!)$
   - $\ln(x) \in o(x)$
 
-## Others:
+## Others
 
 - Lower bounds: Omega
 - Upper and lower bound: Theta
@@ -83,7 +83,7 @@ Partial proof of 2:
 > > > > >
 > > > > > Now this is trivial.
 
-## Best, worst, average case:
+## Best, worst, average case
 
 Those have nothing to do with $O$, $\Theta$ or $\Omega$.
 For each of those three we can calculate $O$, $\Theta$ or $\Omega$ individually.
@@ -102,6 +102,28 @@ So, a thorough analysis would consist of:
   - $O$
   - $\Omega$
   - $\Theta$
+
+# Combinatorics
+
+## Drawing n red balls, m yellow balls and o green balls
+
+```python
+# task = {"id": int, "work": int}
+def createPermutations(tasks):
+    sequences = []
+    for task in tasks:
+        if task["work"] > 1:
+            baseSequence = [task["id"]]
+            task["work"] -= 1
+            childSequences = createPermutations(tasks)
+            if len(childSequences) == 0:
+                sequences.append(baseSequence)
+            else:
+                for childSequence in childSequences:
+                    sequences.append(baseSequence + childSequence)
+            task["work"] += 1
+    return sequences
+```
 
 # Streaming algorithms
 
@@ -458,7 +480,7 @@ function findPath(start: Node, target: Node) {
 - a BFS
 - with a _priority_ queue
 - where priority is cost from source
-  https://www.youtube.com/watch?v=EFg3u_E6eHU
+  <https://www.youtube.com/watch?v=EFg3u_E6eHU>
 
 ```ts
 function dijstra(source: Node, target: Node) {
@@ -642,12 +664,12 @@ function med(targetString: string, editableString: string): number {
 
 ## Fuzzy matching
 
-https://www.cs.helsinki.fi/u/ukkonen/InfCont85.PDF
+<https://www.cs.helsinki.fi/u/ukkonen/InfCont85.PDF>
 
 ## Tree-diff
 
-https://www.youtube.com/watch?v=6Ur8B35xCj8
-https://news.ycombinator.com/item?id=15101373
+<https://www.youtube.com/watch?v=6Ur8B35xCj8>
+<https://news.ycombinator.com/item?id=15101373>
 Notably, trees allow a lot of operations. In dynamic programming we go through all possible operations in a fixed order.
 For example, above in `med` we always first explore inserting and second removing.
 With only two operations possible that's just fine.
@@ -1000,9 +1022,9 @@ for i in 0 ... floor(log2(n)) do:         # iterations
 
 ## span inefficient, work-efficient
 
-https://en.wikipedia.org/wiki/Prefix_sum
+<https://en.wikipedia.org/wiki/Prefix_sum>
 
 ## Sorting
 
-https://www.dcc.fc.up.pt/~ricroc/aulas/1516/cp/apontamentos/slides_sorting.pdf
-https://en.wikipedia.org/wiki/Bitonic_sorter
+<https://www.dcc.fc.up.pt/~ricroc/aulas/1516/cp/apontamentos/slides_sorting.pdf>
+<https://en.wikipedia.org/wiki/Bitonic_sorter>

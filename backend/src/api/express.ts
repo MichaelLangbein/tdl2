@@ -1,10 +1,12 @@
 import cors from "cors";
 import { scryptSync, timingSafeEqual } from "crypto";
 import express, { NextFunction, Request, Response } from "express";
-import fileUpload, { FileArray } from "express-fileupload";
+import fileUpload, { FileArray, UploadedFile } from "express-fileupload";
 import session from "express-session";
 import passport, { Request as PassportRequest } from "passport";
 import { Strategy } from "passport-local";
+import { basename } from "path";
+import { simpleParser } from "mailparser";
 
 import { listFilesInDirRecursive, readJsonFile, readTextFile } from "../files/files";
 import { FileService } from "../files/fileService";
@@ -12,6 +14,9 @@ import { CardService } from "../model/card.service";
 import { DbAction, TaskRow, TaskService } from "../model/task.service";
 import { filterToParentNode, filterTree } from "../model/taskTree.utils";
 import { estimateTime, estimateTreeTime } from "../stats/estimates";
+import { estimateOptimalSchedule, estimateUpcomingTasks } from "../stats/schedule";
+import { KanbanService } from "../model/kanban.service";
+
 
 
 export interface AppConfig {
@@ -23,6 +28,7 @@ export function appFactory(
   taskService: TaskService,
   fileService: FileService,
   cardService: CardService,
+  kanbanService: KanbanService,
   appConfig: AppConfig
 ) {
   const app = express();
@@ -192,29 +198,20 @@ export function appFactory(
     res.send(updatedTask);
   });
 
-  async function saveOneOrMoreFiles(taskId: number, fileArray: FileArray) {
+  async function fileArrayEach(fileArray: FileArray, callback: (file: UploadedFile) => Promise<void | boolean>) {
     for (const key in fileArray) {
       const files = fileArray[key];
       if (Array.isArray(files)) {
         for (const file of files) {
-          const localFilePath = await fileService.storeFile(file);
-          await taskService.addFileAttachment(taskId, localFilePath);
+          const response = await callback(file);
+          if (response === false) return false; // early stopping
         }
       } else {
-        const localFilePath = await fileService.storeFile(files);
-        await taskService.addFileAttachment(taskId, localFilePath);
+        const response = await callback(files);
+        if (response === false) return false;  // early stopping
       }
     }
-  }
-
-  app.post('/tasks/:id/addFile', checkAuthenticated, async (req, res) => {
-    const taskId = +req.params.id;
-    if (req.files) {
-      await saveOneOrMoreFiles(taskId, req.files);
-    }
-    const tree = await taskService.getSubtree(taskId, 1);
-    res.send(tree);
-  });
+  };
 
   // cruD - Delete
   app.delete('/tasks/delete/:id', checkAuthenticated, async (req, res) => {
@@ -222,16 +219,6 @@ export function appFactory(
     const parent = await taskService.getParent(id);
     await taskService.deleteTree(id, true);
     res.send(parent);
-  });
-
-  app.delete('/tasks/:taskId/removeFile/:fileId', checkAuthenticated, async (req, res) => {
-    const taskId = +req.params.taskId;
-    const fileId = +req.params.fileId;
-    const fileRow = await taskService.getFileAttachment(fileId);
-    await fileService.removeFile(fileRow.path);
-    await taskService.deleteFileAttachment(fileId);
-    const tree = await taskService.getSubtree(taskId, 1);
-    res.send(tree);
   });
 
   app.get('/tasks/:id/estimate', checkAuthenticated, async (req, res) => {
@@ -248,6 +235,81 @@ export function appFactory(
   app.get('/tasks/upcoming', async (req, res) => {
     const list = await taskService.upcoming();
     res.send(list);
+  });
+
+  
+  /***********************************************************************
+   * Email tasks
+   **********************************************************************/
+
+  app.post('/tasks/create/emailtask/', checkAuthenticated, async (req, res) => {
+    const formData = req.body;
+    const parentId = +formData.parent;
+    const files = req.files;
+    if (files) {
+      await fileArrayEach(req.files, async (file) => {
+
+        // parsing
+          const mailObject = await simpleParser(file.data);
+          const title = mailObject.subject;
+          const description = mailObject.text || mailObject.html || 'No description available.';
+
+          // create task
+          const task = await taskService.createTask(title, parentId, new Date().getTime());
+
+          // attachment
+          const localFilePath = await fileService.storeFile(file);
+          await taskService.addFileAttachment(task.id, localFilePath);
+          const tree = await taskService.getSubtree(task.id, 1);
+
+          // update task with description and metadata
+          task.description = description;
+          task.metadata = JSON.stringify({"email": {attachmentId: tree.attachments[0].id}});
+          const updatedTask = await taskService.updateTask(task);
+
+          // return
+          res.send(updatedTask);
+          return false; // stop after first file.
+      });
+    }
+  });
+  
+  /***********************************************************************
+   * Files
+   **********************************************************************/
+
+  app.post('/tasks/:id/addFile', checkAuthenticated, async (req, res) => {
+    const taskId = +req.params.id;
+    if (req.files) {
+      await fileArrayEach(req.files, async (file) => {
+        const localFilePath = await fileService.storeFile(file);
+        await taskService.addFileAttachment(taskId, localFilePath);
+      });
+      
+    }
+    const tree = await taskService.getSubtree(taskId, 1);
+    res.send(tree);
+  });
+
+  app.delete('/tasks/:taskId/removeFile/:fileId', checkAuthenticated, async (req, res) => {
+    const taskId = +req.params.taskId;
+    const fileId = +req.params.fileId;
+    const fileRow = await taskService.getFileAttachment(fileId);
+    await fileService.removeFile(fileRow.path);
+    await taskService.deleteFileAttachment(fileId);
+    const tree = await taskService.getSubtree(taskId, 1);
+    res.send(tree);
+  });
+
+  app.get('/tasks/:taskId/getFile/:fileId', checkAuthenticated, async (req, res) => {
+    const taskId = +req.params.taskId;
+    const fileId = +req.params.fileId;
+    const fileRow = await taskService.getFileAttachment(fileId);
+    // const {contentType, file} = await fileService.getFile(fileRow.path);
+    const {contentType, fileStream} = fileService.getFileStream(fileRow.path);
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${basename(fileRow.path)}"`);
+    fileStream.pipe(res);
   });
 
   /***********************************************************************
@@ -279,7 +341,11 @@ export function appFactory(
         case 'delete':
           await taskService.deleteTask(action.args.id);
         case 'addFile':
-          await saveOneOrMoreFiles(action.args.id, action.args.files);
+          await fileArrayEach(action.args.files, async (file) => {
+            const taskId = action.args.id;
+            const localFilePath = await fileService.storeFile(file);
+            await taskService.addFileAttachment(taskId, localFilePath);
+          });
         default:
           console.error(`No such DbAction: ${action.type}`);
       }
@@ -291,6 +357,13 @@ export function appFactory(
     const estimatedUnfinishedTree = filterTree(estimatedTree, (node) => !node.completed);
 
     res.send(estimatedUnfinishedTree);
+  });
+
+  app.get('/schedule', async (req, res) => {
+    const upcomingEstimated = await estimateUpcomingTasks(taskService);
+    // const schedule = getOptimalSchedule(upcomingEstimated); <-- too expensive
+    const schedule = estimateOptimalSchedule(upcomingEstimated);
+    res.send(schedule);
   });
 
   /***********************************************************************
@@ -366,6 +439,71 @@ export function appFactory(
     );
     res.send(updated);
   });
+
+  /***********************************************************************
+   * Kanban boards
+   **********************************************************************/
+
+  app.get('/kanban/', async (req, res) => {
+    const boards = await kanbanService.listBoards();
+    res.send(boards);
+  })
+
+  app.get('/kanban/:boardId', async (req, res) => {
+    const boardId = +req.params.boardId;
+    const board = await kanbanService.getBoard(boardId);
+    res.send(board);
+  });
+
+  app.post('/kanban/create', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.createBoard(body.title, body.created, body.columnNames);
+    res.send(board);
+  });
+
+  app.patch('/kanban/completeBoard/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.completeBoard(body.boardId, body.completed);
+    res.send(board);
+  });
+
+  app.patch('/kanban/addColumn/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.addColumn(body.boardId, body.columnName);
+    res.send(board);
+  });
+
+  app.patch('/kanban/renameColumn/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.renameColumn(body.boardId, body.columnId, body.newName);
+    res.send(board);
+  });
+
+  app.patch('/kanban/removeColumn/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.removeColumn(body.bardId, body.columnId);
+    res.send(board);
+  });
+
+  app.patch('/kanban/addTask/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.addTask(body.boardId, body.columnId, body.taskId);
+    res.send(board);
+  });
+
+  app.patch('/kanban/moveTask/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.moveTaskToColumn(body.boardId, body.taskId, body.sourceColumnId, body.targetColumnId);
+    res.send(board);
+  });
+
+  app.patch('/kanban/removeTask/', async (req, res) => {
+    const body = req.body;
+    const board = await kanbanService.removeTask(body.boardId, body.taskId, body.columnId);
+    res.send(board);
+  });
+
+
 
   return app;
 }

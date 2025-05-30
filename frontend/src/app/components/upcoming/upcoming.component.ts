@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { delay, filter, map, Observable, pairwise, switchMap } from 'rxjs';
+import { delay, filter, map, Observable, pairwise, startWith, switchMap } from 'rxjs';
 import { TaskRow, TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class UpcomingComponent implements OnInit {
   ngOnInit(): void {
     this.tasks$ = this.taskSvc.watchCurrentTask()
       .pipe(
+        startWith(null),  // deliberately start with null, so that we're not blocked on the first pair.
         // get last and current
         pairwise(),
         // check if update is required

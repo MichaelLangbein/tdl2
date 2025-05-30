@@ -8,6 +8,7 @@ import { LoginComponent } from "./views/login/login.component";
 import { StatsComponent } from "./views/stats/stats.component";
 import { TaskViewComponent } from "./views/task-view/task-view.component";
 import { WikiViewComponent } from "./views/wiki-view/wiki-view.component";
+import { KanbanViewComponent } from "./views/kanban-view/kanban-view.component";
 
 
 const routes: Routes = [
@@ -36,6 +37,11 @@ const routes: Routes = [
   {
     path: 'flashcards',
     component: FlashcardViewComponent,
+    canActivate: [loggedInGuard],
+  },
+  {
+    path: 'kanban',
+    component: KanbanViewComponent,
     canActivate: [loggedInGuard],
   },
   {

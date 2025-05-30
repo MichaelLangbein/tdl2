@@ -22,7 +22,8 @@ export interface TaskRow {
     created: number,
     completed: number | null,
     secondsActive: number,
-    deadline: number | null
+    deadline: number | null,
+    metadata: string | null
 }
 
 export interface FileRow {
@@ -64,11 +65,13 @@ export class TaskService {
                     created         Date,
                     completed       Date,
                     secondsActive   integer,
-                    deadline        Date
+                    deadline        Date,
+                    metadata        text
                 );
                 create index parent_task on tasks(parent);
             `);
             await this.createTask('root');
+            // @TODO: metadata is temporary. We might instead have a separate table for email-metadata, one for msteams-metadata, etc.
         }
         const fileTable = await this.db.get(`
             select name from sqlite_master where type='table' and name='files';
@@ -98,6 +101,7 @@ export class TaskService {
         }
     }
     
+
     public async getTask(taskId: number) {
         const result = await this.db.get<TaskRow>(`
             select * from tasks 
@@ -105,6 +109,16 @@ export class TaskService {
         `, { 
             '$id': taskId 
         });
+        return result;
+    }
+
+    public async getTasks(taskIds: number[]) {
+        // querying with unnamed substitutions
+        const placeholders = taskIds.map(_ => "?").join(",");
+        const result = await this.db.all<TaskRow[]>(`
+            select * from tasks 
+                where id in (${placeholders});
+        `, taskIds);
         return result;
     }
 
@@ -161,7 +175,8 @@ export class TaskService {
                 parent = $parent,
                 secondsActive = $secondsActive,
                 completed = $completed,
-                deadline = $deadline
+                deadline = $deadline,
+                metadata = $metadata
             where id = $id;
         `, {
             '$id': task.id,
@@ -170,7 +185,8 @@ export class TaskService {
             '$parent': task.parent,
             '$secondsActive': task.secondsActive,
             '$completed': task.completed,
-            '$deadline': task.deadline
+            '$deadline': task.deadline,
+            "$metadata": task.metadata
         });
         const updatedTask = await this.getTask(task.id);
         return updatedTask!;

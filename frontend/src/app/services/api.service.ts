@@ -55,6 +55,10 @@ export class ApiService {
     });
   }
 
+  public open(path: string) {
+    window.open(`${this.backendUrl}${path}`, '_blank', 'noopener,noreferrer');
+  }
+
   public post<T>(path: string, body: any) {
     return this.http.post<T>(`${this.backendUrl}${path}`, body, {
       withCredentials: true,
@@ -71,5 +75,13 @@ export class ApiService {
     return this.http.delete<T>(`${this.backendUrl}${path}`, {
       withCredentials: true,
     });
+  }
+
+  public uploadFormData<T>(path: string, data: {[key: string]: string | Blob}) {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+      formData.append(key, value);
+    }
+    return this.post<T>(path, formData);
   }
 }
