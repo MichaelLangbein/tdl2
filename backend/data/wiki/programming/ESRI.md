@@ -118,6 +118,17 @@ LEFT JOIN
     -- Add more LEFT JOIN clauses here for additional domain-enabled fields
 ```
 
+# Server
+
+- 2 Versions: one built with Java, one with .NET, both with C++ for some components
+- Users GDAL and OGR for processing
+- Rendering engine unknown
+- Proprietary application-server, but similar to eg Tomcat
+- Core framework: ESRI's proprietary ArcObjects
+  - built according to Microsoft's Component Object Model (COM) model ... kind of like Spring-Beans, but defines interaction across different language binaries (mostly .NET and C++)
+  - SOE: server-object-extension, adds functionality. Added as a COM to the runtime.
+  - SOI: server-object-interceptor, extends existing functionality.
+
 # Services
 
 Web-layer:
@@ -150,8 +161,9 @@ Web-layer:
   - renders multiple layers into the same tile.
   - No identify, no legend, no querying.
 - 3D-tiles
+
 - hosted table
-  - 
+  -
 
 Web-map:
     - a json-file referencing one or many web-layers
