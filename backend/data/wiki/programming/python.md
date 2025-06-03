@@ -91,3 +91,86 @@ def plotRasterAndVector(raster: rio.fh, vector: shapely.FeatureCollection):
     geometries = [project(f.geometry, crs) for f in vector.features]
     _plotRasterAndVector(raster.read(1), geometries)
 ```
+
+
+# Commonly used snippets
+
+## Pickle for memoization
+
+```python
+import os
+from datetime import datetime
+import pickle
+
+cacheDir = "./memoized"
+maxCacheAgeSecs = 60 * 60
+
+
+def __getKey(func, *args, **kwargs):
+    return f"{func.__name__}_args_{args}_kwargs_{kwargs}"
+
+
+def __addTimeToKey(key):
+    timeStr = datetime.now().strftime("%Y-%m-%d_%H-%M")
+    fullName = f"{key}__{timeStr}"
+    return fullName
+
+
+def __getTimeFromName(name):
+    timeString = name.split("__")[-1]
+    dateStr, hourStr = timeString.split("_")
+    year, month, day = dateStr.split("-")
+    hour, minute = hourStr.split("-")
+    fileTime = datetime(int(year), int(month), int(day), int(hour), int(minute))
+    return fileTime
+
+
+def loadStoredResult(key):
+    files = os.listdir(cacheDir)
+    currentTime = datetime.now()
+    for file in files:
+        if file.startswith(key):
+            fileTime = __getTimeFromName(file)
+            delta = currentTime - fileTime
+            if delta.seconds < maxCacheAgeSecs:
+                with open(os.path.join(cacheDir, file), "rb") as fh:
+                    result = pickle.load(fh)
+                    return result
+            else:
+                os.remove(os.path.join(cacheDir, file))
+
+
+def storeResult(key, data):
+    fullName = __addTimeToKey(key)
+    targetPath = os.path.join(cacheDir, fullName)
+    with open(targetPath, "wb") as fh:
+        pickle.dump(data, fh)
+
+
+def memoized(func):
+    def wrapped(*args, **kwargs):
+        key = __getKey(func, args, kwargs)
+        storedResult = loadStoredResult(key)
+        if storedResult:
+            return storedResult
+        result = func(*args, **kwargs)
+        storeResult(key, result)
+        return result
+    return wrapped
+
+
+@memoized
+def createData(someVal):
+    return {
+        "i": "am",
+        "a": {
+            "complex": "object",
+            "val": someVal
+        }
+    }
+
+
+result = createData(2)
+print(result)
+```
+
