@@ -1,14 +1,52 @@
 # Python
 
+## Magic files
+
+- `__init__.py`
+  - makes a directory a package, so it can be imported with an absolute path, like `from utils.utils import someFunc` instead of `from ../utils/utils.py import someFunc`
+  - contents of `__init__` are only executed after the package has been successfully resolved.
+
+## Module resolution
+
+I have this folder structure:
+
+```txt
+/main.py
+    `from lib.lib import libFunc`
+/utils/utils.py
+/utils/__init__.py
+/lib/lib.py
+    `from utils.utils import someFunc`
+/lib/__init__.py
+```
+
+Sometimes I want to run `/lib/lib.py` ... but lib.py imports from `utils.utils`. This import doesn't work if I run lib.py directly from the /lib/ directory.
+
+### Reason
+
+When you run a Python script, the directory containing that script is automatically added to the front of sys.path.
+
+1. When you run python lib/lib.py from the project root: The directory added to the path is /lib/. When lib.py executes from utils.utils import someFunc, Python looks inside /lib/ for a utils package. It doesn't find it and fails. It does not automatically look in parent directories.
+2. When you run python main.py from the project root: The directory added to the path is the project root (/). When main.py imports something from lib or utils, Python can find them because they are subdirectories of the project root. When lib.py is subsequently imported, its from utils.utils ... import also works because the project root is already on the path.
+
+### Solution
+
+```bash
+cd projectRoot
+python -m lib.lib
+```
+
+The -m flag tells Python to run a module as a script. It adds the current working directory (your project root) to sys.path
+
 ## venv
 
--   python -m venv ./venv # creates a venv in the dir ./venv
--   source ./venv/bin/activate
--   deactivate
--   pip install <some-package>
--   deactivate
--   pip freeze > requirements.txt
--   pip install -r requirements.txt
+- python -m venv ./venv # creates a venv in the dir ./venv
+- source ./venv/bin/activate
+- deactivate
+- pip install <some-package>
+- deactivate
+- pip freeze > requirements.txt
+- pip install -r requirements.txt
 
 ## wheels
 
@@ -22,38 +60,38 @@ For this to work, compilers like `g++` and dev-packages like `python-dev` (conta
 
 Better than venv because:
 
--   allows non-python binaries (like gdal, tensorflow, libblas, yfinance, ...)
--   not bound to local python-version
+- allows non-python binaries (like gdal, tensorflow, libblas, yfinance, ...)
+- not bound to local python-version
 
 Cheat-sheet:
 
--   conda
-    -   config
-        -   `--add channels conda-forge`
-        -   `--remove channels defaults`
-        -   `--set `
-            -   channel_priority strict
-            -   auto_activate_base false
-        -   `--show channels`
-        -   Or just alter `.condarc`
-    -   create
-        -   `--name <new-env-name>`
-    -   activate <env-name>
-    -   env
-        -   `list`
-        -   `export --no-builds | grep -v "prefix" > environment.yml`
-        -   `remove --name <env-name>`
-        -   `create --name <new-env-name> --file path/to/environment.yml` (weirdly, `conda create --name xx --file yy.yml` does not work sometimes, but `conda env create --name xx --file yy.yml`.)
+- conda
+  - config
+    - `--add channels conda-forge`
+    - `--remove channels defaults`
+    - `--set`
+      - channel_priority strict
+      - auto_activate_base false
+    - `--show channels`
+    - Or just alter `.condarc`
+  - create
+    - `--name <new-env-name>`
+  - activate <env-name>
+  - env
+    - `list`
+    - `export --no-builds | grep -v "prefix" > environment.yml`
+    - `remove --name <env-name>`
+    - `create --name <new-env-name> --file path/to/environment.yml` (weirdly, `conda create --name xx --file yy.yml` does not work sometimes, but `conda env create --name xx --file yy.yml`.)
             Conda to pip:
-    -   pip list --format=freeze > requirements.txt
+  - pip list --format=freeze > requirements.txt
 
 # Matplotlib
 
 ## Basics
 
--   Figure: canvas on which plots are created. Contains one or more axes
--   Axis:
--   Artist: Text, Line, Circle, ...
+- Figure: canvas on which plots are created. Contains one or more axes
+- Axis:
+- Artist: Text, Line, Circle, ...
 
 ```python
 fig = plt.figure(figsize=5,4)
@@ -91,7 +129,6 @@ def plotRasterAndVector(raster: rio.fh, vector: shapely.FeatureCollection):
     geometries = [project(f.geometry, crs) for f in vector.features]
     _plotRasterAndVector(raster.read(1), geometries)
 ```
-
 
 # Commonly used snippets
 
@@ -173,4 +210,3 @@ def createData(someVal):
 result = createData(2)
 print(result)
 ```
-
