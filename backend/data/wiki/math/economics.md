@@ -518,6 +518,7 @@ In a crisis:
 
 # Macro economics: static neo-classical model
 
+Neo-classical models are long-run. These models imply, particularly under the __assumption, that government intervention is in the long-run to be minimized.
 We will build an equilibrium model of macro-economics.
 That means that when we calculate an optimal demand for something, this will in equilibrium equal the optimal supply for it, and vice versa.
 
@@ -802,87 +803,14 @@ radioPlot(["Y", "C", "I", "r", "U", "w", "W", "P", "N"], stats1, stats2, "baseli
 #%%
 
 
-# Post keynesian with endogenous money
-def postKeynesianWithMoney(
-    b = 0.5,    # propensity to spend out of income
-    c = 0.7,    # share of credit-demand that is accommodated
-    d0 = 5,     # autonomous demand, debt-financed
-    d1 = 0.8,   # sensitivity of demand w.r.t. interest rate
-    i0 = 0.01,  # central bank rate, discretionary component
-    i1 = 0.5,   # sensitivity of central bank rate w.r.t. price level
-    m = 0.15,   # banks' interest rate markup
-    k = 0.3,    # desired reserve ratio
-    n = 0.15,   # price mark-up
-    W0 = 2,     # nominal wage (exogenous)
-    h = 0.8,    # sensitivity of nominal wage w.r.t. unemployment
-    a = 0.8,    # productivity
-    Nf = 12     # full employment
-):
-    """
-    https://macrosimulation.org/a_post_keynesian_macro_model_with_endogenous_money#overview
-    """
-
-    for _ in range(1000):
-        # Initialize endogenous variables at some arbitrary positive value
-        Y = D = ND = r = N = U = P = w = W = i = dL = dR = dM = 1
-
-        # Goods market
-        Y = ND + c * D
-
-        # Non-debt financed component of demand
-        ND = b * Y
-
-        # Debt financed component of demand
-        D = d0 - d1 * r
-
-        # Policy rate
-        # Assumes that fed raises interest when prices increase
-        i = i0 + i1 * P
-
-        # Lending rate
-        # Banks lend at policy rate plus markup
-        r = (1 + m) * i
-
-        # Change in loans
-        dL = c * D
-
-        # Change in deposits
-        dM = dL
-
-        # Change in reserves
-        dR = k * dM
-
-        # Price level
-        # Firms charge at production cost plus markup
-        P =  (1 + n) * a * W
-
-        # Nominal wage
-        # base wage, lower if high unemployment
-        W = W0 - h * U
-
-        # Real wage
-        w = 1 / ((1+n) * a)
-
-        # Employment
-        N = a * Y
-
-        # Unemployment
-        U = (Nf - N) / Nf
-
-    return Y, D, ND, r, N, U, P, w, W, i, dL, dR, dM
-
-
-stats1 = postKeynesianWithMoney()
-stats2 = postKeynesianWithMoney(c=0.9)
-
-
-labels = ["Y", "D", "ND", "r", "N", "U", "P", "w", "W", "i", "dL", "dR", "dM" ]
-radioPlot(labels, stats1, stats2, "baseline", "more lending")
-# %%
-
 ```
 
 # Macro economics - new Keynesian model
+
+Keynesian models are short run. They accept the equilibrium-results of neo-classical models, but believe that there are market imperfections in the short run that can't be ignored.
+
+- Wages are sticky (which we'll see causes inflation)
+- Firms are oligopolist, thus usually add a markup to prices
 
 ## Preliminaries: The circular flow model of macro-economics
 
@@ -1055,8 +983,22 @@ where $p$ is the _worker-productivity_.
 ## Inflation: the Phillips curve
 
 Relates inflation to unemployment.
+In the thirties, Bill Phillips discovered in historical data that inflation was usually high when unemployment was low, and vice versa.
+He derived an explanation, known as the Phillips-curve, which uses a wage-negotiation/price-spiral as an explanation of inflation.
+
+- Pro: Blaming wage negotiations on inflation is reasonable in so far as wages make out about 40-60% of GDP ... so changes there are indeed very significant.
+- Con: The Phillips curve didn't predict the stagflation of the 70s, which had high unemployment and high inflation simultaneously.
+  - The reason was that in its _original_ form, the Phillips curve didn't include _expectations of inflation_.
+  - Accounting for those expectations can now shift the curve, matching the data again.
 
 ### Setting the wages in the factor market
+
+There are two markets where wages play a role.
+
+- In the goods marked, wages are paid to produce a good, and consumers and firms negotiate the price of goods.
+- In the factor market, firms and workers negotiate the price of labor.
+
+We'll look at the factor market here. We'll find that sometimes the goods market overheats, meaning that the previous optimal factor-market wages are now too low and need re-negotiating.
 
 Work is rented by firms from households in the factor-markets.
 Wages are determined by the maximum firms will pay and the minimum unions will demand.
@@ -1262,6 +1204,115 @@ axes[1].legend()
 ### investment trap
 
 Strongly pessimistic expectations regarding future economic conditions, aggregate demand and the profitability of investment mean that even a significant reduction in the interest rate has little, if any, incentive effect on investment.
+
+# Post Keynesian
+
+Keynesian economics doesn't account for banks as a strong player in economics. Post Keynesian models are very diverse in their attempts to address those.
+
+```python
+
+# Post keynesian with endogenous money
+def postKeynesianWithMoney(
+    b = 0.5,    # propensity to spend out of income
+    c = 0.7,    # share of credit-demand that is accommodated
+    d0 = 5,     # autonomous demand, debt-financed
+    d1 = 0.8,   # sensitivity of demand w.r.t. interest rate
+    i0 = 0.01,  # central bank rate, discretionary component
+    i1 = 0.5,   # sensitivity of central bank rate w.r.t. price level
+    m = 0.15,   # banks' interest rate markup
+    k = 0.3,    # desired reserve ratio
+    n = 0.15,   # price mark-up
+    W0 = 2,     # nominal wage (exogenous)
+    h = 0.8,    # sensitivity of nominal wage w.r.t. unemployment
+    a = 0.8,    # productivity
+    Nf = 12     # full employment
+):
+    """
+    https://macrosimulation.org/a_post_keynesian_macro_model_with_endogenous_money#overview
+    """
+
+    for _ in range(1000):
+        # Initialize endogenous variables at some arbitrary positive value
+        Y = D = ND = r = N = U = P = w = W = i = dL = dR = dM = 1
+
+        # Goods market
+        Y = ND + c * D
+
+        # Non-debt financed component of demand
+        ND = b * Y
+
+        # Debt financed component of demand
+        D = d0 - d1 * r
+
+        # Policy rate
+        # Assumes that fed raises interest when prices increase
+        i = i0 + i1 * P
+
+        # Lending rate
+        # Banks lend at policy rate plus markup
+        r = (1 + m) * i
+
+        # Change in loans
+        dL = c * D
+
+        # Change in deposits
+        dM = dL
+
+        # Change in reserves
+        dR = k * dM
+
+        # Price level
+        # Firms charge at production cost plus markup
+        P =  (1 + n) * a * W
+
+        # Nominal wage
+        # base wage, lower if high unemployment
+        W = W0 - h * U
+
+        # Real wage
+        w = 1 / ((1+n) * a)
+
+        # Employment
+        N = a * Y
+
+        # Unemployment
+        U = (Nf - N) / Nf
+
+    return Y, D, ND, r, N, U, P, w, W, i, dL, dR, dM
+
+
+stats1 = postKeynesianWithMoney()
+stats2 = postKeynesianWithMoney(c=0.9)
+
+
+labels = ["Y", "D", "ND", "r", "N", "U", "P", "w", "W", "i", "dL", "dR", "dM" ]
+radioPlot(labels, stats1, stats2, "baseline", "more lending")
+# %%
+
+```
+
+# Macro economics - DSGE's
+
+- Dynamic: time is explicitly simulated
+- Stochastic: some parameters are allowed to have priors
+- General equilibrium: model calculates an equilibrium point
+
+... so as per usual, this abbreviation fails to mention the most important characteristics of the models. In fact, these are not a different type of model, but a different numerical procedure of calculating the model results.
+The idea is that you only specify the objectives and constraints of each actor, and have the software do the algebra, calculus and optimization.
+
+These are models where we:
+
+- For each actor, write their objective function and constraints
+- Then have the software automatically calculate the optimal market solution for you
+  - By combining the objective function and constraints with Lagrange multipliers, ...
+  - ... then linearizing them, ...
+  - ... then finding the optimal solution using dynamic programming, ...
+  - ... often with some parameters stochastically distributed with priors (usually using PyMC)
+
+Example: gEconPy
+
+<br/>
+<br/>
 
 # Macro economics - agent based models
 
