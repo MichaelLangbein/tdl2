@@ -118,6 +118,13 @@ LEFT JOIN
     -- Add more LEFT JOIN clauses here for additional domain-enabled fields
 ```
 
+## Spatial data
+
+- MS SQL Server has a less sophisticated spatial index than PostGIS' GiST index.
+- SQL Servers spatial index can fragment, but won't be re-created automatically, since this is a resource-intensive operation.
+- Users are required to rebuild indices manually after large updates.
+- The newer `Geography` type, as opposed to the older `Geometry`, does have a better behavior, though.
+
 # Server
 
 - 2 Versions: one built with Java, one with .NET, both with C++ for some components
