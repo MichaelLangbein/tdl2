@@ -11,6 +11,11 @@ Requires windows
 
 ArcGIS itself is free for 3 weeks.
 
+# Performance
+
+- Slow on loading: <https://community.esri.com/t5/python-questions/arcpy-import-is-really-slow-2-minutes/td-p/124969>
+- Slow on network drive: <https://community.esri.com/t5/python-questions/arcpy-very-slow-when-using-our-new-san/td-p/1314498>
+
 # Licensing
 
 ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), it will telemetry to its license server to make sure that you are allowed to use it.

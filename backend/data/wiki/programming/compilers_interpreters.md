@@ -1,8 +1,9 @@
 # Compilers and interpreters
 
-
 ## A simple lisp-interpreter
+
 Main:
+
 ```ts
 // based on https://chidiwilliams.com/post/how-to-write-a-lisp-interpreter-in-javascript/
 import { Interpreter } from './interpreter';
@@ -22,6 +23,7 @@ console.log(result);
 ```
 
 Scanner:
+
 ```ts
 export type TokenType = 'LeftBracket' | 'RightBracket' | 'Symbol' | 'Number' | 'Boolean' | 'String' | 'Eof';
 export type Literal = number | boolean | string | undefined;
@@ -140,6 +142,7 @@ export class Scanner {
 ```
 
 Parser:
+
 ```ts
 import { Token, Literal, TokenType } from "./scanner";
 
@@ -268,6 +271,7 @@ export class Parser {
 ```
 
 Interpreter:
+
 ```ts
 import { CallExpression, Expression, IfExpression, LiteralExpression, SymbolExpression } from './parser';
 
@@ -333,8 +337,10 @@ export class Interpreter {
 ```
 
 ## More complex languages
+
 Lisp is an extremely simple language.
+
 - More complex languages will not only have expressions, but also statements (lines of code that don't evaluate to a value).
 - If you do importing, you'll need to not only build an AST, but also a *symbol table*.
-    - That symbol table may even persist into the final executable
-    - C object files keep their symbol table so that the symbols can be resolved by a linker.
+  - That symbol table may even persist into the final executable
+  - C object files keep their symbol table so that the symbols can be resolved by a linker.
