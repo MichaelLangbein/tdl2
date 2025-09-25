@@ -42,7 +42,7 @@ flowchart LR
 
 ### Dynamic data-sources and -sinks
 
-#### Approach 1: sql-executor
+> Approach 1: sql-executor
 
 - sql-executor
   - insert into @Value(targetTable) select * from @Value(sourceTable)
@@ -56,7 +56,7 @@ _Could_ potentially be repaired with python processor:
     arcpy.management.Analyze(feature_class, "BUSINESS")
 ```
 
-### Approach 2: Reader + writer
+> Approach 2: Reader + writer
 
 ```mermaid
 flowchart LR
@@ -65,7 +65,7 @@ flowchart LR
 
 Won't work: we don't know source beforehand.
 
-### Approach 3: DB-joiner + writer
+> Approach 3: DB-joiner + writer
 
 ```mermaid
 flowchart LR
@@ -74,17 +74,32 @@ flowchart LR
 
 Won't work: db-joiner doesn't take variables as table-argument.
 
-### Approach 4: SQL-executor for select + writer
+> Approach 4: SQL-executor for select + writer
 
 ```mermaid
 flowchart LR
-    A[SQL-executor
-        - select * from @sourceTable] --> B[Writer
+    A[**SQL-executor**
+        - select * from @sourceTable] --> B[**Writer**
                                             - @targetTable]
 ```
 
 Won't work: to write into a writer, the previous node needs to expose the feature-properties.
 Our sql-executor doesn't know the feature-properties beforehand.
+
+> Approach 5: feature-reader and feature-writer
+
+Works! <https://www.youtube.com/watch?v=C56kWp0nuvk>
+
+```mermaid
+flowchart LR
+  A[**feature-reader**
+      - read: @sourceTable] 
+        -->|Generic| B[**schema-reader**
+              - groupBy: fme_feature_type] -->|Output,Schema into Value| C[**feature-writer**
+                  - feature-class: @targetTable
+                  - dynamic schema: @fme_feature_type_name
+              ]
+```
 
 ### Embedding db-connections
 
