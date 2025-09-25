@@ -27,6 +27,73 @@
   - job submit     (client sends REST, gets job-id for polling, but no results shown on complete, only success, cancelled or failure)
 - optionally, create a webhook (not like a standard webhook, but much rather just a simple API endpoint. )
 
+## Idiomatic design patterns
+
+### Semaphore
+
+- FME parallelized eagerly
+- This works because FME assumes that you only write to db at the end, through a "writer"
+- But: sql-executor breaks that promise, opening the door for race conditions.
+
+```mermaid
+flowchart LR
+  A[list-builder] --> B[list-exploder]
+```
+
+### Dynamic data-sources and -sinks
+
+#### Approach 1: sql-executor
+
+- sql-executor
+  - insert into @Value(targetTable) select * from @Value(sourceTable)
+
+Drawback: if target is an ESRI feature-class, ESRI metadata isn't updated.
+_Could_ potentially be repaired with python processor:
+
+```python
+    arcpy.management.RecalculateFeatureClassExtent(feature_class)
+    arcpy.management.RebuildIndexes(feature_class, "NO_OVERWRITE")
+    arcpy.management.Analyze(feature_class, "BUSINESS")
+```
+
+### Approach 2: Reader + writer
+
+```mermaid
+flowchart LR
+  A[reader: @sourceTable] --> B[writer: @targetTable]
+```
+
+Won't work: we don't know source beforehand.
+
+### Approach 3: DB-joiner + writer
+
+```mermaid
+flowchart LR
+  A[db-joiner: @sourceTable] --> B[writer: @targetTable]
+```
+
+Won't work: db-joiner doesn't take variables as table-argument.
+
+### Approach 4: SQL-executor for select + writer
+
+```mermaid
+flowchart LR
+    A[SQL-executor
+        - select * from @sourceTable] --> B[Writer
+                                            - @targetTable]
+```
+
+Won't work: to write into a writer, the previous node needs to expose the feature-properties.
+Our sql-executor doesn't know the feature-properties beforehand.
+
+### Embedding db-connections
+
+- often we want to use db-connections that are not visible to anyone on the fme-flow server.
+
+### Ensuring right python version is used
+
+-
+
 ## Besprechung Milena
 
 - publishing: rights for publishing?
