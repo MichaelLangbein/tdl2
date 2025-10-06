@@ -1056,7 +1056,7 @@ def maximize(state, maxValSoFar, minValSoFar):
         if minValSoFar <= maxValSoFar:
             break
 
-    return {"value": maxValSoFar, "actions": actions}
+    return {"value": bestVal, "actions": actions}
 
 
 def minimize(state, maxValSoFar, minValSoFar):
@@ -1075,7 +1075,7 @@ def minimize(state, maxValSoFar, minValSoFar):
         if minValSoFar <= maxValSoFar:
             break
 
-    return {"value": minValSoFar, "actions": actions}
+    return {"value": worstVal, "actions": actions}
 
 
 class Game:
@@ -1113,8 +1113,6 @@ leafNodes = [6, 8, 9, 1, 0, 1, 4, 1, 0, 8, 9, 3, 11, 1, -11, 1]
 game = Game(listToTree(leafNodes))
 result = maximize(game, -999_999_999, 999_999_999)
 print(result)
-
-# %%
 
 
 def first(lst, pred):
@@ -1164,9 +1162,9 @@ class TickTackToe:
     def evaluate(self):
         winner = self.winner()
         if winner == "X":
-            return 100
+            return 100 / len(self.actionHistory)
         if winner == "O":
-            return -100
+            return -100 / len(self.actionHistory)
         return 0
 
 
@@ -1192,9 +1190,15 @@ def printTTTGame(allActions):
         printTTT(actions)
 
 
-game = TickTackToe([])
+initialActions = [
+    {"player": "X", "row": 2, "col": 2},
+    {"player": "O", "row": 2, "col": 1}
+]
+game = TickTackToe(initialActions)
 result = maximize(game, -999_999_999, 999_999_999)
 print(result)
-printTTTGame(result["actions"])
+printTTTGame(initialActions + result["actions"])
+
+# %%
 
 ```
