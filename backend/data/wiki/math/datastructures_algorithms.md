@@ -1028,3 +1028,141 @@ for i in 0 ... floor(log2(n)) do:         # iterations
 
 <https://www.dcc.fc.up.pt/~ricroc/aulas/1516/cp/apontamentos/slides_sorting.pdf>
 <https://en.wikipedia.org/wiki/Bitonic_sorter>
+
+## Game algorithms
+
+### Minimax
+
+Let's first look at the traditional approach with alpha-beta pruning.
+
+```ts
+
+interface State<ActionType> {
+    change(action: ActionType): State<ActionType>;
+    evaluate(): number;
+    actions(): ActionType[];
+}
+
+
+type TickTackToeAction = {
+    player: 'X' | 'O',
+    row: number,
+    col: number
+}
+
+
+class TickTackToeGame implements State<TickTackToeAction> {
+
+    constructor(private board: TickTackToeAction[] = []) {}
+
+    change(action: TickTackToeAction): State<TickTackToeAction> {
+        return new TickTackToeGame([... this.board, action]);
+    }
+
+    private winner() {
+        for (const plyr of ['X', 'O']) {
+            const xTiles = this.board.filter(t => t.player === plyr);
+            if (xTiles.filter(t => t.row === 1).length === 3) return plyr;
+            if (xTiles.filter(t => t.row === 2).length === 3) return plyr;
+            if (xTiles.filter(t => t.row === 3).length === 3) return plyr;
+            if (xTiles.filter(t => t.col === 1).length === 3) return plyr;
+            if (xTiles.filter(t => t.col === 2).length === 3) return plyr;
+            if (xTiles.filter(t => t.col === 3).length === 3) return plyr;
+            if (xTiles.filter(t => t.col === t.row).length === 3) return plyr;
+            if (xTiles.filter(t => t.col + t.row === 4).length === 3) return plyr;
+        }
+
+    }
+
+    evaluate(): number {
+        const winner = this.winner();
+        if (winner === 'X') return 100;
+        if (winner === 'O') return -100;
+        return 0
+    }
+
+    actions(): TickTackToeAction[] {
+        const winner = this.winner();
+        if (winner) return [];
+
+        const lastPlayer = this.board[this.board.length - 1];
+        let nextPlayer: 'X' | 'O'; 
+        if (!lastPlayer) nextPlayer = 'X';
+        else nextPlayer = lastPlayer.player === 'X' ? 'O' : 'X';
+
+        const actions: TickTackToeAction[] = [];
+
+        for (let row = 1; row <= 3; row++) {
+            for (let col = 1; col <= 3; col++) {
+                const match = this.board.find(tile => tile.col === col && tile.row === row);
+                if (!match) actions.push({ player: nextPlayer, row, col});
+            }
+        }
+        return actions;
+    }
+
+}
+
+
+function printState(history: TickTackToeAction[]) {
+    console.log(` ${history.find(t => t.row === 1 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 1 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 1 && t.col === 3)?.player || ' '} `);
+    console.log(`---|---|---`);
+    console.log(` ${history.find(t => t.row === 2 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 2 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 2 && t.col === 3)?.player || ' '} `);
+    console.log(`---|---|---`);
+    console.log(` ${history.find(t => t.row === 3 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 3 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 3 && t.col === 3)?.player || ' '} `);
+    console.log(' ');
+}
+
+function printHistory(history: TickTackToeAction[]) {
+    for (let i = 0; i < history.length; i++) {
+        const subHistory = history.slice(0, i);
+        printState(subHistory);
+    }
+}
+
+
+function maximize<Action>(game: State<Action>, parentMinVal: number = Infinity, grandParentMaxVal: number = -Infinity) {
+    const actions = game.actions();
+    if (actions.length === 0) return {value: game.evaluate(), actions: []};
+
+    let maxVal = -Infinity;
+    let optimalActions: Action[] = []; 
+    for (const action of actions) {
+        const subGame = game.change(action);
+        const {value: childValue, actions} = minimize(subGame, parentMinVal, maxVal);
+        if (childValue > maxVal) {
+            maxVal = childValue;
+            optimalActions = [... actions, action];
+        }
+        if (childValue > parentMinVal) break;
+    }
+    return {value: maxVal, actions: optimalActions};
+}
+
+
+function minimize<Action>(game: State<Action>, grandParentMinVal: number = Infinity, parentMaxVal: number = -Infinity) {
+    const actions = game.actions();
+    if (actions.length === 0) return {value: game.evaluate(), actions: []};
+
+    let minVal = Infinity;
+    let optimalActions: Action[] = []; 
+    for (const action of actions) {
+        const subGame = game.change(action);
+        const {value: childValue, actions} = maximize(subGame, minVal, parentMaxVal);
+        if (childValue < minVal) {
+            minVal = childValue;
+            optimalActions = [... actions, action];
+        }
+        if (childValue < parentMaxVal) break;
+    }
+    return {value: minVal, actions: optimalActions};
+}
+
+
+
+
+const game = new TickTackToeGame();
+const maxVal = maximize(game);
+console.log(maxVal);
+printHistory(maxVal.actions.reverse());
+```
