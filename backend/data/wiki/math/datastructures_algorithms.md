@@ -1036,6 +1036,8 @@ for i in 0 ... floor(log2(n)) do:         # iterations
 Let's first look at the traditional approach with alpha-beta pruning.
 
 ```ts
+// https://www.youtube.com/watch?v=l-hh51ncgDI
+
 
 interface State<ActionType> {
     change(action: ActionType): State<ActionType>;
@@ -1103,7 +1105,6 @@ class TickTackToeGame implements State<TickTackToeAction> {
 
 }
 
-
 function printState(history: TickTackToeAction[]) {
     console.log(` ${history.find(t => t.row === 1 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 1 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 1 && t.col === 3)?.player || ' '} `);
     console.log(`---|---|---`);
@@ -1120,8 +1121,29 @@ function printHistory(history: TickTackToeAction[]) {
     }
 }
 
+class FakeGame implements State<'left' | 'right'> {
+    constructor(private nodes: any[]) {}
 
-function maximize<Action>(game: State<Action>, parentMinVal: number = Infinity, grandParentMaxVal: number = -Infinity) {
+    change(action: "left" | "right"): State<"left" | "right"> {
+        if (this.nodes.length < 2) throw Error('cannot split leaf');
+        if (action === 'left') return new FakeGame(this.nodes[0]);
+        return new FakeGame(this.nodes[1]);
+    }
+
+    evaluate(): number {
+        if (this.nodes.length !== 1) throw Error('cannot evaluate non-leaf');
+        console.log(`evaluating ${this.nodes[0]}`);
+        return this.nodes[0];
+    }
+
+    actions(): ("left" | "right")[] {
+        if (this.nodes.length < 2) return [];
+        return ['left', 'right'];
+    }
+}
+
+
+function maximize<Action>(game: State<Action>, highestScoreGuaranteedSoFar: number = -Infinity, lowestScoreGuaranteedSoFar: number = Infinity) {
     const actions = game.actions();
     if (actions.length === 0) return {value: game.evaluate(), actions: []};
 
@@ -1129,18 +1151,19 @@ function maximize<Action>(game: State<Action>, parentMinVal: number = Infinity, 
     let optimalActions: Action[] = []; 
     for (const action of actions) {
         const subGame = game.change(action);
-        const {value: childValue, actions} = minimize(subGame, parentMinVal, maxVal);
+        const {value: childValue, actions} = minimize(subGame, highestScoreGuaranteedSoFar, lowestScoreGuaranteedSoFar);
         if (childValue > maxVal) {
             maxVal = childValue;
             optimalActions = [... actions, action];
         }
-        if (childValue > parentMinVal) break;
+        highestScoreGuaranteedSoFar = Math.max(highestScoreGuaranteedSoFar, childValue);
+        if (lowestScoreGuaranteedSoFar <= highestScoreGuaranteedSoFar) break; // minimizer already guaranteed a lower score than this, so will never allow this move. 
     }
     return {value: maxVal, actions: optimalActions};
 }
 
 
-function minimize<Action>(game: State<Action>, grandParentMinVal: number = Infinity, parentMaxVal: number = -Infinity) {
+function minimize<Action>(game: State<Action>, highestScoreGuaranteedSoFar: number, lowestScoreGuaranteedSoFar: number) {
     const actions = game.actions();
     if (actions.length === 0) return {value: game.evaluate(), actions: []};
 
@@ -1148,21 +1171,34 @@ function minimize<Action>(game: State<Action>, grandParentMinVal: number = Infin
     let optimalActions: Action[] = []; 
     for (const action of actions) {
         const subGame = game.change(action);
-        const {value: childValue, actions} = maximize(subGame, minVal, parentMaxVal);
+        const {value: childValue, actions} = maximize(subGame, highestScoreGuaranteedSoFar, lowestScoreGuaranteedSoFar);
         if (childValue < minVal) {
             minVal = childValue;
             optimalActions = [... actions, action];
         }
-        if (childValue < parentMaxVal) break;
+        lowestScoreGuaranteedSoFar = Math.min(lowestScoreGuaranteedSoFar, childValue);
+        if (highestScoreGuaranteedSoFar >= lowestScoreGuaranteedSoFar) break;  // maximizer already guaranteed a higher score than this, so will never allow this move. 
     }
     return {value: minVal, actions: optimalActions};
 }
 
 
 
+// const initialState: TickTackToeAction[] = [{player: 'X', row: 2, col: 2}];
+// const game = new TickTackToeGame(initialState);
+// const maxVal = maximize(game);
+// console.log(maxVal.value, maxVal.actions.reverse());
+// printHistory([...initialState, ...maxVal.actions]);
 
-const game = new TickTackToeGame();
-const maxVal = maximize(game);
-console.log(maxVal);
-printHistory(maxVal.actions.reverse());
+
+// const game = new FakeGame([[[[-1], [3]], [[5], [1]]], [[[-6], [-4]], [[0], [9]]]]);
+const game = new FakeGame([
+    [[[[8], [5]], [[6], [-4]]], 
+    [[[3], [8]], [[4], [-6]]], ],
+    [[[[1], [100]], [[5], [2]]], 
+    [[[100], [100]], [[100], [100]]]]]);
+const {value, actions} = maximize(game, -Infinity, Infinity);
+console.log(value);
+console.log(actions);
+
 ```
