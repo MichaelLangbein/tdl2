@@ -4,8 +4,8 @@ Aka. Landau-symbols.
 
 The name _asymptotic_ analysis is well chosen (for once).
 
-- AA only tells us about the behaviour of algorithms as their numbers become _very_ big.
-- AA deals with the **rate of growth**, not absolute values
+-   AA only tells us about the behaviour of algorithms as their numbers become _very_ big.
+-   AA deals with the **rate of growth**, not absolute values
 
 Big-oh is the approximate upper bound, little-oh is the next graph _higher_ than that.
 
@@ -13,31 +13,31 @@ Big-oh is the approximate upper bound, little-oh is the next graph _higher_ than
 
 $$ f \in O(g) \iff \exists k: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
 
-- What is meant: $f$'s rate of growth is within that of $g$
-- Explanation: $f$ will always remain within a fixed linear multiplication (\*k) from $g$. $f$ won't ever grow out of the reach of $kg$.
+-   What is meant: $f$'s rate of growth is within that of $g$
+-   Explanation: $f$ will always remain within a fixed linear multiplication (\*k) from $g$. $f$ won't ever grow out of the reach of $kg$.
 
 ## Little Oh
 
 $$ f \in o(g) \iff \forall k: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
 
-- What is meant: $f$'s rate of growth is a factor smaller than $g$
-- Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
+-   What is meant: $f$'s rate of growth is a factor smaller than $g$
+-   Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
 
 ## Comparision $O$ and $o$
 
-- True for big-oh, false for little-oh:
-  - $x^2 \in O(x^2)$
-  - $x^2 \in O(x^2 + x)$
-  - $x^2 \in O(2000 x^2)$
-- True for little-oh (and therefore automatically true for big-oh):
-  - $x^2 \in o(x^3)$
-  - $x^2 \in o(x!)$
-  - $\ln(x) \in o(x)$
+-   True for big-oh, false for little-oh:
+    -   $x^2 \in O(x^2)$
+    -   $x^2 \in O(x^2 + x)$
+    -   $x^2 \in O(2000 x^2)$
+-   True for little-oh (and therefore automatically true for big-oh):
+    -   $x^2 \in o(x^3)$
+    -   $x^2 \in o(x!)$
+    -   $\ln(x) \in o(x)$
 
 ## Others
 
-- Lower bounds: Omega
-- Upper and lower bound: Theta
+-   Lower bounds: Omega
+-   Upper and lower bound: Theta
 
 ## Rules for $O$
 
@@ -90,18 +90,18 @@ For each of those three we can calculate $O$, $\Theta$ or $\Omega$ individually.
 
 So, a thorough analysis would consist of:
 
-- best case:
-  - $O$
-  - $\Omega$
-  - $\Theta$
-- average:
-  - $O$
-  - $\Omega$
-  - $\Theta$
-- worst case:
-  - $O$
-  - $\Omega$
-  - $\Theta$
+-   best case:
+    -   $O$
+    -   $\Omega$
+    -   $\Theta$
+-   average:
+    -   $O$
+    -   $\Omega$
+    -   $\Theta$
+-   worst case:
+    -   $O$
+    -   $\Omega$
+    -   $\Theta$
 
 # Combinatorics
 
@@ -131,15 +131,15 @@ def createPermutations(tasks):
 
 ```ts
 class SlidingWindow<T> {
-  private index = 0;
+    private index = 0;
 
-  constructor(private data: T[], private range: number) {}
+    constructor(private data: T[], private range: number) {}
 
-  next(): T[] {
-    const window = this.data.slice(this.index, this.range);
-    this.index += 1;
-    return window;
-  }
+    next(): T[] {
+        const window = this.data.slice(this.index, this.range);
+        this.index += 1;
+        return window;
+    }
 }
 ```
 
@@ -147,26 +147,26 @@ class SlidingWindow<T> {
 
 ```ts
 abstract class DynamicSlidingWindow<T> {
-  private index = 0;
+    private index = 0;
 
-  constructor(private data: T[]) {}
+    constructor(private data: T[]) {}
 
-  public next(): T[] {
-    const window: T[] = [];
-    let i = 0;
-    let candidate = this.data[this.index + i];
+    public next(): T[] {
+        const window: T[] = [];
+        let i = 0;
+        let candidate = this.data[this.index + i];
 
-    while (this.index + i < this.data.length && !this.breakCondition(window, candidate)) {
-      window.push(candidate);
-      i += 1;
-      candidate = this.data[this.index + i];
+        while (this.index + i < this.data.length && !this.breakCondition(window, candidate)) {
+            window.push(candidate);
+            i += 1;
+            candidate = this.data[this.index + i];
+        }
+
+        this.index += i;
+        return window;
     }
 
-    this.index += i;
-    return window;
-  }
-
-  protected abstract breakCondition(window: T[], candidate: T): boolean;
+    protected abstract breakCondition(window: T[], candidate: T): boolean;
 }
 ```
 
@@ -174,44 +174,44 @@ abstract class DynamicSlidingWindow<T> {
 
 ```ts
 export class Queue<T> {
-  private data: T[] = [];
+    private data: T[] = [];
 
-  public enqueue(entry: T) {
-    this.data.push(entry);
-  }
+    public enqueue(entry: T) {
+        this.data.push(entry);
+    }
 
-  public dequeue(): T | undefined {
-    return this.data.shift();
-  }
+    public dequeue(): T | undefined {
+        return this.data.shift();
+    }
 }
 
 export class PriorityQueue<T> {
-  private data: { [priority: number]: T[] } = {};
+    private data: { [priority: number]: T[] } = {};
 
-  public enqueue(entry: T, priority: number) {
-    if (!this.data[priority]) {
-      this.data[priority] = [];
-    }
-    this.data[priority].push(entry);
-  }
-
-  public dequeue(): T | undefined {
-    const highestPriority = this.getHighestPriority();
-    if (highestPriority === -Infinity) return undefined;
-    return this.data[highestPriority].shift();
-  }
-
-  private getHighestPriority() {
-    let highestPrio = -Infinity;
-    for (const prio in this.data) {
-      if (+prio > highestPrio) {
-        if (this.data[prio].length > 0) {
-          highestPrio = +prio;
+    public enqueue(entry: T, priority: number) {
+        if (!this.data[priority]) {
+            this.data[priority] = [];
         }
-      }
+        this.data[priority].push(entry);
     }
-    return highestPrio;
-  }
+
+    public dequeue(): T | undefined {
+        const highestPriority = this.getHighestPriority();
+        if (highestPriority === -Infinity) return undefined;
+        return this.data[highestPriority].shift();
+    }
+
+    private getHighestPriority() {
+        let highestPrio = -Infinity;
+        for (const prio in this.data) {
+            if (+prio > highestPrio) {
+                if (this.data[prio].length > 0) {
+                    highestPrio = +prio;
+                }
+            }
+        }
+        return highestPrio;
+    }
 }
 ```
 
@@ -219,23 +219,23 @@ export class PriorityQueue<T> {
 // caterpillar dynamically growing-then-shrinking queue to solve "find subarray where" problems
 
 function findSubarraysAddingUpTo(arr: number[], targetSum: number) {
-  const out = [];
-  const queue = new Queue();
-  for (let i = 0; i < arr.length; i++) {
-    // caterpillar: move head to right
-    queue.enqueue(arr[i]);
-    let sum = queue.data.reduce((v, c) => v + c, 0);
-    while (sum > targetSum) {
-      // caterpillar: move tail to right
-      queue.dequeue();
-      sum = queue.data.reduce((v, c) => v + c, 0);
+    const out = [];
+    const queue = new Queue();
+    for (let i = 0; i < arr.length; i++) {
+        // caterpillar: move head to right
+        queue.enqueue(arr[i]);
+        let sum = queue.data.reduce((v, c) => v + c, 0);
+        while (sum > targetSum) {
+            // caterpillar: move tail to right
+            queue.dequeue();
+            sum = queue.data.reduce((v, c) => v + c, 0);
+        }
+        if (sum === targetSum) {
+            const subArrIndices = [i - queue.data.length, i];
+            out.push(subArrIndices);
+        }
     }
-    if (sum === targetSum) {
-      const subArrIndices = [i - queue.data.length, i];
-      out.push(subArrIndices);
-    }
-  }
-  return out;
+    return out;
 }
 ```
 
@@ -245,13 +245,13 @@ function findSubarraysAddingUpTo(arr: number[], targetSum: number) {
 
 ```ts
 function floodFill(grid: number[][], sr: number, sc: number, fill: number) {
-  const origColor = grid[sc][sr];
-  grid[sr][sc] = fill;
-  //  doesn't overflow ....   && ... has same color ...          then recurse.
-  if (sr > 0 && grid[sr - 1][sc] === origColor) floodFill(grid, sr - 1, sc, fill);
-  if (sr < grid.length - 1 && grid[sr + 1][sc] === origColor) floodFill(grid, sr + 1, sc, fill);
-  if (sc > 0 && grid[sr][sc - 1] === origColor) floodFill(grid, sr, sc - 1, fill);
-  if (sc < grid[0].length - 1 && grid[sr][sc + 1] === origColor) floodFill(grid, sr, sc + 1, fill);
+    const origColor = grid[sc][sr];
+    grid[sr][sc] = fill;
+    //  doesn't overflow ....   && ... has same color ...          then recurse.
+    if (sr > 0 && grid[sr - 1][sc] === origColor) floodFill(grid, sr - 1, sc, fill);
+    if (sr < grid.length - 1 && grid[sr + 1][sc] === origColor) floodFill(grid, sr + 1, sc, fill);
+    if (sc > 0 && grid[sr][sc - 1] === origColor) floodFill(grid, sr, sc - 1, fill);
+    if (sc < grid[0].length - 1 && grid[sr][sc + 1] === origColor) floodFill(grid, sr, sc + 1, fill);
 }
 ```
 
@@ -259,12 +259,12 @@ function floodFill(grid: number[][], sr: number, sc: number, fill: number) {
 
 ```ts
 function scanLine(polyPoints: Point[]) {
-  const xs = polyPoints.map((p) => p.x);
-  const ys = polyPoints.map((p) => p.y);
+    const xs = polyPoints.map((p) => p.x);
+    const ys = polyPoints.map((p) => p.y);
 
-  // scanning through xs:
-  for (const x of xs) {
-  }
+    // scanning through xs:
+    for (const x of xs) {
+    }
 }
 ```
 
@@ -311,37 +311,37 @@ $$ f(n) = a_1 f(n-1) + a_2 f(n-2) + ... + a_d f(n-d) + g(n)$$
 Similar to quicksort.
 Where quicksort does `swipe, recurse`, mergesort does `recurse, merge`.
 
-- Runtime: O(n lg n) in worst, best, and average case.
-- Memory:
+-   Runtime: O(n lg n) in worst, best, and average case.
+-   Memory:
 
 ```ts
 function merge(sorted1: any[], sorted2: any[]): any[] {
-  const merged: any[] = [];
-  let index1 = 0;
-  let index2 = 0;
-  while (index1 < sorted1.length - 1 && index2 < sorted2.length) {
-    const v1 = sorted1[index1];
-    const v2 = sorted2[index2];
-    if (v1 <= v2) {
-      merged.push(v1);
-      index1 += 1;
-    } else {
-      merged.push(v2);
-      index2 += 1;
+    const merged: any[] = [];
+    let index1 = 0;
+    let index2 = 0;
+    while (index1 < sorted1.length - 1 && index2 < sorted2.length) {
+        const v1 = sorted1[index1];
+        const v2 = sorted2[index2];
+        if (v1 <= v2) {
+            merged.push(v1);
+            index1 += 1;
+        } else {
+            merged.push(v2);
+            index2 += 1;
+        }
     }
-  }
-  return merged;
+    return merged;
 }
 
 function mergeSort(unsorted: any[]): any[] {
-  if (unsorted.length <= 1) return unsorted;
-  const splitPoint = Math.floor(unsorted.length / 2);
-  const unsorted1 = unsorted.slice(0, splitPoint);
-  const unsorted2 = unsorted.slice(splitPoint);
-  const sorted1 = mergeSort(unsorted1);
-  const sorted2 = mergeSort(unsorted2);
-  const merged = merge(sorted1, sorted2);
-  return merged;
+    if (unsorted.length <= 1) return unsorted;
+    const splitPoint = Math.floor(unsorted.length / 2);
+    const unsorted1 = unsorted.slice(0, splitPoint);
+    const unsorted2 = unsorted.slice(splitPoint);
+    const sorted1 = mergeSort(unsorted1);
+    const sorted2 = mergeSort(unsorted2);
+    const merged = merge(sorted1, sorted2);
+    return merged;
 }
 ```
 
@@ -349,19 +349,19 @@ function mergeSort(unsorted: any[]): any[] {
 
 Very good when dealing with almost sorted lists.
 
-- Runtime: worst case: O(n^2), almost sorted: O(n)
-- Memory: O(n) Happens in place.
+-   Runtime: worst case: O(n^2), almost sorted: O(n)
+-   Memory: O(n) Happens in place.
 
 ```ts
 function insertionSort(data: any[]): any[] {
-  for (let i = 0; i < data.length; i++) {
-    for (let j = 0; j < i; j++) {
-      if (data[i] < data[j]) {
-        insertIBeforeJ(data, i, j);
-      }
+    for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < i; j++) {
+            if (data[i] < data[j]) {
+                insertIBeforeJ(data, i, j);
+            }
+        }
     }
-  }
-  return data;
+    return data;
 }
 ```
 
@@ -370,23 +370,23 @@ function insertionSort(data: any[]): any[] {
 Has a swipe-phase followed by recursion.
 I call it the tinder-sort.
 
-- Runtime: O(n lg n) on average, O(n^2) worst case.
-- Memory: Can be made to happen in-place, too.
+-   Runtime: O(n lg n) on average, O(n^2) worst case.
+-   Memory: Can be made to happen in-place, too.
 
 ```ts
 function quicksort(list: number[]) {
-  const pIndex = Math.floor(Math.random() * list.length);
-  const pValue = list[pIndex];
-  const smallList = [];
-  const largeList = [];
-  for (let i = 0; i < list.length; i++) {
-    if (list[i] < pValue) smallList.push(list[i]);
-    else if (list[i] > pValue) largeList.push(list[i]);
-  }
-  const smallListSorted = quicksort(smallList);
-  const largeListSorted = quicksort(largeList);
-  const listSorted = [...smallListSorted, pValue, ...largeListSorted];
-  return listSorted;
+    const pIndex = Math.floor(Math.random() * list.length);
+    const pValue = list[pIndex];
+    const smallList = [];
+    const largeList = [];
+    for (let i = 0; i < list.length; i++) {
+        if (list[i] < pValue) smallList.push(list[i]);
+        else if (list[i] > pValue) largeList.push(list[i]);
+    }
+    const smallListSorted = quicksort(smallList);
+    const largeListSorted = quicksort(largeList);
+    const listSorted = [...smallListSorted, pValue, ...largeListSorted];
+    return listSorted;
 }
 ```
 
@@ -400,23 +400,23 @@ A variant of quicksort doesn't recurse into both sub-lists, but only the smaller
 type CD = (data: number[], l: number, L: number) => -1 | 0 | 1;
 
 function binaryFind(data: number[], calcDirection: CD): number {
-  const L = data.length;
-  const l = Math.floor(L / 2);
-  const dir = calcDirection(data, l, L);
+    const L = data.length;
+    const l = Math.floor(L / 2);
+    const dir = calcDirection(data, l, L);
 
-  if (L <= 1 && dir != 0) return -1;
+    if (L <= 1 && dir != 0) return -1;
 
-  if (dir === 0) {
-    // hit
-    return l;
-  } else if (dir < 0) {
-    // move left
-    return binaryFind(data.slice(0, l), calcDirection);
-  } else {
-    // move right
-    const i = binaryFind(data.slice(l, L), calcDirection);
-    return i === -1 ? i : i + l;
-  }
+    if (dir === 0) {
+        // hit
+        return l;
+    } else if (dir < 0) {
+        // move left
+        return binaryFind(data.slice(0, l), calcDirection);
+    } else {
+        // move right
+        const i = binaryFind(data.slice(l, L), calcDirection);
+        return i === -1 ? i : i + l;
+    }
 }
 ```
 
@@ -426,31 +426,31 @@ DFS is usually done with recursion, BFS with a queue.
 
 ```ts
 interface Node {
-  getChildren(): Node[];
+    getChildren(): Node[];
 }
 
 function dfs(node: Node, predicate: (node: Node) => boolean) {
-  if (predicate(node)) {
-    return node;
-  }
-  for (const child of node.getChildren()) {
-    const hit = dfs(child, predicate);
-    if (hit) return hit;
-  }
-  return false;
+    if (predicate(node)) {
+        return node;
+    }
+    for (const child of node.getChildren()) {
+        const hit = dfs(child, predicate);
+        if (hit) return hit;
+    }
+    return false;
 }
 
 function bfs(node: Node, predicate: (node: Node) => boolean) {
-  const queue = new Queue<Node>();
-  queue.enqueue(node);
-  let candidate = queue.dequeue();
-  while (candidate) {
-    if (predicate(candidate)) return candidate;
-    for (const child of candidate.getChildren()) {
-      queue.enqueue(child);
+    const queue = new Queue<Node>();
+    queue.enqueue(node);
+    let candidate = queue.dequeue();
+    while (candidate) {
+        if (predicate(candidate)) return candidate;
+        for (const child of candidate.getChildren()) {
+            queue.enqueue(child);
+        }
+        candidate = queue.dequeue();
     }
-    candidate = queue.dequeue();
-  }
 }
 ```
 
@@ -477,87 +477,87 @@ function findPath(start: Node, target: Node) {
 
 ### Dijkstra
 
-- a BFS
-- with a _priority_ queue
-- where priority is cost from source
-  <https://www.youtube.com/watch?v=EFg3u_E6eHU>
+-   a BFS
+-   with a _priority_ queue
+-   where priority is cost from source
+    <https://www.youtube.com/watch?v=EFg3u_E6eHU>
 
 ```ts
 function dijstra(source: Node, target: Node) {
-  const pQueue = new PriorityQueue<Node>();
-  source.setPathSoFar(0);
-  pQueue.enqueue(source, 0);
+    const pQueue = new PriorityQueue<Node>();
+    source.setPathSoFar(0);
+    pQueue.enqueue(source, 0);
 
-  let candidate = pQueue.dequeue();
-  while (candidate) {
-    // check if target reached
-    const [xc, yc] = candidate.getCoords();
-    const [xt, yt] = target.getCoords();
-    if (xc === xt && yc === yt) {
-      return candidate.getPathSoFar();
+    let candidate = pQueue.dequeue();
+    while (candidate) {
+        // check if target reached
+        const [xc, yc] = candidate.getCoords();
+        const [xt, yt] = target.getCoords();
+        if (xc === xt && yc === yt) {
+            return candidate.getPathSoFar();
+        }
+
+        // if not, look for children to enqueue
+        for (const { costToChild, child } of candidate.getChildren()) {
+            const costPathToChild = candidate.getPathSoFar()! + costToChild;
+            const lastPathToChild = child.getPathSoFar();
+            // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
+            if (!lastPathToChild || costPathToChild < lastPathToChild) {
+                child.setPathSoFar(costPathToChild);
+                pQueue.enqueue(child, costPathToChild);
+            }
+        }
+
+        // prepare next step
+        candidate = pQueue.dequeue();
     }
-
-    // if not, look for children to enqueue
-    for (const { costToChild, child } of candidate.getChildren()) {
-      const costPathToChild = candidate.getPathSoFar()! + costToChild;
-      const lastPathToChild = child.getPathSoFar();
-      // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
-      if (!lastPathToChild || costPathToChild < lastPathToChild) {
-        child.setPathSoFar(costPathToChild);
-        pQueue.enqueue(child, costPathToChild);
-      }
-    }
-
-    // prepare next step
-    candidate = pQueue.dequeue();
-  }
 }
 ```
 
 ### A\*
 
-- a BFS
-- with a priority queue
-- where priority is cost from source _+ estimated remaining cost_
+-   a BFS
+-   with a priority queue
+-   where priority is cost from source _+ estimated remaining cost_
 
 ```ts
 interface Node {
-  getChildren(): { costToChild: number; child: Node }[];
-  getCoords(): [number, number];
-  setPathSoFar(cost: number): void;
-  getPathSoFar(): number | undefined;
+    getChildren(): { costToChild: number; child: Node }[];
+    getCoords(): [number, number];
+    setPathSoFar(cost: number): void;
+    getPathSoFar(): number | undefined;
 }
 
 function aStar(source: Node, target: Node, heuristic: (source: Node, target: Node) => number) {
-  const pQueue = new PriorityQueue<Node>();
-  source.setPathSoFar(0);
-  const estimatedFullCosts = 0 + heuristic(source, target);
-  pQueue.enqueue(source, -estimatedFullCosts);
+    const pQueue = new PriorityQueue<Node>();
+    source.setPathSoFar(0);
+    const estimatedFullCosts = 0 + heuristic(source, target);
+    pQueue.enqueue(source, -estimatedFullCosts);
 
-  let candidate = pQueue.dequeue();
-  while (candidate) {
-    // check if target reached
-    const [xc, yc] = candidate.getCoords();
-    const [xt, yt] = target.getCoords();
-    if (xc === xt && yc === yt) {
-      return candidate.getPathSoFar();
+    let candidate = pQueue.dequeue();
+    while (candidate) {
+        // check if target reached
+        const [xc, yc] = candidate.getCoords();
+        const [xt, yt] = target.getCoords();
+        if (xc === xt && yc === yt) {
+            return candidate.getPathSoFar();
+        }
+
+        // if not, look for children to enqueue
+        for (const { costToChild, child } of candidate.getChildren()) {
+            const costPathToChild = candidate.getPathSoFar()! + costToChild;
+            const lastPathToChild = child.getPathSoFar();
+            // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
+            if (!lastPathToChild || costPathToChild < lastPathToChild) {
+                child.setPathSoFar(costPathToChild);
+                const estimatedFullCosts = costPathToChild + heuristic(child, target);
+                pQueue.enqueue(child, -estimatedFullCosts);
+            }
+        }
+
+        // prepare next step
+        candidate = pQueue.dequeue();
     }
-
-    // if not, look for children to enqueue
-    for (const { costToChild, child } of candidate.getChildren()) {
-      const costPathToChild = candidate.getPathSoFar()! + costToChild;
-      const lastPathToChild = child.getPathSoFar();
-      // if node hasn't been looked at yet or the last time we estimated was worse than this time, add it to queue.
-      if (!lastPathToChild || costPathToChild < lastPathToChild) {
-        child.setPathSoFar(costPathToChild);
-        const estimatedFullCosts = costPathToChild + heuristic(child, target);
-        pQueue.enqueue(child, -estimatedFullCosts);
-      }
-    }
-
-    // prepare next step
-    candidate = pQueue.dequeue();
-  }
 }
 ```
 
@@ -640,27 +640,27 @@ editableString  A   \
 */
 
 function med(targetString: string, editableString: string): number {
-  if (targetString.length === 0) return editableString.length;
-  if (editableString.length === 0) return targetString.length;
+    if (targetString.length === 0) return editableString.length;
+    if (editableString.length === 0) return targetString.length;
 
-  if (targetString[0] === editableString[0]) {
-    // going diagonal
-    return med(targetString.substring(1), editableString.substring(1));
-  } else {
-    // inserting targetString[0] before editableString[0]  === going right
-    const afterInsert = 1 + med(targetString.substring(1), editableString);
-    // removing editableString[0] === going down
-    const afterDelete = 1 + med(targetString, editableString.substring(1));
-    // picking best
-    return Math.min(afterInsert, afterDelete);
-  }
+    if (targetString[0] === editableString[0]) {
+        // going diagonal
+        return med(targetString.substring(1), editableString.substring(1));
+    } else {
+        // inserting targetString[0] before editableString[0]  === going right
+        const afterInsert = 1 + med(targetString.substring(1), editableString);
+        // removing editableString[0] === going down
+        const afterDelete = 1 + med(targetString, editableString.substring(1));
+        // picking best
+        return Math.min(afterInsert, afterDelete);
+    }
 }
 ```
 
-- Also known as Wagner-Fisher algorithm
-- Run-time: `target.length * source.length`
-- Might want to allow substitutions, too: `const afterSubst = 1 + med(targetString.substring(1), editableString.substring(1));`
-- Then the MED is also known as Levenshtein distance.
+-   Also known as Wagner-Fisher algorithm
+-   Run-time: `target.length * source.length`
+-   Might want to allow substitutions, too: `const afterSubst = 1 + med(targetString.substring(1), editableString.substring(1));`
+-   Then the MED is also known as Levenshtein distance.
 
 ## Fuzzy matching
 
@@ -718,34 +718,34 @@ def ted(old, new):
 class BinaryTree {}
 
 interface Entry {
-  pointer: number;
-  size: number;
+    pointer: number;
+    size: number;
 }
 
 class Memory {
-  private entries: Entry[];
+    private entries: Entry[];
 
-  // we need to access entries quickly by their space for `malloc`
-  // but also by their pointer for `free`.
-  // to get both quickly we create two indices on the same data.
-  // this is generally a good abstraction when you need to sort the same data by
-  // different criteria: just create multiple indices.
+    // we need to access entries quickly by their space for `malloc`
+    // but also by their pointer for `free`.
+    // to get both quickly we create two indices on the same data.
+    // this is generally a good abstraction when you need to sort the same data by
+    // different criteria: just create multiple indices.
 
-  private pointerIndex: BinaryTree;
-  private spaceIndex: BinaryTree;
+    private pointerIndex: BinaryTree;
+    private spaceIndex: BinaryTree;
 
-  public malloc(size: number): number {
-    const pointer = this.spaceIndex.getWithMinSize(size);
-    const entry: Entry = { pointer, size };
-    this.pointerIndex.add(pointer);
-    this.spaceIndex.allocated(entry);
-  }
+    public malloc(size: number): number {
+        const pointer = this.spaceIndex.getWithMinSize(size);
+        const entry: Entry = { pointer, size };
+        this.pointerIndex.add(pointer);
+        this.spaceIndex.allocated(entry);
+    }
 
-  public free(pointer: number) {
-    const entry = this.pointerIndex.get(pointer);
-    this.pointerIndex.remove(entry.pointer);
-    this.spaceIndex.freed(entry);
-  }
+    public free(pointer: number) {
+        const entry = this.pointerIndex.get(pointer);
+        this.pointerIndex.remove(entry.pointer);
+        this.spaceIndex.freed(entry);
+    }
 }
 ```
 
@@ -773,8 +773,8 @@ $$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq |x_1 - x_2|$$
 
 In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ _again_ to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
 
-- If a function is a contraction, it has at most one fixed point $x_{fix}$.
-- $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ...$ converges to the fixed point $x_{fix}$
+-   If a function is a contraction, it has at most one fixed point $x_{fix}$.
+-   $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ...$ converges to the fixed point $x_{fix}$
 
 Applied to programming, we can replace a recursive calculation ...
 
@@ -859,9 +859,9 @@ The curious case of compound-queries.
 
 Consider this situation.
 
-- you have a table `table` with columns `a` and `b`, each with an index on it.
-- you want to execute the query `select * from table as t where a=a_0 and b=b_0`
-- what would your execution strategy be?
+-   you have a table `table` with columns `a` and `b`, each with an index on it.
+-   you want to execute the query `select * from table as t where a=a_0 and b=b_0`
+-   what would your execution strategy be?
 
 My first idea was this:
 
@@ -961,24 +961,24 @@ def varianceForMeans(means, data):
 
 ## Fourier (-> Frequency space)
 
-- Transform image to frequency space
-- Draw something simple into the frequency-image
-- Transform it back
-  Creates nice loops in curves
+-   Transform image to frequency space
+-   Draw something simple into the frequency-image
+-   Transform it back
+    Creates nice loops in curves
 
 ## Eigenvalues (-> Eigenvector space)
 
 Example: multiplication with covariance matrix
 
-- Transforms points to eigenvector space (= where it's aligned with the axes)
-- Scales aligned points by eigenvalues
-- Transforms back
-  Reduces small differences, exaggerates large differences
+-   Transforms points to eigenvector space (= where it's aligned with the axes)
+-   Scales aligned points by eigenvalues
+-   Transforms back
+    Reduces small differences, exaggerates large differences
 
 # Parallel algorithms
 
-- **span**: nr of times the gpu needs to execute
-- **work**: nr of computations done == instructions/core \* nr cores ~ nr threads
+-   **span**: nr of times the gpu needs to execute
+-   **work**: nr of computations done == instructions/core \* nr cores ~ nr threads
 
 ## Prefix sum
 
@@ -995,21 +995,21 @@ output = [1, 3, 6, 10, 15, 21, 28, 36]
 
 ```ts
 function prefix_sum(x: number[]) {
-  const n = x.length;
-  const y = Array(n);
-  y[0] = x[0];
-  for (let j = 1; y < n; j++) {
-    y[j] = y[j - 1] + x[j];
-  }
-  return y;
+    const n = x.length;
+    const y = Array(n);
+    y[0] = x[0];
+    for (let j = 1; y < n; j++) {
+        y[j] = y[j - 1] + x[j];
+    }
+    return y;
 }
 ```
 
 ### Hill & Steele: span-efficient, work-inefficient
 
-- $n$: input length
-- work: $n$ threads
-- span: $\lfloor \log_2{n} \rfloor$ iterations
+-   $n$: input length
+-   work: $n$ threads
+-   span: $\lfloor \log_2{n} \rfloor$ iterations
 
 ```python
 for i in 0 ... floor(log2(n)) do:         # iterations
@@ -1038,167 +1038,163 @@ Let's first look at the traditional approach with alpha-beta pruning.
 ```ts
 // https://www.youtube.com/watch?v=l-hh51ncgDI
 
+# %%
 
-interface State<ActionType> {
-    change(action: ActionType): State<ActionType>;
-    evaluate(): number;
-    actions(): ActionType[];
-}
+def maximize(state, maxValSoFar, minValSoFar):
+    actions = state.actions()
+    if len(actions) == 0:
+        return {"value": state.evaluate(), "actions": []}
+
+    bestVal = -999_999_999
+    for action in actions:
+        newState = state.change(action)
+        output = minimize(newState, maxValSoFar, minValSoFar)
+        if output["value"] > bestVal:
+            actions = [action] + output["actions"]
+            bestVal = max(bestVal, output["value"])
+            maxValSoFar = max(bestVal, maxValSoFar)
+        if minValSoFar <= maxValSoFar:
+            break
+
+    return {"value": maxValSoFar, "actions": actions}
 
 
-type TickTackToeAction = {
-    player: 'X' | 'O',
-    row: number,
-    col: number
-}
+def minimize(state, maxValSoFar, minValSoFar):
+    actions = state.actions()
+    if len(actions) == 0:
+        return {"value": state.evaluate(), "actions": []}
+
+    worstVal = 999_999_999
+    for action in actions:
+        newState = state.change(action)
+        output = maximize(newState, maxValSoFar, minValSoFar)
+        if output["value"] < worstVal:
+            actions = [action] + output["actions"]
+            worstVal = min(worstVal, output["value"])
+            minValSoFar = min(worstVal, minValSoFar)
+        if minValSoFar <= maxValSoFar:
+            break
+
+    return {"value": minValSoFar, "actions": actions}
 
 
-class TickTackToeGame implements State<TickTackToeAction> {
+class Game:
+    def __init__(self, nodes):
+        self.nodes = nodes
 
-    constructor(private board: TickTackToeAction[] = []) {}
+    def actions(self):
+        if len(self.nodes) == 1:
+            return []
+        return ["left", "right"]
 
-    change(action: TickTackToeAction): State<TickTackToeAction> {
-        return new TickTackToeGame([... this.board, action]);
-    }
+    def change(self, action):
+        if len(self.nodes) == 1:
+            raise Exception("cannot change leaf node")
+        if action == "left":
+            return Game(self.nodes[0])
+        return Game(self.nodes[1])
 
-    private winner() {
-        for (const plyr of ['X', 'O']) {
-            const xTiles = this.board.filter(t => t.player === plyr);
-            if (xTiles.filter(t => t.row === 1).length === 3) return plyr;
-            if (xTiles.filter(t => t.row === 2).length === 3) return plyr;
-            if (xTiles.filter(t => t.row === 3).length === 3) return plyr;
-            if (xTiles.filter(t => t.col === 1).length === 3) return plyr;
-            if (xTiles.filter(t => t.col === 2).length === 3) return plyr;
-            if (xTiles.filter(t => t.col === 3).length === 3) return plyr;
-            if (xTiles.filter(t => t.col === t.row).length === 3) return plyr;
-            if (xTiles.filter(t => t.col + t.row === 4).length === 3) return plyr;
-        }
+    def evaluate(self):
+        if len(self.nodes) != 1:
+            raise Exception("Cannot evalute non-leaf node")
+        print("evaluating: ", self.nodes[0])
+        return self.nodes[0]
 
-    }
 
-    evaluate(): number {
-        const winner = this.winner();
-        if (winner === 'X') return 100;
-        if (winner === 'O') return -100;
+def listToTree(lst):
+    if len(lst) == 1:
+        return lst
+    else:
+        half = int(len(lst) / 2)
+        return [listToTree(lst[:half]), listToTree(lst[half:])]
+
+
+leafNodes = [6, 8, 9, 1, 0, 1, 4, 1, 0, 8, 9, 3, 11, 1, -11, 1]
+game = Game(listToTree(leafNodes))
+result = maximize(game, -999_999_999, 999_999_999)
+print(result)
+
+# %%
+
+
+def first(lst, pred):
+    for entry in lst:
+        if pred(entry):
+            return entry
+
+
+class TickTackToe:
+    def __init__(self, actions):
+        self.actionHistory = actions
+
+    def actions(self):
+        if self.winner():
+            return []
+        lastPlayer = self.actionHistory[-1]["player"] if len(
+            self.actionHistory) > 0 else "O"
+        nextPlayer = "X" if lastPlayer == "O" else "O"
+        actions = []
+        for row in range(1, 4):
+            for col in range(1, 4):
+                match = first(
+                    self.actionHistory, lambda a: a["row"] == row and a["col"] == col)
+                if match is None:
+                    actions.append(
+                        {"player": nextPlayer, "row": row, "col": col})
+        return actions
+
+    def winner(self):
+        for player in ["X", "O"]:
+            playerActions = [
+                a for a in self.actionHistory if a["player"] == player]
+            for row in range(1, 4):
+                if len([a for a in playerActions if a["row"] == row]) == 3:
+                    return player
+            for col in range(1, 4):
+                if len([a for a in playerActions if a["col"] == col]) == 3:
+                    return player
+            if len([a for a in playerActions if a["row"] == a["col"]]) == 3:
+                return player
+            if len([a for a in playerActions if a["row"] + a["col"] == 4]) == 3:
+                return player
+
+    def change(self, action):
+        return TickTackToe([*self.actionHistory, action])
+
+    def evaluate(self):
+        winner = self.winner()
+        if winner == "X":
+            return 100
+        if winner == "O":
+            return -100
         return 0
-    }
-
-    actions(): TickTackToeAction[] {
-        const winner = this.winner();
-        if (winner) return [];
-
-        const lastPlayer = this.board[this.board.length - 1];
-        let nextPlayer: 'X' | 'O'; 
-        if (!lastPlayer) nextPlayer = 'X';
-        else nextPlayer = lastPlayer.player === 'X' ? 'O' : 'X';
-
-        const actions: TickTackToeAction[] = [];
-
-        for (let row = 1; row <= 3; row++) {
-            for (let col = 1; col <= 3; col++) {
-                const match = this.board.find(tile => tile.col === col && tile.row === row);
-                if (!match) actions.push({ player: nextPlayer, row, col});
-            }
-        }
-        return actions;
-    }
-
-}
-
-function printState(history: TickTackToeAction[]) {
-    console.log(` ${history.find(t => t.row === 1 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 1 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 1 && t.col === 3)?.player || ' '} `);
-    console.log(`---|---|---`);
-    console.log(` ${history.find(t => t.row === 2 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 2 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 2 && t.col === 3)?.player || ' '} `);
-    console.log(`---|---|---`);
-    console.log(` ${history.find(t => t.row === 3 && t.col === 1)?.player || ' '} | ${history.find(t => t.row === 3 && t.col === 2)?.player || ' '} | ${history.find(t => t.row === 3 && t.col === 3)?.player || ' '} `);
-    console.log(' ');
-}
-
-function printHistory(history: TickTackToeAction[]) {
-    for (let i = 0; i < history.length; i++) {
-        const subHistory = history.slice(0, i);
-        printState(subHistory);
-    }
-}
-
-class FakeGame implements State<'left' | 'right'> {
-    constructor(private nodes: any[]) {}
-
-    change(action: "left" | "right"): State<"left" | "right"> {
-        if (this.nodes.length < 2) throw Error('cannot split leaf');
-        if (action === 'left') return new FakeGame(this.nodes[0]);
-        return new FakeGame(this.nodes[1]);
-    }
-
-    evaluate(): number {
-        if (this.nodes.length !== 1) throw Error('cannot evaluate non-leaf');
-        console.log(`evaluating ${this.nodes[0]}`);
-        return this.nodes[0];
-    }
-
-    actions(): ("left" | "right")[] {
-        if (this.nodes.length < 2) return [];
-        return ['left', 'right'];
-    }
-}
 
 
-function maximize<Action>(game: State<Action>, highestScoreGuaranteedSoFar: number = -Infinity, lowestScoreGuaranteedSoFar: number = Infinity) {
-    const actions = game.actions();
-    if (actions.length === 0) return {value: game.evaluate(), actions: []};
-
-    let maxVal = -Infinity;
-    let optimalActions: Action[] = []; 
-    for (const action of actions) {
-        const subGame = game.change(action);
-        const {value: childValue, actions} = minimize(subGame, highestScoreGuaranteedSoFar, lowestScoreGuaranteedSoFar);
-        if (childValue > maxVal) {
-            maxVal = childValue;
-            optimalActions = [... actions, action];
-        }
-        highestScoreGuaranteedSoFar = Math.max(highestScoreGuaranteedSoFar, childValue);
-        if (lowestScoreGuaranteedSoFar <= highestScoreGuaranteedSoFar) break; // minimizer already guaranteed a lower score than this, so will never allow this move. 
-    }
-    return {value: maxVal, actions: optimalActions};
-}
+def getRCVal(actions, r, c):
+    match = first(actions, lambda a: a['row'] == r and a['col'] == c)
+    if match:
+        return match['player']
+    return ' '
 
 
-function minimize<Action>(game: State<Action>, highestScoreGuaranteedSoFar: number, lowestScoreGuaranteedSoFar: number) {
-    const actions = game.actions();
-    if (actions.length === 0) return {value: game.evaluate(), actions: []};
-
-    let minVal = Infinity;
-    let optimalActions: Action[] = []; 
-    for (const action of actions) {
-        const subGame = game.change(action);
-        const {value: childValue, actions} = maximize(subGame, highestScoreGuaranteedSoFar, lowestScoreGuaranteedSoFar);
-        if (childValue < minVal) {
-            minVal = childValue;
-            optimalActions = [... actions, action];
-        }
-        lowestScoreGuaranteedSoFar = Math.min(lowestScoreGuaranteedSoFar, childValue);
-        if (highestScoreGuaranteedSoFar >= lowestScoreGuaranteedSoFar) break;  // maximizer already guaranteed a higher score than this, so will never allow this move. 
-    }
-    return {value: minVal, actions: optimalActions};
-}
+def printTTT(actions):
+    print(f" {getRCVal(actions, 1, 1)} | {getRCVal(actions, 1, 2)} | {getRCVal(actions, 1, 3)} ")
+    print("---|---|---")
+    print(f" {getRCVal(actions, 2, 1)} | {getRCVal(actions, 2, 2)} | {getRCVal(actions, 2, 3)} ")
+    print("---|---|---")
+    print(f" {getRCVal(actions, 3, 1)} | {getRCVal(actions, 3, 2)} | {getRCVal(actions, 3, 3)} ")
+    print("")
 
 
-
-// const initialState: TickTackToeAction[] = [{player: 'X', row: 2, col: 2}];
-// const game = new TickTackToeGame(initialState);
-// const maxVal = maximize(game);
-// console.log(maxVal.value, maxVal.actions.reverse());
-// printHistory([...initialState, ...maxVal.actions]);
+def printTTTGame(allActions):
+    for i in range(1, len(allActions) + 1):
+        actions = allActions[:i]
+        printTTT(actions)
 
 
-// const game = new FakeGame([[[[-1], [3]], [[5], [1]]], [[[-6], [-4]], [[0], [9]]]]);
-const game = new FakeGame([
-    [[[[8], [5]], [[6], [-4]]], 
-    [[[3], [8]], [[4], [-6]]], ],
-    [[[[1], [100]], [[5], [2]]], 
-    [[[100], [100]], [[100], [100]]]]]);
-const {value, actions} = maximize(game, -Infinity, Infinity);
-console.log(value);
-console.log(actions);
+game = TickTackToe([])
+result = maximize(game, -999_999_999, 999_999_999)
+print(result)
+printTTTGame(result["actions"])
 
 ```
