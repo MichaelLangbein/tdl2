@@ -1037,45 +1037,44 @@ Let's first look at the traditional approach with alpha-beta pruning.
 
 ```ts
 // https://www.youtube.com/watch?v=l-hh51ncgDI
-
 # %%
 
-def maximize(state, maxValSoFar, minValSoFar):
+def maximize(state, maxValSoFar, maxValThatParentWillAllow):
     actions = state.actions()
     if len(actions) == 0:
         return {"value": state.evaluate(), "actions": []}
 
-    bestVal = -999_999_999
+    bestValOnThisBranch = -999_999_999
     for action in actions:
         newState = state.change(action)
-        output = minimize(newState, maxValSoFar, minValSoFar)
-        if output["value"] > bestVal:
+        output = minimize(newState, maxValSoFar, maxValThatParentWillAllow)
+        if output["value"] > bestValOnThisBranch:
             actions = [action] + output["actions"]
-            bestVal = max(bestVal, output["value"])
-            maxValSoFar = max(bestVal, maxValSoFar)
-        if minValSoFar <= maxValSoFar:
+            bestValOnThisBranch = output["value"]
+            maxValSoFar = max(bestValOnThisBranch, maxValSoFar)
+        if maxValSoFar >= maxValThatParentWillAllow:
             break
 
-    return {"value": bestVal, "actions": actions}
+    return {"value": bestValOnThisBranch, "actions": actions}
 
 
-def minimize(state, maxValSoFar, minValSoFar):
+def minimize(state, minValThatParentWillAllow, minValSoFar):
     actions = state.actions()
     if len(actions) == 0:
         return {"value": state.evaluate(), "actions": []}
 
-    worstVal = 999_999_999
+    worstValOnThisBranch = 999_999_999
     for action in actions:
         newState = state.change(action)
-        output = maximize(newState, maxValSoFar, minValSoFar)
-        if output["value"] < worstVal:
+        output = maximize(newState, minValThatParentWillAllow, minValSoFar)
+        if output["value"] < worstValOnThisBranch:
             actions = [action] + output["actions"]
-            worstVal = min(worstVal, output["value"])
-            minValSoFar = min(worstVal, minValSoFar)
-        if minValSoFar <= maxValSoFar:
+            worstValOnThisBranch = output["value"]
+            minValSoFar = min(worstValOnThisBranch, minValSoFar)
+        if minValSoFar <= minValThatParentWillAllow:
             break
 
-    return {"value": worstVal, "actions": actions}
+    return {"value": worstValOnThisBranch, "actions": actions}
 
 
 class Game:
@@ -1192,7 +1191,7 @@ def printTTTGame(allActions):
 
 initialActions = [
     {"player": "X", "row": 2, "col": 2},
-    {"player": "O", "row": 2, "col": 1}
+    {"player": "O", "row": 1, "col": 1}
 ]
 game = TickTackToe(initialActions)
 result = maximize(game, -999_999_999, 999_999_999)
