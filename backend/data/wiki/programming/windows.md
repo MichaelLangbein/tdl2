@@ -58,3 +58,12 @@ Security aspects of this:
 - **SAML**: authentication and authorization protocol
 - **OpenSAML**: implementation of SAML
 - **Shibboleth**: Service built on top of OpenSAML
+
+Workflow goes like this:
+
+1. User tries to log in at `portalurl.com/web/auth/portal.json`
+2. Portal sees that user isn't authenticated. Portal asks Shibboleth for directions to `IdP` (identity provider)
+3. Shibboleth redirects user to IdP (here: Azure AD)
+4. User logs in at Azure AD
+5. Shibboleth notifies the `SP` (service provider), that is, the portal,  of the login (on a specific URL on the portal known as the `ACS`, the assertion consumer service)
+6. User is given a token from the SP so that future requests need not go through 1-5
