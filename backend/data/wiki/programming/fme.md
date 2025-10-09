@@ -103,7 +103,11 @@ flowchart LR
 
 ### Embedding db-connections
 
-- often we want to use db-connections that are not visible to anyone on the fme-flow server.
+| Type     | Used by                         | Deployment to Flow                                                                              | Access rights                                              |
+|----------|---------------------------------|-------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| Embedded | general SQL-executor            | stays in workflow-file                                                                          | ?                                                          |
+| Named    | general SQL-executor            | published to connections, overwrites existing ones if required                                  | token needs to be granted access to connections separately |
+| SDE      | ESRI specific readers & writers | not published to server: server expects to have access to the path, so must be on a shared path | ?                                                          |
 
 ### Ensuring right python version is used
 

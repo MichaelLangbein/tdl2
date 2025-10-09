@@ -1,6 +1,7 @@
 # Networking
 
 ## Commands
+
 See `linux.md`
 
 ## Levels
@@ -19,25 +20,45 @@ See `linux.md`
 | ip              | no own ip                                             | no own ip                             | own ip                                         |
 | default gateway | NA                                                    | has default gateway                   | is default gateway                             |
 
-
-### Lingo
+## Lingo
 
 `ifconfig` and `ip route`:
-- `gateway: 172.17.0.0/16`: 
-    - mask out the last 16 bits of address -> `172.17.xxx.xxx`. This is part that all local devices have in common
+
+- `gateway: 172.17.0.0/16`:
+  - mask out the last 16 bits of address -> `172.17.xxx.xxx`. This is part that all local devices have in common
 - `default-gateway: 172.17.0.1`
-    - it the target-ip doesn't match the local-net mask, forward the package to the default-gateway. It is a router that will pass this package on.
+  - if the target-ip doesn't match the local-net mask, forward the package to the default-gateway. It is a router that will pass this package on.
 
-### Router algorithm
+## Interfaces and IPs
 
-1. Source: 
+- Interface: a device connected to your computer
+- For each interface you have another IP
+- Each interface connects you to another gateway-router
+
+## Router algorithm
+
+1. Source:
     1. get target IP from DNS
-    2. target-ip in local network? 
+    2. target-ip in local network?
         1. yes: send directly to target-mac
         2. no: send to default-gateway-mac
-2. Gateway
+2. Gateway (= your closest router):
     1. receive package
-    2. target-ip in routing-table? (either locally connected or matching a jump-router)
-        1. target-mac <- target from ARP-table
-        2. source-mac <- own mac
+    2. target-IP on own subnet?
+       1. Get target-MAC per ARP request
+       2. target-mac <- target from ARP-table
+       3. source-mac <- own mac
+       4. But leave source-IP and destination-IP untouched
+    3. Target-IP not on own subnet?
+       1. check routing table for another router: best router is the one that matches the largest part of the destination-IP (i.e. 123.456.x.x is a better match than 123.x.x.x)
+       2. Forward to that router
+3. Router: same as gateway
 
+## VPNs
+
+A vpn does the following two things:
+
+1. It hosts its own DNS and connects you to it.
+   1. So that you can also look up urls that aren't available in public
+2. It creates a virtual network-device on your machine.
+   1. Behind this virtual network-device is a VPN-owned router, redirecting to the routers of the previously hidden network.
