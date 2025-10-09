@@ -1189,15 +1189,21 @@ def printTTTGame(allActions):
         printTTT(actions)
 
 
+
 initialActions = [
     {"player": "X", "row": 2, "col": 2},
-    {"player": "O", "row": 1, "col": 1}
+    {"player": "O", "row": 1, "col": 1},
+    {"player": "X", "row": 1, "col": 2},
+    {"player": "O", "row": 3, "col": 2},
+    {"player": "X", "row": 2, "col": 1}
 ]
 game = TickTackToe(initialActions)
-result = maximize(game, -999_999_999, 999_999_999)
+lastPlayer = initialActions[-1]["player"]
+func = minimize if lastPlayer == "X" else maximize
+result = func(game, -999_999_999, 999_999_999)
 print(result)
-printTTTGame(initialActions + result["actions"])
+# printTTTGame(initialActions + result["actions"])
+printTTT(initialActions + [result["actions"][0]])
 
-# %%
 
 ```
