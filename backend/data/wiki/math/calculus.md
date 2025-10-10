@@ -31,7 +31,7 @@ $$
 
 ## Hyperreals
 
-For the biggest part, we're going to deal with Nelson-style nonstandard-analysis. 
+For the biggest part, we're going to deal with Nelson-style nonstandard-analysis.
 
 List of external properties:
 
@@ -40,28 +40,27 @@ List of external properties:
 - inftsm, inft
 - nearly cont
 
-
 A statement using any external properties will be denoted as $\ext{A}$, one that *might* use external properties as $\pext{A}$.
 
 We will use the following axioms:
- - $0:std$
- - $\forall n \in \naturals: n:std \then (n+1):std $
- - $\thereis n \in \naturals: n:nstd $
- - External induction: Induction  over $\std{n}$ about $\pext{A}$: 
+
+- $0:std$
+- $\forall n \in \naturals: n:std \then (n+1):std $
+- $\thereis n \in \naturals: n:nstd $
+- External induction: Induction  over $\std{n}$ about $\pext{A}$:
     $$ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n) $$
- - Internal induction: Induction over $\pnstd{n}$ about A:
+- Internal induction: Induction over $\pnstd{n}$ about A:
     $$ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $$
 
-The rationale over the two induction-axioms is simple. Ordinary induction is about $A$ over \std{n}. 
-External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones. 
+The rationale over the two induction-axioms is simple. Ordinary induction is about $A$ over \std{n}.
+External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones.
 Internal induction is about $A$ over \pnstd{n}. This makes sure that when we talk about potentially infinite $n$'s, we only apply internal statements.
 
-In other words: these two inductions ensure that we **never apply external statements to external numbers**. 
+In other words: these two inductions ensure that we **never apply external statements to external numbers**.
 
 Doing so would lead to logical inconsistencies. That's why there is no "fully external" induction.
 
 However, note that axiom 2 is actually a case of "fully external" induction.
-
 
 > **Theorem**
 > $\forall n \in \naturals: n:nst \then (n+1):nst$ <a id="addingNonstds"></a>
@@ -72,8 +71,7 @@ However, note that axiom 2 is actually a case of "fully external" induction.
 >>>
 >>> This contradicts the premise that $n:nst$.
 
-
-If you don't believe the argument in the previous proof, consider this: 
+If you don't believe the argument in the previous proof, consider this:
 
 > Suppose all of the following:
 > $$ [\forall n: Q(n) \then Q(n+1)] \then \forall n: Q(n) $$
@@ -84,9 +82,7 @@ If you don't believe the argument in the previous proof, consider this:
 >> Let $n = n_0$ and suppose $Q(n_0+1)$. Proof that $Q(n_0)$
 >>> Since $ \forall n: Q(n) $ holds, it must be true that $Q(n_0)$.
 
-
-
-We can use [theorem](addingNonstds) to prove the following: 
+We can use [theorem](addingNonstds) to prove the following:
 
 > **Theorem**
 > $\forall n, m \in \naturals: n:std \land m:nstd \then (n+m):nst$
@@ -102,7 +98,6 @@ We can use [theorem](addingNonstds) to prove the following:
 >
 > Induction step. Proof that $[(n+m_0):nst] \then [(n+1+m_0):nst]$
 >> Just apply [theorem](addingNonstds) to $n=(n+m_0)$.
-
 
 It is notable that you can never reach a standard number when adding nonstandard numbers.
 > **Theorem**
@@ -120,21 +115,32 @@ It is notable that you can never reach a standard number when adding nonstandard
 >>>
 >>> Using [theorem](addingNonstds) however, we see that when $n,m:nst$, then it must be that $(n+m):nst$.
 
-
-
 ## Limits
 
 ## Sequences and series
 
-### Tailor
+### Taylor
+
+#### Important Taylor series
+
+$$e^{ix} = 1 + ix + \frac{(ix)^2}{2!} + \frac{(ix)^3}{3!} + \frac{(ix)^4}{4!} + ...$$
+
+$$\sin(x) = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + ...$$
+
+$$\cos(x) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + ...$$
+
 ### Fourier
+
 ### Laplace
 
 ### Euler's formula
+
 Proof: Consider the function $f(t)=e^{-it}(\cos{t}+i\sin{t})$ for $t \in \reals$. By the quotient rule
 $$ f'(t) = e^{-it} (i\cos(t) - \sin(t)) -ie^{-it} (\cos(t) + i \sin(t)) = 0 $$
 identically for all $t \in \reals$. Hence, $f$ is constant everywhere. Since $f(0)=1$, it follows that $f(t)=1$ identically. Therefore, $e^{it}=\cos{t}+i\sin{t}$ for all $t \in \reals$, as claimed.
 
+An alternative proof works by the Taylor expansion of $e^{it}$, $\cos(t)$ and $i\sin(t)$, respectively.
+Note that this is used as the Fourier basis for a vector space.
 
 # Integration
 
@@ -147,40 +153,38 @@ $$
     \end{aligned}
 $$
 
-
 ### Integration strategies
 
 **u-substitution**
 
-**Integration by parts** is the last trick up our sleave when all other strategies haven't helped. Consider the integral 
+**Integration by parts** is the last trick up our sleave when all other strategies haven't helped. Consider the integral
 
 $$ \int x e^x \diff{x} $$
 
-We can rewrite this integral as 
+We can rewrite this integral as
 
 $$ \int u \diff{v} $$
 
 where $u = x$ and $\diff{v} = e^x \diff{x}$. In general, you always want to pick $u$ in such a way that $u$ gets simpler after being differentiated.
-$x$ does get a lot simpler after differentiation, whereas $e^x$ doesn't, so the choice is clear. 
+$x$ does get a lot simpler after differentiation, whereas $e^x$ doesn't, so the choice is clear.
 
-We then use the following: 
+We then use the following:
 
 $$ \int u \diff{v} = uv - \int v \diff{u} $$
 \footnote{The proof goes like this: Starting with the product rule of differentiation: $(ab)' = a'b + ba'$ we get $(ab)' - a'b = ba'$ and  $ab - \int a'b \diff{x} = \int ba' \diff{x} $}
 
-Since we chose $u = x$ we have $\diff{u} = \diff{x}$, and from $\diff{v} = e^x \diff{x}$ we get $v = e^x$. This yields us: 
+Since we chose $u = x$ we have $\diff{u} = \diff{x}$, and from $\diff{v} = e^x \diff{x}$ we get $v = e^x$. This yields us:
 
 $$ xe^x - \int e^x \diff{x} $$
 $$ e^x ( x - 1) $$
 
-as the solution. 
+as the solution.
 
 ## Vector calculus
 
-Integration over a vector, integration along a vector, integration along a surface. 
+Integration over a vector, integration along a vector, integration along a surface.
 
 You can find a nice introduction (mostly in the second part of) this pdf: `http://www.maths.gla.ac.uk/~cc/2A/2A_notes/2A_chap4.pdf` and here `http://geocalc.clas.asu.edu/pdf-preAdobe8/SIMP_CAL.pdf`
-
 
 ### Constraint optimization using Lagrange multipliers
 
