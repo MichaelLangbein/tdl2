@@ -491,3 +491,259 @@ export function useRedux<T>(selector: (state: State) => T): T {
   </body>
 </html>
 ```
+
+## Drawing a path with FFT expansion
+
+### Step 1: convert a circular svg path to samples, get the FFT
+
+```python
+#%% imports
+import numpy as np
+import matplotlib.pyplot as plt
+from svgpathtools import parse_path
+import json
+
+#%% globals
+
+T = 1.0
+nrSamples = 1_000
+time = np.arange(0.0, T, T / nrSamples)
+
+#%% creating sample
+
+# must be a single, closed path
+svgPath = "m 45.976269,110.74576 c -3.43675,-10.73703 -1.677963,-22.652541 10.738985,-26.511863 20.4951,-6.370099 22.820339,12.416949 22.820339,12.416949 0,0 -0.671187,-16.444068 18.793219,-15.437287 19.464408,1.00678 22.484748,17.115253 15.437288,31.545761 -7.04746,14.43051 -24.87841,18.50214 -33.894914,27.51865 C 74.420501,130.8371 49.41302,121.4828 45.976269,110.74576 Z"
+path = parse_path(svgPath)
+
+
+signal = np.zeros(nrSamples, dtype=np.complex128)
+for i in range(nrSamples):
+    sample = path.point(i / nrSamples)
+    signal[i] = sample
+    
+plt.scatter(np.real(signal), np.imag(signal))
+
+
+#%% analyze and save
+
+alphas = np.fft.fft(signal)
+alphas /= nrSamples
+
+
+output = {
+    "sourcePath": svgPath,
+    "T": T,
+    "nrSamples": nrSamples,
+    "samples": []
+}
+for freq, alpha in enumerate(alphas):
+    output["samples"].append({
+        "frequency": freq,
+        "real": np.real(alpha),
+        "imaginary": np.imag(alpha)
+    })
+
+with open("./results.json", "w") as f:
+    json.dump(output, f, indent=4)
+
+
+
+#%% filter frequencies and plot
+
+def base(t, freq, T):
+    return np.exp(-1.0j * t * freq * 2.0 * np.pi / T)
+
+
+def filterAlphas(alphas, filterFunc):
+    output = []
+    for freq, alpha in enumerate(alphas):
+        if filterFunc(alpha, freq):
+            output.append({
+                "frequency": freq,
+                "alpha": alpha
+            })
+    return output
+
+
+alphasReduced = filterAlphas(alphas, lambda a, f: np.abs(a) > 0.2)
+
+print("Remaining frequencies: ", [a["frequency"] for a in alphasReduced])
+plt.plot([a["frequency"] for a in alphasReduced], [np.abs(a["alpha"]) for a in alphasReduced])
+
+
+#%% reproduce original image
+
+def getTipPoint(t, alphaData):
+    point = 0.0 + 0.0j
+    for datum in alphaData:
+        freq = datum["frequency"]
+        alpha = datum["alpha"]
+        vector = alpha * base(t, freq, T)
+        point += vector
+    return point
+
+
+tipPoints = []
+for t in time:
+    tipPoint = getTipPoint(t, alphasReduced)
+    tipPoints.append(tipPoint)
+
+plt.scatter(np.real(signal), np.imag(signal), color='red')
+plt.scatter(np.real(tipPoints), np.imag(tipPoints), color='blue')
+
+```
+
+### Step 2: display as rotating circles
+
+```ts
+import {select, type Selection} from "d3-selection";
+import {scaleLinear, type ScaleLinear} from "d3-scale";
+
+interface CircleDatum {
+  cx: number,
+  cy: number,
+  touchPointX: number,
+  touchPointY: number,
+  frequency: number,
+  amplitude: number
+}
+
+interface DecayingCircleDatum extends CircleDatum {
+  age: number
+}
+
+interface Sample {
+  frequency: number,
+  real: number,
+  imaginary: number
+}
+
+interface FrequencyData {
+  "sourcePath": string,
+  T: number,
+  nrSamples: number,
+  samples: Sample[]
+}
+
+function amplitude(sample: Sample) {
+  return Math.sqrt(sample.real * sample.real + sample.imaginary * sample.imaginary);
+}
+
+const dataResponse = await fetch("results.json");
+const data: FrequencyData = await dataResponse.json();
+
+const freqs = data.samples.filter(s => amplitude(s) > 0.5);
+
+const rootSvg = select<SVGSVGElement, undefined>('#rootSvg');
+
+
+function frequenciesToPoints(freqs: Sample[], time: number, maxTime: number) {
+  const points: CircleDatum[] = [];
+  for (const f of freqs) {
+    let lastPoint = points.at(-1);
+    if (!lastPoint) lastPoint = {cx: 0, cy: 0, touchPointX: 0, touchPointY: 0, amplitude: 0, frequency: 0};
+
+    const inBracks = - time * f.frequency * 2 * Math.PI / maxTime;
+    const real = f.real * Math.cos(inBracks) - f.imaginary * Math.sin(inBracks);
+    const imag = f.imaginary * Math.cos(inBracks) + f.real * Math.sin(inBracks);
+
+    points.push({
+      cx: lastPoint.touchPointX,
+      cy: lastPoint.touchPointY,
+      touchPointX: lastPoint.touchPointX + real,
+      touchPointY: lastPoint.touchPointY + imag,
+      frequency: f.frequency,
+      amplitude: amplitude(f)
+    });
+  }
+
+  return points;
+}
+
+function drawCircles(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, undefined, HTMLElement, any>, rScale: ScaleLinear<number, number, never>) { 
+
+  const circles = rootSvg.selectAll<SVGCircleElement, CircleDatum>('.circle')
+    .data(points, (p) => p.frequency)
+      .attr('cx', p => rScale(p.cx))
+      .attr('cy', p => rScale(p.cy));
+    circles.enter()
+      .append('circle')
+      .attr('class', 'circle')
+      .attr('cx', p => rScale(p.cx))
+      .attr('cy', p => rScale(p.cy))
+      .attr('r', p => rScale(p.amplitude))
+      .attr('fill', 'rgba(90, 90, 90, 0.38)');
+    circles.exit().remove();
+}
+
+
+function drawLines(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, undefined, HTMLElement, any>, rScale: ScaleLinear<number, number, never>) {
+  
+  const lines = rootSvg.selectAll<SVGLineElement, CircleDatum>('.line')
+    .data(points, p => p.frequency)
+        .attr('x1', c => rScale(c.cx))
+        .attr('x2', c => rScale(c.touchPointX))
+        .attr('y1', c => rScale(c.cy))
+        .attr('y2', c => rScale(c.touchPointY));
+    lines.enter()
+      .append('line')
+      .attr('class', 'line')
+      .attr('x1', c => rScale(c.cx))
+      .attr('x2', c => rScale(c.touchPointX))
+      .attr('y1', c => rScale(c.cy))
+      .attr('y2', c => rScale(c.touchPointY))
+      .attr('stroke', 'black')
+      .attr('stroke-width', 0.1);
+    lines.exit().remove();
+}
+
+
+const traceQueueLength = 150;
+const traceQueue: DecayingCircleDatum[] = [];
+function drawTrace(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, undefined, HTMLElement, any>, rScale: ScaleLinear<number, number, never>) {
+  const nextPoint = points.at(-1);
+  if (!nextPoint) return;
+
+  traceQueue.map(e => e.age += 1);
+  traceQueue.push({...nextPoint, age: 0});
+  if (traceQueue.length > traceQueueLength) traceQueue.shift();
+
+  const traces = rootSvg.selectAll<SVGCircleElement, DecayingCircleDatum>('.trace')
+    .data(traceQueue, c => `${c.cx}_${c.cy}`)
+      .attr('fill', d => `rgba(255, 251, 8, ${Math.log(traceQueueLength / 2) - Math.log(d.age + 1)})`);
+    traces.enter()
+      .append('circle')
+      .attr('class', 'trace')
+      .attr('cx', p => rScale(p.touchPointX))
+      .attr('cy', p => rScale(p.touchPointY))
+      .attr('r', 0.5)
+      .attr('fill', 'rgba(255, 251, 8, 1)')
+    traces.exit().remove();
+}
+
+
+
+let i = -1;
+const points = frequenciesToPoints(freqs, 0, data.T);
+const scale = scaleLinear([0, Math.max(...points.map(p => p.amplitude))], [0, 30]);
+
+async function loop() {
+  const startTime = new Date().getTime();
+
+  i = (i + 1) % data.nrSamples;
+  const t = i * data.T / data.nrSamples;
+  const points = frequenciesToPoints(freqs, t, data.T);
+
+  drawCircles(points, rootSvg, scale);
+  drawLines(points, rootSvg, scale);
+  if (i % 10 === 0) drawTrace(points, rootSvg, scale);
+
+  const endTime = new Date().getTime();
+  const timePassed = endTime - startTime;
+  const timeLeft = 5 - timePassed; 
+  setTimeout(loop, timeLeft);
+}
+
+
+loop();
+```
