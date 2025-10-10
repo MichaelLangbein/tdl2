@@ -506,7 +506,7 @@ import json
 #%% globals
 
 T = 1.0
-nrSamples = 1_000
+nrSamples = int(np.power(2, 10))
 time = np.arange(0.0, T, T / nrSamples)
 
 #%% creating sample
@@ -528,6 +528,8 @@ plt.scatter(np.real(signal), np.imag(signal))
 
 alphas = np.fft.fft(signal)
 alphas /= nrSamples
+freqs = np.fft.fftfreq(nrSamples)
+freqs *= nrSamples
 
 
 output = {
@@ -536,7 +538,7 @@ output = {
     "nrSamples": nrSamples,
     "samples": []
 }
-for freq, alpha in enumerate(alphas):
+for freq, alpha in zip(freqs, alphas):
     output["samples"].append({
         "frequency": freq,
         "real": np.real(alpha),
@@ -550,13 +552,10 @@ with open("./results.json", "w") as f:
 
 #%% filter frequencies and plot
 
-def base(t, freq, T):
-    return np.exp(-1.0j * t * freq * 2.0 * np.pi / T)
 
-
-def filterAlphas(alphas, filterFunc):
+def filterAlphas(freqs, alphas, filterFunc):
     output = []
-    for freq, alpha in enumerate(alphas):
+    for freq, alpha in zip(freqs, alphas):
         if filterFunc(alpha, freq):
             output.append({
                 "frequency": freq,
@@ -565,13 +564,17 @@ def filterAlphas(alphas, filterFunc):
     return output
 
 
-alphasReduced = filterAlphas(alphas, lambda a, f: np.abs(a) > 0.2)
+alphasReduced = filterAlphas(freqs, alphas, lambda a, f: np.abs(a) > 0.2)
 
 print("Remaining frequencies: ", [a["frequency"] for a in alphasReduced])
-plt.plot([a["frequency"] for a in alphasReduced], [np.abs(a["alpha"]) for a in alphasReduced])
+plt.scatter([a["frequency"] for a in alphasReduced], [np.abs(a["alpha"]) for a in alphasReduced])
 
 
 #%% reproduce original image
+
+def base(t, freq, T):
+    return np.exp(-1.0j * t * freq * 2.0 * np.pi / T)
+
 
 def getTipPoint(t, alphaData):
     point = 0.0 + 0.0j
@@ -590,7 +593,6 @@ for t in time:
 
 plt.scatter(np.real(signal), np.imag(signal), color='red')
 plt.scatter(np.real(tipPoints), np.imag(tipPoints), color='blue')
-
 ```
 
 ### Step 2: display as rotating circles
@@ -598,6 +600,12 @@ plt.scatter(np.real(tipPoints), np.imag(tipPoints), color='blue')
 ```ts
 import {select, type Selection} from "d3-selection";
 import {scaleLinear, type ScaleLinear} from "d3-scale";
+import { zoom } from 'd3-zoom';
+
+
+/***************************************************************************************************
+ * Data types
+ **************************************************************************************************/
 
 interface CircleDatum {
   cx: number,
@@ -609,7 +617,9 @@ interface CircleDatum {
 }
 
 interface DecayingCircleDatum extends CircleDatum {
-  age: number
+  age: number,
+  prevCx: number,
+  prevCy: number
 }
 
 interface Sample {
@@ -625,20 +635,17 @@ interface FrequencyData {
   samples: Sample[]
 }
 
+/***************************************************************************************************
+ * Helpers
+ **************************************************************************************************/
+
 function amplitude(sample: Sample) {
   return Math.sqrt(sample.real * sample.real + sample.imaginary * sample.imaginary);
 }
 
-const dataResponse = await fetch("results.json");
-const data: FrequencyData = await dataResponse.json();
-
-const freqs = data.samples.filter(s => amplitude(s) > 0.5);
-
-const rootSvg = select<SVGSVGElement, undefined>('#rootSvg');
-
-
 function frequenciesToPoints(freqs: Sample[], time: number, maxTime: number) {
   const points: CircleDatum[] = [];
+
   for (const f of freqs) {
     let lastPoint = points.at(-1);
     if (!lastPoint) lastPoint = {cx: 0, cy: 0, touchPointX: 0, touchPointY: 0, amplitude: 0, frequency: 0};
@@ -657,15 +664,57 @@ function frequenciesToPoints(freqs: Sample[], time: number, maxTime: number) {
     });
   }
 
+
   return points;
 }
 
-function drawCircles(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, undefined, HTMLElement, any>, rScale: ScaleLinear<number, number, never>) { 
+/***************************************************************************************************
+ * Data and globals
+ **************************************************************************************************/
+
+const dataResponse = await fetch("results.json");
+const data: FrequencyData = await dataResponse.json();
+
+const freqs = data.samples.filter(s => amplitude(s) > 0.6);
+// const freqs = data.samples.slice(0, 6);
+console.log(freqs);
+
+const points = frequenciesToPoints(freqs, 0, data.T);
+const scale = scaleLinear([0, Math.max(...points.map(p => p.amplitude))], [0, 30]);
+
+const msPerFrame = 5;
+const drawingSampleRate = 20;
+const traceQueueLength = 50;
+
+/***************************************************************************************************
+ * Root elements
+ **************************************************************************************************/
+
+const rootSvg = select<SVGSVGElement, undefined>('#rootSvg');
+const rootGroup = rootSvg.append('g');
+const zoomBehavior = zoom<SVGSVGElement, unknown>();
+rootSvg.call(zoomBehavior.on('zoom', (evt) => rootGroup.attr('transform', evt.transform)));
+
+rootGroup
+  .append('svg')
+  .attr('viewBox', "35 70 100 80")
+  .attr('transform', 'scale(0.24) translate(30 50)')
+  .append('path')
+  .attr('d', data.sourcePath)
+  .attr('fill', 'none')
+  .attr('stroke', 'rgba(0, 0, 0, 0.5)');
+
+
+/***************************************************************************************************
+ * Drawing
+ **************************************************************************************************/
+
+function drawCircles(points: CircleDatum[], rootSvg: Selection<any, any, any, any>, rScale: ScaleLinear<number, number, never>) { 
 
   const circles = rootSvg.selectAll<SVGCircleElement, CircleDatum>('.circle')
     .data(points, (p) => p.frequency)
       .attr('cx', p => rScale(p.cx))
-      .attr('cy', p => rScale(p.cy));
+      .attr('cy', p => rScale(p.cy));   //console.log('circles', circles.nodes().length)
     circles.enter()
       .append('circle')
       .attr('class', 'circle')
@@ -676,15 +725,14 @@ function drawCircles(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, un
     circles.exit().remove();
 }
 
-
-function drawLines(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, undefined, HTMLElement, any>, rScale: ScaleLinear<number, number, never>) {
+function drawLines(points: CircleDatum[], rootSvg: Selection<any, any, any, any>, rScale: ScaleLinear<number, number, never>) {
   
   const lines = rootSvg.selectAll<SVGLineElement, CircleDatum>('.line')
     .data(points, p => p.frequency)
         .attr('x1', c => rScale(c.cx))
         .attr('x2', c => rScale(c.touchPointX))
         .attr('y1', c => rScale(c.cy))
-        .attr('y2', c => rScale(c.touchPointY));
+        .attr('y2', c => rScale(c.touchPointY));  //console.log('lines', lines.nodes().length)
     lines.enter()
       .append('line')
       .attr('class', 'line')
@@ -693,54 +741,93 @@ function drawLines(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, unde
       .attr('y1', c => rScale(c.cy))
       .attr('y2', c => rScale(c.touchPointY))
       .attr('stroke', 'black')
-      .attr('stroke-width', 0.1);
+      .attr('stroke-width', 0.1)
+      .attr('stroke-linecap', "round");
     lines.exit().remove();
 }
 
-
-const traceQueueLength = 150;
 const traceQueue: DecayingCircleDatum[] = [];
-function drawTrace(points: CircleDatum[], rootSvg: Selection<SVGSVGElement, undefined, HTMLElement, any>, rScale: ScaleLinear<number, number, never>) {
+function drawTrace(points: CircleDatum[], rootSvg: Selection<any, any, any, any>, rScale: ScaleLinear<number, number, never>) {
   const nextPoint = points.at(-1);
   if (!nextPoint) return;
 
+  const prevQueueEl = traceQueue.at(-1);
   traceQueue.map(e => e.age += 1);
-  traceQueue.push({...nextPoint, age: 0});
+  traceQueue.push({...nextPoint, age: 0, prevCx: prevQueueEl?.touchPointX || nextPoint.touchPointX, prevCy: prevQueueEl?.touchPointY || nextPoint.touchPointY});
   if (traceQueue.length > traceQueueLength) traceQueue.shift();
 
   const traces = rootSvg.selectAll<SVGCircleElement, DecayingCircleDatum>('.trace')
     .data(traceQueue, c => `${c.cx}_${c.cy}`)
-      .attr('fill', d => `rgba(255, 251, 8, ${Math.log(traceQueueLength / 2) - Math.log(d.age + 1)})`);
+      .attr('stroke', d => `rgba(255, 251, 8, ${Math.log(traceQueueLength / 2) - Math.log(d.age + 1)})`);  // console.log('traces', traces.nodes().length)
     traces.enter()
-      .append('circle')
+      .append('line')
       .attr('class', 'trace')
-      .attr('cx', p => rScale(p.touchPointX))
-      .attr('cy', p => rScale(p.touchPointY))
-      .attr('r', 0.5)
-      .attr('fill', 'rgba(255, 251, 8, 1)')
+      .attr('x1', p => rScale(p.prevCx))
+      .attr('y1', p => rScale(p.prevCy))
+      .attr('x2', p => rScale(p.touchPointX))
+      .attr('y2', p => rScale(p.touchPointY))
+      .attr('r', 0.2)
+      .attr('stroke', 'rgba(255, 251, 8, 1)')
+      .attr('stroke-width', 0.2)
+      .attr('stroke-linecap', "round");
     traces.exit().remove();
 }
 
+function drawGauges(points: CircleDatum[], rootSvg: Selection<any, any, any, any>) {
+  const xOffset = (freq: number) => 25 + freq * 8;
+  const yOffset = () => 0;
 
+  const gaugeCircles = rootSvg.selectAll<SVGCircleElement, CircleDatum>('.gaugeCircle')
+    .data(points, d => d.frequency);
+  gaugeCircles.enter()
+      .append('circle')
+      .attr('class', 'gaugeCircle')
+      .attr('cx', d => xOffset(d.frequency))
+      .attr('cy', d => yOffset())
+      .attr('r', d => 0.2 * Math.sqrt((d.touchPointX - d.cx) * (d.touchPointX - d.cx) + (d.touchPointY - d.cy) * (d.touchPointY - d.cy)))
+      .attr('fill', 'rgba(87, 87, 87, 0.1)');
+  gaugeCircles.exit().remove();
+
+  const gauges = rootSvg.selectAll<SVGLineElement, CircleDatum>('.gauge')
+    .data(points, d => d.frequency)
+    .attr('x1', d => xOffset(d.frequency))
+    .attr('y1', d => yOffset())
+    .attr('x2', d => xOffset(d.frequency) + 0.2 * (d.touchPointX - d.cx))
+    .attr('y2', d => yOffset() + 0.2 * (d.touchPointY - d.cy));
+  gauges.enter()
+    .append('line')
+    .attr('class', 'gauge')
+    .attr('x1', d => xOffset(d.frequency))
+    .attr('y1', d => yOffset())
+    .attr('x2', d => xOffset(d.frequency) + 0.2 * (d.touchPointX - d.cx))
+    .attr('y2', d => yOffset() + 0.2 * (d.touchPointY - d.cy))
+    .attr('stroke', 'black')
+    .attr('stroke-width', 0.1);
+  gauges.exit().remove();
+
+}
+
+/***************************************************************************************************
+ * Loop
+ **************************************************************************************************/
 
 let i = -1;
-const points = frequenciesToPoints(freqs, 0, data.T);
-const scale = scaleLinear([0, Math.max(...points.map(p => p.amplitude))], [0, 30]);
-
 async function loop() {
   const startTime = new Date().getTime();
 
   i = (i + 1) % data.nrSamples;
   const t = i * data.T / data.nrSamples;
   const points = frequenciesToPoints(freqs, t, data.T);
+  points.shift();
 
-  drawCircles(points, rootSvg, scale);
-  drawLines(points, rootSvg, scale);
-  if (i % 10 === 0) drawTrace(points, rootSvg, scale);
+  drawCircles(points, rootGroup, scale);
+  drawLines(points, rootGroup, scale);
+  if (i % drawingSampleRate === 0) drawTrace(points, rootGroup, scale);
+  drawGauges(points, rootGroup);
 
   const endTime = new Date().getTime();
   const timePassed = endTime - startTime;
-  const timeLeft = 5 - timePassed; 
+  const timeLeft = msPerFrame - timePassed; 
   setTimeout(loop, timeLeft);
 }
 
