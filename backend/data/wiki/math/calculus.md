@@ -1,7 +1,4 @@
 $$
-\def\then{\to}
-\def\thereis{\exists}
-\def\iff{\leftrightarrow}
 \def\intersection{\cap}
 \def\union{\cup}
 \def\reals{\mathbb{R}}
@@ -45,12 +42,12 @@ A statement using any external properties will be denoted as $\ext{A}$, one that
 We will use the following axioms:
 
 - $0:std$
-- $\forall n \in \naturals: n:std \then (n+1):std $
-- $\thereis n \in \naturals: n:nstd $
+- $\forall n \in \naturals: n:std \to (n+1):std$
+- $\exists n \in \naturals: n:nstd$
 - External induction: Induction  over $\std{n}$ about $\pext{A}$:
-    $$ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \then \pext{A}(n+1) ] \then \forall \std{n} \in \naturals: \pext{A}(n) $$
+    $$ [ \pext{A}(0) \land \forall \std{n} \in \naturals: \pext{A}(n) \to \pext{A}(n+1) ] \to \forall \std{n} \in \naturals: \pext{A}(n) $$
 - Internal induction: Induction over $\pnstd{n}$ about A:
-    $$ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \then A(n+1)] \then \forall n \in \naturals: A(n) $$
+    $$ [A(0) \land \forall \pnstd{n} \in \naturals: A(n) \to A(n+1)] \to \forall n \in \naturals: A(n) $$
 
 The rationale over the two induction-axioms is simple. Ordinary induction is about $A$ over \std{n}.
 External induction is about \pext{A} over \std{n}. This makes sure that statements about external stuff only apply to finite $n$, not to infinite ones.
@@ -63,21 +60,21 @@ Doing so would lead to logical inconsistencies. That's why there is no "fully ex
 However, note that axiom 2 is actually a case of "fully external" induction.
 
 > **Theorem**
-> $\forall n \in \naturals: n:nst \then (n+1):nst$ <a id="addingNonstds"></a>
+> $\forall n \in \naturals: n:nst \to (n+1):nst$ <a id="addingNonstds"></a>
 >
 > Suppose $n:nst$. Proof that $(n+1):nst$
 >> By contradiction. Suppose $(n+1):std$. Proof that this leads to a contradiction.
->>> $(n+1):std \then n:std$.
+>>> $(n+1):std \to n:std$.
 >>>
 >>> This contradicts the premise that $n:nst$.
 
 If you don't believe the argument in the previous proof, consider this:
 
 > Suppose all of the following:
-> $$ [\forall n: Q(n) \then Q(n+1)] \then \forall n: Q(n) $$
-> $$ [\forall n: Q(n) \then Q(n+1)] $$
+> $$ [\forall n: Q(n) \to Q(n+1)] \to \forall n: Q(n) $$
+> $$ [\forall n: Q(n) \to Q(n+1)] $$
 > This leads to $\forall n: Q(n)$
->> Proof that $\forall n: Q(n+1) \then Q(n)$
+>> Proof that $\forall n: Q(n+1) \to Q(n)$
 >>
 >> Let $n = n_0$ and suppose $Q(n_0+1)$. Proof that $Q(n_0)$
 >>> Since $ \forall n: Q(n) $ holds, it must be true that $Q(n_0)$.
@@ -85,9 +82,9 @@ If you don't believe the argument in the previous proof, consider this:
 We can use [theorem](addingNonstds) to prove the following:
 
 > **Theorem**
-> $\forall n, m \in \naturals: n:std \land m:nstd \then (n+m):nst$
+> $\forall n, m \in \naturals: n:std \land m:nstd \to (n+m):nst$
 >
-> Let $m=m_0:nst$. Proof that $\forall n \in \naturals: n:std  \then (n+m_0):nst$
+> Let $m=m_0:nst$. Proof that $\forall n \in \naturals: n:std  \to (n+m_0):nst$
 >
 > By induction on $n$
 >
@@ -96,14 +93,14 @@ We can use [theorem](addingNonstds) to prove the following:
 >>
 >> $m_0:nst$
 >
-> Induction step. Proof that $[(n+m_0):nst] \then [(n+1+m_0):nst]$
+> Induction step. Proof that $[(n+m_0):nst] \to [(n+1+m_0):nst]$
 >> Just apply [theorem](addingNonstds) to $n=(n+m_0)$.
 
 It is notable that you can never reach a standard number when adding nonstandard numbers.
 > **Theorem**
-> $\forall n,m \in \naturals: n,m:nst \then (n+m):nst$
+> $\forall n,m \in \naturals: n,m:nst \to (n+m):nst$
 >
-> We proceed by proving the equivalent $(n+m):std \then (n:std \lor m:std)$
+> We proceed by proving the equivalent $(n+m):std \to (n:std \lor m:std)$
 >
 > Suppose $(n+m):std$. Proof that $(n:std \lor m:std)$
 >> Without loss of generality, suppose $n:nst$ Proof that $m:std$
