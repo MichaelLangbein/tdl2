@@ -130,6 +130,15 @@ LEFT JOIN
 - Users are required to rebuild indices manually after large updates.
 - The newer `Geography` type, as opposed to the older `Geometry`, does have a better behavior, though.
 
+## Views
+
+- MS SQL Server has materialized views, which are only changed when the source-table is updated. They're called "indexed views".
+- But: ArcGIS support for them is poor:
+  - they don't support domains
+  - they are slow: ArcGIS doesn't know that the data source is a view and doesn't do any optimization for querying.
+  - they require maintenance: when the source table is changed, the view breaks.
+  - no indexing on views (not even on indexed views, except if they contain no subqueries and no outer joins), and indices of source tables are not effective, because ArcGIS doesn't try to query along the source-tables' indices.
+
 # Server
 
 - 2 Versions: one built with Java, one with .NET, both with C++ for some components

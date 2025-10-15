@@ -4,8 +4,8 @@ React tries to make UI functional.
 Every time something changes, the tree is regenerated based on the new state.
 The idea is this:
 
--   if you have n states, all of which can transition to each other, then there are n\*(n-1) possible transitions.
--   if instead you create a new tree for any state, you don't need to care about transitions; only about n different ways of creating a tree from a state.
+- if you have n states, all of which can transition to each other, then there are n\*(n-1) possible transitions.
+- if instead you create a new tree for any state, you don't need to care about transitions; only about n different ways of creating a tree from a state.
     The price for this is that the tree is re-created every time.
     But here the v-DOM helps us reduce the number of changes to a bearable amount.
 
@@ -28,12 +28,12 @@ function myComponent(props) {
 
 ## JSX
 
--   return must always be exactly one component
--   js is included inside of curly braces
--   some html-keywords are renamed:
-    -   class -> className
-    -   <input>sometext</input> -> <input value="sometext" />
-    -   <label for="inpt"> -> <label htmlFor="inpt">
+- return must always be exactly one component
+- js is included inside of curly braces
+- some html-keywords are renamed:
+  - class -> className
+  - <input>sometext</input> -> <input value="sometext" />
+  - <label for="inpt"> -> <label htmlFor="inpt">
 
 ## Hooks
 
@@ -41,11 +41,11 @@ Hooks must not be called inside conditionals. That's because they need to be gua
 
 ### State-handling hooks
 
--   useState
--   useRef
--   useEffect
--   useContext
--   useReducer
+- useState
+- useRef
+- useEffect
+- useContext
+- useReducer
 
 ### useRef
 
@@ -81,21 +81,21 @@ export function useWatchState<T>(filter: (s: State) => T, id: string) {
 
 `const [name, updateName] = useState('Enter your name here')`: For within-component-state
 
--   Important note: `useState` is a hook and as such must only be called inside a react-component-function.
--   _But_: `updateName` is _not_ a hook, and may be called from anywhere, including asynchronously.
--   Causes a re-draw of the component.
--   If you pass a function to `useState`:
-    -   the first time that function will be evaluated
-    -   after that the reference to the function is compared and no more evaluation is required
-    -   docs: `https://react.dev/reference/react/useState`, "there is a special behavior for functions. This argument is ignored after the initial render."
+- Important note: `useState` is a hook and as such must only be called inside a react-component-function.
+- _But_: `updateName` is _not_ a hook, and may be called from anywhere, including asynchronously.
+- Causes a re-draw of the component.
+- If you pass a function to `useState`:
+  - the first time that function will be evaluated
+  - after that the reference to the function is compared and no more evaluation is required
+  - docs: `https://react.dev/reference/react/useState`, "there is a special behavior for functions. This argument is ignored after the initial render."
 
 ### useEffect
 
 `useEffect((newName) => {api.call(newName)}, [name])`: for side-effects.
 
--   Only called when one of the variables in the second argument (`[name]`) changes.
--   If the second argument is `[]`, then the effect is only called upon construction.
--   effect can return a `cleanup` function that gets called when component is unmounted or when a second effect is fired before the first one is complete.
+- Only called when one of the variables in the second argument (`[name]`) changes.
+- If the second argument is `[]`, then the effect is only called upon construction.
+- effect can return a `cleanup` function that gets called when component is unmounted or when a second effect is fired before the first one is complete.
 
 Example:
 
@@ -166,14 +166,14 @@ and having all other components get the state as read-only
     }
     ```
 
--   You can work with `createContext(initialValue)` and `useContext` only. But to cause a react-re-render, the `Provider` is required. Also, most commonly `createContext` gets no initial value, but receives it through `<Provider value={val}>`.
--   https://www.youtube.com/watch?v=5LrDIWkK_Bc
+- You can work with `createContext(initialValue)` and `useContext` only. But to cause a react-re-render, the `Provider` is required. Also, most commonly `createContext` gets no initial value, but receives it through `<Provider value={val}>`.
+- <https://www.youtube.com/watch?v=5LrDIWkK_Bc>
 
 ### useReducer
 
 `useReducer`: for global context (read/write)
 
--   Remarkably, contrary to `useState`, `useReducer` doesn't require you to build a provider-component.
+- Remarkably, contrary to `useState`, `useReducer` doesn't require you to build a provider-component.
 
 ```jsx
 import { userReducer } from "user.logic";
@@ -187,8 +187,8 @@ dispatchChangeMessage(action);
 
 ### UI-handling hooks
 
--   `useRef`: like `useState` but doesn't cause re-render. Use this when using `useState` causes an infinite loop... and when you want to reference a DOM-element.
-    -   I think that a `ref` attribute on a DOM-element causes the element to be excluded from re-renders.
+- `useRef`: like `useState` but doesn't cause re-render. Use this when using `useState` causes an infinite loop... and when you want to reference a DOM-element.
+  - I think that a `ref` attribute on a DOM-element causes the element to be excluded from re-renders.
 
 ### Background
 
@@ -308,9 +308,91 @@ export function useDebounce<T>(val: T, bufferTimeMS: number) {
 }
 ```
 
+## Sync size of images across app after loading
+
+This is challanging, because:
+
+- Requires a state manager `HeightSyncer`, provided with a `context`
+- Requires components to subscribe and _un_subscribe... the latter forces a cleanup function, meaning it must be wrapped in `useEffect`
+
+```ts
+class HeightSyncer {
+    private images: {[key: string]: HTMLElement} = [];
+    private callbacks: {[key: string]: (height: number) => void} = {};
+
+    watch(key: string, cb: (height: number) => void) {
+        this.callbacks[key] = cb;
+        const unwatchHandler = () => {
+            delete(this.callbacks[key]);
+            delete(this.images[key]);
+        }
+        return unwatchHandler;
+    }
+
+    registerImage(key: string, image: HTMLElement) {
+        this.images[key] = image;
+        let maxHeight = 0;
+        for (const [key_, image] of Object.entries(this.images)) {
+            if (image.clientHeight > maxHeight) maxHeight = image.clientHeight;
+        }
+        for (const [key_, cb] of Object.entries(this.callbacks)) {
+            cb(maxHeight);
+        }
+    }  
+}
+
+export interface SizeSyncedImageProps {
+    imgUrl: string,
+    onError: () => void
+}
+export function SizeSyncedImage(props: SizeSyncedImageProps) {
+
+    const context = useContext(ImageSizeContext);
+    const id = useId();
+    const [height, setHeight] = useState<number>(-Infinity);
+
+    useEffect(() => {
+        const unwatch = context.watch(id, (height) => setHeight(height));
+        return unwatch;
+    }, [context, id]);
+
+    function handleLoad(evt: React.SyntheticEvent<HTMLImageElement, Event>): void {
+        context.registerImage(id, evt.target as HTMLElement);
+    }
+
+    return <img 
+        className="appTileImageImage" 
+        width="100%"
+        height={height > 0 ? height : 'auto'}
+        src={props.imgUrl}
+        onLoad={(evt) => handleLoad(evt)}        
+        onError={props.onError} />
+}
+
+export function useSizeSyncer() {
+    return useMemo((() => new HeightSyncer()), []);
+}
+
+export const ImageSizeContext = createContext<HeightSyncer>(null);
+
+function ExampleComponent() {
+    const syncer = useSizeSyncer();
+    return <ImageSizeContext.Provider value={syncer}>
+            <div>
+                <SizeSyncedImage imgUrl="url/to/image1.jpg" alt="Image 1" />
+                <SomeDeeplyNestedComponent />
+            </div>
+        </ImageSizeContext.Provider>
+}
+
+function SomeDeeplyNestedComponent() {
+    return <SizeSyncedImage imgUrl="url/to/image2.jpg" alt="Image 2" />
+}
+```
+
 ## Handling re-renders
 
-https://www.debugbear.com/blog/react-rerenders
+<https://www.debugbear.com/blog/react-rerenders>
 
 ## Stylable SVGs
 
