@@ -67,3 +67,13 @@ Workflow goes like this:
 4. User logs in at Azure AD
 5. Shibboleth notifies the `SP` (service provider), that is, the portal,  of the login (on a specific URL on the portal known as the `ACS`, the assertion consumer service)
 6. User is given a token from the SP so that future requests need not go through 1-5
+
+Analogy:
+
+1. You want to go into a club.
+2. The bouncer doesn't know you. He asks the manager to handle this.
+3. The manager sends you to the passport office.
+4. You go there. The passport office confirms to the manager that you're cool.
+5. The manager gives you a note saying that you're ok, which you can hand to the bouncer immediately next time.
+
+At no point in time did the bouncer see your actual ID.
