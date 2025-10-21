@@ -690,6 +690,20 @@ portalLdap = GIS("https://yourportal.com/portal", username=usernameLdap, passwor
 
 - Seems to be a bunch of custom widgets on top of experience builder
 
+## Layer ID hierarchy
+
+- Service: looks like `https://yourportal/map/SvcName/layerId`
+  - Service URL
+  - LayerID
+- Portal: looks like `54hjk5432gk31564326kg`
+  - Each service has a PortalItemID
+  - Each WebMap has a PortalItemID
+- WebMap: looks like `j54k32l-layer-31`
+  - Each layer (which is likely a service's layer) has a MapLayerId
+  - The layer-object references back to the service: `layer.url` = ServiceUrl, `layer.itemId` = ServicePortalId, `layer.layers[nr].id` = ServiceLayerId
+- VertiGIS Studio app.json: looks like `4h32j1k4l-4h3j2k-h432j1k4h31j-43h2j1k43`
+  - References back to the WebMapId: `layer.$ref.id`
+
 # Contera
 
 - Offers FME
