@@ -4,8 +4,8 @@ Aka. Landau-symbols.
 
 The name _asymptotic_ analysis is well chosen (for once).
 
--   AA only tells us about the behaviour of algorithms as their numbers become _very_ big.
--   AA deals with the **rate of growth**, not absolute values
+- AA only tells us about the behaviour of algorithms as their numbers become _very_ big.
+- AA deals with the **rate of growth**, not absolute values
 
 Big-oh is the approximate upper bound, little-oh is the next graph _higher_ than that.
 
@@ -13,31 +13,31 @@ Big-oh is the approximate upper bound, little-oh is the next graph _higher_ than
 
 $$ f \in O(g) \iff \exists k: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
 
--   What is meant: $f$'s rate of growth is within that of $g$
--   Explanation: $f$ will always remain within a fixed linear multiplication (\*k) from $g$. $f$ won't ever grow out of the reach of $kg$.
+- What is meant: $f$'s rate of growth is within that of $g$
+- Explanation: $f$ will always remain within a fixed linear multiplication (\*k) from $g$. $f$ won't ever grow out of the reach of $kg$.
 
 ## Little Oh
 
 $$ f \in o(g) \iff \forall k: \exists x_0: \forall x > x_0: 0 \leq f(x) \leq kg(x) $$
 
--   What is meant: $f$'s rate of growth is a factor smaller than $g$
--   Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
+- What is meant: $f$'s rate of growth is a factor smaller than $g$
+- Explanation: we can linearly shrink $g$ as much as we want, but well still never go lower than $f$
 
 ## Comparision $O$ and $o$
 
--   True for big-oh, false for little-oh:
-    -   $x^2 \in O(x^2)$
-    -   $x^2 \in O(x^2 + x)$
-    -   $x^2 \in O(2000 x^2)$
--   True for little-oh (and therefore automatically true for big-oh):
-    -   $x^2 \in o(x^3)$
-    -   $x^2 \in o(x!)$
-    -   $\ln(x) \in o(x)$
+- True for big-oh, false for little-oh:
+  - $x^2 \in O(x^2)$
+  - $x^2 \in O(x^2 + x)$
+  - $x^2 \in O(2000 x^2)$
+- True for little-oh (and therefore automatically true for big-oh):
+  - $x^2 \in o(x^3)$
+  - $x^2 \in o(x!)$
+  - $\ln(x) \in o(x)$
 
 ## Others
 
--   Lower bounds: Omega
--   Upper and lower bound: Theta
+- Lower bounds: Omega
+- Upper and lower bound: Theta
 
 ## Rules for $O$
 
@@ -90,18 +90,18 @@ For each of those three we can calculate $O$, $\Theta$ or $\Omega$ individually.
 
 So, a thorough analysis would consist of:
 
--   best case:
-    -   $O$
-    -   $\Omega$
-    -   $\Theta$
--   average:
-    -   $O$
-    -   $\Omega$
-    -   $\Theta$
--   worst case:
-    -   $O$
-    -   $\Omega$
-    -   $\Theta$
+- best case:
+  - $O$
+  - $\Omega$
+  - $\Theta$
+- average:
+  - $O$
+  - $\Omega$
+  - $\Theta$
+- worst case:
+  - $O$
+  - $\Omega$
+  - $\Theta$
 
 # Combinatorics
 
@@ -311,8 +311,8 @@ $$ f(n) = a_1 f(n-1) + a_2 f(n-2) + ... + a_d f(n-d) + g(n)$$
 Similar to quicksort.
 Where quicksort does `swipe, recurse`, mergesort does `recurse, merge`.
 
--   Runtime: O(n lg n) in worst, best, and average case.
--   Memory:
+- Runtime: O(n lg n) in worst, best, and average case.
+- Memory:
 
 ```ts
 function merge(sorted1: any[], sorted2: any[]): any[] {
@@ -349,8 +349,8 @@ function mergeSort(unsorted: any[]): any[] {
 
 Very good when dealing with almost sorted lists.
 
--   Runtime: worst case: O(n^2), almost sorted: O(n)
--   Memory: O(n) Happens in place.
+- Runtime: worst case: O(n^2), almost sorted: O(n)
+- Memory: O(n) Happens in place.
 
 ```ts
 function insertionSort(data: any[]): any[] {
@@ -370,8 +370,8 @@ function insertionSort(data: any[]): any[] {
 Has a swipe-phase followed by recursion.
 I call it the tinder-sort.
 
--   Runtime: O(n lg n) on average, O(n^2) worst case.
--   Memory: Can be made to happen in-place, too.
+- Runtime: O(n lg n) on average, O(n^2) worst case.
+- Memory: Can be made to happen in-place, too.
 
 ```ts
 function quicksort(list: number[]) {
@@ -477,9 +477,9 @@ function findPath(start: Node, target: Node) {
 
 ### Dijkstra
 
--   a BFS
--   with a _priority_ queue
--   where priority is cost from source
+- a BFS
+- with a _priority_ queue
+- where priority is cost from source
     <https://www.youtube.com/watch?v=EFg3u_E6eHU>
 
 ```ts
@@ -516,9 +516,9 @@ function dijstra(source: Node, target: Node) {
 
 ### A\*
 
--   a BFS
--   with a priority queue
--   where priority is cost from source _+ estimated remaining cost_
+- a BFS
+- with a priority queue
+- where priority is cost from source _+ estimated remaining cost_
 
 ```ts
 interface Node {
@@ -657,10 +657,10 @@ function med(targetString: string, editableString: string): number {
 }
 ```
 
--   Also known as Wagner-Fisher algorithm
--   Run-time: `target.length * source.length`
--   Might want to allow substitutions, too: `const afterSubst = 1 + med(targetString.substring(1), editableString.substring(1));`
--   Then the MED is also known as Levenshtein distance.
+- Also known as Wagner-Fisher algorithm
+- Run-time: `target.length * source.length`
+- Might want to allow substitutions, too: `const afterSubst = 1 + med(targetString.substring(1), editableString.substring(1));`
+- Then the MED is also known as Levenshtein distance.
 
 ## Fuzzy matching
 
@@ -773,8 +773,8 @@ $$ \forall x_1, x_2: |f(x_1) - f(x_2)| \leq |x_1 - x_2|$$
 
 In words: if we apply $f$ to $x_1$ and $x_2$, then the results will be closer to each other than $x_1$ and $x_2$ were. If we apply $f$ _again_ to $f(x_1)$ and $f(x_2)$, the results will be closer yet.
 
--   If a function is a contraction, it has at most one fixed point $x_{fix}$.
--   $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ...$ converges to the fixed point $x_{fix}$
+- If a function is a contraction, it has at most one fixed point $x_{fix}$.
+- $\forall x \in X: \text{ the series } x, f(x), f(f(x)), f(f(f(x))), ...$ converges to the fixed point $x_{fix}$
 
 Applied to programming, we can replace a recursive calculation ...
 
@@ -859,9 +859,9 @@ The curious case of compound-queries.
 
 Consider this situation.
 
--   you have a table `table` with columns `a` and `b`, each with an index on it.
--   you want to execute the query `select * from table as t where a=a_0 and b=b_0`
--   what would your execution strategy be?
+- you have a table `table` with columns `a` and `b`, each with an index on it.
+- you want to execute the query `select * from table as t where a=a_0 and b=b_0`
+- what would your execution strategy be?
 
 My first idea was this:
 
@@ -961,24 +961,24 @@ def varianceForMeans(means, data):
 
 ## Fourier (-> Frequency space)
 
--   Transform image to frequency space
--   Draw something simple into the frequency-image
--   Transform it back
+- Transform image to frequency space
+- Draw something simple into the frequency-image
+- Transform it back
     Creates nice loops in curves
 
 ## Eigenvalues (-> Eigenvector space)
 
 Example: multiplication with covariance matrix
 
--   Transforms points to eigenvector space (= where it's aligned with the axes)
--   Scales aligned points by eigenvalues
--   Transforms back
+- Transforms points to eigenvector space (= where it's aligned with the axes)
+- Scales aligned points by eigenvalues
+- Transforms back
     Reduces small differences, exaggerates large differences
 
 # Parallel algorithms
 
--   **span**: nr of times the gpu needs to execute
--   **work**: nr of computations done == instructions/core \* nr cores ~ nr threads
+- **span**: nr of times the gpu needs to execute
+- **work**: nr of computations done == instructions/core \* nr cores ~ nr threads
 
 ## Prefix sum
 
@@ -1007,9 +1007,9 @@ function prefix_sum(x: number[]) {
 
 ### Hill & Steele: span-efficient, work-inefficient
 
--   $n$: input length
--   work: $n$ threads
--   span: $\lfloor \log_2{n} \rfloor$ iterations
+- $n$: input length
+- work: $n$ threads
+- span: $\lfloor \log_2{n} \rfloor$ iterations
 
 ```python
 for i in 0 ... floor(log2(n)) do:         # iterations
@@ -1029,9 +1029,9 @@ for i in 0 ... floor(log2(n)) do:         # iterations
 <https://www.dcc.fc.up.pt/~ricroc/aulas/1516/cp/apontamentos/slides_sorting.pdf>
 <https://en.wikipedia.org/wiki/Bitonic_sorter>
 
-## Game algorithms
+# Game algorithms
 
-### Minimax
+## Minimax
 
 Let's first look at the traditional approach with alpha-beta pruning.
 
@@ -1206,4 +1206,73 @@ print(result)
 printTTT(initialActions + [result["actions"][0]])
 
 
+```
+
+## Ray marching
+
+- Ray marching: from target to source, step in discrete steps, stop at first intersection
+- Ray tracing:
+  - usually better intersection-point finding
+  - usually also does reflection and refraction and even sub-surface scattering
+
+```python
+#%%
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate a sample height map (e.g., a 2D Gaussian hill)
+size = 100
+x = np.linspace(-3, 3, size)
+y = np.linspace(-3, 3, size)
+x, y = np.meshgrid(x, y)
+height_map = np.exp(-((x - 2)**2 + (y - 1)**2)) * 10  \
+            + np.exp(-((x + 1)**2 + (y - 0)**2)) * 8
+
+# Light source position
+light_x, light_y, light_h = 25, 75, 5  # center of map, height above terrain
+
+# Initialize lightness map
+lightness_map = np.ones_like(height_map)
+
+# Function to check if a pixel is in shadow using ray marching
+def is_in_shadow(px, py):
+    steps = 100
+    dx = (px - light_x) / steps
+    dy = (py - light_y) / steps
+    dz = (height_map[px, py] - light_h) / steps
+    
+    for i in range(1, steps):
+        x = int(light_x + dx * i)
+        y = int(light_y + dy * i)
+        if 0 <= x < size and 0 <= y < size:
+            expected_height = light_h + dz * i
+            if height_map[x, y] > expected_height:
+                return True
+    return False
+
+# Compute lightness map
+for i in range(size):
+    for j in range(size):
+        if is_in_shadow(i, j):
+            lightness_map[i, j] = 0.3  # shadowed
+        else:
+            lightness_map[i, j] = 1.0  # lit
+
+# Display the result
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.title("Height Map")
+plt.imshow(height_map, cmap='terrain')
+plt.plot(light_y, light_x, 'ro')  # mark light source
+plt.colorbar()
+
+plt.subplot(1, 2, 2)
+plt.title("Lightness Map")
+plt.imshow(lightness_map, cmap='gray')
+plt.plot(light_y, light_x, 'ro')  # mark light source
+plt.colorbar()
+plt.tight_layout()
+# plt.savefig("lightness_map.png")
+print("Lightness map saved as 'lightness_map.png'")
 ```
