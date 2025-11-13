@@ -55,7 +55,7 @@
 
   - `sudo fdisk -l`: shows device infos: start-bit, end-bit, size, ...
   - Before modifying disk, unmount it! `sudo umount </dev/filename or mountpath>`
-  - `sudo fdisk /dev/<filename> ` -> interactive prompt
+  - `sudo fdisk /dev/<filename>` -> interactive prompt
     - none of your changes will be flushed to disk before you finalize at the end.
     - `m`: help
     - `p`: show partitions
@@ -97,12 +97,14 @@ File-system types:
 - networked (abstract over local formats `ext, ntfs, fat,` ...):
   - `nfs`: network file system. linux.
   - `cifs`: common internet file system. microsoft's counter to nfs. a dialect of `smb`
-  - `smb`: `server message block`. IBM's file sharing protocol. 80's.
+  - `smb`: `server message block`. IBM's file sharing protocol. 80's. On linux implemented with `samba`
+    - infamously has persistent durable file-handles, that can lock other programs to access a file
 - local:
-  - `ntfs`: new tech file system. local. current microsoft format. Journaling.
+  - `ntfs`: new tech file system. local. current microsoft format. journaling.
   - `fat`: by microsoft. No journaling. but compatible with more OS'es.
   - `xfs`: for extremely large files. journaling.
   - `ext`: pretty standard
+  - `ReiserFS`: famously written by a murderer.
 
 It can happen that you define a networked mount using `/etc/fstab` but still have to use the `mount` command to enter credentials.
 
@@ -149,7 +151,7 @@ PPA's worth knowing:
   - Like exes on Windows
   - All bundled together in one file; so deletion is also just `rm <appimage-filename>`
   - No standardized way of updating
-  - https://appimage.github.io/apps/
+  - <https://appimage.github.io/apps/>
 
 # directories
 
@@ -327,7 +329,7 @@ IF: wlp6s0 state: up mac: <filter>
 => Conclusion: peak performance is already good. Just need to handle those intermittent disconnects.
 
 - explanation of settings: `sudo modinfo rtl8821ae`
-- current settings: `head /sys/module/rtl8821ae/parameters/* `
+- current settings: `head /sys/module/rtl8821ae/parameters/*`
 - adjusting settings: `echo "options rtl8821ae  debug=0 disable_watchdog=N fwlps=N swlps=Y swenc=Y ips=N msi=0" > /etc/modprobe.d/mywifisettings.conf`
 - update: `sudo nmcli radio wifi off && sudo nmcli radio wifi on`
 
