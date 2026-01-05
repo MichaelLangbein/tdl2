@@ -1,6 +1,6 @@
 # ESRI
 
-# Running
+## Running
 
 Requires windows
 
@@ -11,16 +11,21 @@ Requires windows
 
 ArcGIS itself is free for 3 weeks.
 
-# Performance
+## Performance
 
 - Slow on loading: <https://community.esri.com/t5/python-questions/arcpy-import-is-really-slow-2-minutes/td-p/124969>
 - Slow on network drive: <https://community.esri.com/t5/python-questions/arcpy-very-slow-when-using-our-new-san/td-p/1314498>
 
-# Licensing
+## Licensing
 
 ArcGIS is really undignified. Every time you start ArcGIS Pro or run ArcPy (!), it will telemetry to its license server to make sure that you are allowed to use it.
 
-# Infrastructure
+## Versioning
+
+ArcGIS Enterprise V11 (=ArcGIS Pro 3) and ArcGIS Enterprise 10 (=ArcGIS Pro 2) are a _really hard_ cut.
+I once tried to rebuild a spatial index on an Enterprise 10 DB using Pro3. It _claimed_ that it had worked, but instead had failed silently.
+
+## Infrastructure
 
 Types of servers:
 
@@ -55,13 +60,13 @@ A common setup:
     - 1 image server
       - optimized for raster data
 
-# Experience builder
+## Experience builder
 
 - <https://learn.arcgis.com/de/projects/get-started-with-arcgis-experience-builder/>
 - Easily extended: based on react/typescript:
   - <https://developers.arcgis.com/experience-builder/guide/getting-started-widget/>
 
-# Database
+## Database
 
 - **Feature class** = Table with geometry (plus second table in `sde.SDE_layers` and `sde.gdb_items` for metadata, like extent, crs etc)
 - **Feature set** = Dataframe in pandas
@@ -139,7 +144,7 @@ LEFT JOIN
   - they require maintenance: when the source table is changed, the view breaks.
   - no indexing on views (not even on indexed views, except if they contain no subqueries and no outer joins), and indices of source tables are not effective, because ArcGIS doesn't try to query along the source-tables' indices.
 
-# Server
+## Server
 
 - 2 Versions: one built with Java, one with .NET, both with C++ for some components
 - Users GDAL and OGR for processing
@@ -150,7 +155,7 @@ LEFT JOIN
   - SOE: server-object-extension, adds functionality. Added as a COM to the runtime.
   - SOI: server-object-interceptor, extends existing functionality.
 
-# Services
+## Services
 
 Web-layer:
     - provides data
@@ -159,25 +164,25 @@ Web-layer:
       - hosted: data saved on a hosting-server
       - referenced aka federated: data in a file-gdb, a database, or another server
 
-## Types
+### Types
 
-- *Map service* (aka. "Map image" in portal) (analog WMS)
+- _Map service_ (aka. "Map image" in portal) (analog WMS)
   - Images drawn on demand, though cached. Multiple layers on same image.
   - WMS-T = Map service with time-config
   - Identify supported. In fact, allows a `query` request, which allows even WFS-like querying and filtering (`https://<your-image-service-url>/ImageServer/query?where=POP2000 > 350000
   &outFields=POP2000,NAME&f=json
 `)
   - Renders multiple layers into a single image. Toggling one layer leads to another request.
-- *Tiled map service* (analog WMTS)
+- _Tiled map service_ (analog WMTS)
   - Images drawn in advance.
   - No identify.
   - Renders multiple layers into a single image. No toggling allowed.
-- *Raster service* (aka "Imagery layer" in portal) (analog WCS)
-- *Feature service* (analog WFS)
+- _Raster service_ (aka "Imagery layer" in portal) (analog WCS)
+- _Feature service_ (analog WFS)
   - rendered client-side. Data transferred as protobuffer.
   - Identify naturally supported.
   - Querying is a bit more comfortable than in a WFS, because the query language doesn't use XML.
-- *Web-geoprocessing-tool* (analog WPS)
+- _Web-geoprocessing-tool_ (analog WPS)
 - vector-tiles
   - renders multiple layers into the same tile.
   - No identify, no legend, no querying.
@@ -207,7 +212,7 @@ https://gis.suedlink.com/map/rest/services/TNB_WebGIS/TNB_Immissionsschutz/MapSe
 &token=wlYobgXhNDowB92JxsYiC0tOX4iErf-UV408hS477dOS9H_9gex8VHhTFUnvbKVBrvm1QDw2fNfTDxXgfRUuE08_VOPj1BoOeMAAhdd_m9W9y_odMTbe1rZhrLUUU8SqCWzB8Zb7cL5bbVQKDLmbvKXKmFA18rkcK-d2FOF6V4C5g8jbu49TH0vyzM-Kwwa3j5j0PsFWLjTqUmfnGALnQsAWflYwM6oTrJBtyFUuTxQ906oPUSoQDDPw2goLtkZX8Bl8Awa_yn2ymzrda7-7JYNv99ujO2TjkqeQhkOwUjrGJ0IGXUuWnn79eSIpeC4-vClHifCT_n5QdAK6ssfkmA..
 ```
 
-## Hosted services and how their data is stored
+### Hosted services and how their data is stored
 
 <https://pro.arcgis.com/en/pro-app/latest/help/sharing/overview/understanding-reference-registered-data-and-copy-all-data.htm>
 
@@ -219,7 +224,7 @@ When using the "Copy all data" when publishing a service, the copy destination i
   - File data store is often S3 or AFS (azure file storage). There are often issues with accessing file gdbs on AFS, which might be bad for performance.
 - Tile & Vector Tile copy the data, and then create tile caches in the tile cache data store
 
-## URL structure
+### URL structure
 
 - Map image service:
   - domain/<hosting|map>/rest/services/<FolderName>/<ServiceName>/MapServer/query?layer=<LayerName>
@@ -230,292 +235,9 @@ When using the "Copy all data" when publishing a service, the copy destination i
 - OGC Service
   - domain/map/services/<FolderName>/<ServiceName>/WMS?service=WMS&request=GetMap
 
-# Scripting
+## Scripting
 
-## Model builder
-
-## Example script
-
-```python
-#%%
-import os
-import arcpy as ap
-
-
-
-# %% getting access to the project db
-
-currentPath = os.path.dirname(__file__)
-gdbPath = os.path.abspath(
-    os.path.join(currentPath, "..", "Data", "SanJuan.gdb"))
-ap.env.workspace = gdbPath
-ap.env.overwriteOutput = True
-projPath = os.path.abspath(
-    os.path.join(currentPath, "..", "Data", "PythonGP.aprx"))
-
-
-#%% exploring the project
-
-# list FCs and tables
-fcs = ap.ListFeatureClasses()
-for fc in fcs:
-    desc = ap.Describe(fc)
-    print(f"FeatureClass: {fc}, Type: {desc.shapeType}")
-
-tables = ap.ListTables()
-for table in tables:
-    print(f"Table: {table}")
-
-# Get the attribute table of the layer "Roads"
-roads_fields = ap.ListFields("Roads")
-for field in roads_fields:
-    print(f"Field: {field.name}, Type: {field.type}")
-
-# SearchCursor: read only. Alternatively: UpdateCursor, InsertCursor
-# Always use `with` for cursors ... otherwise you might not delete locks on the table
-with ap.da.SearchCursor("Roads", [field.name for field in roads_fields]) as cursor:
-    for row in cursor:
-        print(row)
-
-
-aprx = ap.mp.ArcGISProject(projPath)
-maps = aprx.listMaps()
-for map in maps:
-    print(f"Map: {map.name}")
-
-    for layer in map.listLayers():
-        print(f"Layer: {layer.name}")
-
-
-# %% Joining table to feature class
-
-"""
-help(ap.JoinField_management)
--->
-JoinField_management(
-    in_data, in_field, join_table, join_field, 
-    {fields;fields...}, 
-    {Select transfer fields | Use field mapping}, 
-    {field_mapping}, 
-    {Do not add indexes | Add an attribute index for fields that do not have an existing index | Replace indexes for all fields}
-)'
-"""
-
-roads_layer = "Roads"
-in_field = "ROUTE_TYPE"
-join_table = "BufferDistance"
-join_field = "ROUTE_TYPE"
-
-ap.management.JoinField(roads_layer, in_field, join_table, join_field)   
-
-# %% Buffer the roads
-
-in_features = roads_layer
-out_feature_class = "Roads_Buffered"
-buffer_distance_or_field = "DISTANCE"
-results = ap.analysis.Buffer(
-    in_features = in_features,
-    out_feature_class = out_feature_class,
-    buffer_distance_or_field = buffer_distance_or_field
-)
-print(results.getAllMessages())
-
-# %%
-
-```
-
-## Updating projects per script
-
-```python
-project = arcpy.mu.ArcGISProject("CURRENT")
-map = project.listMaps("_PREPROD")[0]
-
-for layer in map.listLayers():
-    if layer.supports("DATASOURCE") and layer.connectionProperties is not None and "connection_info" in layer.connectionProperties:
-        print(f"updating layer {layer.name}...")
-        oldProps = layer.connectionProperties
-        newProps = oldProps.copy()
-        newProps["connection_info"]["db_connection_properties"] = newProps["connection_info"]["db_connection_properties"].replace("prod.xxxxx", "test.xxxxx")
-        newProps["connection_info"]["instance"] = newProps["connection_info"]["instance"].replace("prod.xxxxx", "test.xxxxx")
-        newProps["connection_info"]["server"] = newProps["connection_info"]["server"].replace("prod.xxxxx", "test.xxxxx")
-        layer.updateConnectionProperties(oldProps, newProps)
-    else:
-        print(f"No source data for layer {layer.name}")
-```
-
-Using the CIM: <https://pro.arcgis.com/en/pro-app/latest/arcpy/mapping/python-cim-access.htm>
-
-```python
-# Reference a project, map, and layer using arcpy.mp
-p = arcpy.mp.ArcGISProject('current')
-m = p.listMaps('Map')[0]
-l = m.listLayers('GreatLakes')[0]
-
-# Return the layer's CIM definition
-l_cim = l.getDefinition('V3')
-
-# Modify a few boolean properties
-l_cim.showMapTips = True  #Turn on map tips for bubble tips to appear
-l_cim.selectable = False  #Set the layer to not be selectable
-l_cim.expanded = True     #Expand the Layer in the Contents pane
-
-# Push the changes back to the layer object
-l.setDefinition(l_cim)
-
-# Save changes
-p.save()
-```
-
-```python
-import arcpy
-import os
-
-
-def createProdMap(projectPath, sourceDb, targetDb):
-
-    # Get a hold of the ArcGIS Pro project
-    print("loading project ...")
-    arcpy.env.overwriteOutput = True
-    project = arcpy.mp.ArcGISProject(projectPath)
-
-    # add gdb to project database
-    print("Checking project databases ...")
-    databases = project.databases
-    if not any([sourceDb in d["databasePath"] for d in databases]):
-        raise Exception(f"Database {sourceDb} not found in project.")
-    if not any([targetDb in d["databasePath"] for d in databases]):
-        raise Exception(f"Database {targetDb} not found in project.")
-
-    # copy map
-    print("copying map ...")
-    map = project.listMaps()[0]
-    newMapName = map.name + "_PROD"
-    if any([m.name == newMapName for m in project.listMaps()]):
-        raise Exception(f"Map {newMapName} already exists in project.")
-    
-    copiedMap = project.copyItem(map, newMapName)
-    copiedMap.updateConnectionProperties(sourceDb, targetDb)
-
-    # Note: 
-    # target gdb must already be registered in project
-    # and must contain FC
-    # *won't* throw an error if either of the above isn't true
-    # On layer by layer basis: known bug https://community.esri.com/t5/arcgis-pro-questions/using-updateconnectionproperties-to-update-a/td-p/1371637
-
-    print("saving project ...")
-    project.save()
-
-
-if __name__ == "__main__":
-    sourceDb = input("Enter the name of the source database: ")
-    targetDb = input("Enter the name of the target database: ")
-    startDir = input("Enter the path to the directory containing the projects: ")
-    if not os.path.isdir(startDir):
-        raise FileNotFoundError("The directory does not exist.")
-    
-    for projectDir in os.listdir(startDir):
-        projectPath = os.path.join(startDir, projectDir)
-        if not os.path.isdir(projectPath):
-            continue
-        aprxFiles = [f for f in os.listdir(projectPath) if f.endswith(".aprx")]
-        if len(aprxFiles) <= 0:
-            continue
-        projectPath = os.path.join(projectPath, aprxFiles[0])
-        if not os.path.isfile(projectPath):
-            continue
-
-        createProdMap(projectPath, sourceDb, targetDb)
-
-print("Done.")
-```
-
-### Sampling raster-dataset at points
-
-```python
-import arcpy
-import os
-
-project = arcpy.mp.ArcGISProject("current")
-map = project.listMaps()[0]
-layers = map.listLayers()
-samplePointsLayer = layers[0]
-srtmLayer = layers[4]
-srtmRaster = arcpy.Raster(srtmLayer.name)
-
-
-# Get raster properties
-lower_left_x = srtmRaster.extent.XMin
-lower_left_y = srtmRaster.extent.YMin
-cell_size_x = srtmRaster.meanCellWidth
-cell_size_y = srtmRaster.meanCellHeight
-upper_left_x = srtmRaster.extent.XMin
-upper_left_y = srtmRaster.extent.YMax # YMax is the top of the raster extent
-# Get spatial reference of the raster
-raster_sr = srtmRaster.spatialReference
-
-
-field_names = [f.name for f in arcpy.ListFields(samplePointsLayer)]
-if "height" not in field_names:
-    arcpy.AddField_management(samplePointsLayer, "height", "LONG")
-
-
-# Use an UpdateCursor to iterate through points and update the height field
-# We need the shape token to get the point's geometry
-with arcpy.da.UpdateCursor(samplePointsLayer, "*", "", raster_sr) as cursor:
-    for row in cursor:
-        point_x, point_y = row[1] # Get the X, Y coordinates of the point
-        
-        if point_x is None:
-            continue
-
-        # Calculate raster column and row from point coordinates
-        # Column = (X - XMin) / CellSizeX
-        # Row = (YMax - Y) / CellSizeY (since rows are indexed from the top)
-        col = int((point_x - upper_left_x) / cell_size_x)
-        row_index = int((upper_left_y - point_y) / cell_size_y)
-
-        # Get the pixel value at the calculated row and column
-        # Need to handle potential index errors if point is outside raster extent
-        try:
-            # Access the pixel value - this requires reading the raster
-            # using the indexing [row_index, col]
-            # Note: This method can be slow for large numbers of points
-            elevation_value = srtmRaster[row_index, col]
-            print(elevation_value)
-
-            # Handle potential NoData values
-            if elevation_value is not None:
-                # Update the height field
-                row[-1] = elevation_value
-                cursor.updateRow(row)
-            else:
-                # Set height to None or a specific value for NoData
-                row[-1] = None # Or some indicator for NoData, e.g., -9999
-                cursor.updateRow(row)
-                print(f"Warning: NoData value at point ({point_x}, {point_y})")
-
-        except IndexError:
-            # Point is outside the raster extent
-            row[-1] = None # Or some indicator
-            cursor.updateRow(row)
-            print(f"Warning: Point ({point_x}, {point_y}) is outside raster extent.")
-        except Exception as cell_error:
-            print(f"Error getting raster value for point ({point_x}, {point_y}): {cell_error}")
-            row[-1] = None # Or some indicator
-            cursor.updateRow(row)
-
-
-    print("Elevation values extracted and updated successfully.")
-
-
-```
-
-## Get current tool's python command
-
-- <https://www.youtube.com/watch?v=sCkVI4VHdXo>
-- (after running tool) history (might have to enable first) > tool > right click > copy python
-
-## Create custom tool
+### Create custom tool
 
 - Videos:
   - 3 Minutes: <https://www.youtube.com/watch?v=nPUkTyDaIhg>
@@ -532,18 +254,18 @@ with arcpy.da.UpdateCursor(samplePointsLayer, "*", "", raster_sr) as cursor:
   - `execute`
 - refresh toobox
 
-## R binding
+### R binding
 
 - <https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started>
 - <https://github.com/R-ArcGIS/r-bridge>
 
-# Exporting
+## Exporting
 
-## Portal-Group: EPX
+### Portal-Group: EPX
 
-## ArcGIS Pro Project: PPKX
+### ArcGIS Pro Project: PPKX
 
-# Deployment through python
+## Deployment through python
 
 1. authenticate
 2. publish my custom views from the test-db to the prod-db
@@ -686,11 +408,11 @@ usernameLdap = "username@domain.com"  # Distinguished Name (DN) format
 portalLdap = GIS("https://yourportal.com/portal", username=usernameLdap, password="MyPassword")
 ```
 
-# Vertigis Studio
+## Vertigis Studio
 
 - Seems to be a bunch of custom widgets on top of experience builder
 
-## Layer ID hierarchy
+### Layer ID hierarchy
 
 - Service: looks like `https://yourportal/map/SvcName/layerId`
   - Service URL
@@ -704,7 +426,7 @@ portalLdap = GIS("https://yourportal.com/portal", username=usernameLdap, passwor
 - VertiGIS Studio app.json: looks like `4h32j1k4l-4h3j2k-h432j1k4h31j-43h2j1k43`
   - References back to the WebMapId: `layer.$ref.id`
 
-# Contera
+## Contera
 
 - Offers FME
 - offers [map.apps](https://www.conterra.de/mapapps-etl), which is FME integrated into a web-gis app
