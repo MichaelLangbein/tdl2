@@ -426,7 +426,15 @@ portalLdap = GIS("https://yourportal.com/portal", username=usernameLdap, passwor
 - VertiGIS Studio app.json: looks like `4h32j1k4l-4h3j2k-h432j1k4h31j-43h2j1k43`
   - References back to the WebMapId: `layer.$ref.id`
 
-## Contera
+### App Concepts
+
+- Custom component: `npx @vertigis/web-sdk@latest create ZoomBox`
+- Custom form component: `npx @vertigis/workflow-sdk@latest create CurrentDataTable`
+- **Event**
+- **Command**: called from ui, returns no results. Can be async.
+- **Operation**: called from ui, returns result. Can be async.
+
+## Conterra
 
 - Offers FME
 - offers [map.apps](https://www.conterra.de/mapapps-etl), which is FME integrated into a web-gis app
