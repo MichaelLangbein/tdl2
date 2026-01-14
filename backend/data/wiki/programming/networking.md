@@ -8,8 +8,12 @@ See `linux.md`
 
 1. Hardware-layer
 2. Datalink-layer: ARP / Ethernet
-3. Networking-layer: IP
-4. Application-layer: UDP / TCP
+3. Networking-layer: IP:
+   1. `ping`: uses ICMP, thus even if target-nginx is down, ping will succeed
+   2. `tracert`
+4. Application-layer: UDP / TCP:
+   1. `wget`
+   2. `curl`
 
 ## Devices
 
