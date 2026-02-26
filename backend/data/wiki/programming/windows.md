@@ -10,6 +10,17 @@
 - `.file.core.windows.net`: public endpoint domain
   - proves that this is azure files technology. Means that this is a fully managed, remote service by azure, accessed over the internet via SMB
 
+Types of network drives:
+
+- Azure file storage
+  - accessed over SMB or NFS
+    - SMB infamously has persistent durable file-handles, that can lock other programs to access a file
+  - good for large files, but _awful_ for many small operations
+  - No-Go for ArcGIS Pro
+- Azure NetApp Files
+  - accessed over SMB or NFS
+  - Much higher throughput, like on-premise NAS
+
 ## Authentication & authorization
 
 - Authentication = who are you?

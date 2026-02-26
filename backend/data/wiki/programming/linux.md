@@ -105,6 +105,7 @@ File-system types:
   - `xfs`: for extremely large files. journaling.
   - `ext`: pretty standard
   - `ReiserFS`: famously written by a murderer.
+  - ONTAP's `WAFL`: used by Azure NetApp locally ... though accessed over the net per smb or nfs.
 
 It can happen that you define a networked mount using `/etc/fstab` but still have to use the `mount` command to enter credentials.
 
