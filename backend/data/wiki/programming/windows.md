@@ -88,3 +88,21 @@ Analogy:
 5. The manager gives you a note saying that you're ok, which you can hand to the bouncer immediately next time.
 
 At no point in time did the bouncer see your actual ID.
+
+## Corporate WIFI Access: WPA2 and 802.1x
+
+Most common corporate WIFI security mode is WPA2-Enterprise.
+
+- WPA2
+  - encryption: AES-CCMP, GCMP, ...
+  - authentication: 802.1x
+    - EAP
+
+### How 802.1x works
+
+- From your org, you get a certificate
+  - Uses EAP-TLS
+  - hasn't expired
+  - matches the private key that your org keeps on its server
+- Before connecting to the wifi, your certificate is checked
+- After successful checking, you get a token which remains valid for the next couple of hours
