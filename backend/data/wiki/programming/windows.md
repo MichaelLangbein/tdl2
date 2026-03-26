@@ -106,3 +106,12 @@ Most common corporate WIFI security mode is WPA2-Enterprise.
   - matches the private key that your org keeps on its server
 - Before connecting to the wifi, your certificate is checked
 - After successful checking, you get a token which remains valid for the next couple of hours
+
+## Programming
+
+### COM objects
+
+Allows you to register an object in memory at the windows registry.
+Allows other processes to call this object's ABI per RPC.
+It's kind of like the linux dbus, but dbus uses sockets, not rpc.
+It is an old concept from the 90's that paved the way for software modularity, but that was very complicated for multiprocessing.

@@ -101,6 +101,7 @@ File-system types:
     - infamously has persistent durable file-handles, that can lock other programs to access a file
 - local:
   - `ntfs`: new tech file system. local. current microsoft format. journaling.
+    - notoriously has AFS, which are hidden metadata per file, often used for hacking payloads.
   - `fat`: by microsoft. No journaling. but compatible with more OS'es.
   - `xfs`: for extremely large files. journaling.
   - `ext`: pretty standard
