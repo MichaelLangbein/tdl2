@@ -15,6 +15,9 @@ ArcGIS itself is free for 3 weeks.
 
 - Slow on loading: <https://community.esri.com/t5/python-questions/arcpy-import-is-really-slow-2-minutes/td-p/124969>
 - Slow on network drive: <https://community.esri.com/t5/python-questions/arcpy-very-slow-when-using-our-new-san/td-p/1314498>
+- Azure file storage is _aweful_ for arcgis:
+  - has global locks that block files and easily go stale
+  - is slow for many small file operations ... and almost all fgdb operations are slow
 
 ## Licensing
 
@@ -59,12 +62,6 @@ A common setup:
       - accessing federated data from an enterprise-gdb
     - 1 image server
       - optimized for raster data
-
-## Experience builder
-
-- <https://learn.arcgis.com/de/projects/get-started-with-arcgis-experience-builder/>
-- Easily extended: based on react/typescript:
-  - <https://developers.arcgis.com/experience-builder/guide/getting-started-widget/>
 
 ## Database
 
@@ -147,7 +144,7 @@ LEFT JOIN
 ## Server
 
 - 2 Versions: one built with Java, one with .NET, both with C++ for some components
-- Users GDAL and OGR for processing
+- Uses GDAL and OGR for processing
 - Rendering engine unknown
 - Proprietary application-server, but similar to eg Tomcat
 - Core framework: ESRI's proprietary ArcObjects
@@ -187,9 +184,7 @@ Web-layer:
   - renders multiple layers into the same tile.
   - No identify, no legend, no querying.
 - 3D-tiles
-
 - hosted table
-  -
 
 Web-map:
     - a json-file referencing one or many web-layers
@@ -204,7 +199,7 @@ Web-map:
 
 Example of a query on a map-image-service:
 
-```
+```bash
 https://gis.suedlink.com/map/rest/services/TNB_WebGIS/TNB_Immissionsschutz/MapServer/1/query
 ?f=json
 &spatialRel=esriSpatialRelIntersects
@@ -252,18 +247,70 @@ When using the "Copy all data" when publishing a service, the copy destination i
         - DE: DataElement
         - GP: GeoProcessing
   - `execute`
-- refresh toobox
-
-### R binding
-
-- <https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/get-started>
-- <https://github.com/R-ArcGIS/r-bridge>
+- refresh toolbox
 
 ## Exporting
 
 ### Portal-Group: EPX
 
 ### ArcGIS Pro Project: PPKX
+
+## Multiprocessing
+
+```python
+#%%
+
+"""
+Known issues with multiprocessing:
+1. Dont import arcpy outside of worker, otherwise memory will be shared
+2. lots of gp-tools are not multiprocessing-capable and must be manually re-implemented
+3. every arcpy needs its own license, so you can only multiprocess so much
+4. Many Azure VMs will depriorize your processes if they are not focussed on for a few minutes
+"""
+
+
+def worker(i):
+    # Dont import arcpy outside of worker, otherwise memory will be shared
+    import arcpy
+
+    fc = "memory\\testfc"
+
+    # lots of gp-tools are not multiprocessing-capable and must be manually re-implemented
+    def custom_XYTableToPoint(in_table, out_fc, x_field, y_field, spatial_ref):
+        pass
+
+    # Create feature class
+    if not arcpy.Exists(fc):
+        arcpy.management.CreateFeatureclass(
+            out_path="memory",
+            out_name="testfc",
+            geometry_type="POINT",
+            spatial_reference=4326
+        )
+
+    # Insert a single feature
+    with arcpy.da.InsertCursor(fc, ["SHAPE@XY"]) as cursor:
+        cursor.insertRow(((i, i),))
+
+    # Count features
+    count = int(arcpy.management.GetCount(fc)[0])
+
+    print(f"Process {i}: feature count = {count}")
+    return count
+
+
+if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.set_start_method("spawn")  # windows only knows "spawn", no "fork"
+
+    # every arcpy needs its own license, so you can only multiprocess so much
+    with multiprocessing.Pool(processes=10) as pool:
+        results = pool.map(worker, range(10))
+
+    print("Final results:", results)
+# %%
+
+```
 
 ## Deployment through python
 
